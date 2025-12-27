@@ -1,0 +1,6 @@
+packages:
+  - apps/*
+  - specs
+
+overrides:
+  '@openuji/speculator': link:../../speculator/packages/speculator

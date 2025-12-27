@@ -4,9 +4,18 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@openuji/speculator': link:../../speculator/packages/speculator
+
 importers:
 
   .:
+    dependencies:
+      '@openuji/speculator':
+        specifier: link:../../speculator/packages/speculator
+        version: link:../../speculator/packages/speculator
+
+  apps/web:
     dependencies:
       astro:
         specifier: ^5.16.6

@@ -1,18 +1,12 @@
 {
-  "name": "@openuji/ujm-spec",
-  "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "astro": "^5.16.6",
-    "tailwindcss": "^4.1.18"
-  },
-  "devDependencies": {
-    "@tailwindcss/vite": "^4.1.18"
-  }
+    "name": "@openuji/monorepo",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "pnpm -r dev",
+        "build": "pnpm -r build"
+    },
+    "dependencies": {
+        "@openuji/speculator": "link:../../speculator/packages/speculator"
+    }
 }

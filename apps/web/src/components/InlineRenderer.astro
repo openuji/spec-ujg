@@ -1,0 +1,183 @@
+---
+import type { Inline, Workspace } from "@openuji/speculator";
+import RecursiveInlineRenderer from "./InlineRenderer.astro";
+import path from "path";
+
+interface Props {
+    nodes: Inline[];
+    workspace?: Workspace;
+    documentPath?: string;
+}
+
+const { nodes, workspace, documentPath } = Astro.props;
+---
+
+{
+    nodes.map((node) => {
+        switch (node.type) {
+            case "text":
+                return <>{node.value}</>;
+
+            case "emphasis":
+                return (
+                    <em>
+                        <RecursiveInlineRenderer
+                            nodes={node.children}
+                            workspace={workspace}
+                            documentPath={documentPath}
+                        />
+                    </em>
+                );
+
+            case "strong":
+                return (
+                    <strong>
+                        <RecursiveInlineRenderer
+                            nodes={node.children}
+                            workspace={workspace}
+                            documentPath={documentPath}
+                        />
+                    </strong>
+                );
+
+            case "inlineCode":
+                return <code>{node.value}</code>;
+
+            case "link":
+                return (
+                    <a href={node.url} title={node.title || undefined}>
+                        <RecursiveInlineRenderer
+                            nodes={node.children}
+                            workspace={workspace}
+                            documentPath={documentPath}
+                        />
+                    </a>
+                );
+
+            case "image":
+                return (
+                    <img
+                        src={node.url}
+                        alt={node.alt || ""}
+                        title={node.title || ""}
+                    />
+                );
+
+            case "definition":
+                // Render <dfn> with ReSpec attributes
+                const dfnId = (node as any).explicitId || (node as any).id;
+                const dfnFor = (node as any).forContexts
+                    ?.filter(Boolean)
+                    .join(", ");
+                const dfnType = (node as any).dfnType;
+                return (
+                    <dfn
+                        id={dfnId}
+                        title={node.term}
+                        data-dfn-for={dfnFor || undefined}
+                        data-dfn-type={dfnType !== "dfn" ? dfnType : undefined}
+                    >
+                        <RecursiveInlineRenderer
+                            nodes={node.children}
+                            workspace={workspace}
+                            documentPath={documentPath}
+                        />
+                    </dfn>
+                );
+
+            case "reference":
+                // Render cross-reference
+                const targetId = (node as any).targetId;
+                let href = `#${targetId || ""}`;
+
+                if (workspace && targetId) {
+                    // Find which document contains this definition
+                    const targetDoc = workspace.documents.find((d) =>
+                        (d.indexes?.definitions || []).some(
+                            (def) => def.id === targetId,
+                        ),
+                    );
+
+                    if (targetDoc) {
+                        const targetFilePath = targetDoc.sourcePos?.file;
+                        if (targetFilePath && targetFilePath !== documentPath) {
+                            const pkg = path.basename(
+                                path.dirname(targetFilePath),
+                            );
+                            href = `/workspace/${pkg}#${targetId}`;
+                        }
+                    }
+                }
+
+                const xrefFor = (node as any).forContexts
+                    ?.filter(Boolean)
+                    .join(", ");
+                return (
+                    <a
+                        href={href}
+                        class="xref"
+                        data-xref-for={xrefFor || undefined}
+                        title={(node as any).targetTerm}
+                    >
+                        <RecursiveInlineRenderer
+                            nodes={node.children}
+                            workspace={workspace}
+                            documentPath={documentPath}
+                        />
+                    </a>
+                );
+
+            case "cite":
+                // Render citation
+                const cite = node as any;
+                const citeClass = cite.forcedNormative
+                    ? "cite normative"
+                    : cite.forcedInformative
+                      ? "cite informative"
+                      : "cite";
+                return (
+                    <cite class={citeClass} data-cite={cite.key}>
+                        {cite.children ? (
+                            <RecursiveInlineRenderer
+                                nodes={cite.children}
+                                workspace={workspace}
+                                documentPath={documentPath}
+                            />
+                        ) : (
+                            <>[{cite.key}]</>
+                        )}
+                    </cite>
+                );
+
+            case "requirement":
+                return (
+                    <span class="requirement" id={node.id}>
+                        {node.keyword}
+                    </span>
+                );
+
+            case "issue":
+                return (
+                    <span
+                        class="issue"
+                        data-status={node.status}
+                        style="color: orange; border: 1px solid orange; padding: 2px; border-radius: 4px;"
+                    >
+                        Issue {node.id && `#${node.id}`}:{" "}
+                        <RecursiveInlineRenderer
+                            nodes={node.children}
+                            workspace={workspace}
+                            documentPath={documentPath}
+                        />
+                    </span>
+                );
+
+            default:
+                return (
+                    <span style="color: red; border: 1px solid red;">
+                        [Unknown Inline: {(node as any).type}]
+                    </span>
+                );
+        }
+    })
+}
