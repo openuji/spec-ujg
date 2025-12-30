@@ -1,0 +1,21 @@
+---
+interface Props {
+    variant?: "default" | "contrast" | "glow" | "intro";
+    title?: string;
+    tag?: string;
+}
+const { variant = "default", title, tag } = Astro.props;
+const classes = ["panel", variant !== "default" && variant].filter(Boolean);
+---
+
+<article class:list={classes}>
+    {
+        (title || tag) && (
+            <div class="panel__header">
+                {title && <h2>{title}</h2>}
+                {tag && <span class="tag">{tag}</span>}
+            </div>
+        )
+    }
+    <slot />
+</article>

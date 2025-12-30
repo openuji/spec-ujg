@@ -1,0 +1,14 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+    title?: string;
+}
+const { title = "Editor's Draft - UJM Specs" } = Astro.props;
+---
+
+<BaseLayout title={title}>
+    <div class="ed-overview">
+        <slot />
+    </div>
+</BaseLayout>

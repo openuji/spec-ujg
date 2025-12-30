@@ -1,0 +1,18 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Hero from "@/components/ds/Hero.astro";
+import Panel from "@/components/ds/Panel.astro";
+import Card from "@/components/ds/Card.astro";
+import CTA from "@/components/ds/CTA.astro";
+
+interface Props {
+    title?: string;
+}
+const { title } = Astro.props;
+---
+
+<BaseLayout title={title}>
+    <div class="page">
+        <slot />
+    </div>
+</BaseLayout>

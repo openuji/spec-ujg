@@ -1,0 +1,22 @@
+---
+interface Props {
+    href?: string;
+    variant?: "default" | "primary" | "dark";
+    type?: "button" | "submit";
+}
+const { href, variant = "default", type = "button" } = Astro.props;
+const isLink = !!href;
+const classes = ["btn", variant !== "default" && variant].filter(Boolean);
+---
+
+{
+    isLink ? (
+        <a href={href} class:list={classes}>
+            <slot />
+        </a>
+    ) : (
+        <button type={type} class:list={classes}>
+            <slot />
+        </button>
+    )
+}

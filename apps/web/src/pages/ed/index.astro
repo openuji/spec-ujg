@@ -1,20 +1,25 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import EditorDraftLayout from "@/layouts/EditorDraftLayout.astro";
 import { listSortedSpecs } from "@/utils/load";
 import { type EntryWithConfig } from "@openuji/speculator";
 
 const specs = await listSortedSpecs();
 ---
 
-<Layout>
-    <h1>ED</h1>
-    <ul>
+<EditorDraftLayout title="Editor's Draft Modules">
+    <h1>Editor's Draft (ED)</h1>
+    <p class="ed-overview__intro">
+        The ED workspace captures the newest ideas, examples, and proposals.
+        Browse individual specification modules below.
+    </p>
+    <div class="ed-modules">
         {
             specs.entries.map((spec: EntryWithConfig) => (
-                <li>
-                    <a href={`/ed/${spec.config.id}`}>{spec.config.id}</a>
-                </li>
+                <a href={`/ed/${spec.config.id}`} class="ed-module-card">
+                    <h3>{spec.config.id}</h3>
+                    <span class="tag">View Spec →</span>
+                </a>
             ))
         }
-    </ul>
-</Layout>
+    </div>
+</EditorDraftLayout>

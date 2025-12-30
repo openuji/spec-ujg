@@ -1,0 +1,38 @@
+---
+import Button from "./Button.astro";
+
+interface CTALink {
+    label: string;
+    href: string;
+    primary?: boolean;
+}
+
+interface Props {
+    title: string;
+    description?: string;
+    links?: CTALink[];
+}
+
+const { title, description, links = [] } = Astro.props;
+---
+
+<section class="cta">
+    <div>
+        <h2>{title}</h2>
+        {description && <p>{description}</p>}
+    </div>
+    {
+        links.length > 0 && (
+            <div class="cta__links">
+                {links.map((link) => (
+                    <Button
+                        href={link.href}
+                        variant={link.primary ? "primary" : "dark"}
+                    >
+                        {link.label}
+                    </Button>
+                ))}
+            </div>
+        )
+    }
+</section>

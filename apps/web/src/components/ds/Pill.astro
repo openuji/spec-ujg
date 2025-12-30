@@ -1,0 +1,10 @@
+---
+interface Props {
+    variant?: "default" | "accent";
+}
+const { variant = "default" } = Astro.props;
+---
+
+<span class:list={["pill", variant === "accent" && "accent"]}>
+    <slot />
+</span>

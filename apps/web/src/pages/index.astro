@@ -1,11 +1,184 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import HomeLayout from "../layouts/HomeLayout.astro";
+import Hero from "../components/ds/Hero.astro";
+import Panel from "../components/ds/Panel.astro";
+import Card from "../components/ds/Card.astro";
+import CTA from "../components/ds/CTA.astro";
+import Grid from "../components/ds/Grid.astro";
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<HomeLayout title="User Journey Graph Specifications">
+	<Hero
+		title="User Journey Graph (UJG)"
+		description="A family of open specifications that model user journeys as graphs of states and transitions, separating design intent from runtime execution to enable validation, measurement, and iteration."
+		pills={[
+			"UJG • Open Specification",
+			"Design-time ↔ Runtime",
+			"Graph-based journeys",
+		]}
+		actions={[
+			// {
+			// 	label: "Latest Technical Report",
+			// 	href: "/tr/latest/",
+			// 	primary: true,
+			// },
+			{ label: "Editor's Draft Workspace", href: "/ed/" },
+		]}
+		stats={[
+			{ value: "6", label: "Core documents" },
+			{ value: "2", label: "Journey layers" },
+			{ value: "1", label: "Spec family" },
+		]}
+	/>
+
+	<section class="grid">
+		<Panel variant="intro">
+			<h2>Start here</h2>
+			<p>
+				UJM is composed of living drafts and stable snapshots. Navigate
+				by what you need right now.
+			</p>
+			<ul class="links">
+				<!-- <li><a href="/tr/latest/">Latest Technical Report</a></li> -->
+				<li><a href="/ed/">Editor's Draft workspace</a></li>
+				<li><a href="/governance/">Governance</a></li>
+				<li><a href="/contributing/">Contributing</a></li>
+				<li><a href="https://github.com/">Repository</a></li>
+			</ul>
+		</Panel>
+
+		<Panel
+			variant="contrast"
+			title="Editor's Draft (ED)"
+			tag="Always evolving"
+		>
+			<p>
+				The ED workspace captures the newest ideas, examples, and
+				proposals. Documents can change at any time.
+			</p>
+			<ul>
+				<li>Track upcoming changes while implementing.</li>
+				<li>Participate in discussions and contribute.</li>
+				<li>Prototype the newest journey patterns.</li>
+			</ul>
+		</Panel>
+
+		<Panel
+			variant="contrast"
+			title="Technical Reports (TR)"
+			tag="Stable snapshot"
+		>
+			<p>
+				TRs are versioned releases of stable UJM work, covering the spec
+				family as a whole.
+			</p>
+			<ul>
+				<li>Stable references for citations.</li>
+				<li>Consensus-based requirements.</li>
+				<li>Reliable baseline for interoperability.</li>
+			</ul>
+		</Panel>
+	</section>
+
+	<section class="flow">
+		<div class="flow__header">
+			<h2>What's inside the UJM family</h2>
+			<p>
+				Each document focuses on a specific aspect of journey modeling.
+				Together, they connect intent, execution, and measurement.
+			</p>
+		</div>
+		<div class="flow__grid">
+			<Card
+				title="Overview & Concepts"
+				description="Motivation, terminology, and the design-time vs runtime split in clear language."
+				href="/ed/overview/"
+			/>
+			<Card
+				title="Core Model"
+				description="Journeys, states, transitions, start/end, identity, and versioning."
+				href="/ed/core-model/"
+			/>
+			<Card
+				title="Design-Time Definitions"
+				description="Prescriptive graphs: allowed paths, optional paths, and guards."
+				href="/ed/design-time/"
+			/>
+			<Card
+				title="Runtime Executions"
+				description="Trace events, sessions, timing, and references to design intent."
+				href="/ed/runtime/"
+			/>
+			<Card
+				title="Metrics & Conformance"
+				description="Conformance scoring, violations, drop-offs, and core metrics."
+				href="/ed/metrics/"
+			/>
+			<Card
+				title="Serialization"
+				description="JSON / JSON-LD guidance and extensibility mechanisms."
+				href="/ed/serialization/"
+			/>
+		</div>
+	</section>
+
+	<section class="grid roles">
+		<Panel>
+			<h2>How to read (by role)</h2>
+			<div class="role-list">
+				<div>
+					<h4>Product / UX</h4>
+					<p>
+						Overview & Concepts → Design-Time Definitions → Metrics
+						& Conformance
+					</p>
+				</div>
+				<div>
+					<h4>Engineering</h4>
+					<p>
+						Overview & Concepts → Core Model → Runtime Executions →
+						Serialization
+					</p>
+				</div>
+				<div>
+					<h4>Analytics / Data</h4>
+					<p>
+						Overview & Concepts → Runtime Executions → Metrics &
+						Conformance
+					</p>
+				</div>
+				<div>
+					<h4>Tool builders</h4>
+					<p>Core Model → Serialization → Runtime Executions</p>
+				</div>
+			</div>
+		</Panel>
+
+		<Panel variant="glow">
+			<h2>Publishing model</h2>
+			<p>
+				UJM evolves in the Editor's Draft workspace. When parts become
+				stable they are snapshotted into a new Technical Report version.
+			</p>
+			<ul>
+				<li>Stable subset captured at a point in time.</li>
+				<li>Stable URL space for implementers.</li>
+				<li>ED continues iterating alongside TR releases.</li>
+			</ul>
+		</Panel>
+	</section>
+
+	<CTA
+		title="Participate"
+		description="UJM is developed openly. Feedback, issues, and implementation reports are welcome."
+		links={[
+			{ label: "Governance", href: "/governance/" },
+			{ label: "Contributing", href: "/contributing/" },
+			{
+				label: "Issues / PRs",
+				href: "https://github.com/",
+				primary: true,
+			},
+		]}
+	/>
+</HomeLayout>

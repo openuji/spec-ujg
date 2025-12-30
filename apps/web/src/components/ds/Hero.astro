@@ -1,0 +1,74 @@
+---
+import Pill from "./Pill.astro";
+import Button from "./Button.astro";
+import Stat from "./Stat.astro";
+
+interface HeroStat {
+    value: string | number;
+    label: string;
+}
+
+interface HeroAction {
+    label: string;
+    href: string;
+    primary?: boolean;
+}
+
+interface Props {
+    title: string;
+    description?: string;
+    pills?: string[];
+    actions?: HeroAction[];
+    stats?: HeroStat[];
+}
+
+const {
+    title,
+    description,
+    pills = [],
+    actions = [],
+    stats = [],
+} = Astro.props;
+---
+
+<header class="hero">
+    {
+        pills.length > 0 && (
+            <div class="hero__meta">
+                {pills.map((pill) => (
+                    <Pill>{pill}</Pill>
+                ))}
+            </div>
+        )
+    }
+
+    <div class="hero__content">
+        <h1>{title}</h1>
+        {description && <p>{description}</p>}
+
+        {
+            actions.length > 0 && (
+                <div class="hero__actions">
+                    {actions.map((action) => (
+                        <Button
+                            href={action.href}
+                            variant={action.primary ? "primary" : "default"}
+                        >
+                            {action.label}
+                        </Button>
+                    ))}
+                </div>
+            )
+        }
+    </div>
+
+    {
+        stats.length > 0 && (
+            <div class="hero__stats">
+                {stats.map((stat) => (
+                    <Stat value={stat.value} label={stat.label} />
+                ))}
+            </div>
+        )
+    }
+</header>

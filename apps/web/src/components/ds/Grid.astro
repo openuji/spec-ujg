@@ -1,0 +1,11 @@
+---
+interface Props {
+    columns?: "2" | "3" | "auto";
+    gap?: "sm" | "md" | "lg";
+}
+const { columns = "auto", gap = "lg" } = Astro.props;
+---
+
+<div class="grid" data-columns={columns} data-gap={gap}>
+    <slot />
+</div>
