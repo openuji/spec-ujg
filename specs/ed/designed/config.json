@@ -1,5 +1,5 @@
 {
-    "id": "core",
+    "id": "designed",
     "deps": [
         "serialization"
     ]

@@ -2,7 +2,7 @@
     "id": "runtime",
     "track": "incubating",
     "deps": [
-        "core",
+        "designed",
         "structure"
     ]
 }

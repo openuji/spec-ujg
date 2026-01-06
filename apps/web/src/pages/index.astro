@@ -7,124 +7,105 @@ import CTA from "../components/ds/CTA.astro";
 ---
 
 <HomeLayout title="User Journey Graph Specifications">
-	<Hero
-		title="User Journey Graph (UJG)"
-		description="UJG cleanly separates design-time intent from runtime execution so teams can design, validate, measure, and iterate on journeys with confidence"
-		,
-		pills={["UJG • Open Specification"]}
-		actions={[
-			// {
-			// 	label: "Latest Technical Report",
-			// 	href: "/tr/latest/",
-			// 	primary: true,
-			// },
-			{ label: "Editor's Draft Workspace", href: "/ed/" },
-		]}
-	/>
+  <Hero
+    title="User Journey Graph (UJG)"
+    description="UJG separates <b>design-time intent</b> from <b>runtime execution</b> so teams can design, validate, measure, and iterate on journeys with confidence"
+    ,
+    pills={["UJG • Open Specification"]}
+    actions={[
+      // {
+      // 	label: "Latest Technical Report",
+      // 	href: "/tr/latest/",
+      // 	primary: true,
+      // },
+      { label: "Editor's Draft Workspace", href: "/ed/" },
+    ]}
+  />
 
-	<section class="grid">
-		<Panel
-			variant="contrast"
-			title="Editor's Draft (ED)"
-			tag="Always evolving"
-		>
-			<p>
-				The ED workspace captures the newest ideas, examples, and
-				proposals. Documents can change at any time.
-			</p>
-			<ul>
-				<li>Track upcoming changes while implementing.</li>
-				<li>Participate in discussions and contribute.</li>
-				<li>Prototype the newest journey patterns.</li>
-			</ul>
-		</Panel>
-	</section>
+  <section class="flow">
+    <div class="flow__header">
+      <h2>What's inside the UJG family</h2>
+      <p>
+        Each document focuses on a specific aspect of journey modeling.
+        Together, they connect intent, execution, and measurement.
+      </p>
+    </div>
+    <div class="flow__grid">
+      <Card
+        title="Overview & Concepts"
+        description="Motivation, terminology, and the design-time vs runtime split in clear language."
+        href="/ed/overview/"
+      />
+      <Card
+        title="Serialization"
+        description="JSON / JSON-LD guidance and extensibility mechanisms."
+        href="/ed/serialization/"
+      />
+      <Card
+        title="Designed Journey Model"
+        description="Journeys, states, transitions, start/end, identity, and versioning."
+        href="/ed/designed/"
+      />
+    </div>
+  </section>
 
-	<section class="flow">
-		<div class="flow__header">
-			<h2>What's inside the UJG family</h2>
-			<p>
-				Each document focuses on a specific aspect of journey modeling.
-				Together, they connect intent, execution, and measurement.
-			</p>
-		</div>
-		<div class="flow__grid">
-			<Card
-				title="Overview & Concepts"
-				description="Motivation, terminology, and the design-time vs runtime split in clear language."
-				href="/ed/overview/"
-			/>
-			<Card
-				title="Core Model"
-				description="Journeys, states, transitions, start/end, identity, and versioning."
-				href="/ed/core/"
-			/>
-			<Card
-				title="Serialization"
-				description="JSON / JSON-LD guidance and extensibility mechanisms."
-				href="/ed/serialization/"
-			/>
-		</div>
-	</section>
+  <section class="grid roles">
+    <Panel>
+      <h2>How to read (by role)</h2>
+      <div class="role-list">
+        <div>
+          <h4>Product / UX</h4>
+          <p>
+            Overview & Concepts → Design-Time Definitions → Metrics &
+            Conformance
+          </p>
+        </div>
+        <div>
+          <h4>Engineering</h4>
+          <p>
+            Overview & Concepts → Core Model → Runtime Executions →
+            Serialization
+          </p>
+        </div>
+        <div>
+          <h4>Analytics / Data</h4>
+          <p>
+            Overview & Concepts → Runtime Executions → Metrics & Conformance
+          </p>
+        </div>
+        <div>
+          <h4>Tool builders</h4>
+          <p>Core Model → Serialization → Runtime Executions</p>
+        </div>
+      </div>
+    </Panel>
 
-	<section class="grid roles">
-		<Panel>
-			<h2>How to read (by role)</h2>
-			<div class="role-list">
-				<div>
-					<h4>Product / UX</h4>
-					<p>
-						Overview & Concepts → Design-Time Definitions → Metrics
-						& Conformance
-					</p>
-				</div>
-				<div>
-					<h4>Engineering</h4>
-					<p>
-						Overview & Concepts → Core Model → Runtime Executions →
-						Serialization
-					</p>
-				</div>
-				<div>
-					<h4>Analytics / Data</h4>
-					<p>
-						Overview & Concepts → Runtime Executions → Metrics &
-						Conformance
-					</p>
-				</div>
-				<div>
-					<h4>Tool builders</h4>
-					<p>Core Model → Serialization → Runtime Executions</p>
-				</div>
-			</div>
-		</Panel>
+    <Panel variant="glow">
+      <h2>Publishing model</h2>
+      <p>
+        UJG evolves in the Editor's Draft workspace. When parts become stable
+        they are snapshotted into a new Technical Report version.
+      </p>
+      <ul>
+        <li>Stable subset captured at a point in time.</li>
+        <li>Stable URL space for implementers.</li>
+        <li>ED continues iterating alongside TR releases.</li>
+      </ul>
+    </Panel>
+  </section>
 
-		<Panel variant="glow">
-			<h2>Publishing model</h2>
-			<p>
-				UJG evolves in the Editor's Draft workspace. When parts become
-				stable they are snapshotted into a new Technical Report version.
-			</p>
-			<ul>
-				<li>Stable subset captured at a point in time.</li>
-				<li>Stable URL space for implementers.</li>
-				<li>ED continues iterating alongside TR releases.</li>
-			</ul>
-		</Panel>
-	</section>
-
-	<CTA
-		title="Participate"
-		description="UJG is developed openly. Feedback, issues, and implementation reports are welcome."
-		links={[
-			{ label: "Governance", href: "/governance/" },
-			{ label: "Contributing", href: "/contributing/" },
-			{
-				label: "Issues / PRs",
-				href: "https://github.com/openuji/spec-ujg/issues",
-				primary: true,
-				target: "_blank",
-			},
-		]}
-	/>
+  <CTA
+    title="Participate"
+    description="UJG is developed openly. Feedback, issues, and implementation reports are welcome."
+    links={[
+      { label: "Governance", href: "/governance/" },
+      { label: "Contributing", href: "/contributing/" },
+      {
+        label: "Issues / PRs",
+        href: "https://github.com/openuji/spec-ujg/issues",
+        primary: true,
+        target: "_blank",
+      },
+    ]}
+  />
 </HomeLayout>

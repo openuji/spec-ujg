@@ -92,7 +92,9 @@ If a bundle document is used:
 - Each element of `items` **MUST** be a UJG Object (i.e., MUST include `type` as a string).
 - If present, `id` on the wrapper identifies the document itself and **MUST NOT** be used as an identifier for objects within `items`.
 
-**In-document uniqueness rule:** Within a single UJG Document (single-object or bundle), no two referencable objects **MAY** share the same `id`. A UJG Consumer **MUST** treat duplicate `id` values within one document as an error.
+**In-document uniqueness rule:** Within a single UJG Document (single-object or bundle), no two referencable objects **MAY** share the same id. A UJG Consumer **MUST** treat duplicate id values within one document as an error.
+
+Note (normative): Objects defined by modules (e.g., Core State, Transition, TransitionSetTransition) are UJG Objects when they include type, and therefore participate in this uniqueness rule even when nested.
 
 #### Example (bundle document)
 
@@ -127,8 +129,8 @@ Whether a nested object is a UJG Object is defined by the module that defines th
 
 A referencable object **MUST** include an `id` member whose value is a non-empty string.
 
-- `id` **SHOULD** be stable and globally unique within the publisher's context.
-- `id` values **MAY** be IRIs/URLs/URNs or other namespaced strings.
+- `id` values **MUST** be globally unique within the publisher’s publication context.
+- `id` values **MUST** be unique within a single UJG Document (see §In-document uniqueness rule).
 - Consumers **MUST** treat `id` as an opaque string (no required parsing or dereferencing).
 
 ### version

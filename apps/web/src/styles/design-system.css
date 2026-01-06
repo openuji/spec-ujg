@@ -312,6 +312,7 @@ body {
     color: var(--color-muted);
     max-width: 640px;
     line-height: 1.6;
+    @apply text-xl;
 }
 
 .hero__actions {
@@ -489,16 +490,17 @@ body {
 }
 
 .spec-content pre {
-    background: var(--color-dark);
-    color: white;
+    background: var(--color-accent-soft);
+    color: var(--color-text);
     padding: var(--spacing-lg);
     border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
     overflow-x: auto;
 }
 
 .spec-content pre code {
     background: transparent;
-    color: inherit;
+    color: var(--color-text);
     padding: 0;
 }
 

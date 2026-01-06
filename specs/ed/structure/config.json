@@ -2,6 +2,6 @@
     "id": "structure",
     "track": "incubating",
     "deps": [
-        "core"
+        "designed"
     ]
 }
