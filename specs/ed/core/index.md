@@ -1,174 +1,228 @@
-## Abstract
+## Abstract {.unnumbered}
 
-This module defines the design-time model for journeys as a graph (similar to a state machine): states connected by transitions representing allowed movement between moments.
+This module models a designed experience as a graph: States (moments) connected by Transitions (allowed moves). It also supports:
 
-It also defines two features needed for real websites and apps:
+- **Composition**: a state can "contain" another journey (nested journeys).
+- **Reusable transitions**: define shared navigation once and include it in many journeys.
 
-- **Composition:** a state can "contain" another journey (pages and components).
-- **Reusable transitions:** shared transitions (like global navigation) can be defined once and included in a journey without repetition.
+Design-time Core intentionally stays structural: transitions are from → to, not "event names". Runtime modules align observations back to design using journeyRef + transitionRef.
 
-This module is written to be readable for Product/UX teams and implementable for engineers.
+## 1) State
 
-## Scope
+### What is a State?
 
-This module defines:
+A State is a meaningful moment the user can be "in".
 
-- Journey (design-time journey model)
-- State and CompositeState
-- Transition
-- TransitionSet (shareable transitions)
-- inclusion ("injection") rules and validity rules
+Think: a page, a step in a flow, or a mode ("menu open").
 
-This module does not define runtime tracking or event semantics.
-
-## Terminology (plain English)
-
-- **Journey:** the designed model of an experience.
-- **State:** a meaningful moment (page, step, mode).
-- **Composite State:** a state that points to a "nested" journey that happens inside it.
-- **Transition:** an allowed move from one state to another.
-- **Start State:** where the journey begins.
-- **End States:** states where the journey can end (within this journey layer).
-- **Transition Set:** reusable transitions that can be included in a journey (e.g., global navigation).
-- **Owner (of a Transition Set):** the UI surface/component that provides the interaction that enables those transitions (e.g., the header navigation).
-- **JourneyRef:** a versioned reference to a Journey: { id, version }.
-
-## Data model (required fields only)
-
-### Journey
-
-A Journey MUST have:
-
-- type = "Journey"
-- id (stable identifier)
-- version (version identifier)
-- startState (a state id)
-- endStates (array of state ids; use [] if none)
-- states (array of State or CompositeState)
-- transitions (array of Transition; use [] if none)
-- includes (array of TransitionSet ids; use [] if none)
-
-### State
+### State (required fields)
 
 A State MUST have:
 
-- type = "State"
-- id (unique within the Journey)
-- label (human-readable)
+- `type`: "State"
+- `id` (unique within the Journey)
+- `label` (human-readable)
 
-### CompositeState
+### Example: a couple of states
 
-A CompositeState MUST have:
+```json
+{ "type": "State", "id": "page:home", "label": "Home" }
 
-- type = "CompositeState"
-- id (unique within the Journey)
-- label
-- subjourneyRef (JourneyRef: { id, version })
+{ "type": "State", "id": "checkout:shipping", "label": "Shipping details" }
+```
 
-**Product/UX reading:** "This state is a page (or major step) with its own internal journey."
+## 2) Transition
 
-### Transition
+### What is a Transition?
+
+A Transition is an allowed move from one state to another:
+
+- `from` = where you are now
+- `to` = where you can go next
+
+### Transition (required fields)
 
 A Transition MUST have:
 
-- id (unique within the Journey)
-- from (state id)
-- to (state id)
+- `id` (unique within the Journey)
+- `from` (state id)
+- `to` (state id)
 
-**Design note (informative):** UJG does not require event names in design-time transitions. Runtime modules align traces to design by referencing transitionRef (the Transition id).
+### Example: simple navigation
+
+```json
+{ "id": "goToCheckout", "from": "page:cart", "to": "checkout:shipping" }
+```
+
+### Example: toggling a UI mode
+
+```json
+{ "id": "openMenu", "from": "header:closed", "to": "header:open" }
+```
+
+## 3) Journey
+
+### What is a Journey?
+
+A Journey is the designed model of an experience at some layer (site, page, component).
+
+It defines:
+
+- where you start (`startState`)
+- where you may end (`endStates`)
+- what moments exist (`states`)
+- what moves are allowed (`transitions`)
+- optional reusable transitions included from elsewhere (`includes`)
+
+### Journey (required fields)
+
+A Journey MUST have:
+
+- `type`: "Journey"
+- `id` (stable identifier)
+- `version` (version identifier)
+- `startState` (a state id)
+- `endStates` (array of state ids; `[]` if none)
+- `states` (array of State or CompositeState)
+- `transitions` (array of Transition; `[]` if none)
+- `includes` (array of TransitionSet ids; `[]` if none)
+
+### Example: a simple 3-step signup journey
+
+```json
+{
+  "type": "Journey",
+  "id": "journey:signup",
+  "version": "ed",
+  "startState": "signup:start",
+  "endStates": ["signup:done"],
+  "includes": [],
+  "states": [
+    { "type": "State", "id": "signup:start", "label": "Start" },
+    { "type": "State", "id": "signup:form", "label": "Enter details" },
+    { "type": "State", "id": "signup:done", "label": "Account created" }
+  ],
+  "transitions": [
+    { "id": "begin", "from": "signup:start", "to": "signup:form" },
+    { "id": "submit", "from": "signup:form", "to": "signup:done" }
+  ]
+}
+```
+
+**How to read endStates**: "We're done modeling at this layer." It does not mean the user disappears forever.
+
+## 4) CompositeState (composition)
+
+### What is a CompositeState?
+
+A CompositeState is a state that points to a nested journey that happens "inside" it.
+
+Product/UX translation: "This page/step has its own internal journey (components, sub-steps)."
 
 ### JourneyRef
 
 A JourneyRef MUST have:
 
-- id (Journey id string)
-- version (Journey version string)
+- `id` (Journey id string)
+- `version` (Journey version string)
 
-## Transition Sets (shareable transitions)
+### CompositeState (required fields)
 
-### TransitionSet
+A CompositeState MUST have:
+
+- `type`: "CompositeState"
+- `id` (unique within the Journey)
+- `label`
+- `subjourneyRef` ({ id, version })
+
+### Example: website journey with a composite "Checkout" page
+
+```json
+{
+  "type": "Journey",
+  "id": "journey:website",
+  "version": "ed",
+  "startState": "page:home",
+  "endStates": ["site:exit"],
+  "includes": [],
+  "states": [
+    { "type": "State", "id": "page:home", "label": "Home" },
+    {
+      "type": "CompositeState",
+      "id": "page:checkout",
+      "label": "Checkout",
+      "subjourneyRef": { "id": "journey:page:checkout", "version": "ed" }
+    },
+    { "type": "State", "id": "site:exit", "label": "Exit" }
+  ],
+  "transitions": [
+    { "id": "startCheckout", "from": "page:home", "to": "page:checkout" },
+    { "id": "leaveSite", "from": "page:home", "to": "site:exit" }
+  ]
+}
+```
+
+### Example: the nested checkout page journey
+
+This is the journey referenced by subjourneyRef above.
+
+```json
+{
+  "type": "Journey",
+  "id": "journey:page:checkout",
+  "version": "ed",
+  "startState": "checkout:shipping",
+  "endStates": ["checkout:confirmation"],
+  "includes": [],
+  "states": [
+    { "type": "State", "id": "checkout:shipping", "label": "Shipping" },
+    { "type": "State", "id": "checkout:payment", "label": "Payment" },
+    { "type": "State", "id": "checkout:confirmation", "label": "Confirmation" }
+  ],
+  "transitions": [
+    {
+      "id": "toPayment",
+      "from": "checkout:shipping",
+      "to": "checkout:payment"
+    },
+    {
+      "id": "confirm",
+      "from": "checkout:payment",
+      "to": "checkout:confirmation"
+    }
+  ]
+}
+```
+
+## 5) TransitionSet (reusable transitions) + Owner
+
+### What is a TransitionSet?
+
+A TransitionSet is a reusable bundle of transitions (often global navigation) that can be included in a Journey without repeating edges everywhere.
+
+### What is the Owner?
+
+The owner says where the interaction comes from (e.g., "Header navigation"). It's a JourneyRef pointing to the UI surface/component journey that "provides" those transitions.
+
+### TransitionSet (required fields)
 
 A TransitionSet MUST have:
 
-- type = "TransitionSet"
-- id (stable identifier)
-- owner (JourneyRef)
-- transitions (array of TransitionSetTransition)
+- `type`: "TransitionSet"
+- `id` (stable identifier)
+- `owner` (JourneyRef)
+- `transitions` (array of TransitionSetTransition)
 
-**Meaning:** A TransitionSet defines reusable transitions (often navigation). The owner says where the interaction comes from (e.g., "Header navigation owns global nav"), without forcing you to duplicate transitions inside the header journey.
-
-### TransitionSetTransition
+### TransitionSetTransition (required fields)
 
 A TransitionSetTransition MUST have:
 
-- id (unique within the TransitionSet)
-- to (a state id in the host Journey)
+- `id` (unique within the TransitionSet)
+- `to` (a state id in the host Journey)
 
-A TransitionSetTransition intentionally does not include from. It is meant to be injected broadly into the host Journey.
+**Note**: it intentionally has no `from`. It's meant to be injected broadly.
 
-## Inclusion and injection rules (precise but simple)
-
-### Inclusion
-
-A Journey.includes value MUST be the id of a TransitionSet available in the publication context.
-
-### Injection (materialization)
-
-For each TransitionSet included by a Journey:
-
-- For every state S in the host Journey such that S.id is not in endStates:
-  - for every TransitionSetTransition T:
-    - inject an equivalent Transition with:
-      - id = "<transitionSetId>::<S.id>::<T.id>"
-      - from = S.id
-      - to = T.to
-
-### Conflicts
-
-If an injected transition conflicts with an explicit transition in the Journey, the explicit transition wins.
-
-A conflict occurs when the Journey already contains a Transition with the same from and to as the injected transition. In that case, the injected transition MUST NOT be materialized.
-
-If an injected transition's derived id would collide with an explicit Transition id, the injected transition MUST NOT be materialized.
-
-## Validity rules (well-formed journeys)
-
-A Journey MUST be well-formed:
-
-- startState MUST reference a state in states.
-- Every id in endStates MUST reference a state in states.
-- Every Transition's from and to MUST reference states in states.
-- All State ids MUST be unique within the Journey.
-- All Transition ids MUST be unique within the Journey.
-- All TransitionSet ids in includes MUST resolve to existing TransitionSets.
-- After injection, every injected transition's to MUST reference a state in the host Journey.
-
-## Modeling guidance (keeps journeys readable)
-
-### Journeys may be partial
-
-A Journey MAY have transitions: []. This commonly means:
-
-- the journey layer is used for composition (pages contain components), or
-- there are no meaningful state changes worth modeling at that layer.
-
-### Make "no outgoing transitions" explicit
-
-If a State has no outgoing transitions in this Journey layer, authors SHOULD list that State in endStates, unless the journey is intentionally partial.
-
-**Product/UX reading:** "End states here mean 'we're done modeling inside this layer', not 'the user is gone forever'."
-
-### Avoid "noise transitions"
-
-Put transitions in the journey layer where the state actually changes:
-
-- Page navigation belongs in the website journey (pages change).
-- Header/footer journeys only model their own internal state (e.g., menu open/close), not every click as a self-loop.
-- Use TransitionSets for cross-cutting navigation so you don't repeat edges.
-
-## Example: Classical website (pages + components + global nav)
-
-### 1) Component journey: Header
+### Example: header component journey (the owner)
 
 ```json
 {
@@ -189,7 +243,7 @@ Put transitions in the journey layer where the state actually changes:
 }
 ```
 
-### 2) TransitionSet: Global navigation (owned by Header)
+### Example: TransitionSet "global nav" owned by the header
 
 ```json
 {
@@ -198,110 +252,72 @@ Put transitions in the journey layer where the state actually changes:
   "owner": { "id": "journey:cmp:header", "version": "ed" },
   "transitions": [
     { "id": "toHome", "to": "page:home" },
-    { "id": "toBlog", "to": "page:blogIndex" },
+    { "id": "toPricing", "to": "page:pricing" },
     { "id": "toContact", "to": "page:contact" }
   ]
 }
 ```
 
-### 3) Website journey: pages are composite states, global nav is included once
+### Example: website journey that includes global nav once
 
 ```json
 {
   "type": "Journey",
-  "id": "journey:website",
+  "id": "journey:website:v2",
   "version": "ed",
   "startState": "page:home",
   "endStates": ["site:exit"],
   "includes": ["ts:globalNav"],
   "states": [
-    {
-      "type": "CompositeState",
-      "id": "page:home",
-      "label": "Home",
-      "subjourneyRef": { "id": "journey:page:home", "version": "ed" }
-    },
-    {
-      "type": "CompositeState",
-      "id": "page:blogIndex",
-      "label": "Blog Index",
-      "subjourneyRef": { "id": "journey:page:blogIndex", "version": "ed" }
-    },
-    {
-      "type": "CompositeState",
-      "id": "page:post",
-      "label": "Post",
-      "subjourneyRef": { "id": "journey:page:post", "version": "ed" }
-    },
-    {
-      "type": "CompositeState",
-      "id": "page:contact",
-      "label": "Contact",
-      "subjourneyRef": { "id": "journey:page:contact", "version": "ed" }
-    },
+    { "type": "State", "id": "page:home", "label": "Home" },
+    { "type": "State", "id": "page:pricing", "label": "Pricing" },
+    { "type": "State", "id": "page:contact", "label": "Contact" },
     { "type": "State", "id": "site:exit", "label": "Exit" }
   ],
   "transitions": [
-    { "id": "openPost", "from": "page:blogIndex", "to": "page:post" },
-    { "id": "backToList", "from": "page:post", "to": "page:blogIndex" }
+    { "id": "exitFromContact", "from": "page:contact", "to": "site:exit" }
   ]
 }
 ```
 
-### 4) Page journeys (mostly compositional)
+## Inclusion and injection rules
 
-#### Home page journey (composition-only)
+### Inclusion
 
-```json
-{
-  "type": "Journey",
-  "id": "journey:page:home",
-  "version": "ed",
-  "startState": "home:hero",
-  "endStates": ["home:hero"],
-  "includes": [],
-  "states": [
-    {
-      "type": "CompositeState",
-      "id": "home:header",
-      "label": "Header",
-      "subjourneyRef": { "id": "journey:cmp:header", "version": "ed" }
-    },
-    { "type": "State", "id": "home:hero", "label": "Hero" }
-  ],
-  "transitions": []
-}
-```
+A Journey's `includes` entries MUST be ids of TransitionSets available in the publication context.
 
-#### Contact page journey (internal success end state)
+### Injection (materialization)
 
-```json
-{
-  "type": "Journey",
-  "id": "journey:page:contact",
-  "version": "ed",
-  "startState": "contact:form",
-  "endStates": ["contact:success"],
-  "includes": [],
-  "states": [
-    {
-      "type": "CompositeState",
-      "id": "contact:header",
-      "label": "Header",
-      "subjourneyRef": { "id": "journey:cmp:header", "version": "ed" }
-    },
-    { "type": "State", "id": "contact:form", "label": "Form" },
-    { "type": "State", "id": "contact:success", "label": "Message sent" }
-  ],
-  "transitions": [
-    { "id": "submitSuccess", "from": "contact:form", "to": "contact:success" }
-  ]
-}
-```
+For each included TransitionSet, materialize transitions as if the nav exists in (almost) every state:
 
-## Consistency note for the rest of the spec family
+For every host state S where S.id is not in `endStates` and for every TransitionSetTransition T:
 
-- Use Journey as the design-time object name.
-- Use journeyRef: { id, version } when runtime/derived data needs to reference a Journey version.
-- Keep stateRef values consistent with Core State.id / CompositeState.id strings.
-- Runtime alignment is intended to use transitionRef (Transition id) rather than requiring event naming in Core.
+Inject an equivalent Transition:
+
+- `id` = "<transitionSetId>::<S.id>::<T.id>"
+- `from` = S.id
+- `to` = T.to
+
+### Conflicts
+
+If the Journey already has an explicit Transition with the same `from` and `to`, the injected one MUST NOT be materialized (explicit wins).
+
+If the injected id would collide with an explicit Transition id, it MUST NOT be materialized.
+
+## Validity rules (well-formed journeys)
+
+A Journey MUST be well-formed:
+
+- `startState` MUST reference a state in `states`.
+- Every id in `endStates` MUST reference a state in `states`.
+- Every Transition `from` and `to` MUST reference states in `states`.
+- All State ids MUST be unique within the Journey.
+- All Transition ids MUST be unique within the Journey.
+- All TransitionSet ids in `includes` MUST resolve to existing TransitionSets.
+- After injection, every injected transition's `to` MUST reference a state in the host Journey.
+
+## Modeling guidance
+
+- A Journey MAY have `transitions: []` (composition-only layers are common).
+- If a state has no outgoing transitions at this layer, authors SHOULD list it in `endStates` (unless the layer is intentionally partial).
+- Avoid "noise transitions": model state changes where they meaningfully occur, and use TransitionSets for cross-cutting navigation instead of repeating edges.
