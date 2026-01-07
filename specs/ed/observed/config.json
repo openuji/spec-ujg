@@ -2,6 +2,7 @@
     "id": "observed",
     "track": "incubating",
     "deps": [
-        "serialization"
+        "serialization",
+        "runtime"
     ]
 }

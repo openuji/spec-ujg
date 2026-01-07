@@ -43,6 +43,6 @@ UJG makes both first-class so teams don't mix "what we planned" with "what we ob
 
 ## Reading guidance
 
-- New readers: start here (Overview), then Core.
-- Implementers: Core → Serialization → Runtime → Conformance.
+- New readers: start here (Overview), then Designed.
+- Implementers: Designed → Serialization → Runtime → Conformance.
 - Analysts: Runtime → Conformance → Observed → Metrics.

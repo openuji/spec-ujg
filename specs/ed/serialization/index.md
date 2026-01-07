@@ -1,6 +1,6 @@
 ## Status of This Document {.unnumbered}
 
-This document defines the **shared wire format** for User Journey Graph (UJG) data. It specifies cross-module serialization rules that apply to all UJG modules (e.g., Core, Runtime, Observed), including document forms, common fields, identifiers, timestamps, references, extensibility, and forward compatibility.
+This document defines the **shared wire format** for User Journey Graph (UJG) data. It specifies cross-module serialization rules that apply to all UJG modules (e.g., Designed, Runtime, Observed), including document forms, common fields, identifiers, timestamps, references, extensibility, and forward compatibility.
 
 This document does **not** define module object models (e.g., Journey, State, Transition). Those are defined in their respective module specifications.
 
@@ -8,7 +8,7 @@ This document does **not** define module object models (e.g., Journey, State, Tr
 
 This module defines the JSON and optional JSON-LD conventions for UJG data: identifiers, timestamps, reference shapes, extensibility containers, and forward compatibility rules.
 
-It is intentionally minimal: object models live in their modules (Core, Runtime, Observed, etc.). This module defines the wire format rules shared across all modules.
+It is intentionally minimal: object models live in their modules (Designed, Runtime, Observed, etc.). This module defines the wire format rules shared across all modules.
 
 ## Scope
 
@@ -27,7 +27,7 @@ This module defines:
 
 This module does not define:
 
-- The design-time journey model (Core)
+- The design-time journey model (Designed)
 - Runtime tracking or event semantics
 - Module-specific required fields beyond what is stated here
 
@@ -94,7 +94,7 @@ If a bundle document is used:
 
 **In-document uniqueness rule:** Within a single UJG Document (single-object or bundle), no two referencable objects **MAY** share the same id. A UJG Consumer **MUST** treat duplicate id values within one document as an error.
 
-Note (normative): Objects defined by modules (e.g., Core State, Transition, TransitionSetTransition) are UJG Objects when they include type, and therefore participate in this uniqueness rule even when nested.
+Note (normative): Objects defined by modules (e.g., Designed State, Transition, TransitionSetTransition) are UJG Objects when they include type, and therefore participate in this uniqueness rule even when nested.
 
 #### Example (bundle document)
 
@@ -259,13 +259,13 @@ A conforming Consumer **MUST**:
 5. Enforce in-document `id` uniqueness for referencable objects.
 6. Ignore unknown non-reserved members and ignore unknown `extensions` members by default.
 
-## Core terminology alignment note (informative)
+## Designed terminology alignment note (informative)
 
 - **UJG Object (wire-level)**: any JSON object with a string `type`.
-- In Core, Journey, State, CompositeState, Transition, TransitionSet are all UJG Objects when they appear as top-level items (or bundle `items[]`).
-- **Embedded objects**: Core may define embedded shapes that can omit `type`. That is module-defined and intentionally not enforced by this shared serialization schema.
-- **References in Core**:
-  - Core structural references like `from`, `to`, `stateId`, `transitionId`, etc. should be string `id` references unless Core explicitly defines a richer ref object.
+- In Designed, Journey, State, CompositeState, Transition, TransitionSet are all UJG Objects when they appear as top-level items (or bundle `items[]`).
+- **Embedded objects**: Designed may define embedded shapes that can omit `type`. That is module-defined and intentionally not enforced by this shared serialization schema.
+- **References in Designed**:
+  - Designed structural references like `from`, `to`, `stateId`, `transitionId`, etc. should be string `id` references unless Designed explicitly defines a richer ref object.
   - Runtime/Observed references to a specific Journey version use `journeyRef = {id, version}`.
 
 ## Examples (non-normative)
