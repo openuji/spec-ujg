@@ -13,10 +13,8 @@ const { toc = [], breadcrumb = [] } = Astro.props;
 <header
   class="bg-panel backdrop-blur-md sticky top-0 z-header border-b border-border"
 >
-  <div
-    class="max-w-content mx-auto h-header px-6 flex items-center justify-between"
-  >
-    <div class="flex items-center justify-between">
+  <div class="h-header px-lg flex items-center justify-between">
+    <div class="flex items-center justify-between gap-2">
       {toc.length > 0 && <MobileToc toc={toc} client:load />}
       <a href="/" class="hidden sm:flex">
         <span class="text-primary font-bold">UJG</span>
@@ -28,7 +26,7 @@ const { toc = [], breadcrumb = [] } = Astro.props;
             {item.href ? (
               <a
                 href={item.href}
-                class="text-secondary-foreground hover:text-accent transition-colors duration-200"
+                class="text-primary font-bold  hover:text-accent transition-colors duration-200"
               >
                 {item.title}
               </a>

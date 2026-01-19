@@ -1,5 +1,7 @@
 {
     "id": "designed",
+    "title": "Designed",
+    "maturityLevel": "draft",
     "deps": [
         "serialization"
     ]

@@ -1,8 +1,8 @@
-## Abstract
+## Abstract {.unnumbered}
 
 The User Journey Graph (UJG) specification family defines a vocabulary and data model for describing user journeys as automata-like graphs: a set of states (moments in the journey) connected by transitions (allowed moves between moments). The family separates design-time journey definitions from runtime journey traces so teams can design experiences and measure real behavior without mixing the two.
 
-## What this is
+## What this is {.unnumbered}
 
 UJG standardizes the structure of journeys so teams can:
 
@@ -13,7 +13,7 @@ UJG standardizes the structure of journeys so teams can:
 
 UJG is about the model, not about a specific visualization.
 
-## Quick mental model (plain English)
+## Quick mental model (plain English) {.unnumbered}
 
 - A journey definition is like a map of what's allowed: "from Browse you can go to Product, from Product you can go to Cart…"
 - A journey trace is what actually happened for one user/session: "Browse → Product → Cart → Abandoned"
@@ -23,7 +23,7 @@ UJG is about the model, not about a specific visualization.
   - violation (unexpected),
   - drop-off (expected next step didn't happen).
 
-## Design-time vs runtime (core distinction)
+## Design-time vs runtime (core distinction) {.unnumbered}
 
 **Design-time Journey Definition**
 
@@ -41,7 +41,7 @@ UJG is about the model, not about a specific visualization.
 
 UJG makes both first-class so teams don't mix "what we planned" with "what we observed".
 
-## Reading guidance
+## Reading guidance {.unnumbered}
 
 - New readers: start here (Overview), then Designed.
 - Implementers: Designed → Serialization → Runtime → Conformance.

@@ -7,7 +7,6 @@ import SpecLayout from "@/layouts/SpecLayout.astro";
 export async function getStaticPaths() {
   const specs = await listSortedSpecs();
 
-  console.log(specs.entries.map((spec) => spec.config));
   return specs.entries.map((spec: EntryWithConfig) => ({
     params: {
       spec: spec.config.id,
@@ -29,6 +28,7 @@ const document: Document = await loadDocument(id);
   parent={{ href: "/ed", title: "Editor's Draft" }}
   toc={document.computed?.toc || []}
 >
+  <h1>{title}</h1>
   {
     document.children.map((child) => (
       <BlockRenderer

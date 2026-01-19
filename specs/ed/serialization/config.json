@@ -1,6 +1,7 @@
 {
     "id": "serialization",
-    "track": "draft",
+    "title": "Serialization",
+    "maturityLevel": "draft",
     "deps": [
         "overview"
     ]

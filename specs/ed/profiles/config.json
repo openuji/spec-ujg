@@ -1,6 +1,7 @@
 {
     "id": "profiles",
-    "track": "incubating",
+    "title": "Profiles",
+    "maturityLevel": "incubating",
     "deps": [
         "serialization"
     ]

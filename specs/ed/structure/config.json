@@ -1,6 +1,7 @@
 {
     "id": "structure",
-    "track": "incubating",
+    "title": "Structure",
+    "maturityLevel": "incubating",
     "deps": [
         "designed"
     ]

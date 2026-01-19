@@ -1,6 +1,7 @@
 {
     "id": "metrics",
-    "track": "incubating",
+    "title": "Metrics",
+    "maturityLevel": "incubating",
     "deps": [
         "serialization",
         "observed"

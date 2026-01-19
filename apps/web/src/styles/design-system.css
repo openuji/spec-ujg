@@ -39,6 +39,7 @@
 
   /* --- your extra tokens (keep them, just don’t pretend they’re shadcn base tokens) --- */
   --app-bg: radial-gradient(circle at top, #d9e4ff 0%, #f4f5fb 40%), #f4f5fb;
+  --spec-bg: #ffffff;
 
   --panel: rgba(255, 255, 255, 0.85);
   --panel-solid: #ffffff;
@@ -70,6 +71,8 @@
   --input: rgba(255, 255, 255, 0.12);
 
   --app-bg: #111422;
+  --spec-bg: #111422;
+
 }
 
 
@@ -106,7 +109,6 @@
 
 
 
-    --header-height: 64px;
 }
 /* Expose tokens to Tailwind utilities (shadcn convention) */
 @theme inline {
@@ -147,9 +149,12 @@
   --shadow-button-primary: var(--shadow-button-primary);
 
   --max-width-content: 1400px;
-  --height-header: var(--header-height);
+  --height-header: 64px;
+  --spacing-header: var(--height-header);
   --width-sidebar: 300px;
   --min-width-card: 220px;
+
+  --max-width-spec: 70ch;
 
   --min-height-card: 180px;
 
@@ -161,8 +166,16 @@
   --z-index-modal: 40;
   --z-index-header: 50;
   --z-index-toast: 60;
+
+    
+  --padding-base: 1rem;
+  --padding-md: 1.5rem;
+  --padding-lg: 2rem;
+
+
 }
 /* === BASE STYLES === */
+
 
 * {
     box-sizing: border-box;
@@ -170,21 +183,35 @@
 
 
 @layer base {
-body {
-    @apply font-sans text-foreground;
-    background: var(--app-bg);
+    body {
+        @apply font-sans text-foreground;
+        background: var(--app-bg);
+    }
+
+    h1 {
+        @apply font-mono;
+    }
+
+    hr {
+        @apply border-border;
+    }
+
+
+
+}
+@layer utilities {
+    .bg-spec {
+       background: var(--spec-bg);
+    }
 }
 
-h1 {
-    @apply font-mono;
-}
 
-}
 /* === LAYOUT UTILITIES === */
 
 .page {
     @apply max-w-content mx-auto pt-12 px-12 pb-20 flex flex-col gap-10;
 }
+
 
 
 .card-grid {
@@ -283,14 +310,6 @@ h1 {
 
 /* === COMPONENT: PANEL === */
 
-.panel {
-    background: var(--color-panel);
-    padding: var(--spacing-xl);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-panel);
-    backdrop-filter: blur(12px);
-}
 
 .panel.intro {
     grid-column: span 2;
@@ -536,125 +555,11 @@ h1 {
 /* === SPEC CONTENT STYLES === */
 
 .spec-content {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: var(--spacing-3xl) var(--spacing-lg);
+    max-width: 70ch;
+    
 }
 
-.spec-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: var(--spacing-lg);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 2px solid var(--color-accent);
-}
 
-.spec-content h2 {
-    font-size: 1.75rem;
-    margin-top: var(--spacing-2xl);
-    margin-bottom: var(--spacing-md);
-    color: var(--color-text);
-}
-
-.spec-content h3 {
-    font-size: 1.25rem;
-    margin-top: var(--spacing-xl);
-    margin-bottom: var(--spacing-sm);
-}
-
-.spec-content p {
-    line-height: 1.7;
-    color: var(--secondary-foreground);
-    margin-bottom: var(--spacing-md);
-}
-
-.spec-content code {
-    background: var(--muted);
-    color: var(--accent);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
-.spec-content pre {
-    background: var(--muted);
-    color: var(--foreground);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    overflow-x: auto;
-}
-
-.spec-content pre code {
-    background: transparent;
-    color: var(--color-text);
-    padding: 0;
-}
-
-.spec-content a {
-    color: var(--color-accent);
-    text-decoration: none;
-}
-
-.spec-content a:hover {
-    text-decoration: underline;
-}
-
-.spec-content ul {
-    padding-left: 1.5rem;
-    margin: 1rem 0 var(--spacing-md);
-    line-height: 1.7;
-    list-style-type: disc;
-}
-
-.spec-content ol {
-    padding-left: 1.5rem;
-    margin: 1rem 0 var(--spacing-md);
-    line-height: 1.7;
-    list-style-type: decimal;
-}
-
-.spec-content li {
-    position: relative;
-    padding-left: 0.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--secondary-foreground);
-}
-
-.spec-content ul li::marker {
-    color: var(--color-accent);
-}
-
-.spec-content ol li::marker {
-    color: var(--color-accent);
-    font-weight: 600;
-}
-
-.spec-content blockquote {
-    border-left: 4px solid var(--color-accent);
-    padding-left: var(--spacing-md);
-    margin: var(--spacing-lg) 0;
-    color: var(--secondary-foreground);
-    font-style: italic;
-}
-
-.spec-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--spacing-lg) 0;
-}
-
-.spec-content th,
-.spec-content td {
-    padding: var(--spacing-sm);
-    border: 1px solid var(--color-border);
-    text-align: left;
-}
-
-.spec-content th {
-    background: var(--muted);
-    color: var(--accent);
-    font-weight: 600;
-}
 
 /* === ED OVERVIEW STYLES === */
 
