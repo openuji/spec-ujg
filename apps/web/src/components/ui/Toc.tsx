@@ -14,8 +14,8 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
   if (!toc || toc.length === 0) return null
 
   return (
-    <nav className={cn("flex flex-col gap-2", className)}>
-      <ul className="flex flex-col gap-1 list-none p-0 m-0">
+    <nav className={cn("flex flex-col", className)}>
+      <ul className="flex flex-col list-none p-0">
         {toc.map((entry, index) => (
           <TocItem key={entry.id || index} entry={entry} onItemClick={onItemClick} />
         ))}
@@ -34,22 +34,29 @@ const TocItem: React.FC<{ entry: TocEntry; onItemClick?: () => void }> = ({
 
   return (
     <li className="flex flex-col">
-      <div className="flex items-center group">
+      <div className="flex items-center group relative">
         <a
           href={`#${entry.id || ""}`}
           onClick={onItemClick}
           className={cn(
-            "flex-1 py-1 px-2 text-sm transition-colors rounded-md hover:bg-muted hover:text-accent",
-            entry.depth === 1 ? "font-semibold" : "text-secondary-foreground"
+            "flex-1 py-1.5 pl-3 text-[13px] leading-snug transition-all border-l-2 border-transparent",
+            "hover:bg-zinc-100/50 hover:text-zinc-900",
+            entry.depth === 1 
+              ? "font-medium text-zinc-900 mt-2" 
+              : "text-zinc-600 hover:border-zinc-200"
           )}
-          style={{ paddingLeft: `${entry.depth * 0.75}rem` }}
+          // style={{ paddingLeft: `${entry.depth * 0.75 + 0.5}rem` }}
         >
-          {entry.number && <span className="mr-2 opacity-50 font-mono text-xs">{entry.number}</span>}
-          {entry.text}
+          {entry.number && (
+            <span className="mr-2 font-mono text-[10px] tracking-tight text-zinc-400 group-hover:text-zinc-600 transition-colors">
+              {entry.number}
+            </span>
+          )}
+          <span>{entry.text}</span>
         </a>
       </div>
       {hasChildren && isOpen && (
-        <ul className="flex flex-col list-none p-0 m-0">
+        <ul className="flex flex-col list-none p-0 m-0 border-l border-zinc-100 ml-4">
           {entry.children?.map((child, index) => (
             <TocItem key={child.id || index} entry={child} onItemClick={onItemClick} />
           ))}

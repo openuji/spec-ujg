@@ -16,14 +16,22 @@ const { toc = [], title = "", parent } = Astro.props;
   <Header toc={toc} breadcrumb={[parent, { title }]} />
 
   <div class="flex px-lg">
-    <aside class="sidebar w-sidebar border-r border-border">
-      <div class="sidebar-content sticky top-[var(--height-header)]">
-        <div class="sidebar-title">Table of Contents</div>
+    <aside class="sidebar w-sidebar border-r border-border shrink-0">
+      <div
+        class="sidebar-content sticky top-[var(--height-header)] overflow-y-auto max-h-[calc(100vh-var(--height-header))] -ml-3"
+      >
+        <div
+          class="sidebar-title text-[11px] font-bold uppercase tracking-wider text-zinc-400 py-md pl-3"
+        >
+          Table of Contents
+        </div>
         <Toc toc={toc} client:load />
       </div>
     </aside>
 
-    <main class="max-w-spec min-w-0 mx-auto p-md">
+    <main
+      class="max-w-spec min-w-0 mx-auto p-md text-base md:text-lg leading-relaxed"
+    >
       <slot />
     </main>
     <div class="w-sidebar"></div>

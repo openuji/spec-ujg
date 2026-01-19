@@ -22,7 +22,7 @@ const { toc = [], breadcrumb = [] } = Astro.props;
       {
         breadcrumb.map((item) => (
           <>
-            <span class="text-border">/</span>
+            <span class="text-secondary-foreground">/</span>
             {item.href ? (
               <a
                 href={item.href}

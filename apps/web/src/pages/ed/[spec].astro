@@ -28,14 +28,16 @@ const document: Document = await loadDocument(id);
   parent={{ href: "/ed", title: "Editor's Draft" }}
   toc={document.computed?.toc || []}
 >
-  <h1>{title}</h1>
-  {
-    document.children.map((child) => (
-      <BlockRenderer
-        node={child}
-        documentPath={document.sourcePos?.file}
-        headingNumbers={document.computed?.headingNumbers}
-      />
-    ))
-  }
-</SpecLayout>
+  <article class="spec">
+    <h1>{title}</h1>
+    {
+      document.children.map((child) => (
+        <BlockRenderer
+          node={child}
+          documentPath={document.sourcePos?.file}
+          headingNumbers={document.computed?.headingNumbers}
+        />
+      ))
+    }
+  </article></SpecLayout
+>

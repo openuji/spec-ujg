@@ -183,6 +183,38 @@
 
 
 @layer base {
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-zinc-200 rounded-full border-2 border-transparent bg-clip-content;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-300;
+  }
+
+  /* Firefox support */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.zinc.200') transparent;
+  }
+
+    html {
+        @apply scroll-smooth;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            @apply scroll-auto;
+        }
+    }
     body {
         @apply font-sans text-foreground;
         background: var(--app-bg);
@@ -630,6 +662,183 @@
     text-decoration: underline;
 }
 
-  .spec-section {
-    scroll-margin-top: calc(var(--header-height) + var(--spacing-xl));
+
+
+@layer base {
+  /* Page-ish defaults (optional) */
+  body {
+    @apply bg-zinc-50 text-zinc-900 antialiased;
+    font-family: var(--font-sans);
   }
+
+  /* The main spec container */
+  .spec{
+    /* @apply text-[17px] leading-[1.7]; */
+    @apply selection:bg-zinc-900 selection:text-white;
+  }
+
+  /* Headings */
+  .spec h1{
+    font-family: var(--font-mono);
+    @apply text-4xl sm:text-5xl font-semibold tracking-[-0.02em] leading-[1.08];
+    @apply mt-0 mb-6;
+  }
+
+  .spec section {
+    @apply scroll-mt-[calc(var(--spacing-header)+(--spacing(6)))];
+  }
+
+  .spec h2{
+    @apply text-2xl sm:text-3xl font-semibold tracking-[-0.015em] leading-tight;
+    @apply mt-12 mb-4;
+  }
+
+  .spec h3{
+    @apply text-xl font-semibold tracking-[-0.01em] leading-snug;
+    @apply mt-10 mb-3;
+  }
+
+  .spec h4{
+    @apply text-lg font-semibold leading-snug;
+    @apply mt-8 mb-3;
+  }
+
+  .spec h5{
+    @apply text-base font-semibold leading-snug;
+    @apply mt-6 mb-2;
+  }
+
+  .spec h6{
+    @apply text-sm font-semibold uppercase tracking-wide text-zinc-600;
+    @apply mt-6 mb-2;
+  }
+
+  /* Paragraphs + inline text */
+  .spec p{ @apply my-4 text-zinc-700; }
+  .spec strong{ @apply font-semibold text-zinc-900; }
+  .spec em{ @apply italic; }
+  .spec small{ @apply text-sm text-zinc-600; }
+  .spec cite{ @apply italic text-zinc-600; }
+  .spec abbr[title]{ @apply underline decoration-dotted underline-offset-4 cursor-help; }
+  .spec mark{ @apply bg-amber-100 text-zinc-900 rounded px-1; }
+  .spec del{ @apply line-through text-zinc-500; }
+  .spec ins{ @apply no-underline border-b border-zinc-400; }
+  .spec sup{ @apply align-super text-[0.75em]; }
+  .spec sub{ @apply align-sub text-[0.75em]; }
+
+
+   
+
+  /* Links */
+  .spec a{
+    @apply text-sky-700 underline decoration-sky-300 underline-offset-4;
+    @apply hover:text-sky-800 hover:decoration-sky-400;
+  }
+  .spec a:visited{ @apply text-violet-700 decoration-violet-300; }
+
+  /* Rules */
+  .spec hr{ @apply my-10 border-0 border-t border-zinc-200; }
+
+  /* Lists */
+  .spec ul{ @apply my-4 list-disc pl-6 text-zinc-700; }
+  .spec ol{ @apply my-4 list-decimal pl-6 text-zinc-700; }
+  .spec li{ @apply my-1; }
+  .spec ::marker{ @apply text-zinc-400; }
+  .spec li > p {
+    @apply my-0;
+   }
+   .spec p + ul,
+   .spec p + ol{
+    @apply -mt-3;
+   }
+  .spec li > ul,
+  .spec li > ol{ @apply my-1; }
+  
+  /* Definition lists */
+  .spec dl{ @apply my-6; }
+  .spec dt{ @apply font-semibold text-zinc-900 mt-4; }
+  .spec dd{ @apply text-zinc-700 ml-0 mt-1; }
+
+  /* Blockquotes */
+  .spec blockquote{
+    @apply my-6 border-l-2 border-zinc-300 pl-4 text-zinc-700;
+  }
+  .spec blockquote p{ @apply my-3; }
+
+  /* Inline code */
+  .spec :not(pre) > code{
+    @apply rounded-md border border-zinc-200 bg-zinc-50 px-1.5 py-0.5;
+    @apply font-mono text-[0.92em] text-zinc-900;
+  }
+
+  /* Preformatted / code blocks */
+  .spec pre{
+    @apply my-6 overflow-x-auto rounded-xl border border-zinc-200 bg-zinc-950 p-4;
+    @apply text-zinc-100;
+  }
+  .spec pre code{
+    @apply bg-transparent border-0 p-0;
+    @apply font-mono text-[13px] leading-6;
+    color: inherit;
+  }
+
+  /* Keyboard / samples */
+  .spec kbd{
+    @apply rounded-md border border-zinc-300 bg-white px-1.5 py-0.5;
+    @apply font-mono text-[0.85em] text-zinc-800 shadow-[0_1px_0_0_rgba(0,0,0,0.08)];
+  }
+  .spec samp{ @apply font-mono text-[0.92em] text-zinc-800; }
+
+  /* Tables */
+  .spec table{
+    @apply my-8 w-full border-collapse text-[15px];
+  }
+  .spec thead{ @apply border-b border-zinc-200; }
+  .spec th{
+    @apply py-2.5 text-left font-semibold text-zinc-900;
+    @apply align-bottom;
+  }
+  .spec td{
+    @apply py-2.5 align-top text-zinc-700;
+  }
+  .spec tr{ @apply border-b border-zinc-100; }
+  .spec tbody tr:hover{ @apply bg-zinc-50; }
+
+  /* If you want vertical borders instead, uncomment:
+  .spec th, .spec td{ @apply border border-zinc-200 px-3; }
+  */
+
+  /* Figures / images */
+  .spec figure{ @apply my-8; }
+  .spec img{
+    @apply my-6 max-w-full rounded-xl border border-zinc-200 bg-white;
+  }
+  .spec figcaption{
+    @apply mt-3 text-sm text-zinc-600;
+  }
+
+  /* Details/summary (nice for collapsible sections) */
+  .spec details{
+    @apply my-6 rounded-xl border border-zinc-200 bg-white px-4 py-3;
+  }
+  .spec summary{
+    @apply cursor-pointer font-semibold text-zinc-900;
+  }
+  .spec details > *:not(summary){ @apply mt-3; }
+
+  /* “Pills” / badges (use <span class="pill">Informative</span>) */
+  .spec .pill{
+    @apply inline-flex items-center rounded-full border border-zinc-200 bg-white;
+    @apply px-2 py-0.5 text-xs font-semibold text-zinc-600;
+    @apply align-middle;
+  }
+
+  /* Optional: callout blocks */
+  .spec .callout{
+    @apply my-6 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-700;
+  }
+
+  /* Optional: spacing polish — avoid extra margin at the edges */
+  .spec > :first-child{ @apply mt-0; }
+  .spec > :last-child{ @apply mb-0; }
+}
