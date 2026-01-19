@@ -1,22 +1,24 @@
 ---
-import { MobileToc } from "./ui/MobileToc";
 import type { TocEntry } from "./ui/Toc";
+import { MobilePanel } from "./ui/MobilePanel";
 
 interface Props {
   toc?: TocEntry[];
   breadcrumb?: { title: string; href?: string }[];
 }
 
-const { toc = [], breadcrumb = [] } = Astro.props;
+const { breadcrumb = [] } = Astro.props;
 ---
 
 <header
   class="bg-panel backdrop-blur-md sticky top-0 z-header border-b border-border"
 >
   <div class="h-header px-lg flex items-center justify-between">
+    <div class="flex sm:hidden">
+      <MobilePanel client:load />
+    </div>
     <div class="flex items-center justify-between gap-2">
-      {toc.length > 0 && <MobileToc toc={toc} client:load />}
-      <a href="/" class="hidden sm:flex">
+      <a href="/" class="flex">
         <span class="text-primary font-bold">UJG</span>
       </a>
       {

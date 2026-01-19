@@ -176,9 +176,70 @@
   --padding-md: 1.5rem;
 
   --padding-lg: 2rem;
-
-
 }
+
+/* Sidebar Toggle Styles */
+.sidebar, 
+.sidebar-right-placeholder,
+main {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              margin 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              flex-basis 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Default Mobile: Collapsed */
+@media (max-width: 639px) {
+  .sidebar {
+    margin-left: -300px; /* Fixed width for slide */
+    opacity: 0;
+    pointer-events: none;
+  }
+  .sidebar-content {
+    visibility: hidden;
+  }
+
+  /* Show when toggled (mobile) */
+  .toc-toggled .sidebar {
+    margin-left: -12px; /* Offset for internal padding/sticky spacing */
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .toc-toggled .sidebar-content {
+    visibility: visible;
+  }
+}
+
+/* Default Desktop: Expanded */
+@media (min-width: 640px) {
+  /* Hide when toggled (desktop) */
+  .toc-toggled .sidebar {
+    margin-left: -300px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .toc-toggled .sidebar-right-placeholder {
+    margin-right: -300px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .toc-toggled .sidebar-content {
+    visibility: hidden;
+  }
+}
+
+/* Reveal button when collapsed */
+/* Note: Portal button is absolute/fixed on body, so it doesn't need to be inside .sidebar */
+.sidebar-restore-btn {
+  /* position: fixed; is already in JSX, adding enhancements here */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-restore-btn:hover {
+  transform: translateX(2px);
+}
+
 /* === BASE STYLES === */
 
 

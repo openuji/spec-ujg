@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from "react"
+import { createPortal } from "react-dom"
 import { cn } from "@/utils/cn"
+import { PanelLeft, PanelRight } from "lucide-react"
 
 import type { TocEntry } from "@openuji/speculator"
 export type { TocEntry }
@@ -32,11 +34,21 @@ const flattedIds = (toc: TocEntry[]) => {
 
 const useActiveId = (ids: string[]) => {
   const [activeId, setActiveId] = useState<string | null>(null)
+  const lastScrollY = useRef(0)
+  const scrollDirection = useRef<"up" | "down">("down")
 
   useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      scrollDirection.current = currentScrollY > lastScrollY.current ? "down" : "up"
+      lastScrollY.current = currentScrollY
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
+  useEffect(() => {
     const observer = new IntersectionObserver(entries => {
-
       const intersectingIds = entries.filter(entry => entry.isIntersecting && ids.includes(entry.target.id))
       if (intersectingIds.length <= 0) return;
 
@@ -44,14 +56,20 @@ const useActiveId = (ids: string[]) => {
         setActiveId(intersectingIds[0].target.id)
       }
       else if (intersectingIds.length > 1) {
-        const sortedByTop = intersectingIds.sort((a, b) => {
-          return b.target.getBoundingClientRect().top - a.target.getBoundingClientRect().top
+        // When multiple items intersect:
+        // - Scrolling DOWN: pick the LAST one in the focal area (the newest one approaching)
+        // - Scrolling UP: pick the FIRST one in the focal area (the newest one approaching)
+        const sorted = intersectingIds.sort((a, b) => {
+          const aTop = a.target.getBoundingClientRect().top
+          const bTop = b.target.getBoundingClientRect().top
+          return scrollDirection.current === "down" ? bTop - aTop : aTop - bTop
         })
-        setActiveId(sortedByTop[0].target.id)
+        setActiveId(sorted[0].target.id)
       }   
     }, {  
-      rootMargin: "-10% 0% -80% 0%",
-      threshold: 0, })
+      rootMargin: "-20% 0% -35% 0%", // More balanced focal strip
+      threshold: 0, 
+    })
 
     ids.forEach(id => {
       const element = document.getElementById(id)
@@ -103,13 +121,53 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
     return () => clearTimeout(timeoutId);
   }, [activeId])  
 
+  const [isToggled, setIsToggled] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      document.documentElement.classList.toggle("toc-toggled", isToggled);
+    }
+  }, [isToggled]);
+
+  useEffect(() => {
+    const handleToggle = (e: any) => {
+      if (typeof e.detail === "boolean") {
+        setIsToggled(e.detail);
+      } else {
+        setIsToggled(prev => !prev);
+      }
+    };
+    window.addEventListener("toggle-sidebar", handleToggle);
+    return () => window.removeEventListener("toggle-sidebar", handleToggle);
+  }, []);
+
+  const restoreButton = isToggled && typeof document !== "undefined" ? createPortal(
+    <button
+      onClick={() => setIsToggled(false)}
+      className="hidden sm:flex sidebar-restore-btn fixed left-4 top-[calc(var(--height-header)+1rem)] z-50 p-2 bg-white border border-border shadow-panel rounded-md hover:bg-zinc-50 hover:text-primary transition-all duration-300"
+      title="Expand sidebar"
+    >
+      <PanelRight className="w-5 h-5" />
+    </button>,
+    document.body
+  ) : null;
+
   return (
-    <div ref={tocRef} className="overflow-y-auto max-h-[calc(100vh-var(--height-header))] pr-3">
-      <div
-        className="sidebar-title text-xs font-bold uppercase tracking-wider text-zinc-400 pt-md pb-base pl-3"
-      >
-        Table of Contents
-      </div>
+    <>
+      {restoreButton}
+      <div ref={tocRef} className="overflow-y-auto max-h-[calc(100vh-var(--height-header))] pr-3">
+        <div
+          className="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-400 pt-md pb-base pl-3 pr-2"
+        >
+          <span>Table of Contents</span>
+          <button
+            onClick={() => setIsToggled(!isToggled)}
+            className="hidden sm:flex hover:text-zinc-900 transition-colors p-1 rounded-md hover:bg-zinc-100"
+            title="Collapse sidebar"
+          >
+            <PanelLeft className="w-4 h-4" />
+          </button>
+        </div>
           
 
     <nav  className={cn("flex flex-col", className)}>
@@ -125,6 +183,7 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
       </ul>
     </nav>
     </div>
+    </>
   )
 }
 
