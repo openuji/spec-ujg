@@ -1,8 +1,8 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import Header from "../components/Header.astro";
-import { Toc } from "../components/ui/Toc";
-import type { TocEntry } from "../components/ui/Toc";
+import Header from "@/components/astro/Header.astro";
+import { Toc } from "@/components/react/toc/Toc";
+import type { TocEntry } from "@openuji/speculator";
 
 interface Props {
   title?: string;
@@ -13,7 +13,7 @@ const { toc = [], title = "", parent } = Astro.props;
 ---
 
 <BaseLayout title={title} bodyClass="bg-spec">
-  <Header toc={toc} breadcrumb={[parent, { title }]} />
+  <Header toc={toc} title={title} breadcrumb={[parent]} />
 
   <div class="flex px-lg">
     <aside class="sidebar w-sidebar border-r border-border shrink-0">

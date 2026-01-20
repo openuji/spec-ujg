@@ -36,7 +36,6 @@ export const loadDocuments = async () => {
     const pipeline = new SpeculatorPipeline(corePlugins);
     const sortedEntries = await listSortedSpecs();
 
-    console.log('sortedEntries', sortedEntries.entries.map((spec) => spec.config));
     const result = await pipeline.runWorkspace({
         entries: sortedEntries.entries,
         fileProvider,

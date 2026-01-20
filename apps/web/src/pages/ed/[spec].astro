@@ -1,7 +1,7 @@
 ---
 import { type Document, type EntryWithConfig } from "@openuji/speculator";
-import { loadDocument, listSortedSpecs } from "@/utils/load";
-import BlockRenderer from "@/components/BlockRenderer.astro";
+import { loadDocument, listSortedSpecs } from "@/lib/load";
+import BlockRenderer from "@/components/astro/BlockRenderer.astro";
 import SpecLayout from "@/layouts/SpecLayout.astro";
 
 export async function getStaticPaths() {

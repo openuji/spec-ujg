@@ -1,0 +1,56 @@
+import { navigate } from "astro:transitions/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/react/ui/select"
+
+type Option = { label: string; href: string }
+
+export default function BreadcrumbSelect(props: {
+  valueHref: string
+  options: Option[]
+}) {
+  const { valueHref, options } = props
+
+  return (
+    <Select
+      value={valueHref}
+      onValueChange={(href) => {
+        if (href !== valueHref) navigate(href)
+      }}
+    >
+      {/* Trigger should look like breadcrumb text */}
+      <SelectTrigger
+        className="h-auto w-auto gap-1 
+                   text-secondary-foreground hover:text-accent transition-colors duration-200
+                   focus:ring-0 focus:ring-offset-0"
+        aria-label="Switch section"
+      >
+        <SelectValue />
+      </SelectTrigger>
+
+      {/* This is the key: item-aligned wraps around the selected item */}
+      <SelectContent
+        position="item-aligned"
+        align="start"
+        className="min-w-[12rem]"
+      >
+        {options.map((o) => (
+          <SelectItem
+            key={o.href}
+            value={o.href}
+            className="
+              data-[state=checked]:bg-accent
+              data-[state=checked]:text-accent-foreground
+            "
+          >
+            {o.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
+}

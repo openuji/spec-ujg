@@ -1,13 +1,13 @@
 ---
-import Panel from "@/components/ds/Panel.astro";
+import Panel from "@/components/astro/Panel.astro";
 import EditorDraftLayout from "@/layouts/EditorDraftLayout.astro";
-import { listSortedSpecs } from "@/utils/load";
+import { listSortedSpecs } from "@/lib/load";
 import { type EntryWithConfig } from "@openuji/speculator";
 
 const specs = await listSortedSpecs();
 ---
 
-<EditorDraftLayout title="Editor's Draft Modules">
+<EditorDraftLayout title="Editor's Draft">
   <h1>Editor's Draft (ED)</h1>
   <section class="card-grid">
     <Panel variant="contrast">

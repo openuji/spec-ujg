@@ -5,7 +5,8 @@ interface Props {
 }
 const { title = "User Journey Mapping Specifications", bodyClass = "" } =
   Astro.props;
-import "../styles/design-system.css";
+import "@/styles/design-system.css";
+import { ClientRouter } from "astro:transitions";
 ---
 
 <!doctype html>
@@ -29,6 +30,7 @@ import "../styles/design-system.css";
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <ClientRouter />
   </head>
   <body class={bodyClass}>
     <slot />

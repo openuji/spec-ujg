@@ -1,0 +1,75 @@
+---
+import { MobilePanel } from "@/components/react/toc/MobilePanel";
+import type { TocEntry } from "@openuji/speculator";
+import BreadcrumbSelect from "@/components/react/select/BreadcrumbSelect";
+import { listSortedSpecs } from "@/lib/load";
+
+interface Props {
+  title: string;
+  toc?: TocEntry[];
+  breadcrumb?: { title: string; href: string }[];
+}
+
+const { title, breadcrumb = [], toc } = Astro.props;
+
+const specs = await listSortedSpecs();
+
+const options = specs.entries.map((doc) => ({
+  label: doc.config.title,
+  href: `/ed/${doc.config.id}`,
+}));
+
+const currentHref = Astro.url.pathname;
+---
+
+<header
+  class="bg-panel backdrop-blur-md sticky top-0 z-header border-b border-border"
+>
+  <div class="h-header px-lg flex items-center gap-2 sm:justify-between">
+    {
+      toc && (
+        <div class="flex sm:hidden">
+          <MobilePanel client:load />
+        </div>
+      )
+    }
+    <div class="flex items-center justify-between gap-2">
+      <a href="/" class="flex">
+        <span class="text-primary font-bold">UJG</span>
+      </a>
+      {
+        breadcrumb.map((item) => (
+          <>
+            <span class="text-secondary-foreground">/</span>
+            <a
+              href={item.href}
+              class="text-primary font-bold  hover:text-accent transition-colors duration-200"
+            >
+              {item.title}
+            </a>
+          </>
+        ))
+      }
+      <span class="text-secondary-foreground">/</span>
+      {
+        breadcrumb.length === 0 ? (
+          <span class="text-secondary-foreground">{title}</span>
+        ) : (
+          <BreadcrumbSelect
+            valueHref={currentHref}
+            options={options}
+            client:load
+            transition:persist
+          />
+        )
+      }
+    </div>
+    <nav class="hidden sm:flex">
+      <a
+        href="https://github.com/openuji/spec-ujg/tree/main/specs/ed"
+        class="text-secondary-foreground hover:text-accent transition-colors duration-200 text-sm"
+        >GitHub</a
+      >
+    </nav>
+  </div>
+</header>

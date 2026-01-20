@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState, useRef } from "react"
 import { createPortal } from "react-dom"
-import { cn } from "@/utils/cn"
+import { cn } from "@/lib/utils"
 import { PanelLeft, PanelRight } from "lucide-react"
 
+import { useStore } from "@nanostores/react"
+import { tocCollapsed, setTocCollapsed, toggleTocCollapsed } from "@/stores/tocSidebar"
+
+
 import type { TocEntry } from "@openuji/speculator"
-export type { TocEntry }
 
 interface TocProps {
   toc: TocEntry[]
@@ -67,7 +70,7 @@ const useActiveId = (ids: string[]) => {
         setActiveId(sorted[0].target.id)
       }   
     }, {  
-      rootMargin: "-20% 0% -35% 0%", // More balanced focal strip
+      rootMargin: "0% 0% -80% 0%", // More balanced focal strip
       threshold: 0, 
     })
 
@@ -121,36 +124,21 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
     return () => clearTimeout(timeoutId);
   }, [activeId])  
 
-  const [isToggled, setIsToggled] = useState(false);
+  const isToggled = useStore(tocCollapsed)
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      document.documentElement.classList.toggle("toc-toggled", isToggled);
-    }
-  }, [isToggled]);
-
-  useEffect(() => {
-    const handleToggle = (e: any) => {
-      if (typeof e.detail === "boolean") {
-        setIsToggled(e.detail);
-      } else {
-        setIsToggled(prev => !prev);
-      }
-    };
-    window.addEventListener("toggle-sidebar", handleToggle);
-    return () => window.removeEventListener("toggle-sidebar", handleToggle);
-  }, []);
-
-  const restoreButton = isToggled && typeof document !== "undefined" ? createPortal(
-    <button
-      onClick={() => setIsToggled(false)}
-      className="hidden sm:flex sidebar-restore-btn fixed left-4 top-[calc(var(--height-header)+1rem)] z-50 p-2 bg-white border border-border shadow-panel rounded-md hover:bg-zinc-50 hover:text-primary transition-all duration-300"
-      title="Expand sidebar"
-    >
-      <PanelRight className="w-5 h-5" />
-    </button>,
-    document.body
-  ) : null;
+  const restoreButton =
+    isToggled && typeof document !== "undefined"
+      ? createPortal(
+          <button
+            onClick={() => setTocCollapsed(false)}
+            className="hidden sm:flex sidebar-restore-btn fixed left-4 top-[calc(var(--height-header)+1rem)] z-50 p-2 bg-white border border-border shadow-panel rounded-md hover:bg-zinc-50 hover:text-primary transition-all duration-300"
+            title="Expand sidebar"
+          >
+            <PanelRight className="w-5 h-5" />
+          </button>,
+          document.body
+        )
+      : null
 
   return (
     <>
@@ -161,7 +149,7 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
         >
           <span>Table of Contents</span>
           <button
-            onClick={() => setIsToggled(!isToggled)}
+            onClick={toggleTocCollapsed}
             className="hidden sm:flex hover:text-zinc-900 transition-colors p-1 rounded-md hover:bg-zinc-100"
             title="Collapse sidebar"
           >
@@ -170,7 +158,7 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
         </div>
           
 
-    <nav  className={cn("flex flex-col", className)}>
+    <nav className={cn("flex flex-col", className)}>
       <ul className="flex flex-col list-none p-0">
         {toc.map((entry, index) => (
           <TocItem 
@@ -196,7 +184,7 @@ const TocItem: React.FC<{
   onItemClick,
   activeId,
 }) => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen] = useState(true)
 
   const hasChildren = entry.children && entry.children.length > 0
 
