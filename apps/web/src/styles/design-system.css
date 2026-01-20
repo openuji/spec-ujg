@@ -23,15 +23,15 @@
 
   /* “muted” is usually a subtle surface + muted text */
   --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
+  --muted-foreground: oklch(0.4 0.01 285); /* Darkened for accessibility (Zinc-600 approx) */
 
   /* "secondary" for dimmed/descriptive text */
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
 
-  /* “accent” is often hover/alt surface */
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
+  /* “accent” is used for interactive elements and highlights */
+  --accent: oklch(0.55 0.15 260); /* Vibrant Indigo/Blue for contrast */
+  --accent-foreground: oklch(0.985 0 0); /* White text on accent */
 
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
@@ -402,7 +402,12 @@ main {
 /* === COMPONENT: PILL === */
 
 .pill {
-    @apply bg-muted text-accent font-semibold text-sm flex items-center px-3 py-2 rounded-pill;
+    @apply bg-zinc-100 text-primary font-semibold text-sm flex items-center px-3 py-2 rounded-pill;
+}
+
+.pill.accent {
+    background: var(--color-accent);
+    color: var(--color-primary-foreground);
 }
 
 .tag {
@@ -429,7 +434,7 @@ main {
 
 .btn.primary {
     background: var(--color-accent);
-    color: white;
+    color: var(--color-primary-foreground);
     border-color: transparent;
     box-shadow: var(--shadow-button-primary);
 }

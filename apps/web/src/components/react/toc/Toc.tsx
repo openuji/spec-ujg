@@ -145,7 +145,7 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
       {restoreButton}
       <div ref={tocRef} className="overflow-y-auto max-h-[calc(100vh-var(--height-header))] pr-3">
         <div
-          className="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-400 pt-md pb-base pl-3 pr-2"
+          className="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-500 pt-md pb-base pl-3 pr-2"
         >
           <span>Table of Contents</span>
           <button
@@ -205,7 +205,7 @@ const TocItem: React.FC<{
           )}
         >
           {entry.number && (
-            <span className="mr-2 font-mono text-2xs tracking-tight text-zinc-400 group-hover:text-zinc-600 transition-colors">
+            <span className="mr-2 font-mono text-2xs tracking-tight text-zinc-500 group-hover:text-zinc-700 transition-colors">
               {entry.number}
             </span>
           )}
