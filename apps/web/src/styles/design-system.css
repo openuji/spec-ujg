@@ -64,6 +64,7 @@ body {
     background: var(--gradient-body);
     color: var(--color-text);
     font-family: var(--font-display);
+    min-height: 100svh;
 }
 
 /* === LAYOUT UTILITIES === */
