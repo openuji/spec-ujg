@@ -1,0 +1,43 @@
+---
+import HomeLayout from "@/layouts/HomeLayout.astro";
+
+export async function getStaticPaths() {
+  const pages = [
+    {
+      slug: "governance",
+      fileName: "governance.md",
+      title: "Governance - UJG Spec",
+    },
+    {
+      slug: "contributing",
+      fileName: "contribution.md",
+      title: "Contributing - UJG Spec",
+    },
+  ];
+
+  return pages.map(({ slug, fileName, title }) => ({
+    params: { slug },
+    props: { fileName, title },
+  }));
+}
+
+const { fileName, title } = Astro.props;
+
+// Use import.meta.glob to load the markdown files from the specs directory
+// We need to use the relative path from this file to the specs directory
+const allSpecs = import.meta.glob("../../../../specs/*.md");
+const specPath = `../../../../specs/${fileName}`;
+
+if (!allSpecs[specPath]) {
+  throw new Error(`Spec file not found: ${specPath}`);
+}
+
+const post = (await allSpecs[specPath]()) as any;
+const { Content } = post;
+---
+
+<HomeLayout title={title}>
+  <article class="prose">
+    <Content />
+  </article>
+</HomeLayout>
