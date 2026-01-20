@@ -98,6 +98,11 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
   const ids =  useMemo(() => flattedIds(toc), [toc])
   const activeId = useActiveId(ids)
 
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   useEffect(() => {
     if (!activeId || !tocRef.current) return;
     
@@ -125,9 +130,10 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
   }, [activeId])  
 
   const isToggled = useStore(tocCollapsed)
-
+  const displayToggled = isMounted ? isToggled : false
+  
   const restoreButton =
-    isToggled && typeof document !== "undefined"
+    isMounted && displayToggled && typeof document !== "undefined"
       ? createPortal(
           <button
             onClick={() => setTocCollapsed(false)}
@@ -151,10 +157,10 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
           <button
             onClick={toggleTocCollapsed}
             className="hidden sm:flex hover:text-zinc-900 transition-[background-color,color] p-1 rounded-md hover:bg-zinc-100"
-            title="Collapse sidebar"
-            aria-label="Collapse sidebar"
+            title={displayToggled ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={displayToggled ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <PanelLeft className="w-4 h-4" />
+            {displayToggled ? <PanelRight className="w-4 h-4" /> : <PanelLeft className="w-4 h-4" />}
           </button>
         </div>
           

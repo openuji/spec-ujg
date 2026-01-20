@@ -15,7 +15,10 @@ const { toc = [], title = "", parent } = Astro.props;
 <BaseLayout title={title} bodyClass="bg-spec">
   <Header toc={toc} title={title} breadcrumb={[parent]} />
 
-  <div class="flex px-lg" transition:animate="fade">
+  <div
+    class="sidebar-container is-initializing flex px-lg"
+    transition:animate="fade"
+  >
     <aside class="sidebar w-sidebar border-r border-border shrink-0">
       <div class="sidebar-content sticky top-[var(--height-header)] -ml-3">
         <Toc toc={toc} client:load />
@@ -28,6 +31,43 @@ const { toc = [], title = "", parent } = Astro.props;
       <slot />
     </main>
   </div>
+
+  <script>
+    import { tocCollapsed } from "@/stores/tocSidebar";
+
+    let unbind: (() => void) | undefined;
+
+    function init() {
+      if (unbind) unbind();
+
+      const container = document.querySelector(
+        ".sidebar-container",
+      ) as HTMLElement;
+      if (container) {
+        // Sync state immediately
+        container.setAttribute(
+          "data-toc-toggled",
+          tocCollapsed.get().toString(),
+        );
+
+        unbind = tocCollapsed.subscribe((collapsed: boolean) => {
+          container.setAttribute("data-toc-toggled", collapsed.toString());
+        });
+
+        // Remove initializing class after the first frame to enable transitions for clicks
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            container.classList.remove("is-initializing");
+          });
+        });
+      }
+    }
+
+    // Initialize on both initial load and after Astro view transitions
+    document.addEventListener("astro:page-load", init);
+    // Fallback for non-transition loads if needed
+    init();
+  </script>
   <footer class="flex flex-col items-center justify-center">
     <hr class="w-full" />
     <div class="p-md">
