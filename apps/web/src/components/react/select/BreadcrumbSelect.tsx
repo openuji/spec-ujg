@@ -14,6 +14,7 @@ export default function BreadcrumbSelect(props: {
   options: Option[]
 }) {
   const { valueHref, options } = props
+  console.log("valueHref", valueHref);
 
   return (
     <Select
@@ -25,8 +26,7 @@ export default function BreadcrumbSelect(props: {
       {/* Trigger should look like breadcrumb text */}
       <SelectTrigger
         className="h-auto w-auto gap-1 
-                   text-secondary-foreground hover:text-accent transition-colors duration-200
-                   focus:ring-0 focus:ring-offset-0"
+                   text-secondary-foreground hover:text-accent transition-[color,box-shadow] duration-200"
         aria-label="Switch section"
       >
         <SelectValue />

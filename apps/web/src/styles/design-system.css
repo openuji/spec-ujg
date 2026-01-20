@@ -416,7 +416,11 @@ main {
 /* === COMPONENT: BUTTON === */
 
 .btn {
-    @apply px-3 py-3 rounded-sm border border-border bg-card text-foreground font-semibold cursor-pointer flex items-center transition-all duration-200 font-sans no-underline;
+    @apply px-3 py-3 rounded-sm border border-border bg-card text-foreground font-semibold cursor-pointer flex items-center transition-[background-color,border-color,color,box-shadow,transform] duration-200 font-sans no-underline;
+}
+
+.btn:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2;
 }
 
 .btn:hover {
@@ -645,7 +649,7 @@ main {
     color: var(--color-text);
     font-weight: 600;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .links li a::before {

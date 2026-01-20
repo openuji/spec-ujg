@@ -5,8 +5,8 @@ import { Toc } from "@/components/react/toc/Toc";
 import type { TocEntry } from "@openuji/speculator";
 
 interface Props {
-  title?: string;
   parent: { href: string; title: string };
+  title?: string;
   toc?: TocEntry[];
 }
 const { toc = [], title = "", parent } = Astro.props;
@@ -15,7 +15,7 @@ const { toc = [], title = "", parent } = Astro.props;
 <BaseLayout title={title} bodyClass="bg-spec">
   <Header toc={toc} title={title} breadcrumb={[parent]} />
 
-  <div class="flex px-lg">
+  <div class="flex px-lg" transition:animate="fade">
     <aside class="sidebar w-sidebar border-r border-border shrink-0">
       <div class="sidebar-content sticky top-[var(--height-header)] -ml-3">
         <Toc toc={toc} client:load />

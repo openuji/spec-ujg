@@ -131,7 +131,7 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
       ? createPortal(
           <button
             onClick={() => setTocCollapsed(false)}
-            className="hidden sm:flex sidebar-restore-btn fixed left-4 top-[calc(var(--height-header)+1rem)] z-50 p-2 bg-white border border-border shadow-panel rounded-md hover:bg-zinc-50 hover:text-primary transition-all duration-300"
+            className="hidden sm:flex sidebar-restore-btn fixed left-4 top-[calc(var(--height-header)+1rem)] z-50 p-2 bg-white border border-border shadow-panel rounded-md hover:bg-zinc-50 hover:text-primary transition-[background-color,color,box-shadow,transform] duration-300"
             title="Expand sidebar"
           >
             <PanelRight className="w-5 h-5" />
@@ -150,8 +150,9 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
           <span>Table of Contents</span>
           <button
             onClick={toggleTocCollapsed}
-            className="hidden sm:flex hover:text-zinc-900 transition-colors p-1 rounded-md hover:bg-zinc-100"
+            className="hidden sm:flex hover:text-zinc-900 transition-[background-color,color] p-1 rounded-md hover:bg-zinc-100"
             title="Collapse sidebar"
+            aria-label="Collapse sidebar"
           >
             <PanelLeft className="w-4 h-4" />
           </button>
@@ -195,8 +196,8 @@ const TocItem: React.FC<{
           onClick={onItemClick}
           className={cn(
             "flex items-center group relative",
-            "flex-1 py-1.5 pl-3 text-sm leading-snug transition-all border-l-2 border-transparent",
-            "hover:bg-zinc-100/50 hover:text-zinc-900",
+            "flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent",
+            "hover:bg-zinc-100 hover:text-zinc-900",
             entry.depth === 1 
               ? "font-medium text-zinc-900 mt-2" 
               : "text-zinc-600 hover:border-zinc-200",
