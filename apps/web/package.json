@@ -11,7 +11,6 @@
   "dependencies": {
     "@astrojs/react": "^4.4.2",
     "@nanostores/react": "^1.0.0",
-    "@openuji/speculator": "file:/Users/zavalit/Projects/openuji/speculator/packages/speculator",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.4",
@@ -26,6 +25,7 @@
     "nanostores": "^1.1.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "@openuji/speculator": "^0.5.4",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18"
   },
