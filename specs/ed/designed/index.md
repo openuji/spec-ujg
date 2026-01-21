@@ -1,31 +1,31 @@
 ## Status of This Document {.unnumbered}
 
-This module defines the **Designed** journey: a shared way to describe _what you meant to build_ as a map of moments and allowed moves.
+This module defines the **Designed** [=Journey=]: a shared way to describe _what you meant to build_ as a map of moments and allowed moves.
 
 If you can draw it as boxes and arrows, it fits:
 
-- **States** are the boxes (moments like "Home", "Shipping", "Menu open").
-- **Transitions** are the arrows (allowed moves like "Home → Checkout").
+- [=State=]s are the boxes (moments like "Home", "Shipping", "Menu open").
+- [=Transition=]s are the arrows (allowed moves like "Home → Checkout").
 
 Two real-world features are included:
 
-- **Composition:** a box can "contain" another journey (zoom-in / nested flow).
-- **Reusable navigation:** global navigation can be defined once and applied across many journeys.
+- **Composition:** a box can "contain" another [=Journey=] (zoom-in / nested flow).
+- **Reusable navigation:** global navigation can be defined once and applied across many [=Journey=]s.
 
-This module is about the _plan_. The **Runtime** module is about _what actually happened_, and how real sessions can reference this plan.
+This module is about the _plan_. The Runtime module is about _what actually happened_, and how real sessions can reference this plan.
 
 ## Abstract {.unnumbered}
 
-UJG Designed describes user journeys as a graph: **States** (moments) connected by **Transitions** (allowed moves). It supports nesting via **CompositeState** and reusable cross-cutting navigation via **TransitionSet**.
+UJG Designed describes user [=Journey=]s as a graph: [=State=]s (moments) connected by [=Transition=]s (allowed moves). It supports nesting via [=CompositeState=] and reusable cross-cutting navigation via [=TransitionSet=].
 
 ## Scope {.unnumbered}
 
 This module covers:
 
-- How to define a **Journey** as boxes (States) and arrows (Transitions)
-- How to "zoom in" using **CompositeState** (a state that links to a sub-journey)
-- How to apply shared navigation using **TransitionSet**
-- Basic checks for "well-formed" journeys (e.g., references point to real states)
+- How to define a [=Journey=] as boxes ([=State=]s) and arrows ([=Transition=]s)
+- How to "zoom in" using [=CompositeState=] (a [=State=] that links to a sub-[=Journey=])
+- How to apply shared navigation using [=TransitionSet=]
+- Basic checks for "well-formed" [=Journey=]s (e.g., references point to real [=State=]s)
 
 This module does not cover:
 
@@ -35,21 +35,21 @@ This module does not cover:
 
 ## Visual mental model (informative) {.unnumbered}
 
-A Journey is a **map of what's allowed**, not what happened in one session.
+A [=Journey=] is a **map of what's allowed**, not what happened in one session.
 
-- Designed Journey: "From Browse you can go to Product; from Product you can go to Cart…"
+- Designed [=Journey=]: "From Browse you can go to Product; from Product you can go to Cart…"
 - Runtime session: "Browse → Product → Cart → Exit"
 
 ### Suggested visualization conventions (informative)
 
 These are recommendations for tools, docs, and workshops (the data model does not require any specific UI):
 
-- **State**: rectangle (label inside)
-- **Start**: "Start" badge on a State
-- **End**: "End" badge on one or more States
-- **CompositeState**: double-border rectangle or a "↳" marker (means "you can zoom in")
-- **Transition**: solid arrow
-- **TransitionSet overlay**: dashed arrows or a separate "global nav" layer
+- [=State=]: rectangle "label inside"
+- **Start**: "Start" badge on a [=State=]
+- **End**: "End" badge on one or more [=State=]s
+- [=CompositeState=]: double-border rectangle or a "↳" marker (means "you can zoom in")
+- [=Transition=]: solid arrow
+- [=TransitionSet=] overlay: dashed arrows or a separate "global nav" layer
 
 ### Diagram: a simple journey (informative)
 
@@ -86,11 +86,11 @@ flowchart LR
 
 ## Concepts (plain English) (informative) {.unnumbered}
 
-- **State**: a meaningful moment (page, step, mode).
-- **Transition**: an allowed move between moments.
-- **Journey**: a bundle of states + transitions with a defined start (and optional ends).
-- **CompositeState**: a state that points to a nested Journey (a "zoom-in" map).
-- **TransitionSet**: reusable "go to X" transitions that you can apply to many Journeys.
+- [=State=]: a meaningful moment (page, step, mode).
+- [=Transition=]: an allowed move between moments.
+- [=Journey=]: a bundle of [=State=]s + [=Transition=]s with a defined start (and optional ends).
+- [=CompositeState=]: a [=State=] that points to a nested [=Journey=] (a "zoom-in" map).
+- [=TransitionSet=]: reusable "go to X" [=Transition=]s that you can apply to many [=Journey=]s.
 
 **How to read the data model**: the JSON is simply a machine-readable way to store the same picture you'd draw in a workshop.
 
@@ -110,7 +110,7 @@ This specification defines requirements for:
 
 - **Designed Producer**: software that creates and emits UJG Designed objects.
 - **Designed Consumer**: software that parses and processes UJG Designed objects.
-- **Designed Validator** (optional): a Consumer that checks all validity rules in §Validity rules.
+- **Designed Validator** (optional): a Designed Consumer that checks all validity rules in §Validity rules.
 
 A system MAY conform to more than one class.
 
@@ -120,11 +120,11 @@ All Designed objects are serialized according to the UJG Serialization module's 
 
 ## Terminology (plain English)
 
-- **Journey**: the designed model of an experience at some layer (site, page, flow, component).
-- **State**: a meaningful moment the user can be "in" (page, step, mode).
-- **Transition**: an allowed move from one State to another.
-- **CompositeState**: a State that contains a nested Journey.
-- **TransitionSet**: a reusable bundle of "go to X" transitions (e.g., global nav) that can be applied in many Journeys.
+- <dfn>Journey</dfn>: the designed model of an experience at some layer (site, page, flow, component).
+- <dfn>State</dfn>: a meaningful moment the user can be "in" (page, step, mode).
+- <dfn>Transition</dfn>: an allowed move from one [=State=] to another.
+- <dfn>CompositeState</dfn>: a [=State=] that contains a nested [=Journey=].
+- <dfn>TransitionSet</dfn>: a reusable bundle of "go to X" [=transition=]s (e.g., global nav) that can be applied in many [=Journey=]s.
 
 ## Identifier rules (normative)
 
@@ -134,36 +134,36 @@ Every Designed object that has an `id` **MUST** use an identifier that is global
 
 This includes (at minimum):
 
-- Journey
-- State
-- CompositeState
-- Transition
-- TransitionSet
+- [=Journey=]
+- [=State=]
+- [=CompositeState=]
+- [=Transition=]
+- [=TransitionSet=]
 - TransitionSetTransition
 
 **Note (informative):** Using IRIs/URLs/URNs is a common way to achieve global uniqueness.
 
 ### Opaque identifiers
 
-Consumers **MUST** treat `id` values as opaque strings. No parsing or dereferencing is required for conformance.
+Designed Consumers **MUST** treat `id` values as opaque strings. No parsing or dereferencing is required for conformance.
 
 ## State
 
 ### What is a State? (informative)
 
-A State is a meaningful moment the user can be "in".
+A [=State=] is a meaningful moment the user can be "in".
 
 Think: a page, a step in a checkout flow, or a UI mode ("menu open").
 
 ### State object (normative)
 
-A State **MUST** be a UJG Object with:
+A [=State=] **MUST** be a [=UJG Object=] with:
 
 - `type`: the string `"State"`
 - `id`: a non-empty string, globally unique (§Identifier rules)
 - `label`: a non-empty string (human-readable)
 
-A State **MAY** include additional members (e.g., `name`, `description`, `extensions`) as permitted by Serialization.
+A [=State=] **MAY** include additional members (e.g., `name`, `description`, `extensions`) as permitted by Serialization.
 
 ### Example: a couple of states (informative)
 
@@ -185,19 +185,19 @@ A State **MAY** include additional members (e.g., `name`, `description`, `extens
 
 ### What is a Transition? (informative)
 
-A Transition is an allowed move from one State to another:
+A [=Transition=] is an allowed move from one [=State=] to another:
 
 - `from` = where you are now
 - `to` = where you can go next
 
 ### Transition object (normative)
 
-A Transition **MUST** be a UJG Object with:
+A [=Transition=] **MUST** be a [=UJG Object=] with:
 
 - `type`: the string `"Transition"`
 - `id`: a non-empty string, globally unique (§Identifier rules)
-- `from`: a State id (string)
-- `to`: a State id (string)
+- `from`: a [=State=] `id` (string)
+- `to`: a [=State=] `id` (string)
 
 ### Example: simple navigation (informative)
 
@@ -225,7 +225,7 @@ A Transition **MUST** be a UJG Object with:
 
 ### What is a Journey? (informative)
 
-A Journey is the designed model of an experience at some layer (site, page, component, flow).
+A [=Journey=] is the designed model of an experience at some layer (site, page, component, flow).
 
 It defines:
 
@@ -233,20 +233,20 @@ It defines:
 - where you may end at this layer (`endStates`)
 - what moments exist (`states`)
 - what moves are allowed (`transitions`)
-- optional reusable transitions applied from elsewhere (`transitionSets`)
+- optional reusable [=Transition=]s applied from elsewhere (`transitionSets`)
 
 ### Journey object (normative)
 
-A Journey **MUST** be a UJG Object with:
+A [=Journey=] **MUST** be a [=UJG Object=] with:
 
 - `type`: the string `"Journey"`
 - `id`: a non-empty string, globally unique (§Identifier rules)
 - `version`: a non-empty string
-- `startState`: a State/CompositeState id (string)
-- `endStates`: an array of State/CompositeState id strings (MAY be empty)
-- `states`: an array of State and/or CompositeState objects
-- `transitions`: an array of Transition objects (MAY be empty)
-- `transitionSets`: an array of TransitionSet id strings (MAY be empty)
+- `startState`: a [=State=]/[=CompositeState=] `id` (string)
+- `endStates`: an array of [=State=]/[=CompositeState=] `id` strings (MAY be empty)
+- `states`: an array of [=State=] and/or [=CompositeState=] objects
+- `transitions`: an array of [=Transition=] objects (MAY be empty)
+- `transitionSets`: an array of [=TransitionSet=] `id` strings (MAY be empty)
 
 ### Example: a simple 3-step signup journey (informative)
 
@@ -298,20 +298,20 @@ A Journey **MUST** be a UJG Object with:
 
 ### What is a CompositeState? (informative)
 
-A CompositeState is a state that points to a nested Journey that happens "inside" it.
+A [=CompositeState=] is a [=State=] that points to a nested [=Journey=] that happens "inside" it.
 
-**Product/UX translation:** "This page/step has its own internal journey (components, sub-steps)."
+**Product/UX translation:** "This page/step has its own internal [=Journey=] (components, sub-steps)."
 
 ### JourneyRef (normative)
 
 A JourneyRef **MUST** be a JSON object with:
 
-- `id`: a Journey id string
-- `version`: a Journey version string
+- `id`: a [=Journey=] `id` string
+- `version`: a [=Journey=] `version` string
 
 ### CompositeState object (normative)
 
-A CompositeState **MUST** be a UJG Object with:
+A [=CompositeState=] **MUST** be a [=UJG Object=] with:
 
 - `type`: the string `"CompositeState"`
 - `id`: a non-empty string, globally unique (§Identifier rules)
@@ -414,15 +414,15 @@ A CompositeState **MUST** be a UJG Object with:
 
 ### What is a TransitionSet? (informative)
 
-A TransitionSet is a reusable bundle of "go to X" transitions (often global navigation) that can be applied in many Journeys without repeating edges everywhere.
+A [=TransitionSet=] is a reusable bundle of "go to X" [=Transition=]s (often global navigation) that can be applied in many [=Journey=]s without repeating edges everywhere.
 
 ### What is the Owner? (informative)
 
-The owner indicates the UI surface/component journey that "provides" those transitions (e.g., a Header component).
+The owner indicates the UI surface/component [=Journey=] that "provides" those [=Transition=]s (e.g., a Header component).
 
 ### TransitionSet object (normative)
 
-A TransitionSet **MUST** be a UJG Object with:
+A [=TransitionSet=] **MUST** be a [=UJG Object=] with:
 
 - `type`: the string `"TransitionSet"`
 - `id`: a non-empty string, globally unique (§Identifier rules)
@@ -431,13 +431,13 @@ A TransitionSet **MUST** be a UJG Object with:
 
 ### TransitionSetTransition object (normative)
 
-A TransitionSetTransition **MUST** be a UJG Object with:
+A TransitionSetTransition **MUST** be a [=UJG Object=] with:
 
 - `type`: the string `"TransitionSetTransition"`
 - `id`: a non-empty string, globally unique (§Identifier rules)
-- `to`: a State/CompositeState id string in the host Journey
+- `to`: a [=State=]/[=CompositeState=] `id` string in the host [=Journey=]
 
-A TransitionSetTransition intentionally has no `from`. It is injected broadly into a host Journey (see §Inclusion and injection rules).
+A TransitionSetTransition intentionally has no `from`. It is injected broadly into a host [=Journey=] (see §Inclusion and injection rules).
 
 ### Example: TransitionSet "global nav" (informative)
 
@@ -470,27 +470,27 @@ A TransitionSetTransition intentionally has no `from`. It is injected broadly in
 
 ### Inclusion
 
-A Journey's `transitionSets` entries **MUST** be id strings of TransitionSets available in the publication context.
+A [=Journey=]'s `transitionSets` entries **MUST** be `id` strings of [=TransitionSet=]s available in the publication context.
 
-A Designed Validator **MUST** treat an unresolved TransitionSet id as a validity error.
+A Designed Validator **MUST** treat an unresolved [=TransitionSet=] `id` as a validity error.
 
 ### Injection (materialization)
 
-For each TransitionSet listed in a Journey's `transitionSets`, a Consumer computes effective transitions as follows:
+For each [=TransitionSet=] listed in a [=Journey=]'s `transitionSets`, a Designed Consumer computes effective [=Transition=]s as follows:
 
-For every host State `S` in the Journey's `states` such that `S.id` is not in `endStates`, and for every TransitionSetTransition `T` in the TransitionSet:
+For every host [=State=] `S` in the [=Journey=]'s `states` such that `S.id` is not in `endStates`, and for every TransitionSetTransition `T` in the [=TransitionSet=]:
 
 1. Let `candidateFrom = S.id`.
 2. Let `candidateTo = T.to`.
 3. Let `candidateId = InjectedTransitionId(transitionSetId, S.id, T.id)` as defined below.
-4. If the host Journey already contains an explicit Transition with the same `(from, to)` pair, the injected transition **MUST NOT** be added (explicit wins).
-5. If `candidateId` collides with any explicit Transition id in the host Journey, the injected transition **MUST NOT** be added.
+4. If the host [=Journey=] already contains an explicit [=Transition=] with the same `(from, to)` pair, the injected [=Transition=] **MUST NOT** be added (explicit wins).
+5. If `candidateId` collides with any explicit [=Transition=] `id` in the host [=Journey=], the injected [=Transition=] **MUST NOT** be added.
 
-Injected transitions are derived; they do not need to be physically present in the serialized `transitions` array.
+Injected [=Transition=]s are derived; they do not need to be physically present in the serialized `transitions` array.
 
 ### InjectedTransitionId function
 
-To ensure injected Transition identifiers are collision-safe while treating input ids as opaque, the injected id **MUST** be computed using percent-encoding.
+To ensure injected [=Transition=] identifiers are collision-safe while treating input `id`s as opaque, the injected `id` **MUST** be computed using percent-encoding.
 
 Define `enc(s)` as:
 
@@ -504,24 +504,24 @@ InjectedTransitionId(tsId, fromStateId, tsTransitionId) returns:
   "urn:ujg:injected:" + enc(tsId) + ":" + enc(fromStateId) + ":" + enc(tsTransitionId)
 ```
 
-A Designed Consumer **MUST** use this function exactly to compute injected ids.
+A Designed Consumer **MUST** use this function exactly to compute injected `id`s.
 
-## Validity rules (well-formed journeys) (normative)
+## Validity rules (well-formed Journeys) (normative)
 
-A Journey **MUST** be well-formed:
+A [=Journey=] **MUST** be well-formed:
 
-1. `startState` **MUST** reference a State/CompositeState id present in `states`.
-2. Every id in `endStates` **MUST** reference a State/CompositeState id present in `states`.
-3. Every Transition's `from` and `to` **MUST** reference State/CompositeState id values present in `states`.
-4. Every TransitionSet id in `transitionSets` **MUST** resolve to an existing TransitionSet.
-5. For each included TransitionSetTransition `T`, `T.to` **MUST** reference a State/CompositeState id present in the host Journey's `states`.
-6. After injection (§Inclusion and injection rules), every injected transition's `to` **MUST** reference a State/CompositeState id present in the host Journey's `states`.
+1. `startState` **MUST** reference a [=State=]/[=CompositeState=] `id` present in `states`.
+2. Every `id` in `endStates` **MUST** reference a [=State=]/[=CompositeState=] `id` present in `states`.
+3. Every [=Transition=]'s `from` and `to` **MUST** reference [=State=]/[=CompositeState=] `id` values present in `states`.
+4. Every [=TransitionSet=] `id` in `transitionSets` **MUST** resolve to an existing [=TransitionSet=].
+5. For each included TransitionSetTransition `T`, `T.to` **MUST** reference a [=State=]/[=CompositeState=] `id` present in the host [=Journey=]'s `states`.
+6. After injection (§Inclusion and injection rules), every injected [=Transition=]'s `to` **MUST** reference a [=State=]/[=CompositeState=] `id` present in the host [=Journey=]'s `states`.
 
 A Designed Validator **MUST** treat violation of any rule above as an error.
 
 ## Modeling guidance (informative)
 
-- A Journey **MAY** have `transitions: []` (composition-only layers are common).
-- If a State has no outgoing transitions at this layer, authors **SHOULD** list it in `endStates` (unless intentionally partial).
-- Prefer TransitionSets for cross-cutting navigation instead of repeating the same navigation edges everywhere.
-- Use stable, globally unique ids to simplify cross-document publishing, bundling, and analytics alignment.
+- A [=Journey=] **MAY** have `transitions: []` (composition-only layers are common).
+- If a [=State=] has no outgoing [=Transition=]s at this layer, authors **SHOULD** list it in `endStates` (unless intentionally partial).
+- Prefer [=TransitionSet=]s for cross-cutting navigation instead of repeating the same navigation edges everywhere.
+- Use stable, globally unique `id`s to simplify cross-document publishing, bundling, and analytics alignment.

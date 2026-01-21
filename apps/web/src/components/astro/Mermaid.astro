@@ -14,10 +14,13 @@ const { code, id } = Astro.props;
 <script>
   import mermaid from "mermaid";
 
-  // Initialize and render mermaid diagrams
-  // Astro bundles this script, so it only runs once per page
-  mermaid.initialize({ startOnLoad: false, theme: "default" });
-  mermaid.run({ querySelector: ".mermaid" });
+  function initMermaid() {
+    mermaid.initialize({ startOnLoad: false, theme: "default" });
+    mermaid.run({ querySelector: ".mermaid" });
+  }
+
+  // Initialize on both initial load and after Astro view transitions
+  document.addEventListener("astro:page-load", initMermaid);
 </script>
 
 <style>

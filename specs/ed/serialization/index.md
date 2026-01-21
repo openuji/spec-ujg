@@ -6,7 +6,7 @@ This document does **not** define module object models (e.g., Journey, State, Tr
 
 ## Abstract {.unnumbered}
 
-This module defines the JSON and optional JSON-LD conventions for UJG data: identifiers, timestamps, reference shapes, extensibility containers, and forward compatibility rules.
+This module defines the JSON and optional JSON-LD conventions for UJG data: ids, timestamps, reference shapes, extensions containers, and forward compatibility rules.
 
 It is intentionally minimal: object models live in their modules (Designed, Runtime, Observed, etc.). This module defines the wire format rules shared across all modules.
 
@@ -15,11 +15,11 @@ It is intentionally minimal: object models live in their modules (Designed, Runt
 This module defines:
 
 - JSON serialization constraints
-- Document forms (single object or bundle)
-- Common fields and reserved keys
+- [=UJG Document=] forms (single object or bundle)
+- Common fields and [=Reserved key=]s
 - Timestamp representation
-- Reference conventions (including `journeyRef`)
-- Extensibility container (`extensions`)
+- Reference conventions (including journeyRef)
+- Extensibility container (extensions)
 - Forward compatibility behavior
 - Optional JSON-LD handling (`@context`)
 - A baseline processing model for Consumers
@@ -56,17 +56,17 @@ A system MAY conform to more than one class.
 
 ## Terminology
 
-- **JSON value**: As defined by RFC 8259.
-- **UJG Object**: A JSON object that contains a `type` member whose value is a string.
-- **UJG Document**: Either (a) a single UJG Object, or (b) a UJG Document Wrapper Object containing an `items` array of UJG Objects.
-- **Reserved key**: A member name listed in §Reserved keys whose meaning is defined by this specification.
-- **Referencable object**: A UJG Object that contains an `id` member. (An object without `id` is not referencable by this specification.)
+- <dfn>JSON value</dfn>: As defined by RFC 8259.
+- <dfn>UJG Object</dfn>: A JSON object that contains a `type` member whose value is a string.
+- <dfn>UJG Document</dfn>: Either (a) a single [=UJG Object=], or (b) a UJG Document Wrapper Object containing an `items` array of [=UJG Object=]s.
+- <dfn>Reserved key</dfn>: A member name listed in §[=Reserved key=]s whose meaning is defined by this specification.
+- <dfn>Referencable object</dfn>: A [=UJG Object=] that contains an `id` member. (An object without `id` is not referencable by this specification.)
 
 ## Serialization format (normative)
 
 ### JSON
 
-1. UJG data **MUST** be serialized as JSON values as defined by RFC 8259.
+1. UJG data **MUST** be serialized as [=JSON value=]s as defined by RFC 8259.
 2. A UJG Producer **MUST** encode serialized JSON text as UTF-8.
 3. Arrays **MUST** preserve element order (array element order is significant).
 4. A UJG Producer **MUST NOT** emit JSON objects with duplicate member names.
@@ -77,24 +77,24 @@ A system MAY conform to more than one class.
 
 ### Single-object document
 
-A UJG Document MAY be a single UJG Object.
+A [=UJG Document=] MAY be a single [=UJG Object=].
 
 ### Bundle document (UJG Document Wrapper Object)
 
-A UJG Document MAY be a JSON object with:
+A [=UJG Document=] MAY be a JSON object with:
 
 - `type`: the string `"UJGDocument"`, and
-- `items`: an array of UJG Objects.
+- `items`: an array of [=UJG Object=]s.
 
 If a bundle document is used:
 
 - `items` **MUST** be a JSON array.
-- Each element of `items` **MUST** be a UJG Object (i.e., MUST include `type` as a string).
+- Each element of `items` **MUST** be a [=UJG Object=] (i.e., MUST include `type` as a string).
 - If present, `id` on the wrapper identifies the document itself and **MUST NOT** be used as an identifier for objects within `items`.
 
-**In-document uniqueness rule:** Within a single UJG Document (single-object or bundle), no two referencable objects **MAY** share the same id. A UJG Consumer **MUST** treat duplicate id values within one document as an error.
+**In-document uniqueness rule:** Within a single [=UJG Document=] (single-object or bundle), no two [=Referencable object=]s **MAY** share the same `id`. A UJG Consumer **MUST** treat duplicate `id` values within one document as an error.
 
-Note (normative): Objects defined by modules (e.g., Designed State, Transition, TransitionSetTransition) are UJG Objects when they include type, and therefore participate in this uniqueness rule even when nested.
+Note (normative): Objects defined by modules (e.g., Designed [=State=], [=Transition=], TransitionSetTransition) are [=UJG Object=]s when they include `type`, and therefore participate in this uniqueness rule even when nested.
 
 #### Example (bundle document)
 
@@ -121,38 +121,38 @@ Note (normative): Objects defined by modules (e.g., Designed State, Transition, 
 
 ### type
 
-Every UJG Object **MUST** include a `type` member whose value is a non-empty string.
+Every [=UJG Object=] **MUST** include a `type` member whose value is a non-empty string.
 
-Whether a nested object is a UJG Object is defined by the module that defines the containing property. This specification does not require `type` on non-UJG nested objects unless they are intended to be UJG Objects.
+Whether a nested object is a [=UJG Object=] is defined by the module that defines the containing property. This specification does not require `type` on non-UJG nested objects unless they are intended to be [=UJG Object=]s.
 
 ### id
 
-A referencable object **MUST** include an `id` member whose value is a non-empty string.
+A [=Referencable object=] **MUST** include an `id` member whose value is a non-empty string.
 
 - `id` values **MUST** be globally unique within the publisher’s publication context.
-- `id` values **MUST** be unique within a single UJG Document (see §In-document uniqueness rule).
+- `id` values **MUST** be unique within a single [=UJG Document=] (see §In-document uniqueness rule).
 - Consumers **MUST** treat `id` as an opaque string (no required parsing or dereferencing).
 
 ### version
 
-If a UJG Object includes `version`, its value **MUST** be a non-empty string.
+If a [=UJG Object=] includes `version`, its value **MUST** be a non-empty string.
 
 Unless a module specifies otherwise, Consumers **MUST** treat `version` as an opaque string and **MUST NOT** infer ordering semantics from it.
 
-## Reserved keys (normative)
+### Reserved key
 
-The following member names are reserved across UJG Objects:
+The following member names are [=Reserved key=]s across [=UJG Object=]s:
 
 `type`, `id`, `version`, `name`, `description`, `createdAt`, `updatedAt`, `extensions`, `@context`
 
 ### Reserved key integrity
 
-- Producers **MUST NOT** change the meaning of reserved keys.
-- Consumers **MUST** treat reserved-key misuse as an error.
+- Producers **MUST NOT** change the meaning of [=Reserved key=]s.
+- Consumers **MUST** treat [=Reserved key=]-misuse as an error.
 
 ### Reserved key misuse (testable conditions)
 
-Reserved-key misuse occurs when:
+[=Reserved key=]-misuse occurs when:
 
 - `type` exists and is not a string.
 - `id` exists and is not a non-empty string.
@@ -160,18 +160,18 @@ Reserved-key misuse occurs when:
 - `name` exists and is not a string.
 - `description` exists and is not a string.
 - `createdAt` or `updatedAt` exists and is not a timestamp string conforming to §Timestamps.
-- `extensions` exists and is not a JSON object (§Extensibility).
+- `extensions` exists and is not a JSON object (§Extensibility container).
 - `@context` exists and is neither a string nor a JSON object nor an array.
 
-## Extensibility container (normative)
+## Extensibility container
 
-Any UJG Object **MAY** include an `extensions` member.
+Any [=UJG Object=] **MAY** include an `extensions` member.
 
 ### Rules
 
 - `extensions` **MUST** be a JSON object.
 - Member names inside `extensions` **SHOULD** be collision-resistant (e.g., reverse-DNS like `com.example.foo` or an IRI-like namespace).
-- `extensions` member names **MUST NOT** use reserved keys listed in §Reserved keys.
+- `extensions` member names **MUST NOT** use [=Reserved key=] names listed in §[=Reserved key=]s.
 
 ### Consumer behavior
 
@@ -195,7 +195,7 @@ Whenever timestamps are used (including `createdAt`, `updatedAt`, and module-def
 
 ### Journey version reference (journeyRef)
 
-When a UJG Object references a specific Journey version, it **MUST** use a `journeyRef` member whose value is a JSON object of the form:
+When a [=UJG Object=] references a specific [=Journey=] version, it **MUST** use a `journeyRef` member whose value is a JSON object of the form:
 
 ```json
 { "id": "…", "version": "…" }
@@ -210,7 +210,7 @@ When a UJG Object references a specific Journey version, it **MUST** use a `jour
 
 Unless a module defines otherwise, references to other objects **MUST** be by identifier string (the referenced object's `id`).
 
-Consumers **MAY** validate that a referenced `id` exists within the same UJG Document, but cross-document references are allowed and validation may require external context.
+Consumers **MAY** validate that a referenced `id` exists within the same [=UJG Document=], but cross-document references are allowed and validation may require external context.
 
 ## Forward compatibility (normative)
 
@@ -218,7 +218,7 @@ Consumers **MAY** validate that a referenced `id` exists within the same UJG Doc
 
 A Consumer **MUST** be forward-compatible by default:
 
-- It **MUST** ignore unknown members that are not reserved keys.
+- It **MUST** ignore unknown members that are not [=Reserved key=]s.
 - It **MUST** apply module rules for required members and validity; missing/invalid required data **MUST** cause validation failure per the applicable module.
 
 ### Strictness
@@ -251,22 +251,22 @@ A conforming Consumer **MUST**:
 
 1. Parse the input as JSON (RFC 8259).
 2. Fail if any JSON object contains duplicate member names.
-3. Determine document form:
-   - If top-level is a UJG Object (has `type` string), process it as a single-object document.
-   - Else if top-level is an object with `type == "UJGDocument"` and `items` array, process each `items[i]` as a UJG Object.
-   - Else fail (not a UJG Document).
-4. Enforce reserved-key constraints for all encountered UJG Objects (and the wrapper object, if present).
-5. Enforce in-document `id` uniqueness for referencable objects.
+3. Determine [=UJG Document=] form:
+   - If top-level is a [=UJG Object=] (has `type` string), process it as a single-object document.
+   - Else if top-level is an object with `type == "UJGDocument"` and `items` array, process each `items[i]` as a [=UJG Object=].
+   - Else fail (not a [=UJG Document=]).
+4. Enforce [=Reserved key=] constraints for all encountered [=UJG Object=]s (and the wrapper object, if present).
+5. Enforce in-document `id` uniqueness for [=Referencable object=]s.
 6. Ignore unknown non-reserved members and ignore unknown `extensions` members by default.
 
 ## Designed terminology alignment note (informative)
 
 - **UJG Object (wire-level)**: any JSON object with a string `type`.
-- In Designed, Journey, State, CompositeState, Transition, TransitionSet are all UJG Objects when they appear as top-level items (or bundle `items[]`).
+- In Designed, [=Journey=], [=State=], [=CompositeState=], [=Transition=], [=TransitionSet=] are all [=UJG Object=]s when they appear as top-level items (or bundle `items[]`).
 - **Embedded objects**: Designed may define embedded shapes that can omit `type`. That is module-defined and intentionally not enforced by this shared serialization schema.
 - **References in Designed**:
   - Designed structural references like `from`, `to`, `stateId`, `transitionId`, etc. should be string `id` references unless Designed explicitly defines a richer ref object.
-  - Runtime/Observed references to a specific Journey version use `journeyRef = {id, version}`.
+  - Runtime/Observed references to a specific [=Journey=] version use journeyRef = {id, version}.
 
 ## Examples (non-normative)
 
@@ -309,10 +309,10 @@ UJG data may contain identifiers, timestamps, and behavioral structure that can 
 
 This schema validates:
 
-- top-level document form (single object or bundle wrapper),
-- reserved key types,
-- `journeyRef` shape,
-- `extensions` is an object and cannot use reserved key names inside.
+- top-level [=UJG Document=] form (single object or bundle wrapper),
+- [=Reserved key=] types,
+- journeyRef shape,
+- extensions is an object and cannot use [=Reserved key=] names inside.
 
 It does not validate:
 

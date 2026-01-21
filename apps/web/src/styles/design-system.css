@@ -692,6 +692,9 @@ main {
    ins{ @apply no-underline border-b border-zinc-400; }
    sup{ @apply align-super text-[0.75em]; }
    sub{ @apply align-sub text-[0.75em]; }
+   dfn {
+    @apply font-semibold text-zinc-900 scroll-mt-header;
+   }
 
   /* Links */
    a{
