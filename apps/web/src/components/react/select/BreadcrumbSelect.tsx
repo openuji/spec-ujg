@@ -42,7 +42,7 @@ export default function BreadcrumbSelect(props: {
             key={o.href}
             value={o.href}
             className="
-              data-[state=checked]:bg-zinc-300
+              data-[state=checked]:bg-zinc-100
               data-[state=checked]:text-zinc-900
             "
           >
