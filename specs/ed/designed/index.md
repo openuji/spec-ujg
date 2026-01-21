@@ -45,15 +45,15 @@ A Journey is a **map of what's allowed**, not what happened in one session.
 These are recommendations for tools, docs, and workshops (the data model does not require any specific UI):
 
 - **State**: rectangle (label inside)
-- **Start**: pill/capsule or "Start" badge on a State
-- **End**: pill/capsule or "End" badge on one or more States
+- **Start**: "Start" badge on a State
+- **End**: "End" badge on one or more States
 - **CompositeState**: double-border rectangle or a "↳" marker (means "you can zoom in")
 - **Transition**: solid arrow
 - **TransitionSet overlay**: dashed arrows or a separate "global nav" layer
 
 ### Diagram: a simple journey (informative)
 
-```ujg
+```mermaid
 flowchart LR
   A[Start: Home] --> B[Product]
   B --> C[Cart]

@@ -95,12 +95,14 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
           return <Mermaid code={node.value} id={node.id} />;
         }
 
-        return (
-          <pre id={node.id}>
-            <code class={node.lang || ""}>{node.value}</code>
-          </pre>
+        const codeBlock = (
+          <pre
+            id={node.id}
+            class="code-block"
+            set:html={`<code class="${node.lang || ""}">${node.value}</code>`}
+          />
         );
-
+        return codeBlock;
       case "blockquote":
         return (
           <blockquote id={node.id}>

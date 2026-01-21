@@ -736,13 +736,13 @@ main {
   }
 
   /* Preformatted / code blocks */
-  pre{
-    @apply my-6 overflow-x-auto rounded-xl border border-zinc-200 bg-zinc-950 p-4;
-    @apply text-zinc-100;
+  pre {
+    @apply my-6 overflow-x-auto rounded-xl border border-zinc-200 bg-accent-soft/30 p-4;
+    @apply text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
   }
-  pre code{
+  pre code {
     @apply bg-transparent border-0 p-0;
-    @apply font-mono text-[13px] leading-6;
+    @apply font-mono text-base leading-6;
     color: inherit;
   }
 
