@@ -14,7 +14,6 @@ export default function BreadcrumbSelect(props: {
   options: Option[]
 }) {
   const { valueHref, options } = props
-  console.log("valueHref", valueHref);
 
   return (
     <Select
@@ -43,8 +42,8 @@ export default function BreadcrumbSelect(props: {
             key={o.href}
             value={o.href}
             className="
-              data-[state=checked]:bg-accent
-              data-[state=checked]:text-accent-foreground
+              data-[state=checked]:bg-zinc-300
+              data-[state=checked]:text-zinc-900
             "
           >
             {o.label}

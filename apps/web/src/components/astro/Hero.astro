@@ -34,7 +34,7 @@ const {
 <header class="hero">
   {
     pills.length > 0 && (
-      <div class="hero__meta">
+      <div class="meta">
         {pills.map((pill) => (
           <Pill>{pill}</Pill>
         ))}
@@ -42,13 +42,13 @@ const {
     )
   }
 
-  <div class="hero__content">
+  <div class="content">
     <h1>{title}</h1>
     {description && <p set:html={description} />}
 
     {
       actions.length > 0 && (
-        <div class="hero__actions">
+        <div class="actions">
           {actions.map((action) => (
             <Button
               href={action.href}
@@ -64,7 +64,7 @@ const {
 
   {
     stats.length > 0 && (
-      <div class="hero__stats">
+      <div class="stats">
         {stats.map((stat) => (
           <Stat value={stat.value} label={stat.label} />
         ))}

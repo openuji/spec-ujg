@@ -3,8 +3,14 @@ import Panel from "@/components/astro/Panel.astro";
 import EditorDraftLayout from "@/layouts/EditorDraftLayout.astro";
 import { listSortedSpecs } from "@/lib/load";
 import { type EntryWithConfig } from "@openuji/speculator";
+import { cn } from "@/lib/utils";
 
 const specs = await listSortedSpecs();
+
+const maturityStyles: Record<string, string> = {
+  incubating: "bg-accent-soft/5 text-zinc-400 border border-border",
+  draft: "bg-accent-soft",
+};
 ---
 
 <EditorDraftLayout title="Editor's Draft">
@@ -16,19 +22,30 @@ const specs = await listSortedSpecs();
         Documents can change at any time. You can use it for:
       </p>
       <ul>
-        <li>Track upcoming changes while implementing.</li>
         <li>Participate in discussions and contribute.</li>
+        <li>Track upcoming changes while implementing.</li>
         <li>Prototype the newest journey patterns.</li>
       </ul>
     </Panel>
   </section>
 
-  <div class="ed-modules">
+  <div class="flow__grid">
     {
       specs.entries.map((spec: EntryWithConfig) => (
-        <a href={`/ed/${spec.config.id}`} class="ed-module-card">
-          <h3>{spec.config.id}</h3>
-          <span class="tag">View Spec →</span>
+        <a
+          href={`/ed/${spec.config.id}`}
+          class="card min-h-auto hover:bg-accent-soft/1 hover:translate-y-[1px] transition-transform"
+        >
+          <h3>{spec.config.title}</h3>
+          <span
+            class={cn(
+              "tag",
+              maturityStyles[spec.config.maturityLevel] || "bg-accent-soft",
+            )}
+          >
+            Maturity: {spec.config.maturityLevel}
+          </span>
+          View Spec →
         </a>
       ))
     }

@@ -20,7 +20,6 @@ const options = specs.entries.map((doc) => ({
 }));
 
 const currentHref = Astro.url.pathname;
-console.log("currentHref", currentHref);
 ---
 
 <header
@@ -35,8 +34,8 @@ console.log("currentHref", currentHref);
       )
     }
     <div class="flex items-center justify-between gap-2">
-      <a href="/" class="flex">
-        <span class="text-primary font-bold">UJG</span>
+      <a href="/" class="flex text-primary font-bold hover:text-accent">
+        <span>UJG</span>
       </a>
       {
         breadcrumb.map((item) => (
