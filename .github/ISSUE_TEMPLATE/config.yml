@@ -4,5 +4,5 @@ contact_links:
     url: https://www.w3.org/community/ujg/join
     about: "Join to follow discussions, mailing list, and calls (search for UJG)."
   - name: "Editor’s Draft"
-    url: https://github.com/openui/spec-ujg
+    url: https://github.com/openuji/spec-ujg
     about: "Read the current draft and terminology."
