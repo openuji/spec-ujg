@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Join the W3C UJG Community Group"
+    url: https://www.w3.org/community/ujg/join
+    about: "Join to follow discussions, mailing list, and calls (search for UJG)."
+  - name: "Editor’s Draft"
+    url: https://github.com/openui/spec-ujg
+    about: "Read the current draft and terminology."
