@@ -35,65 +35,81 @@ const flattedIds = (toc: TocEntry[]) => {
   return ids;
 }
 
+
+
 const useActiveId = (ids: string[]) => {
-  const [activeId, setActiveId] = useState<string | null>(null)
-  const lastScrollY = useRef(0)
-  const scrollDirection = useRef<"up" | "down">("down")
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      scrollDirection.current = currentScrollY > lastScrollY.current ? "down" : "up"
-      lastScrollY.current = currentScrollY
-    }
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    if (!ids.length) return;
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      const intersectingIds = entries.filter(entry => entry.isIntersecting && ids.includes(entry.target.id))
-      if (intersectingIds.length <= 0) return;
+    const HEADER_HEIGHT = Number(getComputedStyle(document.documentElement).getPropertyValue("--height-header").replace("px", ""));
+    const THRESHOLD = HEADER_HEIGHT; // How far below header to consider "active"
 
-      if (intersectingIds.length === 1) {
-        setActiveId(intersectingIds[0].target.id)
+    const onScroll = () => {
+      let currentId: string | null = null;
+
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i];
+        const prevId = ids[i - 1];
+        const el = document.getElementById(id);
+        if (!el) continue;
+
+        const rect = el.getBoundingClientRect();
+        const top = rect.top;
+        
+        // If heading is at or above the detection zone, it's the candidate
+        if (top <= HEADER_HEIGHT + THRESHOLD) {
+          currentId = id;
+        }
+        // Last section: just needs to be visible below header
+        else if (i === ids.length - 1 && prevId === currentId) {
+          const prevEl = document.getElementById(prevId);
+          if (!prevEl) continue;
+
+          const prevRect = prevEl.getBoundingClientRect();
+          const prevTop = prevRect.top;
+          
+          if(prevTop < 0) {
+            currentId = id;
+          }
+
+          
+        }
       }
-      else if (intersectingIds.length > 1) {
-        // When multiple items intersect:
-        // - Scrolling DOWN: pick the LAST one in the focal area (the newest one approaching)
-        // - Scrolling UP: pick the FIRST one in the focal area (the newest one approaching)
-        const sorted = intersectingIds.sort((a, b) => {
-          const aTop = a.target.getBoundingClientRect().top
-          const bTop = b.target.getBoundingClientRect().top
-          return scrollDirection.current === "down" ? bTop - aTop : aTop - bTop
-        })
-        setActiveId(sorted[0].target.id)
-      }   
-    }, {  
-      rootMargin: "0% 0% -80% 0%", // More balanced focal strip
-      threshold: 0, 
-    })
 
-    ids.forEach(id => {
-      const element = document.getElementById(id)
-      if (element) {
-        observer.observe(element)
+      if (currentId !== activeId) {
+        setActiveId(currentId);
       }
-    })
+      
+    };
 
-    return () => {
-      observer.disconnect()
-    }
+    // Throttle for performance
+    let ticking = false;
+    const throttledScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          onScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
 
-  }, [ids])
+    window.addEventListener("scroll", throttledScroll, { passive: true });
+    onScroll(); // Initial check
+
+    return () => window.removeEventListener("scroll", throttledScroll);
+  }, [ids, activeId]);
 
   return activeId;
-}
+};
 
 export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
   if (!toc || toc.length === 0) return null  
   
   const tocRef = useRef<HTMLDivElement>(null)
+  const scrollDir = useRef<"up" | "down" | null>(null);
 
   const ids =  useMemo(() => flattedIds(toc), [toc])
   const activeId = useActiveId(ids)
@@ -104,30 +120,50 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
   }, [])
 
   useEffect(() => {
-    if (!activeId || !tocRef.current) return;
-    
-    const timeoutId = setTimeout(() => {
-      const activeElement = tocRef.current?.querySelector(`a[href="#${activeId}"]`) as HTMLElement;
-      if (!activeElement) return;
+    let lastScrollY = window.scrollY;
 
-      const container = tocRef.current!;
-      const containerHeight = container.clientHeight;
-      const elementTop = activeElement.offsetTop;
-      const elementHeight = activeElement.offsetHeight;
-      
-      const isVisible = (elementTop >= container.scrollTop) && 
-                       (elementTop + elementHeight <= container.scrollTop + containerHeight);
-
-      if (!isVisible) {
-        container.scrollTo({
-          top: elementTop - containerHeight / 2 + elementHeight / 2,
-          behavior: "smooth"
-        });
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY) {
+        scrollDir.current = "down";
+      } else if (currentScrollY < lastScrollY) {
+        scrollDir.current = "up";
       }
-    }, 100);
+      lastScrollY = currentScrollY;
+    };
 
-    return () => clearTimeout(timeoutId);
-  }, [activeId])  
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const padding = 0;
+    const container = tocRef.current;
+    if (!container || !activeId) return;
+
+    const activeLink = container.querySelector<HTMLAnchorElement>(
+      `a[href="#${activeId}"]`,
+    );
+    if (!activeLink) return;
+
+    const linkTop = activeLink.offsetTop;
+    const linkBottom = linkTop + activeLink.offsetHeight;
+    const containerTop = container.scrollTop;
+    const containerBottom = containerTop + container.clientHeight;
+    if (linkTop > containerBottom && scrollDir.current === "down") {
+      container.scrollTo({ top: linkTop - padding, behavior: "smooth" });
+    } else if (linkBottom < containerTop && scrollDir.current === "up") {
+      container.scrollTo({
+        top: linkBottom - container.clientHeight + padding,
+        behavior: "smooth",
+      });
+    }
+
+    //console.log('Scrolling TOC to active link:', { linkTop, linkBottom, containerTop, containerBottom });
+  }, [activeId]);
+
 
   const isToggled = useStore(tocCollapsed)
   const displayToggled = isMounted ? isToggled : false
@@ -149,10 +185,9 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
   return (
     <>
       {restoreButton}
-      <div ref={tocRef} className="overflow-y-auto max-h-[calc(100vh-var(--height-header))] pr-3">
+      <div ref={tocRef} className="overflow-y-auto max-h-[calc(100vh-var(--height-header))] py-md pr-3">
         <div
-          className="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-500 pt-md pb-base pl-3 pr-2"
-        >
+          className="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-500 pb-base pl-3 pr-2">
           <span>Table of Contents</span>
           <button
             onClick={toggleTocCollapsed}
@@ -163,20 +198,18 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
             {displayToggled ? <PanelRight className="w-4 h-4" /> : <PanelLeft className="w-4 h-4" />}
           </button>
         </div>
-          
-
-    <nav className={cn("flex flex-col", className)}>
-      <ul className="flex flex-col list-none p-0">
-        {toc.map((entry, index) => (
-          <TocItem 
-            key={entry.id || index} 
-            entry={entry} 
-            onItemClick={onItemClick} 
-            activeId={activeId}
-          />
-        ))}
-      </ul>
-    </nav>
+        <nav className={cn("flex flex-col", className)}>
+          <ul className="flex flex-col list-none p-0">
+            {toc.map((entry, index) => (
+              <TocItem 
+                key={entry.id || index} 
+                entry={entry} 
+                onItemClick={onItemClick} 
+                activeId={activeId}
+              />
+            ))}
+          </ul>
+        </nav>
     </div>
     </>
   )
