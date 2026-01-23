@@ -1,7 +1,9 @@
 name: "Use case"
 description: "Propose a real-world use case UJG should cover"
 title: "[Use case] <short name>"
-labels: ["use-case", "needs-triage"]
+labels:
+  - "use-case"
+  - "needs-triage"
 body:
   - type: markdown
     attributes:
@@ -11,8 +13,8 @@ body:
   - type: input
     id: summary
     attributes:
-      label: Summary
-      description: One sentence: what user goal/journey is this about?
+      label: "Summary"
+      description: "One sentence — what user goal/journey is this about?"
       placeholder: "A user compares plans and upgrades without losing context."
     validations:
       required: true
@@ -20,8 +22,8 @@ body:
   - type: textarea
     id: context
     attributes:
-      label: Context
-      description: Product domain + why this matters.
+      label: "Context"
+      description: "Product domain + why this matters."
       placeholder: "Subscription SaaS; users churn when upgrade flow is confusing."
     validations:
       required: true
@@ -29,14 +31,14 @@ body:
   - type: textarea
     id: actors
     attributes:
-      label: Actors / personas
+      label: "Actors / personas"
       placeholder: "New user, returning user, admin, support agent…"
 
   - type: textarea
     id: journey
     attributes:
-      label: Journey narrative (steps)
-      description: Write it as a short story, not screens.
+      label: "Journey narrative (steps)"
+      description: "Write it as a short story, not screens."
       placeholder: |
         1) User starts on pricing page...
         2) Compares options...
@@ -48,30 +50,30 @@ body:
   - type: textarea
     id: success
     attributes:
-      label: Success criteria
+      label: "Success criteria"
       placeholder: "User completes upgrade in <2 min; no dead-ends; clear confirmation."
 
   - type: textarea
     id: failure
     attributes:
-      label: Failure modes / edge cases
+      label: "Failure modes / edge cases"
       placeholder: "Auth expires, payment fails, user changes device, accessibility needs..."
 
   - type: textarea
     id: signals
     attributes:
-      label: Measurement signals (optional)
-      description: What would you instrument to know it works?
+      label: "Measurement signals (optional)"
+      description: "What would you instrument to know it works?"
       placeholder: "Drop-off points, loops, time-to-complete, recovery rate…"
 
   - type: checkboxes
     id: checklist
     attributes:
-      label: Contribution checklist
+      label: "Contribution checklist"
       options:
-        - label: I checked for duplicates
+        - label: "I checked for duplicates"
           required: true
-        - label: I can clarify details if maintainers ask follow-ups
+        - label: "I can clarify details if maintainers ask follow-ups"
           required: true
-        - label: I want updates via the W3C CG (mailing list / calls)
+        - label: "I want updates via the W3C CG (mailing list / calls)"
           required: false
