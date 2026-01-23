@@ -4,18 +4,26 @@ title: "[Use case] <short name>"
 labels:
   - "use-case"
   - "needs-triage"
+
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping UJG! If you want to follow discussions and calls, join the W3C UJG Community Group (link in the sidebar / README).
+        Thanks for helping UJG!
+
+        **How to write a good use case (keep it simple):**
+        - Describe the **user-visible journey** (what the user does + what outcome they see).
+        - Avoid internal implementation steps like “system validates/renders”.
+        - It helps to name outcomes like: **Success**, **Needs-fix**, **Pending**, **Blocked**.
+
+        If you want to follow discussions and calls, join the W3C UJG Community Group (link in the sidebar / README).
 
   - type: input
     id: summary
     attributes:
       label: "Summary"
-      description: "One sentence — what user goal/journey is this about?"
-      placeholder: "A user compares plans and upgrades without losing context."
+      description: "One sentence — what is the user trying to do?"
+      placeholder: "A visitor reads a landing page and subscribes to a newsletter."
     validations:
       required: true
 
@@ -23,48 +31,64 @@ body:
     id: context
     attributes:
       label: "Context"
-      description: "Product domain + why this matters."
-      placeholder: "Subscription SaaS; users churn when upgrade flow is confusing."
+      description: "Where does this happen and why does it matter?"
+      placeholder: "Marketing site; newsletter signup is the primary conversion journey."
     validations:
       required: true
 
   - type: textarea
     id: actors
     attributes:
-      label: "Actors / personas"
-      placeholder: "New user, returning user, admin, support agent…"
+      label: "Personas (human roles only)"
+      description: "Examples: visitor, returning visitor, admin, support agent."
+      placeholder: "Visitor (new); Visitor (returning)"
+    validations:
+      required: false
 
   - type: textarea
     id: journey
     attributes:
-      label: "Journey narrative (steps)"
-      description: "Write it as a short story, not screens."
+      label: "Journey narrative (user-visible steps & outcomes)"
+      description: "List the journey as user actions and user-visible outcomes (success / needs-fix / pending / blocked). Avoid UI layout details and internal system actions."
       placeholder: |
-        1) User starts on pricing page...
-        2) Compares options...
-        3) Hits a blocker...
-        4) Resolves and completes...
+        1) User arrives.
+        2) User chooses to start (or leaves).
+        3) User provides required info.
+        4) User sees an outcome: Success / Needs-fix / Pending / Blocked.
+        5) If Pending or Needs-fix, user can recover and reach Success.
     validations:
       required: true
 
   - type: textarea
     id: success
     attributes:
-      label: "Success criteria"
-      placeholder: "User completes upgrade in <2 min; no dead-ends; clear confirmation."
+      label: "Success criteria (optional)"
+      description: "What must be true when the journey works?"
+      placeholder: "Clear success outcome; no dead-ends; recovery path exists from Needs-fix/Pending."
+    validations:
+      required: false
 
   - type: textarea
     id: failure
     attributes:
-      label: "Failure modes / edge cases"
-      placeholder: "Auth expires, payment fails, user changes device, accessibility needs..."
+      label: "Failure modes / edge cases (optional)"
+      description: "Journey-level failures: dead-ends, loops, state loss, missing recovery paths, ambiguous outcomes."
+      placeholder: |
+        - User gets stuck in Needs-fix (no clear way to retry)
+        - User cannot complete from Pending (no next step / no resend)
+        - User loops between steps without progress
+        - User can’t tell if Success happened
+    validations:
+      required: false
 
   - type: textarea
     id: signals
     attributes:
       label: "Measurement signals (optional)"
-      description: "What would you instrument to know it works?"
-      placeholder: "Drop-off points, loops, time-to-complete, recovery rate…"
+      description: "If you have them: conversion/completion, drop-off per outcome, time-to-complete, recovery rate, loop frequency."
+      placeholder: "Completion rate; drop-off points; time-to-complete; recovery rate from Needs-fix/Pending."
+    validations:
+      required: false
 
   - type: checkboxes
     id: checklist
