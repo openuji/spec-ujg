@@ -1,0 +1,11 @@
+{
+  "ed": [
+    { "entry": "../../specs/ed/designed/index.md" },
+    { "entry": "../../specs/ed/metrics/index.md" },
+    { "entry": "../../specs/ed/observed/index.md" },
+    { "entry": "../../specs/ed/overview/index.md" },
+    { "entry": "../../specs/ed/profiles/index.md" },
+    { "entry": "../../specs/ed/runtime/index.md" },
+    { "entry": "../../specs/ed/serialization/index.md" }
+  ]
+}

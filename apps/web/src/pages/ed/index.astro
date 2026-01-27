@@ -1,15 +1,15 @@
 ---
-import Panel from "@/components/astro/Panel.astro";
-import EditorDraftLayout from "@/layouts/EditorDraftLayout.astro";
-import { listSortedSpecs } from "@/lib/load";
-import { type EntryWithConfig } from "@openuji/speculator";
-import { cn } from "@/lib/utils";
+import Panel from '@/components/astro/Panel.astro';
+import EditorDraftLayout from '@/layouts/EditorDraftLayout.astro';
+import { getDocuments } from '@/lib/load';
+import { type Document } from '@openuji/speculator';
+import { cn } from '@/lib/utils';
 
-const specs = await listSortedSpecs();
+const documents = await getDocuments();
 
 const maturityStyles: Record<string, string> = {
-  incubating: "bg-accent-soft/5 text-zinc-400 border border-border",
-  draft: "bg-accent-soft",
+  incubating: 'bg-accent-soft/5 text-zinc-400 border border-border',
+  draft: 'bg-accent-soft',
 };
 ---
 
@@ -18,8 +18,8 @@ const maturityStyles: Record<string, string> = {
   <section class="card-grid">
     <Panel variant="contrast">
       <p>
-        The ED workspace captures the newest ideas, examples, and proposals.
-        Documents can change at any time. You can use it for:
+        The ED workspace captures the newest ideas, examples, and proposals. Documents can change at
+        any time. You can use it for:
       </p>
       <ul>
         <li>Participate in discussions and contribute.</li>
@@ -31,19 +31,14 @@ const maturityStyles: Record<string, string> = {
 
   <div class="flow__grid">
     {
-      specs.entries.map((spec: EntryWithConfig) => (
+      documents.map((doc: Document) => (
         <a
-          href={`/ed/${spec.config.id}`}
+          href={`/ed/${doc.id}`}
           class="card min-h-auto hover:bg-accent-soft/1 hover:translate-y-[1px] transition-transform"
         >
-          <h3>{spec.config.title}</h3>
-          <span
-            class={cn(
-              "tag",
-              maturityStyles[spec.config.maturityLevel] || "bg-accent-soft",
-            )}
-          >
-            Maturity: {spec.config.maturityLevel}
+          <h3>{doc.metadata?.title}</h3>
+          <span class={cn('tag', maturityStyles[doc.metadata?.maturityLevel || 'draft'])}>
+            {doc.metadata?.maturityLevel || 'draft'}
           </span>
           View Spec →
         </a>

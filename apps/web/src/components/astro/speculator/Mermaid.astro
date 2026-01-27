@@ -1,0 +1,48 @@
+---
+interface Props {
+  code: string;
+  id?: string;
+}
+
+const { code, id } = Astro.props;
+---
+
+<div class="mermaid-container" id={id}>
+  <pre class="mermaid">{code}</pre>
+</div>
+
+<script>
+  import mermaid from "mermaid";
+
+  function initMermaid() {
+    mermaid.initialize({ startOnLoad: false, theme: "default" });
+    mermaid.run({ querySelector: ".mermaid" });
+  }
+
+  // Initialize on both initial load and after Astro view transitions
+  document.addEventListener("astro:page-load", initMermaid);
+</script>
+
+<style>
+  .mermaid-container {
+    background: var(--muted);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+    margin: 1.5rem 0;
+  }
+
+  .mermaid-container pre.mermaid {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+  }
+
+  .mermaid-container :global(svg) {
+    max-width: 100%;
+    height: auto;
+  }
+</style>

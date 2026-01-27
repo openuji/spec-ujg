@@ -1,9 +1,16 @@
 {
-    "name": "@openuji/monorepo",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "dev": "pnpm -r dev",
-        "build": "pnpm -r build"
-    }
+  "name": "@openuji/monorepo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1"
+  }
 }

@@ -1,19 +1,19 @@
 ---
 import { type Document, type EntryWithConfig } from "@openuji/speculator";
-import { loadDocument, listSortedSpecs } from "@/lib/load";
-import BlockRenderer from "@/components/astro/BlockRenderer.astro";
+import { getDocuments, loadDocument } from "@/lib/load";
+import BlockRenderer from "@/components/astro/speculator/BlockRenderer.astro";
 import SpecLayout from "@/layouts/SpecLayout.astro";
 
 export async function getStaticPaths() {
-  const specs = await listSortedSpecs();
+  const specs = await getDocuments();
 
-  return specs.entries.map((spec: EntryWithConfig) => ({
+  return specs.map((spec: Document) => ({
     params: {
-      spec: spec.config.id,
+      spec: spec.id,
     },
     props: {
-      id: spec.config.id,
-      title: spec.config.title,
+      id: spec.id,
+      title: spec.metadata?.title,
     },
   }));
 }
@@ -36,6 +36,7 @@ const document: Document = await loadDocument(id);
           node={child}
           documentPath={document.sourcePos?.file}
           headingNumbers={document.computed?.headingNumbers}
+          basePath="/ed"
         />
       ))
     }

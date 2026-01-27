@@ -1,0 +1,212 @@
+---
+import type { Inline } from "@openuji/speculator";
+import RecursiveInlineRenderer from "./InlineRenderer.astro";
+
+interface Props {
+  nodes: Inline[];
+  basePath?: string;
+}
+
+const { nodes, basePath } = Astro.props;
+
+// Shared props to pass to all recursive calls - update here when adding new props
+const sharedProps = { basePath };
+---
+
+{
+  nodes.map((node) => {
+    switch (node.type) {
+      case "text":
+        return <>{node.value}</>;
+
+      case "emphasis":
+        return (
+          <em>
+            <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
+          </em>
+        );
+
+      case "strong":
+        return (
+          <strong>
+            <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
+          </strong>
+        );
+
+      case "inlineCode":
+        return <code>{node.value}</code>;
+
+      case "variable":
+        return <var>{node.value}</var>;
+
+      case "link":
+        return (
+          <a href={node.url} title={node.title || undefined}>
+            <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
+          </a>
+        );
+
+      case "image":
+        return (
+          <img src={node.url} alt={node.alt || ""} title={node.title || ""} />
+        );
+
+      case "definition":
+        // Render <dfn> with ReSpec attributes
+        const def = node;
+        const dfnId = def.explicitId || def.id;
+        const dfnFor = def.forContexts?.filter(Boolean).join(", ");
+        const dfnType = def.dfnType;
+        return (
+          <dfn
+            id={dfnId}
+            title={node.term}
+            data-dfn-for={dfnFor || undefined}
+            data-dfn-type={dfnType !== "dfn" ? dfnType : undefined}
+          >
+            <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
+          </dfn>
+        );
+
+      case "workspaceDfnReference": {
+        const ref = node;
+        const href =
+          ref.targetDocumentId && basePath
+            ? `${basePath}/${ref.targetDocumentId}#${ref.targetId || ""}`
+            : `#${ref.targetId || ""}`;
+        return (
+          <a href={href} class="xref" title={ref.targetTerm}>
+            <RecursiveInlineRenderer nodes={ref.children} {...sharedProps} />
+          </a>
+        );
+      }
+
+      case "workspaceIdlReference": {
+        const ref = node;
+        const href =
+          ref.targetDocumentId && basePath
+            ? `${basePath}/${ref.targetDocumentId}#${ref.targetId || ""}`
+            : `#${ref.targetId || ""}`;
+        return (
+          <code class="idl" data-link-type="idl">
+            <a href={href} class="xref" title={ref.targetTerm}>
+              <RecursiveInlineRenderer nodes={ref.children} {...sharedProps} />
+            </a>
+          </code>
+        );
+      }
+
+      case "workspaceElementReference": {
+        const ref = node;
+        const href =
+          ref.targetDocumentId && basePath
+            ? `${basePath}/${ref.targetDocumentId}#${ref.targetId || ""}`
+            : `#${ref.targetId || ""}`;
+        return (
+          <code class="element" data-link-type="element">
+            <a href={href} class="xref" title={ref.targetTerm}>
+              <RecursiveInlineRenderer nodes={ref.children} {...sharedProps} />
+            </a>
+          </code>
+        );
+      }
+
+      case "externalDfnReference": {
+        const ref = node;
+        return (
+          <a
+            href={ref.url || "#"}
+            class="xref external"
+            title={`${ref.targetTerm} in ${ref.xrefSpec}`}
+          >
+            <RecursiveInlineRenderer nodes={ref.children} {...sharedProps} />
+          </a>
+        );
+      }
+
+      case "externalIdlReference": {
+        const ref = node;
+        return (
+          <code class="idl" data-link-type="idl">
+            <a
+              href={ref.url || "#"}
+              class="xref external"
+              title={`${ref.targetTerm} in ${ref.xrefSpec}`}
+            >
+              <RecursiveInlineRenderer nodes={ref.children} {...sharedProps} />
+            </a>
+          </code>
+        );
+      }
+
+      case "externalElementReference": {
+        const ref = node;
+        return (
+          <code class="element" data-link-type="element">
+            <a
+              href={ref.url || "#"}
+              class="xref external"
+              title={`${ref.targetTerm} in ${ref.xrefSpec}`}
+            >
+              <RecursiveInlineRenderer nodes={ref.children} {...sharedProps} />
+            </a>
+          </code>
+        );
+      }
+
+      case "cite":
+        // Render citation
+        const cite = node;
+        const citeClass = cite.forcedNormative
+          ? "cite normative"
+          : cite.forcedInformative
+            ? "cite informative"
+            : "cite";
+        const citeHref =
+          cite.url || (cite.targetId ? `#${cite.targetId}` : undefined);
+
+        const citeContent =
+          cite.children && cite.children.length > 0 ? (
+            <RecursiveInlineRenderer nodes={cite.children} {...sharedProps} />
+          ) : (
+            <>[{cite.key}]</>
+          );
+
+        return citeHref ? (
+          <a href={citeHref} class={citeClass} data-cite={cite.key}>
+            {citeContent}
+          </a>
+        ) : (
+          <cite class={citeClass} data-cite={cite.key}>
+            {citeContent}
+          </cite>
+        );
+
+      case "requirement":
+        return (
+          <span class="requirement" id={node.id}>
+            {node.keyword}
+          </span>
+        );
+
+      case "issue":
+        return (
+          <span
+            class="issue"
+            data-status={node.status}
+            style="color: orange; border: 1px solid orange; padding: 2px; border-radius: 4px;"
+          >
+            Issue {node.id && `#${node.id}`}:{" "}
+            <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
+          </span>
+        );
+
+      default:
+        return (
+          <span style="color: red; border: 1px solid red;">
+            [Unknown Inline: {(node as Inline).type}]
+          </span>
+        );
+    }
+  })
+}

@@ -1,8 +1,8 @@
 ---
 import { MobilePanel } from "@/components/react/toc/MobilePanel";
-import type { TocEntry } from "@openuji/speculator";
+import type { TocEntry, Document } from "@openuji/speculator";
 import BreadcrumbSelect from "@/components/react/select/BreadcrumbSelect";
-import { listSortedSpecs } from "@/lib/load";
+import { getDocuments } from "@/lib/load";
 
 interface Props {
   title: string;
@@ -12,13 +12,13 @@ interface Props {
 
 const { title, breadcrumb = [], toc } = Astro.props;
 
-const specs = await listSortedSpecs();
+const docs = await getDocuments();
 
-const options = specs.entries
-  .filter((doc) => doc.config.title !== undefined)
-  .map((doc) => ({
-    label: doc.config.title!,
-    href: `/ed/${doc.config.id}`,
+const options = docs
+  .filter((doc: Document) => doc.metadata?.title !== undefined)
+  .map((doc: Document) => ({
+    label: doc.metadata?.title!,
+    href: `/ed/${doc.id}`,
   }));
 
 const currentHref = Astro.url.pathname;
