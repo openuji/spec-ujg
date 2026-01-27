@@ -21,7 +21,7 @@ const options = docs
     href: `/ed/${doc.id}`,
   }));
 
-const currentHref = Astro.url.pathname;
+const currentHref = Astro.url.pathname.replace(/\.html$/, "");
 ---
 
 <header

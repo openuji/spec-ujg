@@ -13,4 +13,7 @@ export default defineConfig({
 
   integrations: [react()],
   trailingSlash: 'never',
+  build: {
+    format: 'file'
+  }
 });

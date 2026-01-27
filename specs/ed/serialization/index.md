@@ -94,7 +94,7 @@ If a bundle document is used:
 
 **In-document uniqueness rule:** Within a single [=UJG Document=] (single-object or bundle), no two [=Referencable object=]s **MAY** share the same `id`. A UJG Consumer **MUST** treat duplicate `id` values within one document as an error.
 
-Note (normative): Objects defined by modules (e.g., Designed [=State=], [=Transition=], TransitionSetTransition) are [=UJG Object=]s when they include `type`, and therefore participate in this uniqueness rule even when nested.
+Note (normative): Objects defined by modules (e.g., top-level items in _Designed_) are [=UJG Object=]s when they include `type`, and therefore participate in this uniqueness rule even when nested.
 
 #### Example (bundle document)
 
@@ -262,7 +262,7 @@ A conforming Consumer **MUST**:
 ## Designed terminology alignment note (informative)
 
 - **UJG Object (wire-level)**: any JSON object with a string `type`.
-- In Designed, [=Journey=], [=State=], [=CompositeState=], [=Transition=], [=TransitionSet=] are all [=UJG Object=]s when they appear as top-level items (or bundle `items[]`).
+- In Designed, all objects that are defined as top-level items (or bundle `items[]`) are [=UJG Object=]s.
 - **Embedded objects**: Designed may define embedded shapes that can omit `type`. That is module-defined and intentionally not enforced by this shared serialization schema.
 - **References in Designed**:
   - Designed structural references like `from`, `to`, `stateId`, `transitionId`, etc. should be string `id` references unless Designed explicitly defines a richer ref object.
@@ -379,11 +379,7 @@ It does not validate:
         "updatedAt": { "$ref": "#/$defs/TimestampRFC3339WithTZ" },
         "extensions": { "$ref": "#/$defs/Extensions" },
         "@context": {
-          "anyOf": [
-            { "type": "string" },
-            { "type": "object" },
-            { "type": "array" }
-          ]
+          "anyOf": [{ "type": "string" }, { "type": "object" }, { "type": "array" }]
         },
         "journeyRef": { "$ref": "#/$defs/JourneyRef" }
       },
@@ -402,11 +398,7 @@ It does not validate:
         },
         "extensions": { "$ref": "#/$defs/Extensions" },
         "@context": {
-          "anyOf": [
-            { "type": "string" },
-            { "type": "object" },
-            { "type": "array" }
-          ]
+          "anyOf": [{ "type": "string" }, { "type": "object" }, { "type": "array" }]
         }
       },
       "additionalProperties": true

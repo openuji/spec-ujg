@@ -53,7 +53,7 @@ It supports two methods of ordering:
 
 - `timestamp`: An RFC 3339 timestamp string.
 - `payload`: A JSON object containing domain-specific data (e.g., URL, button ID, metadata).
-- `stateRef`: (Optional) The `id` string of the [=Designed State=] this event represents.
+- `stateRef`: (Optional) The `id` string of the Designed [=State=] this event represents.
 - `journeyRef`: (Optional) A [=Journey Reference=] object (`{id, version}`) identifying the context.
 
 #### Example: A Chained Event
