@@ -39,6 +39,20 @@ import Banner from "@/components/astro/Banner.astro";
 
         const shouldReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+        function highlightTarget(target) {
+          if (!target) return;
+          target.classList.remove("target-highlight");
+          // Trigger reflow to restart animation
+          void target.offsetWidth;
+          target.classList.add("target-highlight");
+          
+          // Optional: remove class after animation finishes to keep DOM clean
+          // but it's not strictly necessary as it's a one-shot animation
+          setTimeout(() => {
+            target.classList.remove("target-highlight");
+          }, 2100);
+        }
+
         function handleLinkClick(e) {
           const link = e.target.closest("a");
           if (!link?.hash || link.origin !== location.origin) return;
@@ -55,10 +69,23 @@ import Banner from "@/components/astro/Banner.astro";
             behavior: shouldReduceMotion.matches ? "auto" : "smooth",
           });
           history.pushState(null, "", link.hash);
+          highlightTarget(target);
+        }
+
+        function handleHashChange() {
+          const hash = location.hash;
+          if (hash) {
+            const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+            if (target) {
+              highlightTarget(target);
+            }
+          }
         }
 
         function init() {
           document.addEventListener("click", handleLinkClick, { capture: true });
+          // Also highlight on page load if hash exists
+          handleHashChange();
         }
 
         document.addEventListener("astro:page-load", init);

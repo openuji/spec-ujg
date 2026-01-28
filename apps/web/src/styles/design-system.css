@@ -840,3 +840,24 @@ main {
   }
 
 }
+
+/* === TARGET HIGHLIGHTING === */
+
+@keyframes target-highlight {
+  0% {
+    background-color: var(--color-accent-soft);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.target-highlight {
+  animation: target-highlight 2s ease-out;
+  border-radius: var(--radius-sm);
+}
+
+/* Fallback/Persistent style for :target */
+:target {
+  scroll-margin-top: calc(var(--height-header) + var(--spacing-md));
+}
