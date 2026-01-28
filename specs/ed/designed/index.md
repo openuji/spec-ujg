@@ -23,7 +23,7 @@ This module defines:
 
 ---
 
-## Level 1: The Basic Graph (Normative)
+## The Basic Graph (Normative)
 
 At its simplest, a Journey is a set of **States** connected by **Transitions**.
 
@@ -96,7 +96,7 @@ graph LR
 
 ---
 
-## Level 2: Organization with Tags (Normative)
+## Organization with Tags (Normative)
 
 As graphs grow, humans need to group states into "Phases" or "Features." We use **Tags** for this.
 
@@ -136,7 +136,7 @@ graph LR
 
 ---
 
-## Level 3: Managing Complexity with Composition (Normative)
+## Managing Complexity with Composition (Normative)
 
 Real journeys are too large to see on one screen. **Composition** allows a [=State=] to contain an entire sub-journey. This allows designers to "Zoom In" and "Zoom Out."
 
@@ -204,7 +204,7 @@ graph LR
 
 ---
 
-## Level 4: Reusability with TransitionSets (Normative)
+## Reusability with TransitionSets (Normative)
 
 Applications often have "Global Navigation" (e.g., a Header with "Home" and "Profile" links) available on every page. Drawing these arrows manually for 50 states creates a messy "spaghetti graph."
 
@@ -313,6 +313,19 @@ When a Consumer loads a Journey that lists `transitionSets`:
 ```
 
 ---
+
+## Journey version reference (journeyRef)
+
+When a [=UJG Object=] references a specific [=Journey=] version, it **MUST** use a `journeyRef` member whose value is a JSON object of the form:
+
+```json
+{ "id": "…", "version": "…" }
+```
+
+#### Rules
+
+- `journeyRef.id` **MUST** be a non-empty string.
+- `journeyRef.version` **MUST** be a non-empty string.
 
 ## Validity Rules (Normative)
 

@@ -10,7 +10,7 @@ This module defines:
 
 - JSON serialization constraints
 - [=UJG Document=] forms (single object or bundle)
-- Common fields and [=Reserved key=]s
+- Common fields and <xref data-lt="reserved key">Reserved keys</xref>
 - Timestamp representation
 - Reference conventions (including journeyRef)
 - Extensibility container (extensions)
@@ -52,8 +52,8 @@ A system MAY conform to more than one class.
 
 - <dfn>JSON value</dfn>: As defined by RFC 8259.
 - <dfn>UJG Object</dfn>: A JSON object that contains a `type` member whose value is a string.
-- <dfn>UJG Document</dfn>: Either (a) a single [=UJG Object=], or (b) a UJG Document Wrapper Object containing an `items` array of [=UJG Object=]s.
-- <dfn>Reserved key</dfn>: A member name listed in §[=Reserved key=]s whose meaning is defined by this specification.
+- <dfn>UJG Document</dfn>: Either (a) a single [=UJG Object=], or (b) a UJG Document Wrapper Object containing an `items` array of <xref data-lt="ujg object">UJG Objects</xref>.
+- <dfn>Reserved key</dfn>: A member name listed in §<a href="#reserved-key">Reserved key</a> whose meaning is defined by this specification.
 - <dfn>Referencable object</dfn>: A [=UJG Object=] that contains an `id` member. (An object without `id` is not referencable by this specification.)
 
 ## Serialization format (normative)
@@ -78,7 +78,7 @@ A [=UJG Document=] MAY be a single [=UJG Object=].
 A [=UJG Document=] MAY be a JSON object with:
 
 - `type`: the string `"UJGDocument"`, and
-- `items`: an array of [=UJG Object=]s.
+- `items`: an array of <xref data-lt="ujg object">UJG Objects</xref>.
 
 If a bundle document is used:
 
@@ -135,7 +135,7 @@ Unless a module specifies otherwise, Consumers **MUST** treat `version` as an op
 
 ### Reserved key
 
-The following member names are [=Reserved key=]s across [=UJG Object=]s:
+The following member names are <xref data-lt="reserved key">Reserved keys</xref> across <xref data-lt="ujg object">UJG Objects</xref>:
 
 `type`, `id`, `version`, `name`, `description`, `createdAt`, `updatedAt`, `extensions`, `@context`
 
@@ -165,7 +165,7 @@ Any [=UJG Object=] **MAY** include an `extensions` member.
 
 - `extensions` **MUST** be a JSON object.
 - Member names inside `extensions` **SHOULD** be collision-resistant (e.g., reverse-DNS like `com.example.foo` or an IRI-like namespace).
-- `extensions` member names **MUST NOT** use [=Reserved key=] names listed in §[=Reserved key=]s.
+- `extensions` member names **MUST NOT** use [=Reserved key=] names listed in <a href="#reserved-key">Reserved keys</a>.
 
 ### Consumer behavior
 
@@ -186,21 +186,6 @@ Whenever timestamps are used (including `createdAt`, `updatedAt`, and module-def
 ```
 
 ## References (normative)
-
-### Journey version reference (journeyRef)
-
-When a [=UJG Object=] references a specific [=Journey=] version, it **MUST** use a `journeyRef` member whose value is a JSON object of the form:
-
-```json
-{ "id": "…", "version": "…" }
-```
-
-#### Rules
-
-- `journeyRef.id` **MUST** be a non-empty string.
-- `journeyRef.version` **MUST** be a non-empty string.
-
-### Other references
 
 Unless a module defines otherwise, references to other objects **MUST** be by identifier string (the referenced object's `id`).
 
