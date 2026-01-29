@@ -12,5 +12,13 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1"
+  },
+  "lint-staged": {
+    "apps/web/src/**/*.{js,jsx,ts,tsx,astro,css,md}": [
+      "prettier --write"
+    ],
+    "specs/**/*.md": [
+      "pnpm --filter @openuji/web exec speculator-lint ujg.workspace.json"
+    ]
   }
 }

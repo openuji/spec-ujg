@@ -235,7 +235,7 @@ A conforming Consumer **MUST**:
    - Else if top-level is an object with `type == "UJGDocument"` and `items` array, process each `items[i]` as a [=UJG Object=].
    - Else fail (not a [=UJG Document=]).
 4. Enforce [=Reserved key=] constraints for all encountered [=UJG Object=]s (and the wrapper object, if present).
-5. Enforce in-document `id` uniqueness for [=Referencable object=]s.
+5. Enforce in-document `id` uniqueness for [=Referencable object|Referencable objects=].
 6. Ignore unknown non-reserved members and ignore unknown `extensions` members by default.
 
 ## Designed terminology alignment note (informative)
