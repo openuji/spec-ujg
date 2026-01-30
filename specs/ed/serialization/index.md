@@ -41,14 +41,9 @@ This specification defines requirements for:
 
 A system MAY conform to more than one class.
 
-## Normative references
-
-- RFC 8259: The JavaScript Object Notation (JSON) Data Interchange Format
-- RFC 3339: Date and Time on the Internet: Timestamps
-- RFC 2119 / RFC 8174: Normative language keywords
-- (Optional JSON-LD mode) JSON-LD 1.1 (W3C Recommendation)
-
 ## Terminology
+
+This module covers:
 
 - <dfn>JSON value</dfn>: As defined by RFC 8259.
 - <dfn>UJG Object</dfn>: A JSON object that contains a `type` member whose value is a string.

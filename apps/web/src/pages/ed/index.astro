@@ -3,15 +3,9 @@ import Panel from '@/components/astro/Panel.astro';
 import EditorDraftLayout from '@/layouts/EditorDraftLayout.astro';
 import { getDocuments } from '@/lib/load';
 import { type Document } from '@openuji/speculator';
-import { cn } from '@/lib/utils';
 import MaturityPill from '@/components/astro/speculator/w3c-cg/MaturityPill.astro';
 
 const documents = await getDocuments();
-
-const maturityStyles: Record<string, string> = {
-  incubating: 'bg-accent-soft/5 text-zinc-400 border border-border',
-  draft: 'bg-accent-soft',
-};
 ---
 
 <EditorDraftLayout title="Editor's Draft">

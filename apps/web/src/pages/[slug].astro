@@ -1,18 +1,18 @@
 ---
-import HomeLayout from "@/layouts/HomeLayout.astro";
-import PageLayout from "@/layouts/PageLayout.astro";
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import PageLayout from '@/layouts/PageLayout.astro';
 
 export async function getStaticPaths() {
   const pages = [
     {
-      slug: "governance",
-      fileName: "governance.md",
-      title: "Governance",
+      slug: 'governance',
+      fileName: 'governance.md',
+      title: 'Governance',
     },
     {
-      slug: "contributing",
-      fileName: "contribution.md",
-      title: "Contributing",
+      slug: 'contributing',
+      fileName: 'contribution.md',
+      title: 'Contributing',
     },
   ];
 
@@ -26,7 +26,7 @@ const { fileName, title } = Astro.props;
 
 // Use import.meta.glob to load the markdown files from the specs directory
 // We need to use the relative path from this file to the specs directory
-const allSpecs = import.meta.glob("../../../../specs/*.md");
+const allSpecs = import.meta.glob('../../../../specs/*.md');
 const specPath = `../../../../specs/${fileName}`;
 
 if (!allSpecs[specPath]) {
@@ -38,7 +38,7 @@ const { Content } = post;
 ---
 
 <PageLayout title={title}>
-  <article class="prose max-w-spec min-w-0 mx-auto p-md">
+  <article class="spec max-w-spec min-w-0 mx-auto p-md">
     <Content />
   </article>
 </PageLayout>
