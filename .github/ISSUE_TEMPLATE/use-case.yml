@@ -91,7 +91,7 @@ body:
     id: success
     attributes:
       label: "Success criteria (optional)"
-      description: "What must be true when the journey works?"
+      description: "When this journey is well-designed, what must be true for the user? Include the happy path AND that recovery from Needs-fix/Pending is possible. (This is not saying Needs-fix/Pending are “success”—it means they’re handled well.)"
       placeholder: "Clear success outcome; no dead-ends; recovery path exists from Needs-fix/Pending."
     validations:
       required: false
@@ -100,7 +100,7 @@ body:
     id: failure
     attributes:
       label: "Failure modes / edge cases (optional)"
-      description: "Journey-level failures: dead-ends, loops, state loss, missing recovery paths, ambiguous outcomes."
+      description: "List ways the user could get stuck, confused, or unable to complete. Focus on journey-level problems: dead-ends, loops, ambiguous outcomes, lost progress, missing recovery steps, or rare-but-real situations."
       placeholder: |
         - User gets stuck in Needs-fix (no clear way to retry)
         - User cannot complete from Pending (no next step / no resend)
