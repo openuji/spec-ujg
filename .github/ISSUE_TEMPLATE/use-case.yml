@@ -1,6 +1,6 @@
 name: "Use case"
 description: "Propose a real-world use case UJG should cover"
-title: "[Use case] <short name>"
+title: "[Use case] Short name here"
 labels:
   - "use-case"
   - "needs-triage"
@@ -14,7 +14,8 @@ body:
         **How to write a good use case (keep it simple):**
         - Describe the **user-visible journey** (what the user does + what outcome they see).
         - Avoid internal implementation steps like “system validates/renders”.
-        - It helps to name outcomes like: **Success**, **Needs-fix**, **Pending**, **Blocked**.
+        - Name outcomes like: **Success**, **Needs-fix**, **Pending**, **Blocked**.
+        - Include a recovery path if the journey can fail or pause.
 
         If you want to follow discussions and calls, join the W3C UJG Community Group (link in the sidebar / README).
 
@@ -45,17 +46,44 @@ body:
     validations:
       required: false
 
+  - type: dropdown
+    id: surface
+    attributes:
+      label: "Surface / domain (optional)"
+      description: "Helps triage and clustering."
+      options:
+        - "Marketing / content"
+        - "Commerce / checkout"
+        - "Account / auth"
+        - "Support / help"
+        - "Internal / employee"
+        - "Other"
+    validations:
+      required: false
+
+  - type: textarea
+    id: links
+    attributes:
+      label: "References (optional)"
+      description: "Links to pages, screenshots, specs, or examples that illustrate the journey."
+      placeholder: "- https://...\n- Screenshot / doc link..."
+    validations:
+      required: false
+
   - type: textarea
     id: journey
     attributes:
       label: "Journey narrative (user-visible steps & outcomes)"
-      description: "List the journey as user actions and user-visible outcomes (success / needs-fix / pending / blocked). Avoid UI layout details and internal system actions."
+      description: "List the journey as user actions and user-visible outcomes (Success / Needs-fix / Pending / Blocked). Avoid UI layout details and internal system actions."
       placeholder: |
-        1) User arrives.
-        2) User chooses to start (or leaves).
-        3) User provides required info.
-        4) User sees an outcome: Success / Needs-fix / Pending / Blocked.
-        5) If Pending or Needs-fix, user can recover and reach Success.
+        1) User arrives and chooses to start.
+        2) User provides required info.
+        3) User sees an outcome:
+           - Success: ...
+           - Needs-fix: ... (and how they recover)
+           - Pending: ... (and how they proceed)
+           - Blocked: ... (what stops them)
+        4) Recovery path to reach Success (if applicable).
     validations:
       required: true
 
