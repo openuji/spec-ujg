@@ -13,6 +13,7 @@ const { toc = [], title = '', parent } = Astro.props;
 ---
 
 <BaseLayout title={title} bodyClass="bg-spec">
+  <slot name="head" slot="head" />
   <Header toc={toc} title={title} breadcrumb={[parent]} />
 
   <div class="sidebar-container is-initializing flex px-lg" transition:animate="fade">

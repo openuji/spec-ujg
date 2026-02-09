@@ -3,11 +3,10 @@ interface Props {
   title?: string;
   bodyClass?: string;
 }
-const { title = "User Journey Mapping Specifications", bodyClass = "" } =
-  Astro.props;
-import "@/styles/design-system.css";
-import { ClientRouter } from "astro:transitions";
-import Banner from "@/components/astro/Banner.astro";
+const { title = 'User Journey Mapping Specifications', bodyClass = '' } = Astro.props;
+import '@/styles/design-system.css';
+import { ClientRouter } from 'astro:transitions';
+import Banner from '@/components/astro/Banner.astro';
 ---
 
 <!doctype html>
@@ -16,10 +15,12 @@ import Banner from "@/components/astro/Banner.astro";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
+
     <meta
       name="description"
       content="A family of open specifications that model user journeys as graphs of states and transitions."
     />
+    <slot name="head" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,28 +38,28 @@ import Banner from "@/components/astro/Banner.astro";
         if (window._smoothScrollSetup) return;
         window._smoothScrollSetup = true;
 
-        const shouldReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const shouldReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
         function highlightTarget(target) {
           if (!target) return;
-          target.classList.remove("target-highlight");
+          target.classList.remove('target-highlight');
           // Trigger reflow to restart animation
           void target.offsetWidth;
-          target.classList.add("target-highlight");
-          
+          target.classList.add('target-highlight');
+
           // Optional: remove class after animation finishes to keep DOM clean
           // but it's not strictly necessary as it's a one-shot animation
           setTimeout(() => {
-            target.classList.remove("target-highlight");
+            target.classList.remove('target-highlight');
           }, 2100);
         }
 
         function handleLinkClick(e) {
-          const link = e.target.closest("a");
+          const link = e.target.closest('a');
           if (!link?.hash || link.origin !== location.origin) return;
 
-          const urlPath = link.pathname.replace(/\/$/, "");
-          const locPath = location.pathname.replace(/\/$/, "");
+          const urlPath = link.pathname.replace(/\/$/, '');
+          const locPath = location.pathname.replace(/\/$/, '');
           if (urlPath !== locPath) return;
 
           const target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
@@ -66,9 +67,9 @@ import Banner from "@/components/astro/Banner.astro";
 
           e.preventDefault();
           target.scrollIntoView({
-            behavior: shouldReduceMotion.matches ? "auto" : "smooth",
+            behavior: shouldReduceMotion.matches ? 'auto' : 'smooth',
           });
-          history.pushState(null, "", link.hash);
+          history.pushState(null, '', link.hash);
           highlightTarget(target);
         }
 
@@ -83,12 +84,12 @@ import Banner from "@/components/astro/Banner.astro";
         }
 
         function init() {
-          document.addEventListener("click", handleLinkClick, { capture: true });
+          document.addEventListener('click', handleLinkClick, { capture: true });
           // Also highlight on page load if hash exists
           handleHashChange();
         }
 
-        document.addEventListener("astro:page-load", init);
+        document.addEventListener('astro:page-load', init);
         init();
       })();
     </script>

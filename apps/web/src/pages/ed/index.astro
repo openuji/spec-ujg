@@ -32,7 +32,7 @@ const documents = await getDocuments();
           class="card min-h-auto hover:bg-accent-soft/1 hover:translate-y-[1px] transition-transform"
         >
           <h3>{doc.metadata?.title}</h3>
-          <MaturityPill metadata={doc.metadata} />
+          <MaturityPill metadata={doc.metadata || {}} />
           View Spec →
         </a>
       ))

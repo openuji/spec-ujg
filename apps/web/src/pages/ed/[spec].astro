@@ -1,12 +1,12 @@
 ---
-import { type Document } from "@openuji/speculator";
-import { getDocuments, loadDocument } from "@/lib/load";
-import BlockRenderer from "@/components/astro/speculator/BlockRenderer.astro";
-import SpecLayout from "@/layouts/SpecLayout.astro";
-import Header from "@/components/astro/speculator/w3c-cg/Header.astro";
-import Footer from "@/components/astro/speculator/w3c-cg/Footer.astro";
-import CGLogo from "@/components/astro/speculator/w3c-cg/CGLogo.astro";
-import MaturityPill from "@/components/astro/speculator/w3c-cg/MaturityPill.astro";
+import { type Document } from '@openuji/speculator';
+import { getDocuments, loadDocument } from '@/lib/load';
+import BlockRenderer from '@/components/astro/speculator/BlockRenderer.astro';
+import SpecLayout from '@/layouts/SpecLayout.astro';
+import Header from '@/components/astro/speculator/w3c-cg/Header.astro';
+import Footer from '@/components/astro/speculator/w3c-cg/Footer.astro';
+import CGLogo from '@/components/astro/speculator/w3c-cg/CGLogo.astro';
+import MaturityPill from '@/components/astro/speculator/w3c-cg/MaturityPill.astro';
 
 export async function getStaticPaths() {
   const specs = await getDocuments();
@@ -24,34 +24,44 @@ export async function getStaticPaths() {
 
 const { id, title } = Astro.props;
 
-const document: Document = await loadDocument(id);
-console.log("document", document.metadata);
+const document = await loadDocument(id);
+const statementsJsonLd = document?.computed?.statementsJsonLd;
 ---
 
 <SpecLayout
   title={title}
-  parent={{ href: "/ed", title: "Editor's Draft" }}
-  toc={document.computed?.toc || []}
+  parent={{ href: '/ed', title: "Editor's Draft" }}
+  toc={document?.computed?.toc || []}
 >
+  {
+    statementsJsonLd && (
+      <script
+        type="application/ld+json"
+        slot="head"
+        set:html={JSON.stringify(statementsJsonLd, null, 2)}
+      />
+    )
+  }
   <article>
-    <CGLogo metadata={document.metadata} />
-    
+    <CGLogo metadata={document?.metadata} />
+
     <div class="flex items-center gap-md mt-md">
-        <h1>{title}</h1>  <MaturityPill metadata={document.metadata} />
+      <h1>{title}</h1>
+      <MaturityPill metadata={document?.metadata} />
     </div>
-    <Header metadata={document.metadata} />
+    <Header metadata={document?.metadata} />
     <div class="spec">
-    {
-      document.children.map((child) => (
-        <BlockRenderer
-          node={child}
-          documentPath={document.sourcePos?.file}
-          headingNumbers={document.computed?.headingNumbers}
-          basePath="/ed"
-        />
-      ))
-    }
-    <Footer metadata={document.metadata} pkgName={`ujg/${id}`} />
+      {
+        document.children.map((child) => (
+          <BlockRenderer
+            node={child}
+            documentPath={document.sourcePos?.file}
+            headingNumbers={document.computed?.headingNumbers}
+            basePath="/ed"
+          />
+        ))
+      }
+      <Footer metadata={document.metadata} pkgName={`ujg/${id}`} />
     </div>
   </article></SpecLayout
 >

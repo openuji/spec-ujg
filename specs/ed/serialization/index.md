@@ -35,16 +35,21 @@ This module covers:
 - <dfn>Reserved key</dfn>: A member name listed in [§#reserved-key|Reserved keys] whose meaning is defined by this specification.
 - <dfn>Referencable object</dfn>: A [=UJG Object=] that contains an `id` member. (An object without `id` is not referencable by this specification.)
 
-## Serialization format (normative)
+## Serialization format
 
-### JSON
+### JSON {data-cop=serialization-json #serialization-json}
 
-1. UJG data **MUST** be serialized as [=JSON value=]s as defined by RFC 8259.
-2. A UJG Producer **MUST** encode serialized JSON text as UTF-8.
-3. Arrays **MUST** preserve element order (array element order is significant).
-4. A UJG Producer **MUST NOT** emit JSON objects with duplicate member names.
-5. A UJG Consumer **MUST** treat duplicate member names as an error.
-6. A UJG Consumer **MUST NOT** require any particular ordering of members within a JSON object.
+<spec-statement>UJG data **MUST** be serialized as [=JSON value=]s as defined by RFC 8259.</spec-statement>
+
+<spec-statement>A UJG Producer **MUST** encode serialized JSON text as UTF-8.</spec-statement>
+
+<spec-statement>Arrays **MUST** preserve element order (array element order is significant).</spec-statement>
+
+<spec-statement>A UJG Producer **MUST NOT** emit JSON objects with duplicate member names.</spec-statement>
+
+<spec-statement>A UJG Consumer **MUST** treat duplicate member names as an error.</spec-statement>
+
+<spec-statement>A UJG Consumer **MUST NOT** require any particular ordering of members within a JSON object.</spec-statement>
 
 ## Document forms and bundling (normative)
 

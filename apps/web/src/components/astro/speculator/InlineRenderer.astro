@@ -1,6 +1,6 @@
 ---
-import type { Inline } from "@openuji/speculator";
-import RecursiveInlineRenderer from "./InlineRenderer.astro";
+import type { Inline } from '@openuji/speculator';
+import RecursiveInlineRenderer from './InlineRenderer.astro';
 
 interface Props {
   nodes: Inline[];
@@ -16,64 +16,62 @@ const sharedProps = { basePath };
 {
   nodes.map((node) => {
     switch (node.type) {
-      case "text":
+      case 'text':
         return <>{node.value}</>;
 
-      case "emphasis":
+      case 'emphasis':
         return (
           <em>
             <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
           </em>
         );
 
-      case "strong":
+      case 'strong':
         return (
           <strong>
             <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
           </strong>
         );
 
-      case "inlineCode":
+      case 'inlineCode':
         return <code>{node.value}</code>;
 
-      case "variable":
+      case 'variable':
         return <var>{node.value}</var>;
 
-      case "link":
+      case 'link':
         return (
           <a href={node.url} title={node.title || undefined}>
             <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
           </a>
         );
 
-      case "image":
-        return (
-          <img src={node.url} alt={node.alt || ""} title={node.title || ""} />
-        );
+      case 'image':
+        return <img src={node.url} alt={node.alt || ''} title={node.title || ''} />;
 
-      case "definition":
+      case 'definition':
         // Render <dfn> with ReSpec attributes
         const def = node;
         const dfnId = def.explicitId || def.id;
-        const dfnFor = def.forContexts?.filter(Boolean).join(", ");
+        const dfnFor = def.forContexts?.filter(Boolean).join(', ');
         const dfnType = def.dfnType;
         return (
           <dfn
             id={dfnId}
             title={node.term}
             data-dfn-for={dfnFor || undefined}
-            data-dfn-type={dfnType !== "dfn" ? dfnType : undefined}
+            data-dfn-type={dfnType !== 'dfn' ? dfnType : undefined}
           >
             <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
           </dfn>
         );
 
-      case "workspaceDfnReference": {
+      case 'workspaceDfnReference': {
         const ref = node;
         const href =
           ref.targetDocumentId && basePath
-            ? `${basePath}/${ref.targetDocumentId}#${ref.targetId || ""}`
-            : `#${ref.targetId || ""}`;
+            ? `${basePath}/${ref.targetDocumentId}#${ref.targetId || ''}`
+            : `#${ref.targetId || ''}`;
         return (
           <a href={href} class="xref" title={ref.targetTerm}>
             <RecursiveInlineRenderer nodes={ref.children} {...sharedProps} />
@@ -81,12 +79,12 @@ const sharedProps = { basePath };
         );
       }
 
-      case "workspaceIdlReference": {
+      case 'workspaceIdlReference': {
         const ref = node;
         const href =
           ref.targetDocumentId && basePath
-            ? `${basePath}/${ref.targetDocumentId}#${ref.targetId || ""}`
-            : `#${ref.targetId || ""}`;
+            ? `${basePath}/${ref.targetDocumentId}#${ref.targetId || ''}`
+            : `#${ref.targetId || ''}`;
         return (
           <code class="idl" data-link-type="idl">
             <a href={href} class="xref" title={ref.targetTerm}>
@@ -96,12 +94,12 @@ const sharedProps = { basePath };
         );
       }
 
-      case "workspaceElementReference": {
+      case 'workspaceElementReference': {
         const ref = node;
         const href =
           ref.targetDocumentId && basePath
-            ? `${basePath}/${ref.targetDocumentId}#${ref.targetId || ""}`
-            : `#${ref.targetId || ""}`;
+            ? `${basePath}/${ref.targetDocumentId}#${ref.targetId || ''}`
+            : `#${ref.targetId || ''}`;
         return (
           <code class="element" data-link-type="element">
             <a href={href} class="xref" title={ref.targetTerm}>
@@ -111,18 +109,17 @@ const sharedProps = { basePath };
         );
       }
 
-      case "sectionReference": {
-        console.log('sectionReference', node);
+      case 'sectionReference': {
         const ref = node;
         const href = `#${ref.targetId}`;
         const label =
           ref.children && ref.children.length > 0 ? (
             <>
-              §{ref.targetNumber || ""}{" "}
+              §{ref.targetNumber || ''}{' '}
               <RecursiveInlineRenderer nodes={ref.children} {...sharedProps} />
             </>
           ) : (
-            <>§{ref.targetNumber || ""}</>
+            <>§{ref.targetNumber || ''}</>
           );
         return (
           <a href={href} class="sec-ref" title={ref.targetTitle || undefined}>
@@ -130,12 +127,12 @@ const sharedProps = { basePath };
           </a>
         );
       }
-      
-      case "externalDfnReference": {
+
+      case 'externalDfnReference': {
         const ref = node;
         return (
           <a
-            href={ref.url || "#"}
+            href={ref.url || '#'}
             class="xref external"
             title={`${ref.targetTerm} in ${ref.xrefSpec}`}
           >
@@ -144,12 +141,12 @@ const sharedProps = { basePath };
         );
       }
 
-      case "externalIdlReference": {
+      case 'externalIdlReference': {
         const ref = node;
         return (
           <code class="idl" data-link-type="idl">
             <a
-              href={ref.url || "#"}
+              href={ref.url || '#'}
               class="xref external"
               title={`${ref.targetTerm} in ${ref.xrefSpec}`}
             >
@@ -159,12 +156,12 @@ const sharedProps = { basePath };
         );
       }
 
-      case "externalElementReference": {
+      case 'externalElementReference': {
         const ref = node;
         return (
           <code class="element" data-link-type="element">
             <a
-              href={ref.url || "#"}
+              href={ref.url || '#'}
               class="xref external"
               title={`${ref.targetTerm} in ${ref.xrefSpec}`}
             >
@@ -174,16 +171,15 @@ const sharedProps = { basePath };
         );
       }
 
-      case "cite":
+      case 'cite':
         // Render citation
         const cite = node;
         const citeClass = cite.forcedNormative
-          ? "cite normative"
+          ? 'cite normative'
           : cite.forcedInformative
-            ? "cite informative"
-            : "cite";
-        const citeHref =
-          cite.url || (cite.targetId ? `#${cite.targetId}` : undefined);
+            ? 'cite informative'
+            : 'cite';
+        const citeHref = cite.url || (cite.targetId ? `#${cite.targetId}` : undefined);
 
         const citeContent =
           cite.children && cite.children.length > 0 ? (
@@ -202,21 +198,21 @@ const sharedProps = { basePath };
           </cite>
         );
 
-      case "requirement":
+      case 'requirement':
         return (
           <span class="requirement" id={node.id}>
             {node.keyword}
           </span>
         );
 
-      case "issue":
+      case 'issue':
         return (
           <span
             class="issue"
             data-status={node.status}
             style="color: orange; border: 1px solid orange; padding: 2px; border-radius: 4px;"
           >
-            Issue {node.id && `#${node.id}`}:{" "}
+            Issue {node.id && `#${node.id}`}:{' '}
             <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
           </span>
         );

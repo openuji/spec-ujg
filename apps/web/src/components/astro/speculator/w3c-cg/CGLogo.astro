@@ -1,25 +1,22 @@
 ---
-import type { DocumentMetadata } from "@openuji/speculator";
-import draftLogo from "./assets/w3c-cg-draft.png";
-import finalLogo from "./assets/w3c-cg-final.png";
+import type { DocumentMetadata } from '@openuji/speculator';
+import draftLogo from './assets/w3c-cg-draft.png';
+import finalLogo from './assets/w3c-cg-final.png';
 
 interface Props {
-  metadata: DocumentMetadata;
+  metadata?: DocumentMetadata;
 }
 
 const { metadata } = Astro.props;
 
-
-const isFinal =
-  metadata.status === "CG-FINAL" || metadata.maturityLevel === "stable";
+const isFinal = metadata?.status === 'CG-FINAL' || metadata?.maturityLevel === 'stable';
 const cgLogo = isFinal ? finalLogo.src : draftLogo.src;
-
 ---
 
 <div class="w-20 p-2 pt-3 pl-3 border border-border rounded-md">
-    <img
-        src={cgLogo}
-        alt={`W3C Community Group ${isFinal ? "Final" : "Draft"} Report`}
-        class="w-full"
-/>
+  <img
+    src={cgLogo}
+    alt={`W3C Community Group ${isFinal ? 'Final' : 'Draft'} Report`}
+    class="w-full"
+  />
 </div>

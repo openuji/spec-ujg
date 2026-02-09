@@ -1,5 +1,5 @@
 {
-  "name": "openuji-ujg-spec",
+  "name": "spec-ujg",
   "compatibility_date": "2025-08-14",
   "assets": {
     "directory": "./dist"

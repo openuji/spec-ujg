@@ -1,41 +1,36 @@
-import { useEffect, useMemo, useState, useRef } from "react"
-import { createPortal } from "react-dom"
-import { cn } from "@/lib/utils"
-import { PanelLeft, PanelRight } from "lucide-react"
+import { useEffect, useMemo, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { cn } from '@/lib/utils';
+import { PanelLeft, PanelRight } from 'lucide-react';
 
-import { useStore } from "@nanostores/react"
-import { tocCollapsed, setTocCollapsed, toggleTocCollapsed } from "@/stores/tocSidebar"
+import { useStore } from '@nanostores/react';
+import { tocCollapsed, setTocCollapsed, toggleTocCollapsed } from '@/stores/tocSidebar';
 
-
-import type { TocEntry } from "@openuji/speculator"
+import type { TocEntry } from '@openuji/speculator';
 
 interface TocProps {
-  toc: TocEntry[]
-  className?: string
-  onItemClick?: () => void
+  toc: TocEntry[];
+  className?: string;
+  onItemClick?: () => void;
 }
 
 const flattedIds = (toc: TocEntry[]) => {
-
-  const ids: string[] = []
+  const ids: string[] = [];
   const walk = (entries: TocEntry[]) => {
-    for(const entry of entries) {
+    for (const entry of entries) {
       if (entry.id) {
-        ids.push(entry.id)
+        ids.push(entry.id);
       }
       if (entry.children) {
-        walk(entry.children)
+        walk(entry.children);
       }
     }
-    
-  }
+  };
 
-  walk(toc)
+  walk(toc);
 
   return ids;
-}
-
-
+};
 
 const useActiveId = (ids: string[]) => {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -43,7 +38,11 @@ const useActiveId = (ids: string[]) => {
   useEffect(() => {
     if (!ids.length) return;
 
-    const HEADER_HEIGHT = Number(getComputedStyle(document.documentElement).getPropertyValue("--height-header").replace("px", ""));
+    const HEADER_HEIGHT = Number(
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--height-header')
+        .replace('px', '')
+    );
     const THRESHOLD = HEADER_HEIGHT; // How far below header to consider "active"
 
     const onScroll = () => {
@@ -57,7 +56,7 @@ const useActiveId = (ids: string[]) => {
 
         const rect = el.getBoundingClientRect();
         const top = rect.top;
-        
+
         // If heading is at or above the detection zone, it's the candidate
         if (top <= HEADER_HEIGHT + THRESHOLD) {
           currentId = id;
@@ -69,19 +68,16 @@ const useActiveId = (ids: string[]) => {
 
           const prevRect = prevEl.getBoundingClientRect();
           const prevTop = prevRect.top;
-          
-          if(prevTop < 0) {
+
+          if (prevTop < 0) {
             currentId = id;
           }
-
-          
         }
       }
 
       if (currentId !== activeId) {
         setActiveId(currentId);
       }
-      
     };
 
     // Throttle for performance
@@ -96,28 +92,28 @@ const useActiveId = (ids: string[]) => {
       }
     };
 
-    window.addEventListener("scroll", throttledScroll, { passive: true });
+    window.addEventListener('scroll', throttledScroll, { passive: true });
     onScroll(); // Initial check
 
-    return () => window.removeEventListener("scroll", throttledScroll);
+    return () => window.removeEventListener('scroll', throttledScroll);
   }, [ids, activeId]);
 
   return activeId;
 };
 
 export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
-  if (!toc || toc.length === 0) return null  
-  
-  const tocRef = useRef<HTMLDivElement>(null)
-  const scrollDir = useRef<"up" | "down" | null>(null);
+  if (!toc || toc.length === 0) return null;
 
-  const ids =  useMemo(() => flattedIds(toc), [toc])
-  const activeId = useActiveId(ids)
+  const tocRef = useRef<HTMLDivElement>(null);
+  const scrollDir = useRef<'up' | 'down' | null>(null);
 
-  const [isMounted, setIsMounted] = useState(false)
+  const ids = useMemo(() => flattedIds(toc), [toc]);
+  const activeId = useActiveId(ids);
+
+  const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -125,16 +121,16 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY) {
-        scrollDir.current = "down";
+        scrollDir.current = 'down';
       } else if (currentScrollY < lastScrollY) {
-        scrollDir.current = "up";
+        scrollDir.current = 'up';
       }
       lastScrollY = currentScrollY;
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener('scroll', onScroll);
     };
   }, []);
 
@@ -143,33 +139,28 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
     const container = tocRef.current;
     if (!container || !activeId) return;
 
-    const activeLink = container.querySelector<HTMLAnchorElement>(
-      `a[href="#${activeId}"]`,
-    );
+    const activeLink = container.querySelector<HTMLAnchorElement>(`a[href="#${activeId}"]`);
     if (!activeLink) return;
 
     const linkTop = activeLink.offsetTop;
     const linkBottom = linkTop + activeLink.offsetHeight;
     const containerTop = container.scrollTop;
     const containerBottom = containerTop + container.clientHeight;
-    if (linkTop > containerBottom && scrollDir.current === "down") {
-      container.scrollTo({ top: linkTop - padding, behavior: "smooth" });
-    } else if (linkBottom < containerTop && scrollDir.current === "up") {
+    if (linkTop > containerBottom && scrollDir.current === 'down') {
+      container.scrollTo({ top: linkTop - padding, behavior: 'smooth' });
+    } else if (linkBottom < containerTop && scrollDir.current === 'up') {
       container.scrollTo({
         top: linkBottom - container.clientHeight + padding,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
-
-    //console.log('Scrolling TOC to active link:', { linkTop, linkBottom, containerTop, containerBottom });
   }, [activeId]);
 
+  const isToggled = useStore(tocCollapsed);
+  const displayToggled = isMounted ? isToggled : false;
 
-  const isToggled = useStore(tocCollapsed)
-  const displayToggled = isMounted ? isToggled : false
-  
   const restoreButton =
-    isMounted && displayToggled && typeof document !== "undefined"
+    isMounted && displayToggled && typeof document !== 'undefined'
       ? createPortal(
           <button
             onClick={() => setTocCollapsed(false)}
@@ -180,88 +171,90 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
           </button>,
           document.body
         )
-      : null
+      : null;
 
   return (
     <>
       {restoreButton}
-      <div ref={tocRef} className="overflow-y-auto max-h-[calc(100vh-var(--height-header))] py-md pr-3">
-        <div
-          className="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-500 pb-base pl-3 pr-2">
+      <div
+        ref={tocRef}
+        className="overflow-y-auto max-h-[calc(100vh-var(--height-header))] py-md pr-3"
+      >
+        <div className="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-500 pb-base pl-3 pr-2">
           <span>Table of Contents</span>
           <button
             onClick={toggleTocCollapsed}
             className="hidden sm:flex hover:text-zinc-900 transition-[background-color,color] p-1 rounded-md hover:bg-zinc-100"
-            title={displayToggled ? "Expand sidebar" : "Collapse sidebar"}
-            aria-label={displayToggled ? "Expand sidebar" : "Collapse sidebar"}
+            title={displayToggled ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label={displayToggled ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            {displayToggled ? <PanelRight className="w-4 h-4" /> : <PanelLeft className="w-4 h-4" />}
+            {displayToggled ? (
+              <PanelRight className="w-4 h-4" />
+            ) : (
+              <PanelLeft className="w-4 h-4" />
+            )}
           </button>
         </div>
-        <nav className={cn("flex flex-col", className)}>
+        <nav className={cn('flex flex-col', className)}>
           <ul className="flex flex-col list-none p-0">
             {toc.map((entry, index) => (
-              <TocItem 
-                key={entry.id || index} 
-                entry={entry} 
-                onItemClick={onItemClick} 
+              <TocItem
+                key={entry.id || index}
+                entry={entry}
+                onItemClick={onItemClick}
                 activeId={activeId}
               />
             ))}
           </ul>
         </nav>
-    </div>
+      </div>
     </>
-  )
-}
+  );
+};
 
-const TocItem: React.FC<{ 
-  entry: TocEntry; 
+const TocItem: React.FC<{
+  entry: TocEntry;
   onItemClick?: () => void;
   activeId: string | null;
-}> = ({
-  entry,
-  onItemClick,
-  activeId,
-}) => {
-  const [isOpen] = useState(true)
+}> = ({ entry, onItemClick, activeId }) => {
+  const [isOpen] = useState(true);
 
-  const hasChildren = entry.children && entry.children.length > 0
+  const hasChildren = entry.children && entry.children.length > 0;
 
   return (
     <li className="flex flex-col">
-        <a
-          href={`#${entry.id || ""}`}
-          onClick={onItemClick}
-          className={cn(
-            "flex items-center group relative",
-            "flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent",
-            "hover:bg-zinc-100 hover:text-zinc-900",
-            entry.depth === 1 
-              ? "font-medium text-zinc-900 mt-2" 
-              : "text-zinc-600 hover:border-zinc-200",
-            activeId === entry.id && "text-accent border-accent bg-accent/5 font-medium"
-          )}
-        >
-          {entry.number && (
-            <span className="mr-2 font-mono text-2xs tracking-tight text-zinc-500 group-hover:text-zinc-700 transition-colors">
-              {entry.number}
-            </span>
-          )}
-          <span>{entry.text}</span>
-        </a>
+      <a
+        href={`#${entry.id || ''}`}
+        onClick={onItemClick}
+        className={cn(
+          'flex items-center group relative',
+          'flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent',
+          'hover:bg-zinc-100 hover:text-zinc-900',
+          entry.depth === 1
+            ? 'font-medium text-zinc-900 mt-2'
+            : 'text-zinc-600 hover:border-zinc-200',
+          activeId === entry.id && 'text-accent border-accent bg-accent/5 font-medium'
+        )}
+      >
+        {entry.number && (
+          <span className="mr-2 font-mono text-2xs tracking-tight text-zinc-500 group-hover:text-zinc-700 transition-colors">
+            {entry.number}
+          </span>
+        )}
+        <span>{entry.text}</span>
+      </a>
       {hasChildren && isOpen && (
         <ul className="flex flex-col list-none p-0 m-0 border-l border-zinc-100 ml-4">
           {entry.children?.map((child, index) => (
-            <TocItem 
-              key={child.id || index} 
-              entry={child} 
-              onItemClick={onItemClick} 
+            <TocItem
+              key={child.id || index}
+              entry={child}
+              onItemClick={onItemClick}
               activeId={activeId}
             />
           ))}
         </ul>
       )}
     </li>
-  )
-}
+  );
+};

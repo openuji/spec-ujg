@@ -798,7 +798,8 @@
     @apply font-sans text-foreground wrap-anywhere;
   }
 
-  .spec section {
+  .spec section,
+  .spec p {
     @apply scroll-mt-[calc(var(--spacing-header)+(--spacing(6)))];
   }
 
