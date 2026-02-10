@@ -1,8 +1,8 @@
 ---
-import { MobilePanel } from "@/components/react/toc/MobilePanel";
-import type { TocEntry, Document } from "@openuji/speculator";
-import BreadcrumbSelect from "@/components/react/select/BreadcrumbSelect";
-import { getDocuments } from "@/lib/load";
+import { MobilePanel } from '@/components/react/toc/MobilePanel';
+import type { TocEntry, Document } from '@openuji/speculator';
+import BreadcrumbSelect from '@/components/react/select/BreadcrumbSelect';
+import { getDocuments } from '@/lib/load';
 
 interface Props {
   title: string;
@@ -17,16 +17,14 @@ const docs = await getDocuments();
 const options = docs
   .filter((doc: Document) => doc.metadata?.title !== undefined)
   .map((doc: Document) => ({
-    label: doc.metadata?.title!,
+    label: doc.metadata?.title || '',
     href: `/ed/${doc.id}`,
   }));
 
-const currentHref = Astro.url.pathname.replace(/\.html$/, "");
+const currentHref = Astro.url.pathname.replace(/\.html$/, '');
 ---
 
-<header
-  class="bg-panel backdrop-blur-md sticky top-0 z-header border-b border-border"
->
+<header class="bg-panel backdrop-blur-md sticky top-0 z-header border-b border-border">
   <div class="h-header px-lg flex items-center gap-2 sm:justify-between">
     {
       toc && (
@@ -57,20 +55,33 @@ const currentHref = Astro.url.pathname.replace(/\.html$/, "");
         breadcrumb.length === 0 ? (
           <span class="text-secondary-foreground">{title}</span>
         ) : (
-          <BreadcrumbSelect
-            valueHref={currentHref}
-            options={options}
-            client:load
-          />
+          <BreadcrumbSelect valueHref={currentHref} options={options} client:load />
         )
       }
     </div>
     <nav class="hidden sm:flex">
       <a
-        href="https://github.com/openuji/spec-ujg/tree/main/specs/ed"
-        class="text-secondary-foreground hover:text-accent transition-colors duration-200 text-sm"
-        >GitHub</a
+        href="https://github.com/openuji/spec-ujg"
+        class="inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200"
+        aria-label="GitHub repository"
+        title="GitHub repository"
       >
+        <svg
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          stroke="currentColor"
+          stroke-width="2"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+          ></path>
+        </svg>
+        <span class="sr-only">GitHub</span>
+      </a>
     </nav>
   </div>
 </header>
