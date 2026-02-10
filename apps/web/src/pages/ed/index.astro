@@ -29,7 +29,7 @@ const documents = await getDocuments();
       documents.map((doc: Document) => (
         <a
           href={`/ed/${doc.id}`}
-          class="card min-h-auto hover:bg-accent-soft/1 hover:translate-y-[1px] transition-transform"
+          class="card min-h-auto hover:bg-accent-soft/40 hover:translate-y-[1px] transition-[background-color,transform]"
         >
           <h3>{doc.metadata?.title}</h3>
           <MaturityPill metadata={doc.metadata || {}} />

@@ -1,5 +1,5 @@
 ---
-import type { DocumentMetadata } from "@openuji/speculator";
+import type { DocumentMetadata } from '@openuji/speculator';
 
 interface Props {
   metadata: DocumentMetadata;
@@ -7,54 +7,84 @@ interface Props {
 
 const { metadata } = Astro.props;
 
-const isFinal =
-  metadata.status === "CG-FINAL" || metadata.maturityLevel === "stable";
+const isFinal = metadata.status === 'CG-FINAL' || metadata.maturityLevel === 'stable';
 
 const group =
-  typeof metadata.group === "object"
+  typeof metadata.group === 'object'
     ? metadata.group
-    : { name: metadata.group || "Unknown Group", url: undefined };
+    : { name: metadata.group || 'Unknown Group', url: undefined };
 ---
 
-<section 
-  class="my-8 p-6 rounded-r-lg border-l-4 border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30"
->
-  <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-500 mb-3 mt-0 border-none">
+<section class="my-8 p-6 rounded-r-lg border-l-4 border-border bg-panel">
+  <h2
+    class="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3 mt-0 border-none"
+  >
     Status of this Document
   </h2>
-  
-  <div class="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-    {isFinal ? (
-      <p>
-        This report was published by the{" "}
-        {group.url ? <a href={group.url} class="text-zinc-900 dark:text-zinc-100 underline decoration-zinc-300 underline-offset-4 hover:decoration-zinc-400 transition-colors">{group.name}</a> : group.name}. It
-        is not a W3C Standard nor is it on the W3C Standards Track. Please
-        note that under the{" "}
-        <a href="https://www.w3.org/community/about/process/final/" class="text-zinc-900 dark:text-zinc-100 underline decoration-zinc-300 underline-offset-4 hover:decoration-zinc-400 transition-colors">
-          W3C Community Final Specification Agreement (FSA)
-        </a>{" "}
-        other conditions apply. Learn more about{" "}
-        <a href="https://www.w3.org/community/" class="text-zinc-900 dark:text-zinc-100 underline decoration-zinc-300 underline-offset-4 hover:decoration-zinc-400 transition-colors">
-          W3C Community and Business Groups
-        </a>
-        .
-      </p>
-    ) : (
-      <p>
-        This report was published by the{" "}
-        {group.url ? <a href={group.url} class="text-zinc-900 dark:text-zinc-100 underline decoration-zinc-300 underline-offset-4 hover:decoration-zinc-400 transition-colors">{group.name}</a> : group.name}. It
-        is not a W3C Standard nor is it on the W3C Standards Track. Please
-        note that under the{" "}
-        <a href="https://www.w3.org/community/about/process/cla/" class="text-zinc-900 dark:text-zinc-100 underline decoration-zinc-300 underline-offset-4 hover:decoration-zinc-400 transition-colors">
-          W3C Community Contributor License Agreement (CLA)
-        </a>{" "}
-        there is a limited opt-out and other conditions apply. Learn more
-        about{" "}
-        <a href="https://www.w3.org/community/" class="text-zinc-900 dark:text-zinc-100 underline decoration-zinc-300 underline-offset-4 hover:decoration-zinc-400 transition-colors">
-          W3C Community and Business Groups
-        </a>
-        .
-      </p>
-    )}
+
+  <div class="text-xs leading-relaxed text-secondary-foreground">
+    {
+      isFinal ? (
+        <p>
+          This report was published by the{' '}
+          {group.url ? (
+            <a
+              href={group.url}
+              class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"
+            >
+              {group.name}
+            </a>
+          ) : (
+            group.name
+          )}
+          . It is not a W3C Standard nor is it on the W3C Standards Track. Please note that under
+          the{' '}
+          <a
+            href="https://www.w3.org/community/about/process/final/"
+            class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"
+          >
+            W3C Community Final Specification Agreement (FSA)
+          </a>{' '}
+          other conditions apply. Learn more about{' '}
+          <a
+            href="https://www.w3.org/community/"
+            class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"
+          >
+            W3C Community and Business Groups
+          </a>
+          .
+        </p>
+      ) : (
+        <p>
+          This report was published by the{' '}
+          {group.url ? (
+            <a
+              href={group.url}
+              class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"
+            >
+              {group.name}
+            </a>
+          ) : (
+            group.name
+          )}
+          . It is not a W3C Standard nor is it on the W3C Standards Track. Please note that under
+          the{' '}
+          <a
+            href="https://www.w3.org/community/about/process/cla/"
+            class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"
+          >
+            W3C Community Contributor License Agreement (CLA)
+          </a>{' '}
+          there is a limited opt-out and other conditions apply. Learn more about{' '}
+          <a
+            href="https://www.w3.org/community/"
+            class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"
+          >
+            W3C Community and Business Groups
+          </a>
+          .
+        </p>
+      )
+    }
   </div>
 </section>

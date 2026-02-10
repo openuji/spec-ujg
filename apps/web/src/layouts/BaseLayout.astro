@@ -32,6 +32,27 @@ import Banner from '@/components/astro/Banner.astro';
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      (function () {
+        const storageKey = 'ujg-theme';
+        try {
+          const stored = localStorage.getItem(storageKey);
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', stored);
+          } else {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+            document.documentElement.setAttribute('data-theme', systemTheme);
+          }
+        } catch {
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+          document.documentElement.setAttribute('data-theme', systemTheme);
+        }
+      })();
+    </script>
     <ClientRouter />
     <script is:inline>
       (function () {
@@ -97,5 +118,65 @@ import Banner from '@/components/astro/Banner.astro';
   <body class={bodyClass}>
     <Banner />
     <slot />
+    <footer class="border-t border-border bg-panel backdrop-blur-md mt-auto">
+      <div
+        class="max-w-content mx-auto px-4 md:px-12 py-4 flex items-center justify-between gap-md"
+      >
+        <div class="text-xs text-secondary-foreground">
+          <slot name="footer-meta"> User Journey Graph specifications </slot>
+        </div>
+        <button
+          type="button"
+          class="theme-switcher js-theme-switcher"
+          aria-label="Toggle color theme"></button>
+      </div>
+    </footer>
+
+    <script>
+      import { themeMode, syncThemeMode, toggleThemeMode, watchSystemTheme } from '@/stores/theme';
+
+      const g = globalThis as any;
+
+      const updateButtonLabel = () => {
+        const button = document.querySelector('.js-theme-switcher');
+        if (!(button instanceof HTMLButtonElement)) return;
+
+        const theme = themeMode.get();
+        button.textContent = theme === 'dark' ? 'Theme: Dark' : 'Theme: Light';
+        button.setAttribute('aria-pressed', String(theme === 'dark'));
+      };
+
+      const bindThemeSwitcher = () => {
+        const button = document.querySelector('.js-theme-switcher');
+        if (!(button instanceof HTMLButtonElement)) return;
+
+        if (button.dataset.bound !== 'true') {
+          button.dataset.bound = 'true';
+          button.addEventListener('click', () => {
+            toggleThemeMode();
+          });
+        }
+
+        updateButtonLabel();
+      };
+
+      const initThemeUi = () => {
+        syncThemeMode();
+        bindThemeSwitcher();
+      };
+
+      if (!g.__ujgThemeUiInit) {
+        g.__ujgThemeUiInit = true;
+        g.__ujgThemeUnsub?.();
+        g.__ujgThemeUnsub = themeMode.subscribe(() => {
+          updateButtonLabel();
+        });
+        g.__ujgThemeWatchCleanup?.();
+        g.__ujgThemeWatchCleanup = watchSystemTheme();
+        document.addEventListener('astro:page-load', initThemeUi);
+      }
+
+      initThemeUi();
+    </script>
   </body>
 </html>

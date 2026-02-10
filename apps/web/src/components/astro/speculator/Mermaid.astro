@@ -8,19 +8,127 @@ const { code, id } = Astro.props;
 ---
 
 <div class="mermaid-container" id={id}>
-  <pre class="mermaid">{code}</pre>
+  <pre class="mermaid" data-mermaid-source={code}>{code}</pre>
 </div>
 
 <script>
-  import mermaid from "mermaid";
+  import mermaid from 'mermaid';
 
-  function initMermaid() {
-    mermaid.initialize({ startOnLoad: false, theme: "default" });
-    mermaid.run({ querySelector: ".mermaid" });
+  const MERMAID_SELECTOR = '.mermaid';
+  const COLOR_SCHEME_QUERY = '(prefers-color-scheme: dark)';
+  let isRendering = false;
+  let rerenderQueued = false;
+
+  function isDarkTheme() {
+    const forcedTheme = document.documentElement.getAttribute('data-theme');
+    if (forcedTheme === 'dark') return true;
+    if (forcedTheme === 'light') return false;
+    return window.matchMedia(COLOR_SCHEME_QUERY).matches;
   }
 
-  // Initialize on both initial load and after Astro view transitions
-  document.addEventListener("astro:page-load", initMermaid);
+  function getMermaidTheme(isDark: boolean) {
+    if (isDark) {
+      return {
+        theme: 'base',
+        themeVariables: {
+          darkMode: true,
+          background: 'transparent',
+          textColor: '#f3f4f8',
+          titleColor: '#f3f4f8',
+          lineColor: '#95a2cb',
+          primaryColor: '#1a2340',
+          primaryTextColor: '#f3f4f8',
+          primaryBorderColor: '#8f80ff',
+          secondaryColor: '#162036',
+          secondaryTextColor: '#f3f4f8',
+          tertiaryColor: '#1d2b4a',
+          tertiaryTextColor: '#f3f4f8',
+          mainBkg: '#1a2340',
+          nodeBkg: '#1a2340',
+          edgeLabelBackground: '#27272a',
+          clusterBkg: '#10182e',
+          clusterBorder: '#33416b',
+          labelBackground: '#10182e',
+          fontFamily: 'Inter, system-ui, sans-serif',
+        },
+      };
+    }
+
+    return {
+      theme: 'default',
+    };
+  }
+
+  function collectMermaidNodes() {
+    const nodes = document.querySelectorAll(MERMAID_SELECTOR);
+    const readyNodes: HTMLElement[] = [];
+
+    for (const node of nodes) {
+      let source = node.getAttribute('data-mermaid-source');
+
+      if (!source) {
+        // If Mermaid already processed this node but source is missing, skip it.
+        // Using rendered SVG text as source can trigger UnknownDiagramError.
+        if (node.getAttribute('data-processed') === 'true') continue;
+
+        source = node.textContent ?? '';
+        if (!source.trim()) continue;
+      }
+
+      node.setAttribute('data-mermaid-source', source);
+      node.textContent = source;
+      node.removeAttribute('data-processed');
+      readyNodes.push(node as HTMLElement);
+    }
+
+    return readyNodes;
+  }
+
+  async function initMermaid() {
+    const isDark = isDarkTheme();
+    const theme = getMermaidTheme(isDark);
+    const nodes = collectMermaidNodes();
+    if (!nodes.length) return;
+
+    mermaid.initialize({
+      startOnLoad: false,
+      ...theme,
+    });
+    await mermaid.run({ nodes, suppressErrors: true });
+  }
+
+  async function renderMermaidQueued() {
+    if (isRendering) {
+      rerenderQueued = true;
+      return;
+    }
+
+    isRendering = true;
+    do {
+      rerenderQueued = false;
+      try {
+        await initMermaid();
+      } catch (error) {
+        console.warn('Mermaid render failed', error);
+      }
+    } while (rerenderQueued);
+    isRendering = false;
+  }
+
+  function queueMermaidRender() {
+    requestAnimationFrame(() => {
+      void renderMermaidQueued();
+    });
+  }
+
+  if (!window.__ujgMermaidInit) {
+    window.__ujgMermaidInit = true;
+    document.addEventListener('astro:page-load', queueMermaidRender);
+    window.matchMedia(COLOR_SCHEME_QUERY).addEventListener('change', queueMermaidRender);
+    window.addEventListener('ujg:theme-change', queueMermaidRender);
+  }
+
+  queueMermaidRender();
 </script>
 
 <style>
@@ -44,5 +152,19 @@ const { code, id } = Astro.props;
   .mermaid-container :global(svg) {
     max-width: 100%;
     height: auto;
+  }
+
+  /* Edge label readability:
+     - smaller font
+     - larger backing rect to create visual inner padding */
+  .mermaid-container :global(.edgeLabel text),
+  .mermaid-container :global(.edgeLabel tspan),
+  .mermaid-container :global(.edgeLabel span p) {
+    font-size: 0.82rem !important;
+  }
+
+  .mermaid-container :global(.cluster-label span p) {
+    font-size: 0.82rem !important;
+    padding: 0.2rem 0.4rem !important;
   }
 </style>

@@ -164,7 +164,7 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
       ? createPortal(
           <button
             onClick={() => setTocCollapsed(false)}
-            className="hidden sm:flex sidebar-restore-btn fixed left-4 top-[calc(var(--height-header)+1rem)] z-50 p-2 bg-white border border-border shadow-panel rounded-md hover:bg-zinc-50 hover:text-primary transition-[background-color,color,box-shadow,transform] duration-300"
+            className="hidden sm:flex sidebar-restore-btn fixed left-4 top-[calc(var(--height-header)+1rem)] z-50 p-2 bg-card border border-border shadow-panel rounded-md text-muted-foreground hover:bg-accent-soft/50 hover:text-foreground transition-[background-color,color,box-shadow,transform] duration-300"
             title="Expand sidebar"
           >
             <PanelRight className="w-5 h-5" />
@@ -180,11 +180,11 @@ export const Toc: React.FC<TocProps> = ({ toc, className, onItemClick }) => {
         ref={tocRef}
         className="overflow-y-auto max-h-[calc(100vh-var(--height-header))] py-md pr-3"
       >
-        <div className="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-zinc-500 pb-base pl-3 pr-2">
+        <div className="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground pb-base pl-3 pr-2">
           <span>Table of Contents</span>
           <button
             onClick={toggleTocCollapsed}
-            className="hidden sm:flex hover:text-zinc-900 transition-[background-color,color] p-1 rounded-md hover:bg-zinc-100"
+            className="hidden sm:flex text-muted-foreground hover:text-foreground transition-[background-color,color] p-1 rounded-md hover:bg-accent-soft/50"
             title={displayToggled ? 'Expand sidebar' : 'Collapse sidebar'}
             aria-label={displayToggled ? 'Expand sidebar' : 'Collapse sidebar'}
           >
@@ -229,22 +229,22 @@ const TocItem: React.FC<{
         className={cn(
           'flex items-center group relative',
           'flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent',
-          'hover:bg-zinc-100 hover:text-zinc-900',
+          'hover:bg-accent-soft/35 hover:text-foreground',
           entry.depth === 1
-            ? 'font-medium text-zinc-900 mt-2'
-            : 'text-zinc-600 hover:border-zinc-200',
+            ? 'font-medium text-foreground mt-2'
+            : 'text-secondary-foreground hover:border-border',
           activeId === entry.id && 'text-accent border-accent bg-accent/5 font-medium'
         )}
       >
         {entry.number && (
-          <span className="mr-2 font-mono text-2xs tracking-tight text-zinc-500 group-hover:text-zinc-700 transition-colors">
+          <span className="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">
             {entry.number}
           </span>
         )}
         <span>{entry.text}</span>
       </a>
       {hasChildren && isOpen && (
-        <ul className="flex flex-col list-none p-0 m-0 border-l border-zinc-100 ml-4">
+        <ul className="flex flex-col list-none p-0 m-0 border-l border-border ml-4">
           {entry.children?.map((child, index) => (
             <TocItem
               key={child.id || index}
