@@ -69,6 +69,10 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(109, 120, 152, 0.34);
+  --scrollbar-thumb-hover: rgba(86, 99, 133, 0.5);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -120,6 +124,10 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.552 0.016 285.938);
+
+    --scrollbar-track: rgba(11, 15, 29, 0.55);
+    --scrollbar-thumb: rgba(79, 93, 131, 0.72);
+    --scrollbar-thumb-hover: rgba(104, 122, 168, 0.86);
   }
 }
 
@@ -171,6 +179,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
+  --scrollbar-track: rgba(11, 15, 29, 0.55);
+  --scrollbar-thumb: rgba(79, 93, 131, 0.72);
+  --scrollbar-thumb-hover: rgba(104, 122, 168, 0.86);
 }
 
 @theme {
@@ -477,21 +489,24 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--scrollbar-track);
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-zinc-200 rounded-full border-2 border-transparent bg-clip-content;
+    background: var(--scrollbar-thumb);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-zinc-300;
+    background: var(--scrollbar-thumb-hover);
   }
 
   /* Firefox support */
   * {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.zinc.200') transparent;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
 
   html {

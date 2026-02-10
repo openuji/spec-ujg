@@ -1,0 +1,136 @@
+---
+import { Code } from 'astro:components';
+import { Copy, Check } from 'lucide-react';
+
+interface Props {
+  code: string;
+  lang?: string;
+  id?: string;
+}
+
+const { code, lang = 'text', id } = Astro.props;
+---
+
+<div
+  class="code-block-wrapper rounded-lg border border-border overflow-hidden my-6 mb-8 relative group"
+  id={id}
+>
+  <div class="code-header flex items-center justify-between px-4 py-2.5 border-b border-border">
+    <span
+      class="text-xs font-mono font-medium text-(--color-muted-foreground) uppercase tracking-wider select-none"
+    >
+      {lang}
+    </span>
+    <button
+      class="copy-btn p-1.5 rounded-md text-(--color-muted-foreground) hover:text-(--color-foreground) hover:bg-(--color-muted) transition-all cursor-pointer bg-transparent border-none flex items-center justify-center"
+      aria-label="Copy code"
+      data-code={code}
+    >
+      <div class="relative w-4 h-4">
+        <Copy
+          className="size-4 copy-icon absolute inset-0 transition-all duration-200 scale-100 opacity-100"
+        />
+      </div>
+    </button>
+  </div>
+  <div class="code-content overflow-x-auto text-[0.9rem] leading-relaxed py-4 px-4">
+    <div class="code-theme code-theme--light">
+      <Code code={code} lang={lang as any} theme="github-light" wrap={false} />
+    </div>
+    <div class="code-theme code-theme--dark">
+      <Code code={code} lang={lang as any} theme="github-dark" wrap={false} />
+    </div>
+  </div>
+</div>
+
+<script>
+  function setupCopyButtons() {
+    const buttons = document.querySelectorAll('.copy-btn');
+
+    buttons.forEach((btn) => {
+      // Remove old listener if present (in case of re-runs)
+      const newBtn = btn.cloneNode(true) as HTMLButtonElement;
+      btn.parentNode?.replaceChild(newBtn, btn);
+
+      newBtn.addEventListener('click', async () => {
+        const code = newBtn.getAttribute('data-code') || '';
+        const copyIcon = newBtn.querySelector('.copy-icon');
+        const checkIcon = newBtn.querySelector('.check-icon');
+
+        try {
+          await navigator.clipboard.writeText(code);
+
+          // Toggle icons
+          copyIcon?.classList.add('scale-0', 'opacity-0');
+          checkIcon?.classList.remove('scale-0', 'opacity-0');
+          checkIcon?.classList.add('scale-100', 'opacity-100');
+
+          setTimeout(() => {
+            copyIcon?.classList.remove('scale-0', 'opacity-0');
+            checkIcon?.classList.add('scale-0', 'opacity-0');
+            checkIcon?.classList.remove('scale-100', 'opacity-100');
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy code:', err);
+        }
+      });
+    });
+  }
+
+  // Run on initial load
+  setupCopyButtons();
+
+  // Run on view transitions navigation
+  document.addEventListener('astro:page-load', setupCopyButtons);
+</script>
+
+<style>
+  .code-block-wrapper {
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+    border-color: var(--border);
+  }
+
+  .code-header {
+    background: color-mix(in srgb, var(--card) 96%, transparent);
+  }
+
+  .code-content {
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+  }
+
+  .code-theme--light {
+    display: block;
+  }
+
+  .code-theme--dark {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .code-theme--light {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .code-theme--dark {
+    display: block;
+  }
+
+  /* Override Shiki background to match our container if needed, though we handle it in wrapper */
+  :global(.astro-code) {
+    background-color: transparent !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    font-family: var(--font-mono) !important;
+  }
+
+  /* Make sure the Code component's pre tag doesn't introduce unwanted margins/layout */
+  :global(.code-content pre) {
+    margin: 0;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: fit-content;
+    min-width: 100%;
+  }
+</style>
