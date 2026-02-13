@@ -1,24 +1,23 @@
 ---
-import HomeLayout from "@/layouts/HomeLayout.astro";
-import Hero from "@/components/astro/Hero.astro";
-import Panel from "@/components/astro/Panel.astro";
-import Card from "@/components/astro/Card.astro";
-import CTA from "@/components/astro/CTA.astro";
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import Hero from '@/components/astro/Hero.astro';
+import Panel from '@/components/astro/Panel.astro';
+import Card from '@/components/astro/Card.astro';
+import CTA from '@/components/astro/CTA.astro';
 ---
 
 <HomeLayout title="User Journey Graph Specifications">
   <Hero
     title="User Journey Graph (UJG)"
     description="UJG separates <b>design-time intent</b> from <b>runtime execution</b> so teams can design, validate, measure, and iterate on journeys with confidence"
-    ,
-    pills={["UJG • W3C Community Group"]}
+    pills={['UJG • W3C Community Group']}
     actions={[
       {
-        label: "Join UJG W3C community group",
-        href: "https://www.w3.org/community/ujg/join",
+        label: 'Join UJG W3C community group',
+        href: 'https://www.w3.org/community/ujg/join',
         primary: true,
       },
-      { label: "Editor's Draft Workspace", href: "/ed" },
+      { label: "Editor's Draft Workspace", href: '/ed' },
     ]}
   />
 
@@ -26,25 +25,25 @@ import CTA from "@/components/astro/CTA.astro";
     <div class="flow__header">
       <h2 class="font-medium">What's inside the UJG family</h2>
       <p>
-        Each document focuses on a specific aspect of journey modeling.
-        Together, they connect intent, execution, and measurement.
+        Each document focuses on a specific aspect of journey modeling. Together, they connect
+        intent, execution, and measurement.
       </p>
     </div>
     <div class="flow__grid">
       <Card
-        title="Overview & Concepts"
+        title="Overview"
         description="Motivation, terminology, and the design-time vs runtime split in clear language."
         href="/ed/overview"
       />
       <Card
-        title="Serialization"
-        description="JSON / JSON-LD guidance and extensibility mechanisms."
-        href="/ed/serialization"
+        title="Blueprint"
+        description="Journeys, states, transitions, nesting, and reusable navigation patterns."
+        href="/ed/blueprint"
       />
       <Card
-        title="Designed Journey Model"
-        description="Journeys, states, transitions, start/end, identity, and versioning."
-        href="/ed/designed"
+        title="Runtime"
+        description="Data model for recording actual user behavior as causally ordered event chains."
+        href="/ed/runtime"
       />
     </div>
   </section>
@@ -55,27 +54,19 @@ import CTA from "@/components/astro/CTA.astro";
       <div class="role-list">
         <div>
           <h4>Product / UX</h4>
-          <p>
-            Overview & Concepts → Design-Time Definitions → Metrics &
-            Conformance
-          </p>
+          <p>Overview → Blueprint → Metrics</p>
         </div>
         <div>
           <h4>Engineering</h4>
-          <p>
-            Overview & Concepts → Core Model → Runtime Executions →
-            Serialization
-          </p>
+          <p>Overview → Core → Blueprint → Runtime → Mapping</p>
         </div>
         <div>
           <h4>Analytics / Data</h4>
-          <p>
-            Overview & Concepts → Runtime Executions → Metrics & Conformance
-          </p>
+          <p>Overview → Runtime → Mapping → Metrics</p>
         </div>
         <div>
           <h4>Tool builders</h4>
-          <p>Core Model → Serialization → Runtime Executions</p>
+          <p>Core → Profiles → Runtime → Mapping</p>
         </div>
       </div>
     </Panel>
@@ -83,8 +74,8 @@ import CTA from "@/components/astro/CTA.astro";
     <Panel variant="glow">
       <h2>Publishing model</h2>
       <p>
-        UJG evolves in the Editor's Draft workspace. When parts become stable
-        they are snapshotted into a new Technical Report version.
+        UJG evolves in the Editor's Draft workspace. When parts become stable they are snapshotted
+        into a new Technical Report version.
       </p>
       <ul>
         <li>Stable subset captured at a point in time.</li>
@@ -98,13 +89,13 @@ import CTA from "@/components/astro/CTA.astro";
     title="Participate"
     description="UJG is developed openly. Feedback, issues, and implementation reports are welcome."
     links={[
-      { label: "Governance", href: "/governance" },
-      { label: "Contributing", href: "/contributing" },
+      { label: 'Governance', href: '/governance' },
+      { label: 'Contributing', href: '/contributing' },
       {
-        label: "Issues / PRs",
-        href: "https://github.com/openuji/spec-ujg/issues",
+        label: 'Issues / PRs',
+        href: 'https://github.com/openuji/spec-ujg/issues',
         primary: true,
-        target: "_blank",
+        target: '_blank',
       },
     ]}
   />
