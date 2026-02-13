@@ -963,7 +963,7 @@
   }
 
   .spec table {
-    @apply w-full border-separate border-spacing-0;
+    @apply w-full border-separate border-spacing-0 text-sm;
     table-layout: auto;
     overflow-wrap: normal;
     word-break: normal;
@@ -975,12 +975,12 @@
 
   .spec table th,
   .spec table td {
-    @apply px-6 py-4 align-top text-left;
+    @apply px-6 py-3 align-top text-left;
   }
 
   .spec table thead th,
   .spec table tbody tr:first-child th {
-    @apply font-medium text-foreground;
+    @apply font-normal text-foreground;
   }
 
   .spec table tbody tr + tr th,
@@ -1009,23 +1009,11 @@
     }
 
     .spec table {
-      table-layout: fixed;
+      /* table-layout: fixed; */
     }
 
     .spec .spec-table-wrap > table {
       min-width: 100%;
-    }
-
-    .spec .spec-table :is(th, td):first-child {
-      width: 8rem;
-      min-width: 8rem;
-      max-width: 8rem;
-    }
-
-    .spec .spec-table.cols-3 :is(th, td):nth-child(2) {
-      width: 10rem;
-      min-width: 10rem;
-      max-width: 10rem;
     }
   }
 

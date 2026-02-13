@@ -138,9 +138,8 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
                 <thead>
                   <tr>
                     {headerCells.map((cell) => {
-                      const style = { textAlign: cell.align || 'left' };
                       return (
-                        <th style={style}>
+                        <th>
                           <InlineRenderer nodes={cell.children} {...inlineProps} />
                         </th>
                       );
