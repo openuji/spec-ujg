@@ -88,7 +88,7 @@ Every object inside `items` is a [=Node=].
 | `id` | `required` | Unique URI/URN identifier. |
 | `meta` | `optional` | Metadata object (versioning, timestamps). |
 | `extensions` | `optional` | Use case and/or Vendor-specific data. |
-| </spec-statement> |  |  |
+ </spec-statement>
 
 ### Handling Meta & Extensions
 

@@ -1,48 +1,20 @@
-## Abstract {.unnumbered}
+## Abstract
 
-The User Journey Graph (UJG) specification family defines a vocabulary and data model for describing user journeys as automata-like graphs: a set of states (moments in the journey) connected by transitions (allowed moves between moments). The family separates design-time journey definitions from runtime journey traces so teams can design experiences and measure real behavior without mixing the two.
+The **User Journey Graph (UJG)** standardizes user experience as **computable data**. It decouples the **Definition of Intent** (Design) from the **Observation of Reality** (Telemetry). This separation creates a single source of truth for Designers, Developers, and Analysts. As a deterministic protocol, it supports automation by AI agents across these roles, ensuring structural consistency.
 
-## What this is {.unnumbered}
+## The Core Philosophy
 
-UJG standardizes the structure of journeys so teams can:
+Building human facing digital products requires three distinct translations: **Design** (The Map), **Code** (The Logic), and **Analytics** (The Scoreboard). UJG unifies these by enforcing a single **Graph-based Mental Model**:
 
-- describe an intended experience (design-time),
-- emit runtime traces from apps/services (runtime),
-- compare reality to intent (conformance),
-- compute funnels and metrics without re-inventing semantics per tool.
+* **The Map (Intent):** A directed graph where nodes are *States* and edges are allowed *Transitions*.
+* **The Path (Reality):** A linear, causal sequence of *Events* linked by predecessor.
+* **The Binding:** Shared URIs that allow the Path to be mathematically projected onto the Map.
 
-UJG is about the model, not about a specific visualization.
+## Conceptual Stack
 
-## Quick mental model (plain English) {.unnumbered}
+The standard is organized into four logical layers:
 
-- A journey definition is like a map of what's allowed: "from Browse you can go to Product, from Product you can go to Cart…"
-- A journey trace is what actually happened for one user/session: "Browse → Product → Cart → Abandoned"
-- Conformance is how you compare the two:
-  - conformant path (expected),
-  - optional path (allowed but not primary),
-  - violation (unexpected),
-  - drop-off (expected next step didn't happen).
-
-## Design-time vs runtime (core distinction) {.unnumbered}
-
-**Design-time Journey Definition**
-
-- normative ("this is the intended model")
-- stable identifiers
-- used by design, engineering, QA, docs
-- does not require event naming
-
-**Runtime Journey Trace**
-
-- descriptive ("this is what happened")
-- timestamped events/traces
-- used for metrics, debugging, analysis
-- aligns to the design by referencing Journey + Transition identifiers
-
-UJG makes both first-class so teams don't mix "what we planned" with "what we observed".
-
-## Reading guidance {.unnumbered}
-
-- New readers: start here (Overview), then Designed.
-- Implementers: Designed → Serialization → Runtime → Conformance.
-- Analysts: Runtime → Conformance → Observed → Metrics.
+1. **The Wire (Transport):** The universal JSON-LD envelope. Ensures any tool—human or AI—can parse the file structure without ambiguity.
+2. **The Blueprint (Definition):** Defines the "Happy Path." It is the vocabulary for States, Transitions, and Composition (nesting).
+3. **The Runtime (Execution):** Captures the "Actual Path." It records events as a causal chain, not just timestamped logs.
+4. **The Mapping (Conformance):** Closes the loop. It overlays Reality onto Intent to calculate conversion and detect friction.
