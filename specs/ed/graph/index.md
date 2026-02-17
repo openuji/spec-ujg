@@ -91,7 +91,7 @@ A [=CompositeState=] **MUST** include:
 
 ---
 
-## Reusability (OutgoingTransitionGroup)
+## Reusability (OutgoingTransitionGroup) {data-cop-concept="reusability"}
 
 An [=OutgoingTransitionGroup=] defines reusable outgoing transitions (e.g., headers/footers) to avoid duplicating common navigation across many states.
 
@@ -153,7 +153,7 @@ When a Consumer loads a [=Journey=] referencing `outgoingTransitionGroupRefs`:
 
 ---
 
-## Validation Rules
+## Validation Rules {data-cop-concept="validation"}
 
 <spec-statement>
 To ensure graph integrity, the following constraints **MUST** be met:

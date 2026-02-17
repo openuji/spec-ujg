@@ -33,7 +33,7 @@ This specification defines a mandatory envelope for all **User Journey Graph (UJ
 * **Flat Binding**: 
   * A reference to another Node **MUST** be expressed as either:
     * a string equal to the target [=Node=]’s `id`, or
-    * a JSON object that is a [=Node Reference=].
+    * a JSON object that is a [=Node=].
   * The referenced id **MUST** resolve to exactly one Node within the current resolution scope (including imports).
 </spec-statement>
 
@@ -43,7 +43,7 @@ This specification defines a mandatory envelope for all **User Journey Graph (UJ
   * `type`: A non-empty string.
   * `id`: A non-empty string representing a valid URI/URN.</spec-statement>
 * <spec-statement>**Uniqueness:** No two Nodes within a single document **MAY** share the same `id`.</spec-statement>
-* <spec-statement>**Reserved Keys:** The keys `@context`, `type`, `id`, `meta`, `extensions`, `specVersion`, `items`, and `imports` are reserved for system use.</spec-statement>
+* <spec-statement>**Reserved Keys:** The keys reserved for system use `@context`, `type`, `id`, `meta`, `extensions`, `specVersion`, `items`, `imports` **MUST NOT** be used.</spec-statement>
 
 ---
 
@@ -68,7 +68,7 @@ Every object inside `items` is a [=Node=].
 <dfn>Node Reference</dfn>: A JSON object used to reference a Node without embedding it.
 
 <spec-statement>
-A Node Reference **MUST** satisfy:
+A Node Reference have to satisfy:
 
   * It **MUST** contain id (a non-empty string representing a valid URI/URN).
   * It **MAY** contain type.
@@ -76,12 +76,13 @@ A Node Reference **MUST** satisfy:
 </spec-statement>
 
 ### Handling Meta & Extensions
-
-* <spec-statement>**Timestamps:** Any timestamp within `meta` **MUST** adhere to [[RFC3339]] with timezone information (e.g., `Z` or `+01:00`).</spec-statement>
+<spec-statement>
+* **Timestamps:** Any timestamp within `meta` **MUST** adhere to [[RFC3339]] with timezone information (e.g., `Z` or `+01:00`).
 * **Extensions** (if present):
-* <spec-statement>**Structure:** `extensions` **MUST** be a Map (represented as a [§#example-node|JSON object]).</spec-statement>
-* <spec-statement>**Key:** Every key in the map **MUST** be a string representing a unique namespace (e.g., reverse-DNS notation).</spec-statement>
-* <spec-statement>**Value**: The value for every key **MUST** be a JSON object.</spec-statement>
+  * **Structure:** `extensions` **MUST** be a Map (represented as a [§#example-node|JSON object]).
+  * **Key:** Every key in the map **MUST** be a string representing a unique namespace (e.g., reverse-DNS notation).
+* **Value**: The value for every key **MUST** be a JSON object.
+</spec-statement>
 
 
 

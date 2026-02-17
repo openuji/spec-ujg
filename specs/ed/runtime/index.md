@@ -56,19 +56,20 @@ graph LR
 
 ---
 
-## Chain Validity Rules
+## Chain Validity Rules {data-cop-concept="validation"}
 
+<spec-statement>
 Within a single execution (events where `executionId` equals the [=JourneyExecution=] id):
   1. **Root**: Exactly one event MUST be the Root Event.
   2. **Resolution**: Every non-root previousId MUST match the id of an event in the same execution.
   3. **Single Successor**: An event id MUST NOT be referenced as previousId by more than one event in the same execution.
   4. **Acyclic**: The chain MUST NOT contain cycles.
-
+</spec-statement>
 If any rule above is violated, the [=JourneyExecution=] is invalid.
 
 ---
 
-## Reconstruction
+## Reconstruction {data-cop-concept="reconstruction"}
 
 <spec-statement>A Consumer reconstructing event order **MUST**:
   1. Identify the Root Event.
