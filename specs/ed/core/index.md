@@ -145,7 +145,7 @@ Consumers may process multiple UJGDocument files as a single logical graph.
 
 ```json
 {
-  "@context": "https://ujg.specs.openuji.org/context.jsonld",
+  "@context": "https://ujg.specs.openuji.org/ed/context.jsonld",
   "type": "UJGDocument",
   "specVersion": "1.0",
   "imports": [
