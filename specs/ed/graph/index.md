@@ -4,12 +4,12 @@ This module defines the vocabulary for **intended** user flow. It extends [[UJG 
 
 ## Terminology
 
-* <dfn>Journey</dfn>: A named container for a user flow.
-* <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal).
-* <dfn>Transition</dfn>: A directed edge between two states.
-* <dfn>CompositeState</dfn>: A state that encapsulates another [=Journey=] (sub-journey).
-* <dfn>OutgoingTransition</dfn>: A one way edge pointing to a next possible [=State=]
-* <dfn>OutgoingTransitionGroup</dfn>: A reusable set of outgoing transitions that a Consumer can treat as present on multiple states (e.g., global nav).
+- <dfn>Journey</dfn>: A named container for a user flow.
+- <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal).
+- <dfn>Transition</dfn>: A directed edge between two states.
+- <dfn>CompositeState</dfn>: A state that encapsulates another [=Journey=] (sub-journey).
+- <dfn>OutgoingTransition</dfn>: A one way edge pointing to a next possible [=State=]
+- <dfn>OutgoingTransitionGroup</dfn>: A reusable set of outgoing transitions that a Consumer can treat as present on multiple states (e.g., global nav).
 
 ---
 
@@ -29,36 +29,37 @@ graph LR
 
 #### The Journey Container
 
-<spec-statement>A [=Journey=] **MUST** include:
+<spec-statement>
 
-* `type`: `"Journey"`
-* `id`: Unique URI/URN.
-* `startState`: ID of the entry [=State=] or [=CompositeState=].
-* `stateRefs`: Array of IDs of [=State=] or [=CompositeState=] Nodes.
-* `transitionRefs`: Array of IDs of [=Transition=] Nodes.
-* `outgoingTransitionGroupRefs`: (Optional) Array of IDs of [=OutgoingTransitionGroup=] Nodes.
+A [=Journey=] **MUST** include:
+
+- `type`: `"Journey"`
+- `id`: Unique URI/URN.
+- `startState`: ID of the entry [=State=] or [=CompositeState=].
+- `stateRefs`: Array of IDs of [=State=] or [=CompositeState=] Nodes.
+- `transitionRefs`: Array of IDs of [=Transition=] Nodes.
+- `outgoingTransitionGroupRefs`: (Optional) Array of IDs of [=OutgoingTransitionGroup=] Nodes.
+
 </spec-statement>
 
 #### The State Object
 
 A [=State=] **MUST** include:
 
-* `type`: `"State"`
-* `id`: Unique URI/URN.
-* `label`: Human-readable string.
-* `tags`: (Optional) Array of strings for grouping (e.g., `["phase:checkout"]`).
+- `type`: `"State"`
+- `id`: Unique URI/URN.
+- `label`: Human-readable string.
+- `tags`: (Optional) Array of strings for grouping (e.g., `["phase:checkout"]`).
 
 #### The Transition Object
 
 A [=Transition=] **MUST** include:
 
-* `type`: `"Transition"`
-* `id`: Unique URI/URN.
-* `from`: ID of the source [=State=] or [=CompositeState=].
-* `to`: ID of the target [=State=] or [=CompositeState=].
-* `label`: (Optional) Action name.
-
-
+- `type`: `"Transition"`
+- `id`: Unique URI/URN.
+- `from`: ID of the source [=State=] or [=CompositeState=].
+- `to`: ID of the target [=State=] or [=CompositeState=].
+- `label`: (Optional) Action name.
 
 ---
 
@@ -83,11 +84,10 @@ graph LR
 
 A [=CompositeState=] **MUST** include:
 
-* `type`: `"CompositeState"`
-* `id`: Unique URI/URN.
-* `label`: Human-readable string.
-* `subjourneyId`: The ID of the target [=Journey=].
-
+- `type`: `"CompositeState"`
+- `id`: Unique URI/URN.
+- `label`: Human-readable string.
+- `subjourneyId`: The ID of the target [=Journey=].
 
 ---
 
@@ -97,17 +97,16 @@ An [=OutgoingTransitionGroup=] defines reusable outgoing transitions (e.g., head
 
 An [=OutgoingTransitionGroup=] **MUST** include:
 
-* `type`: `"OutgoingTransitionGroup"`
-* `id`: Unique URI/URN.
-* `outgoingTransitionRefs`: Array of IDs of [=OutgoingTransition=] Nodes.
+- `type`: `"OutgoingTransitionGroup"`
+- `id`: Unique URI/URN.
+- `outgoingTransitionRefs`: Array of IDs of [=OutgoingTransition=] Nodes.
 
 An [=OutgoingTransition=] **MUST** include:
 
-* `type`: `"OutgoingTransition"`
-* `id`: Unique URI/URN.
-* `to`: Target [=State=] or [=CompositeState=] ID.
-* `label`: (Optional) Action name.
-
+- `type`: `"OutgoingTransition"`
+- `id`: Unique URI/URN.
+- `to`: Target [=State=] or [=CompositeState=] ID.
+- `label`: (Optional) Action name.
 
 ### Visual Model
 
@@ -131,13 +130,11 @@ graph TD
     S1 -.->|Outgoing| P
     S2 -.->|Outgoing| H
     S2 -.->|Outgoing| P
-    
+
     %% Styling for clarity
     linkStyle 1,2,3,4 stroke-dasharray: 5 5, stroke:green, color:green;
 
 ```
-
-
 
 ### Processing Model (Injection)
 
@@ -190,7 +187,12 @@ To ensure graph integrity, the following constraints **MUST** be met:
       "label": "Buy Now"
     },
 
-    { "type": "State", "id": "urn:ujg:state:home", "label": "Home Page", "tags": ["phase:landing"] },
+    {
+      "type": "State",
+      "id": "urn:ujg:state:home",
+      "label": "Home Page",
+      "tags": ["phase:landing"]
+    },
 
     {
       "type": "CompositeState",
@@ -220,8 +222,6 @@ To ensure graph integrity, the following constraints **MUST** be met:
       "id": "urn:ujg:otg:global-header",
       "outgoingTransitionRefs": ["urn:ujg:ot:go-home", "urn:ujg:ot:go-profile"]
     }
-    
   ]
 }
-
 ```

@@ -4,9 +4,9 @@ This module defines the data model for recording actual user behavior as a **cau
 
 ## Terminology
 
-* <dfn>JourneyExecution</dfn>: A bounded container for events belonging to one logical trace.
-* <dfn>RuntimeEvent</dfn>: An atomic record of a single runtime moment.
-* <dfn>Event Chain</dfn>: A sequence where each event references its immediate predecessor via `previousId`.
+- <dfn>JourneyExecution</dfn>: A bounded container for events belonging to one logical trace.
+- <dfn>RuntimeEvent</dfn>: An atomic record of a single runtime moment.
+- <dfn>Event Chain</dfn>: A sequence where each event references its immediate predecessor via `previousId`.
 
 ---
 
@@ -26,32 +26,40 @@ graph LR
   end
 ```
 
-### The JourneyExecution Object (The Container) 
+### The JourneyExecution Object (The Container)
 
-<spec-statement>A [=JourneyExecution=] **MUST** include:
+<spec-statement>
 
-* `type`: `"JourneyExecution"`
-* `id`: required, MUST be a valid URI/URN, unique within resolution scope.
-* `eventRefs`: array of [=RuntimeEvent=] IDs
+A [=JourneyExecution=] **MUST** include:
+
+- `type`: `"JourneyExecution"`
+- `id`: required, MUST be a valid URI/URN, unique within resolution scope.
+- `eventRefs`: array of [=RuntimeEvent=] IDs
+
 </spec-statement>
-
 
 ### The RuntimeEvent Object (The Atom)
 
-<spec-statement>A [=RuntimeEvent=] **MUST** include:
+<spec-statement>
 
-* `type`: `"RuntimeEvent"`
-* `id`: required, MUST be a valid URI/URN, unique within resolution scope.
-* `executionId`: ID of the owning [=JourneyExecution=]
-* `previousId`: string or null
-  * `null` indicates the **Root Event**
-  * otherwise **MUST** equal the `id` of another event in the same [=JourneyExecution=]
-* `stateRef`: string (Graph [=State=] or [=CompositeState=] `id`)
+A [=RuntimeEvent=] **MUST** include:
+
+- `type`: `"RuntimeEvent"`
+- `id`: required, MUST be a valid URI/URN, unique within resolution scope.
+- `executionId`: ID of the owning [=JourneyExecution=]
+- `previousId`: string or null
+  - `null` indicates the **Root Event**
+  - otherwise **MUST** equal the `id` of another event in the same [=JourneyExecution=]
+- `stateRef`: string (Graph [=State=] or [=CompositeState=] `id`)
+
 </spec-statement>
 
-<spec-statement>A [=RuntimeEvent=] **MAY** include:
+<spec-statement>
 
-* `payload`: object (domain-specific data)
+A [=RuntimeEvent=] **MAY** include:
+
+- `payload`: object (domain-specific data)
+
 </spec-statement>
 
 ---
@@ -71,14 +79,17 @@ If any rule above is violated, the [=JourneyExecution=] is invalid.
 
 ## Reconstruction {data-cop-concept="reconstruction"}
 
-<spec-statement>A Consumer reconstructing event order **MUST**:
-  1. Identify the Root Event.
-  2. Repeatedly select the unique event whose `previousId` equals the current event’s `id`.
-  3. Continue until no successor exists.
+<spec-statement>
+
+A Consumer reconstructing event order **MUST**:
+
+1. Identify the Root Event.
+2. Repeatedly select the unique event whose `previousId` equals the current event’s `id`.
+3. Continue until no successor exists.
+
 </spec-statement>
 
 ---
-
 
 ## Appendix: Combined JSON Example {.unnumbered}
 
@@ -87,14 +98,11 @@ If any rule above is violated, the [=JourneyExecution=] is invalid.
   "@context": "https://ujg.specs.openuji.org/ed/context.jsonld",
   "type": "UJGDocument",
   "specVersion": "1.0",
-   "items": [
+  "items": [
     {
       "type": "JourneyExecution",
       "id": "urn:ujg:execution:12345",
-      "eventRefs": [
-        "urn:ujg:event:12345:100",
-        "urn:ujg:event:12345:200"
-      ]
+      "eventRefs": ["urn:ujg:event:12345:100", "urn:ujg:event:12345:200"]
     },
     {
       "type": "RuntimeEvent",
@@ -115,4 +123,3 @@ If any rule above is violated, the [=JourneyExecution=] is invalid.
   ]
 }
 ```
-
