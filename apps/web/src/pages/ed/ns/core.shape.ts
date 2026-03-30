@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 const filePath = fileURLToPath(
-  new URL('../../../../../../specs/ed/core/core.ttl', import.meta.url)
+  new URL('../../../../../../specs/ed/core/core.shape.ttl', import.meta.url)
 );
 
 export const GET: APIRoute = async () => {
