@@ -1,0 +1,128 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgexperience: <https://ujg.specs.openuji.org/ed/ns/experience#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ujgexperienceshape: <https://ujg.specs.openuji.org/ed/ns/experience.shape#> .
+
+
+ujgexperienceshape:StateLikeShape a sh:NodeShape ;
+  sh:nodeKind sh:IRI ;
+  sh:or (
+    [ sh:class ujggraph:State ]
+    [ sh:class ujggraph:CompositeState ]
+  ) .
+
+ujgexperienceshape:GraphRefTargetShape a sh:NodeShape ;
+  sh:nodeKind sh:IRI ;
+  sh:or (
+    [ sh:class ujggraph:State ]
+    [ sh:class ujggraph:CompositeState ]
+    [ sh:class ujggraph:Transition ]
+    [ sh:class ujggraph:OutgoingTransition ]
+  ) .
+
+ujgexperienceshape:ExperienceStepShape a sh:NodeShape ;
+  sh:targetClass ujgexperience:ExperienceStep ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:stateRefs ;
+    sh:node ujgexperienceshape:StateLikeShape ;
+    sh:minCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgexperience:phaseRef ;
+    sh:class ujgexperience:Phase ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgexperience:touchpointRefs ;
+    sh:class ujgexperience:Touchpoint ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] .
+
+ujgexperienceshape:PhaseShape a sh:NodeShape ;
+  sh:targetClass ujgexperience:Phase ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgexperience:order ;
+    sh:datatype xsd:integer ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgexperienceshape:TouchpointShape a sh:NodeShape ;
+  sh:targetClass ujgexperience:Touchpoint ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgexperience:channel ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgexperienceshape:PainPointShape a sh:NodeShape ;
+  sh:targetClass ujgexperience:PainPoint ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgexperience:graphRefs ;
+    sh:node ujgexperienceshape:GraphRefTargetShape ;
+    sh:minCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgexperience:severity ;
+    sh:datatype xsd:decimal ;
+    sh:minInclusive 0 ;
+    sh:maxInclusive 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgexperience:description ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] .

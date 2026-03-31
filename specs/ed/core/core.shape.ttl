@@ -1,5 +1,7 @@
 @prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix ujgshape: <https://ujg.specs.openuji.org/ed/ns/core.shape#> .
 
 
@@ -16,14 +18,28 @@ ujgshape:UJGDocumentShape a sh:NodeShape ;
 
   sh:property [
     sh:path ujg:documentImports ;
-    sh:class ujg:UJGDocument ;
     sh:nodeKind sh:IRI ;
     sh:minCount 0 ;
   ] ;
 
   sh:property [
     sh:path ujg:documentNodes ;
-    sh:class ujg:Node ;
     sh:nodeKind sh:IRI ;
     sh:minCount 0 ;
+  ] ;
+
+  sh:property [
+    sh:path ujg:extensions ;
+    sh:maxCount 0 ;
+  ] .
+
+ujgshape:NodeShape a sh:NodeShape ;
+  sh:targetClass ujg:Node ;
+  sh:targetObjectsOf ujg:documentNodes ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujg:extensions ;
+    sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
   ] .

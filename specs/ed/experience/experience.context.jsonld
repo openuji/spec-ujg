@@ -1,0 +1,49 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgexperience": "https://ujg.specs.openuji.org/ed/ns/experience#",
+    "ujggraph": "https://ujg.specs.openuji.org/ed/ns/graph#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "ExperienceStep": "ujgexperience:ExperienceStep",
+    "Touchpoint": "ujgexperience:Touchpoint",
+    "Phase": "ujgexperience:Phase",
+    "PainPoint": "ujgexperience:PainPoint",
+
+    "label": "ujggraph:label",
+    "tags": {
+      "@id": "ujggraph:tags",
+      "@container": "@set"
+    },
+    "stateRefs": {
+      "@id": "ujggraph:stateRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "phaseRef": {
+      "@id": "ujgexperience:phaseRef",
+      "@type": "@id"
+    },
+    "touchpointRefs": {
+      "@id": "ujgexperience:touchpointRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "order": {
+      "@id": "ujgexperience:order",
+      "@type": "xsd:integer"
+    },
+    "channel": "ujgexperience:channel",
+    "graphRefs": {
+      "@id": "ujgexperience:graphRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "severity": {
+      "@id": "ujgexperience:severity",
+      "@type": "xsd:decimal"
+    },
+    "description": "ujgexperience:description"
+  }
+}

@@ -1,0 +1,42 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgruntime: <https://ujg.specs.openuji.org/ed/ns/runtime#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+
+<https://ujg.specs.openuji.org/ed/ns/runtime#> a owl:Ontology ;
+  rdfs:label "UJG Runtime Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Runtime ontology declaration" .
+
+### Classes
+
+ujgruntime:JourneyExecution a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgruntime:RuntimeEvent a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgruntime:eventRefs a owl:ObjectProperty ;
+  rdfs:domain ujgruntime:JourneyExecution ;
+  rdfs:range ujgruntime:RuntimeEvent .
+
+ujgruntime:executionId a owl:ObjectProperty ;
+  rdfs:domain ujgruntime:RuntimeEvent ;
+  rdfs:range ujgruntime:JourneyExecution .
+
+ujgruntime:previousId a owl:ObjectProperty ;
+  rdfs:domain ujgruntime:RuntimeEvent ;
+  rdfs:range ujgruntime:RuntimeEvent .
+
+ujgruntime:stateRef a owl:ObjectProperty ;
+  rdfs:domain ujgruntime:RuntimeEvent ;
+  rdfs:range ujggraph:State .
+
+ujgruntime:payload a owl:DatatypeProperty ;
+  rdfs:domain ujgruntime:RuntimeEvent ;
+  rdfs:range rdf:JSON .

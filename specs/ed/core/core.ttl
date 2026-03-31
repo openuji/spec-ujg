@@ -29,7 +29,6 @@ ujg:specVersion a owl:DatatypeProperty ;
   rdfs:domain ujg:UJGDocument ;
   rdfs:range xsd:string .
 
-ujg:extensions a owl:ObjectProperty ;
+ujg:extensions a owl:DatatypeProperty ;
   rdfs:domain ujg:Node ;
-  rdfs:range ujg:Extension .
-
+  rdfs:range rdf:JSON .

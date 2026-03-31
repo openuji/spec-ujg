@@ -2,6 +2,16 @@
 
 This module defines the data model for recording actual user behavior as a **causally ordered event chain**. Ordering is established by explicit linkage between events, not by timestamps.
 
+## Normative Artifacts
+
+This module is published through the following artifacts:
+
+- `runtime.ttl`: ontology, published at `https://ujg.specs.openuji.org/ed/ns/runtime`
+- `runtime.context.jsonld`: JSON-LD term mappings, published at `https://ujg.specs.openuji.org/ed/ns/runtime.context.jsonld`
+- `runtime.shape.ttl`: SHACL validation rules, published at `https://ujg.specs.openuji.org/ed/ns/runtime.shape`
+
+Examples in this page use an explicit context array composed from the published module contexts. The same composition is also published as the convenience context `https://ujg.specs.openuji.org/ed/context.jsonld`.
+
 ## Terminology
 
 - <dfn>JourneyExecution</dfn>: A bounded container for events belonging to one logical trace.
@@ -18,7 +28,7 @@ This module defines the data model for recording actual user behavior as a **cau
 graph LR
   subgraph Execution [JourneyExecution]
     direction LR
-    E1[Event A, id: e1<br/>previousId: null]
+    E1[Event A, id: e1]
     E2[Event B, id: e2<br/>previousId: e1]
     E3[Event C, id: e3<br/>previousId: e2]
     E1 -->|previousId| E2
@@ -26,51 +36,35 @@ graph LR
   end
 ```
 
-### The JourneyExecution Object (The Container)
+A [=JourneyExecution=] groups the [=RuntimeEvent|RuntimeEvents=] for one logical trace. A [=RuntimeEvent=] records one runtime moment and may reference its immediate predecessor via `previousId`; if `previousId` is omitted, the event is the Root Event.
 
-<spec-statement>
+## Ontology {data-cop-concept="ontology"}
 
-A [=JourneyExecution=] **MUST** include:
+The normative Runtime ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/runtime`. It is the authoritative structural definition for `JourneyExecution`, `RuntimeEvent`, and the properties that connect them.
 
-- `type`: `"JourneyExecution"`
-- `id`: required, MUST be a valid URI/URN, unique within resolution scope.
-- `eventRefs`: array of [=RuntimeEvent=] IDs
+:::include ./runtime.ttl :::
 
-</spec-statement>
+## JSON-LD Context {data-cop-concept="jsonld-context"}
 
-### The RuntimeEvent Object (The Atom)
+The normative Runtime JSON-LD context is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/runtime.context.jsonld`. It provides the compact JSON-LD term mappings for Runtime examples, including IRI-valued references and opaque JSON `payload` values.
 
-<spec-statement>
-
-A [=RuntimeEvent=] **MUST** include:
-
-- `type`: `"RuntimeEvent"`
-- `id`: required, MUST be a valid URI/URN, unique within resolution scope.
-- `executionId`: ID of the owning [=JourneyExecution=]
-- `previousId`: string or null
-  - `null` indicates the **Root Event**
-  - otherwise **MUST** equal the `id` of another event in the same [=JourneyExecution=]
-- `stateRef`: string (Graph [=State=] or [=CompositeState=] `id`)
-
-</spec-statement>
-
-<spec-statement>
-
-A [=RuntimeEvent=] **MAY** include:
-
-- `payload`: object (domain-specific data)
-
-</spec-statement>
+:::include ./runtime.context.jsonld :::
 
 ---
 
-## Chain Validity Rules {data-cop-concept="validation"}
+## Validation {data-cop-concept="validation"}
+
+The normative Runtime SHACL shape is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/runtime.shape`. It is the authoritative validation artifact for Runtime structural constraints.
+
+:::include ./runtime.shape.ttl :::
+
+The rules below define additional causal constraints on event chains beyond the structural constraints captured by the SHACL shape.
 
 <spec-statement>
 Within a single execution (events where `executionId` equals the [=JourneyExecution=] id):
   1. **Root**: Exactly one event MUST be the Root Event.
-  2. **Resolution**: Every non-root previousId MUST match the id of an event in the same execution.
-  3. **Single Successor**: An event id MUST NOT be referenced as previousId by more than one event in the same execution.
+  2. **Resolution**: Every present `previousId` MUST match the `@id` of an event in the same execution.
+  3. **Single Successor**: An event `@id` MUST NOT be referenced as `previousId` by more than one event in the same execution.
   4. **Acyclic**: The chain MUST NOT contain cycles.
 </spec-statement>
 If any rule above is violated, the [=JourneyExecution=] is invalid.
@@ -84,7 +78,7 @@ If any rule above is violated, the [=JourneyExecution=] is invalid.
 A Consumer reconstructing event order **MUST**:
 
 1. Identify the Root Event.
-2. Repeatedly select the unique event whose `previousId` equals the current event’s `id`.
+2. Repeatedly select the unique event whose `previousId` equals the current event’s `@id`.
 3. Continue until no successor exists.
 
 </spec-statement>
@@ -95,26 +89,31 @@ A Consumer reconstructing event order **MUST**:
 
 ```json
 {
-  "@context": "https://ujg.specs.openuji.org/ed/context.jsonld",
-  "type": "UJGDocument",
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/runtime.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/experience.context.jsonld"
+  ],
+  "@id": "https://example.com/ujg/runtime/execution-12345.jsonld",
+  "@type": "UJGDocument",
   "specVersion": "1.0",
-  "items": [
+  "nodes": [
     {
-      "type": "JourneyExecution",
-      "id": "urn:ujg:execution:12345",
+      "@type": "JourneyExecution",
+      "@id": "urn:ujg:execution:12345",
       "eventRefs": ["urn:ujg:event:12345:100", "urn:ujg:event:12345:200"]
     },
     {
-      "type": "RuntimeEvent",
-      "id": "urn:ujg:event:12345:100",
+      "@type": "RuntimeEvent",
+      "@id": "urn:ujg:event:12345:100",
       "executionId": "urn:ujg:execution:12345",
-      "previousId": null,
       "stateRef": "urn:ujg:state:product-page",
       "payload": { "action": "view" }
     },
     {
-      "type": "RuntimeEvent",
-      "id": "urn:ujg:event:12345:200",
+      "@type": "RuntimeEvent",
+      "@id": "urn:ujg:event:12345:200",
       "executionId": "urn:ujg:execution:12345",
       "previousId": "urn:ujg:event:12345:100",
       "stateRef": "urn:ujg:state:cart",

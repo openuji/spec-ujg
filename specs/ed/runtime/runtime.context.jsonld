@@ -1,0 +1,32 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgruntime": "https://ujg.specs.openuji.org/ed/ns/runtime#",
+
+    "JourneyExecution": "ujgruntime:JourneyExecution",
+    "RuntimeEvent": "ujgruntime:RuntimeEvent",
+
+    "eventRefs": {
+      "@id": "ujgruntime:eventRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "executionId": {
+      "@id": "ujgruntime:executionId",
+      "@type": "@id"
+    },
+    "previousId": {
+      "@id": "ujgruntime:previousId",
+      "@type": "@id"
+    },
+    "stateRef": {
+      "@id": "ujgruntime:stateRef",
+      "@type": "@id"
+    },
+    "payload": {
+      "@id": "ujgruntime:payload",
+      "@type": "@json"
+    }
+  }
+}

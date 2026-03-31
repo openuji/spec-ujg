@@ -1,22 +1,14 @@
-import type { APIRoute } from 'astro';
-import fs from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
+import { createArtifactHandler } from '../../../lib/spec-artifacts';
 
-const filePath = fileURLToPath(
-  new URL('../../../../../../specs/ed/core/core.context.jsonld', import.meta.url)
+const CANONICAL_SPEC_BASE_URL = 'https://ujg.specs.openuji.org';
+const SPEC_BASE_URL = String(import.meta.env.SPEC_BASE_URL ?? CANONICAL_SPEC_BASE_URL).replace(
+  /\/$/,
+  ''
 );
 
-export const GET: APIRoute = async () => {
-  try {
-    const fileContent = await fs.readFile(filePath, 'utf-8');
-
-    return new Response(fileContent, {
-      headers: {
-        'Content-Type': 'application/ld+json; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600',
-      },
-    });
-  } catch {
-    return new Response('Not found', { status: 404 });
-  }
-};
+export const GET = createArtifactHandler(
+  import.meta.url,
+  '../../../../../../specs/ed/core/core.context.jsonld',
+  'application/ld+json; charset=utf-8',
+  (fileContent) => fileContent.replaceAll(CANONICAL_SPEC_BASE_URL, SPEC_BASE_URL)
+);

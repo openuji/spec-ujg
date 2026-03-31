@@ -11,6 +11,9 @@
     },
     "nodes": {
       "@id": "ujg:documentNodes", "@container": "@set"
+    },
+    "extensions": {
+      "@id": "ujg:extensions", "@type": "@json"
     }
   }
 }

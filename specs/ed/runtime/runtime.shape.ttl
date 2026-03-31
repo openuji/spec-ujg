@@ -1,0 +1,56 @@
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgruntime: <https://ujg.specs.openuji.org/ed/ns/runtime#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ujgruntimeshape: <https://ujg.specs.openuji.org/ed/ns/runtime.shape#> .
+
+
+ujgruntimeshape:StateLikeShape a sh:NodeShape ;
+  sh:nodeKind sh:IRI ;
+  sh:or (
+    [ sh:class ujggraph:State ]
+    [ sh:class ujggraph:CompositeState ]
+  ) .
+
+ujgruntimeshape:JourneyExecutionShape a sh:NodeShape ;
+  sh:targetClass ujgruntime:JourneyExecution ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgruntime:eventRefs ;
+    sh:class ujgruntime:RuntimeEvent ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+  ] .
+
+ujgruntimeshape:RuntimeEventShape a sh:NodeShape ;
+  sh:targetClass ujgruntime:RuntimeEvent ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgruntime:executionId ;
+    sh:class ujgruntime:JourneyExecution ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:previousId ;
+    sh:class ujgruntime:RuntimeEvent ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:stateRef ;
+    sh:node ujgruntimeshape:StateLikeShape ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:payload ;
+    sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
+  ] .

@@ -1,0 +1,71 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+
+<https://ujg.specs.openuji.org/ed/ns/graph#> a owl:Ontology ;
+  rdfs:label "UJG Graph Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Graph ontology declaration" .
+
+### Classes
+
+ujggraph:Journey a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujggraph:State a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujggraph:CompositeState a owl:Class ;
+  rdfs:subClassOf ujggraph:State .
+
+ujggraph:Transition a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujggraph:OutgoingTransition a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujggraph:OutgoingTransitionGroup a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujggraph:label a owl:DatatypeProperty ;
+  rdfs:domain ujg:Node ;
+  rdfs:range xsd:string .
+
+ujggraph:tags a owl:DatatypeProperty ;
+  rdfs:domain ujg:Node ;
+  rdfs:range xsd:string .
+
+ujggraph:startState a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:State .
+
+ujggraph:stateRefs a owl:ObjectProperty ;
+  rdfs:range ujggraph:State .
+
+ujggraph:transitionRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:Transition .
+
+ujggraph:outgoingTransitionGroupRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:OutgoingTransitionGroup .
+
+ujggraph:from a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Transition ;
+  rdfs:range ujggraph:State .
+
+ujggraph:to a owl:ObjectProperty ;
+  rdfs:range ujggraph:State .
+
+ujggraph:subjourneyId a owl:ObjectProperty ;
+  rdfs:domain ujggraph:CompositeState ;
+  rdfs:range ujggraph:Journey .
+
+ujggraph:outgoingTransitionRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:OutgoingTransitionGroup ;
+  rdfs:range ujggraph:OutgoingTransition .

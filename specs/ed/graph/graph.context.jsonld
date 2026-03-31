@@ -1,0 +1,56 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujggraph": "https://ujg.specs.openuji.org/ed/ns/graph#",
+
+    "Journey": "ujggraph:Journey",
+    "State": "ujggraph:State",
+    "CompositeState": "ujggraph:CompositeState",
+    "Transition": "ujggraph:Transition",
+    "OutgoingTransition": "ujggraph:OutgoingTransition",
+    "OutgoingTransitionGroup": "ujggraph:OutgoingTransitionGroup",
+
+    "label": "ujggraph:label",
+    "tags": {
+      "@id": "ujggraph:tags",
+      "@container": "@set"
+    },
+    "startState": {
+      "@id": "ujggraph:startState",
+      "@type": "@id"
+    },
+    "stateRefs": {
+      "@id": "ujggraph:stateRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "transitionRefs": {
+      "@id": "ujggraph:transitionRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "outgoingTransitionGroupRefs": {
+      "@id": "ujggraph:outgoingTransitionGroupRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "from": {
+      "@id": "ujggraph:from",
+      "@type": "@id"
+    },
+    "to": {
+      "@id": "ujggraph:to",
+      "@type": "@id"
+    },
+    "subjourneyId": {
+      "@id": "ujggraph:subjourneyId",
+      "@type": "@id"
+    },
+    "outgoingTransitionRefs": {
+      "@id": "ujggraph:outgoingTransitionRefs",
+      "@type": "@id",
+      "@container": "@set"
+    }
+  }
+}

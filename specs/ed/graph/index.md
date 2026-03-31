@@ -2,6 +2,16 @@
 
 This module defines the vocabulary for **intended** user flow. It extends [[UJG Core]] to support structured, interactive graphs with composition via sub-journey references, organization tags, and reusable outgoing navigation patterns.
 
+## Normative Artifacts
+
+This module is published through the following artifacts:
+
+- `graph.ttl`: ontology, published at `https://ujg.specs.openuji.org/ed/ns/graph`
+- `graph.context.jsonld`: JSON-LD term mappings, published at `https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld`
+- `graph.shape.ttl`: SHACL validation rules, published at `https://ujg.specs.openuji.org/ed/ns/graph.shape`
+
+Examples in this page use an explicit context array composed from the published module contexts. The same composition is also published as the convenience context `https://ujg.specs.openuji.org/ed/context.jsonld`.
+
 ## Terminology
 
 - <dfn>Journey</dfn>: A named container for a user flow.
@@ -25,44 +35,6 @@ graph LR
 
 ```
 
-### Data Model
-
-#### The Journey Container
-
-<spec-statement>
-
-A [=Journey=] **MUST** include:
-
-- `type`: `"Journey"`
-- `id`: Unique URI/URN.
-- `startState`: ID of the entry [=State=] or [=CompositeState=].
-- `stateRefs`: Array of IDs of [=State=] or [=CompositeState=] Nodes.
-- `transitionRefs`: Array of IDs of [=Transition=] Nodes.
-- `outgoingTransitionGroupRefs`: (Optional) Array of IDs of [=OutgoingTransitionGroup=] Nodes.
-
-</spec-statement>
-
-#### The State Object
-
-A [=State=] **MUST** include:
-
-- `type`: `"State"`
-- `id`: Unique URI/URN.
-- `label`: Human-readable string.
-- `tags`: (Optional) Array of strings for grouping (e.g., `["phase:checkout"]`).
-
-#### The Transition Object
-
-A [=Transition=] **MUST** include:
-
-- `type`: `"Transition"`
-- `id`: Unique URI/URN.
-- `from`: ID of the source [=State=] or [=CompositeState=].
-- `to`: ID of the target [=State=] or [=CompositeState=].
-- `label`: (Optional) Action name.
-
----
-
 ## Composition (CompositeState)
 
 Composition allows a node to reference an entire sub-journey, enabling "zoomable" graph interactions.
@@ -80,14 +52,7 @@ graph LR
 
 ```
 
-### Schema
-
-A [=CompositeState=] **MUST** include:
-
-- `type`: `"CompositeState"`
-- `id`: Unique URI/URN.
-- `label`: Human-readable string.
-- `subjourneyId`: The ID of the target [=Journey=].
+The structural definition of [=CompositeState=] and `subjourneyId` is normative in the ontology and validation artifacts. This section defines only how consumers interpret that structure as nested or zoomable journey composition.
 
 ---
 
@@ -95,18 +60,7 @@ A [=CompositeState=] **MUST** include:
 
 An [=OutgoingTransitionGroup=] defines reusable outgoing transitions (e.g., headers/footers) to avoid duplicating common navigation across many states.
 
-An [=OutgoingTransitionGroup=] **MUST** include:
-
-- `type`: `"OutgoingTransitionGroup"`
-- `id`: Unique URI/URN.
-- `outgoingTransitionRefs`: Array of IDs of [=OutgoingTransition=] Nodes.
-
-An [=OutgoingTransition=] **MUST** include:
-
-- `type`: `"OutgoingTransition"`
-- `id`: Unique URI/URN.
-- `to`: Target [=State=] or [=CompositeState=] ID.
-- `label`: (Optional) Action name.
+The structural definition of [=OutgoingTransitionGroup=] and [=OutgoingTransition=] is normative in the ontology and validation artifacts. This section defines only the consumer processing model for applying those reusable outgoing edges.
 
 ### Visual Model
 
@@ -140,7 +94,7 @@ graph TD
 
 <spec-statement>
 When a Consumer loads a [=Journey=] referencing `outgoingTransitionGroupRefs`:
-1. **Resolution:**:
+1. **Resolution:**
   * The Consumer **MUST** resolve each referenced [=OutgoingTransitionGroup=]
   * The Consumer **MUST** resolve each `outgoingTransitionRefs` entry to an [=OutgoingTransition=].
 2. **Iteration:** The Consumer **MUST** iterate over every [=State=] and [=CompositeState=] ID in `stateRefs`.
@@ -150,7 +104,26 @@ When a Consumer loads a [=Journey=] referencing `outgoingTransitionGroupRefs`:
 
 ---
 
-## Validation Rules {data-cop-concept="validation"}
+## Ontology {data-cop-concept="ontology"}
+
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `State`, `CompositeState`, `Transition`, `OutgoingTransition`, and `OutgoingTransitionGroup`.
+
+:::include ./graph.ttl :::
+
+## JSON-LD Context {data-cop-concept="jsonld-context"}
+
+The normative Graph JSON-LD context is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld`. It provides the compact JSON-LD term mappings for the Graph vocabulary used by the examples on this page.
+
+:::include ./graph.context.jsonld :::
+
+---
+## Validation {data-cop-concept="validation"}
+
+The normative Graph SHACL shape is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph.shape`. It is the authoritative validation artifact for Graph structural constraints.
+
+:::include ./graph.shape.ttl :::
+
+The rules below define additional graph integrity and resolution behavior beyond the structural constraints captured by the SHACL shape.
 
 <spec-statement>
 To ensure graph integrity, the following constraints **MUST** be met:
@@ -166,13 +139,19 @@ To ensure graph integrity, the following constraints **MUST** be met:
 
 ```json
 {
-  "@context": "https://ujg.specs.openuji.org/ed/context.jsonld",
-  "type": "UJGDocument",
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/runtime.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/experience.context.jsonld"
+  ],
+  "@id": "https://example.com/ujg/graph/main-site.jsonld",
+  "@type": "UJGDocument",
   "specVersion": "1.0",
-  "items": [
+  "nodes": [
     {
-      "type": "Journey",
-      "id": "urn:ujg:journey:main-site",
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:main-site",
       "startState": "urn:ujg:state:home",
       "stateRefs": ["urn:ujg:state:home", "urn:ujg:state:checkout-flow"],
       "transitionRefs": ["urn:ujg:transition:home-to-checkout"],
@@ -180,46 +159,46 @@ To ensure graph integrity, the following constraints **MUST** be met:
     },
 
     {
-      "type": "Transition",
-      "id": "urn:ujg:transition:home-to-checkout",
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:home-to-checkout",
       "from": "urn:ujg:state:home",
-      "to": { "id": "urn:ujg:state:checkout-flow", "type": "CompositeState" },
+      "to": "urn:ujg:state:checkout-flow",
       "label": "Buy Now"
     },
 
     {
-      "type": "State",
-      "id": "urn:ujg:state:home",
+      "@type": "State",
+      "@id": "urn:ujg:state:home",
       "label": "Home Page",
       "tags": ["phase:landing"]
     },
 
     {
-      "type": "CompositeState",
-      "id": "urn:ujg:state:checkout-flow",
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:checkout-flow",
       "label": "Checkout Process",
       "subjourneyId": "urn:ujg:journey:checkout"
     },
 
-    { "type": "State", "id": "urn:ujg:state:profile", "label": "Profile" },
+    { "@type": "State", "@id": "urn:ujg:state:profile", "label": "Profile" },
 
     {
-      "type": "OutgoingTransition",
-      "id": "urn:ujg:ot:go-home",
+      "@type": "OutgoingTransition",
+      "@id": "urn:ujg:ot:go-home",
       "to": "urn:ujg:state:home",
       "label": "Home"
     },
 
     {
-      "type": "OutgoingTransition",
-      "id": "urn:ujg:ot:go-profile",
+      "@type": "OutgoingTransition",
+      "@id": "urn:ujg:ot:go-profile",
       "to": "urn:ujg:state:profile",
       "label": "Profile"
     },
 
     {
-      "type": "OutgoingTransitionGroup",
-      "id": "urn:ujg:otg:global-header",
+      "@type": "OutgoingTransitionGroup",
+      "@id": "urn:ujg:otg:global-header",
       "outgoingTransitionRefs": ["urn:ujg:ot:go-home", "urn:ujg:ot:go-profile"]
     }
   ]
