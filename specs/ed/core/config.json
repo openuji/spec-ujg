@@ -59,6 +59,14 @@
             "RFC3339": {
                 "title": "RFC 3339",
                 "url": "https://www.rfc-editor.org/rfc/rfc3339"
+            },
+            "RFC3986": {
+                "title": "Uniform Resource Identifier (URI): Generic Syntax",
+                "url": "https://www.rfc-editor.org/rfc/rfc3986",
+                "authors": ["T. Berners-Lee", "R. Fielding", "L. Masinter"],
+                "date": "January 2005",
+                "publisher": "IETF",
+                "status": "Internet Standard"
             }
 
         }

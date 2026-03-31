@@ -29,6 +29,24 @@ The current context does not define a compact term for `ujg:extensions`, so exam
 
 :::include ./core.context.jsonld :::
 
+### Import Resolution
+
+<spec-statement>`imports` values **MUST** be IRI references.</spec-statement>
+
+<spec-statement>An `imports` value **MAY** be an absolute IRI or a relative IRI reference.</spec-statement>
+
+<spec-statement>Relative import references **MUST** be resolved against the location of the importing [=UJGDocument=].</spec-statement>
+
+<spec-statement>For a document retrieved via HTTP(S), the base for resolution is the document URL. For a document loaded from a file URL, the base for resolution is the file URL of the importing document.</spec-statement>
+
+<spec-statement>Core does not define a manifest root, package root, or workspace root for import resolution.</spec-statement>
+
+<spec-statement>If no stable document location is available, relative imports are implementation-specific and may not be portable.</spec-statement>
+
+> Note: JSON-LD defines a base IRI mechanism, including local `@base`, but Core import resolution is defined by the importing document location. External contexts do not apply `@base`, and relative references are only reliable when a base is well defined. See [[JSON-LD 1.1.]].
+
+> Note: Authors **SHOULD** prefer relative import references for intra-package documents so the same document set can be moved between local development and deployed environments without changing import values, provided the relative directory layout is preserved.
+
 ## Validation {data-cop-concept="validation"}
 
 The normative Core SHACL shape is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/core.shape`. It constrains [=UJGDocument=] instances and is the validation artifact for Core semantics.
@@ -50,20 +68,29 @@ The examples below are informative. Each example uses `https://ujg.specs.openuji
 }
 ```
 
-### Document With Imports
+### Document With Relative Imports
 
 ```json
 {
   "@context": "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-  "@id": "https://example.com/ujg/core/importing.jsonld",
+  "@id": "https://example.com/ujg/flows/order/main.jsonld",
   "@type": "UJGDocument",
   "specVersion": "1.0",
   "imports": [
-    "https://example.com/ujg/graph/base.jsonld",
-    "https://example.com/ujg/runtime/events.jsonld"
+    "./shared/states.jsonld",
+    "../runtime/events.jsonld",
+    "https://example.com/ujg/common/errors.jsonld"
   ]
 }
 ```
+
+Resolved imports:
+
+- `./shared/states.jsonld` → `https://example.com/ujg/flows/order/shared/states.jsonld`
+- `../runtime/events.jsonld` → `https://example.com/ujg/flows/runtime/events.jsonld`
+- `https://example.com/ujg/common/errors.jsonld` → unchanged
+
+This follows [[RFC3986]] relative-reference resolution and the [[JSON-LD 1.1.]] rule that relative IRI references resolve from the document base IRI.
 
 ### Document With Nodes
 
