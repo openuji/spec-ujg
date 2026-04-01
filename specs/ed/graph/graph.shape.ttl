@@ -39,6 +39,38 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
     sh:path ujggraph:outgoingTransitionGroupRefs ;
     sh:class ujggraph:OutgoingTransitionGroup ;
     sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A transition in transitionRefs has a from state that is not listed in this journey's stateRefs." ;
+    sh:select """
+      SELECT $this ?transition ?from
+      WHERE {
+        $this ujggraph:transitionRefs ?transition .
+        ?transition ujggraph:from ?from .
+
+        FILTER (NOT EXISTS {
+          $this ujggraph:stateRefs ?from .
+        })
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A transition in transitionRefs has a to state that is not listed in this journey's stateRefs." ;
+    sh:select """
+      SELECT $this ?transition ?to
+      WHERE {
+        $this ujggraph:transitionRefs ?transition .
+        ?transition ujggraph:to ?to .
+
+        FILTER (NOT EXISTS {
+          $this ujggraph:stateRefs ?to .
+        })
+      }
+    """ ;
   ] .
 
 ujggraphshape:StateShape a sh:NodeShape ;
@@ -131,4 +163,4 @@ ujggraphshape:OutgoingTransitionGroupShape a sh:NodeShape ;
     sh:class ujggraph:OutgoingTransition ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
-  ] .
+  ] . 

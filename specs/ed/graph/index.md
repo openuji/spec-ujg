@@ -127,10 +127,11 @@ The rules below define additional graph integrity and resolution behavior beyond
 
 <spec-statement>
 To ensure graph integrity, the following constraints **MUST** be met:
-1. **Reference Integrity:** All `startState`, `stateRefs`, `transitionRefs`, `outgoingTransitionGroupRefs`, `outgoingTransitionRefs`, `from`, and `to` IDs **MUST** resolve to valid Nodes within the current scope or imported modules.
-2. **Composition Safety**: `subjourneyId` **MUST** resolve to a valid [=Journey=].
-3. **Group Resolution**: Every ID in `outgoingTransitionGroupRefs` **MUST** resolve to an [=OutgoingTransitionGroup=].
-4. **Outgoing Resolution**: Every ID in `outgoingTransitionRefs` **MUST** resolve to an [=OutgoingTransition=].
+1. **Reference Integrity:** All `startState`, `stateRefs`, `transitionRefs`, `outgoingTransitionGroupRefs`, and `outgoingTransitionRefs` IDs **MUST** resolve to valid Nodes within the current scope or imported modules.
+2. **Transition Endpoint Resolution:** The `from` and `to` IDs of a [=Transition=] **MUST** resolve to valid Nodes, and are required to be members of the enclosing [=Journey=]'s `stateRefs`. A transition **MUST NOT** reference states belonging to other journeys.
+3. **Composition Safety**: `subjourneyId` **MUST** resolve to a valid [=Journey=].
+4. **Group Resolution**: Every ID in `outgoingTransitionGroupRefs` **MUST** resolve to an [=OutgoingTransitionGroup=].
+5. **Outgoing Resolution**: Every ID in `outgoingTransitionRefs` **MUST** resolve to an [=OutgoingTransition=].
 </spec-statement>
 
 ---
