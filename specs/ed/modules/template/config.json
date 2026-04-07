@@ -1,6 +1,6 @@
 {
-    "id": "modules/design-system",
-    "title": "Design System",
+    "id": "modules/template",
+    "title": "Templates",
     "maturityLevel": "incubating",
     "baseUrl": "${SPEC_BASE_URL}/ed",
     "deps": [
@@ -8,7 +8,7 @@
     ],
     "custom": {
         "family": "module",
-        "order": 10
+        "order": 40
     },
     "respec": {
         "noConformance": true,
@@ -17,7 +17,7 @@
             "name": "User Journal Graph Community Group",
             "url": "https://www.w3.org/community/ujg/"
         },
-        "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/ed/modules/design-system/index.md",
+        "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/ed/modules/template/index.md",
         "editors": [
             {
                 "name": "Seva Dolgopolov",

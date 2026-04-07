@@ -1,0 +1,25 @@
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgtemplates: <https://ujg.specs.openuji.org/ed/ns/templates#> .
+@prefix ujgtemplatesshape: <https://ujg.specs.openuji.org/ed/ns/templates.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgtemplatesshape:StateTemplateShape a sh:NodeShape ;
+  sh:targetClass ujggraph:State ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgtemplates:templateRef ;
+    sh:class ujgtemplates:Template ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgtemplatesshape:TemplateShape a sh:NodeShape ;
+  sh:targetClass ujgtemplates:Template ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgtemplates:stateRefs ;
+    sh:class ujggraph:State ;
+    sh:nodeKind sh:IRI ;
+  ] .

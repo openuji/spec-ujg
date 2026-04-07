@@ -1,0 +1,26 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgtemplates: <https://ujg.specs.openuji.org/ed/ns/templates#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/ed/ns/templates#> a owl:Ontology ;
+  rdfs:label "UJG Templates Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Templates ontology declaration" .
+
+### Classes
+
+ujgtemplates:Template a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgtemplates:templateRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:State ;
+  rdfs:range ujgtemplates:Template .
+
+ujgtemplates:stateRefs a owl:ObjectProperty ;
+  rdfs:domain ujgtemplates:Template ;
+  rdfs:range ujggraph:State .
