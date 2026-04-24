@@ -1,0 +1,61 @@
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgcond: <https://ujg.specs.openuji.org/ed/ns/condition#> .
+@prefix ujgcondshape: <https://ujg.specs.openuji.org/ed/ns/condition.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgcondshape:ConditionShape a sh:NodeShape ;
+  sh:targetClass ujgcond:Condition ;
+  sh:nodeKind sh:IRI .
+
+ujgcondshape:GuardedTransitionShape a sh:NodeShape ;
+  sh:targetClass ujggraph:Transition ;
+  sh:nodeKind sh:IRI ;
+  sh:property [
+    sh:path ujgcond:conditionRef ;
+    sh:class ujgcond:Condition ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgcondshape:ConditionSetShape a sh:NodeShape ;
+  sh:targetClass ujgcond:ConditionSet ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgcond:conditionTransitionRefs ;
+    sh:class ujggraph:Transition ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 2 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "Every transition referenced by a ConditionSet MUST have a conditionRef." ;
+    sh:select """
+      SELECT $this ?transition
+      WHERE {
+        $this ujgcond:conditionTransitionRefs ?transition .
+        FILTER NOT EXISTS {
+          ?transition ujgcond:conditionRef ?condition .
+        }
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "All transitions referenced by one ConditionSet MUST have the same from state." ;
+    sh:select """
+      SELECT $this ?transitionA ?transitionB ?fromA ?fromB
+      WHERE {
+        $this ujgcond:conditionTransitionRefs ?transitionA .
+        $this ujgcond:conditionTransitionRefs ?transitionB .
+
+        ?transitionA ujggraph:from ?fromA .
+        ?transitionB ujggraph:from ?fromB .
+
+        FILTER (?transitionA != ?transitionB)
+        FILTER (?fromA != ?fromB)
+      }
+    """ ;
+  ] .

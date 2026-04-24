@@ -1,0 +1,28 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgcond: <https://ujg.specs.openuji.org/ed/ns/condition#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/ed/ns/condition#> a owl:Ontology ;
+  rdfs:label "UJG Conditions Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Conditions ontology declaration" .
+
+### Classes
+
+ujgcond:Condition a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgcond:ConditionSet a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgcond:conditionRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Transition ;
+  rdfs:range ujgcond:Condition .
+
+ujgcond:conditionTransitionRefs a owl:ObjectProperty ;
+  rdfs:domain ujgcond:ConditionSet ;
+  rdfs:range ujggraph:Transition .

@@ -1,0 +1,21 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgcond": "https://ujg.specs.openuji.org/ed/ns/condition#",
+
+    "Condition": "ujgcond:Condition",
+    "ConditionSet": "ujgcond:ConditionSet",
+
+    "conditionRef": {
+      "@id": "ujgcond:conditionRef",
+      "@type": "@id"
+    },
+
+    "conditionTransitionRefs": {
+      "@id": "ujgcond:conditionTransitionRefs",
+      "@type": "@id",
+      "@container": "@set"
+    }
+  }
+}
