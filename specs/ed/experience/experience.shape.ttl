@@ -13,15 +13,6 @@ ujgexperienceshape:StateLikeShape a sh:NodeShape ;
     [ sh:class ujggraph:CompositeState ]
   ) .
 
-ujgexperienceshape:GraphRefTargetShape a sh:NodeShape ;
-  sh:nodeKind sh:IRI ;
-  sh:or (
-    [ sh:class ujggraph:State ]
-    [ sh:class ujggraph:CompositeState ]
-    [ sh:class ujggraph:Transition ]
-    [ sh:class ujggraph:OutgoingTransition ]
-  ) .
-
 ujgexperienceshape:ExperienceStepShape a sh:NodeShape ;
   sh:targetClass ujgexperience:ExperienceStep ;
   sh:nodeKind sh:IRI ;
@@ -103,8 +94,9 @@ ujgexperienceshape:PainPointShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgexperience:graphRefs ;
-    sh:node ujgexperienceshape:GraphRefTargetShape ;
+    sh:path ujgexperience:experienceRefs ;
+    sh:class ujgexperience:ExperienceStep ;
+    sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
   ] ;
 

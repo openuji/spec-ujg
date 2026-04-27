@@ -43,9 +43,9 @@ ujgexperience:channel a owl:DatatypeProperty ;
   rdfs:domain ujgexperience:Touchpoint ;
   rdfs:range xsd:string .
 
-ujgexperience:graphRefs a owl:ObjectProperty ;
+ujgexperience:experienceRefs a owl:ObjectProperty ;
   rdfs:domain ujgexperience:PainPoint ;
-  rdfs:range ujg:Node .
+  rdfs:range ujgexperience:ExperienceStep .
 
 ujgexperience:severity a owl:DatatypeProperty ;
   rdfs:domain ujgexperience:PainPoint ;

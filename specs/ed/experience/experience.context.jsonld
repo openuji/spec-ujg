@@ -35,8 +35,8 @@
       "@type": "xsd:integer"
     },
     "channel": "ujgexperience:channel",
-    "graphRefs": {
-      "@id": "ujgexperience:graphRefs",
+    "experienceRefs": {
+      "@id": "ujgexperience:experienceRefs",
       "@type": "@id",
       "@container": "@set"
     },

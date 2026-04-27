@@ -32,6 +32,8 @@ Examples in this page use an explicit context array composed from the published 
 
 Experience annotations add semantic grouping and interpretation to a graph without changing traversal behavior. The normative structural definition is provided by the ontology below; the context and shape that follow also show the shared Graph terms reused by this module, including `label`, `tags`, and `stateRefs`.
 
+`experienceRefs` records the journey steps a `PainPoint` annotates. Its values reference one or more `ExperienceStep` nodes, which in turn reference the underlying Graph states through `stateRefs`; it does not define new graph topology.
+
 **Notes:**
 
 * A Step **MUST NOT** imply traversal order. Order is defined only by [[UJG Graph]] transitions.
@@ -59,7 +61,7 @@ The normative Experience SHACL shape is defined below and is published at `https
 
 The rules below define the remaining resolution and non-structural constraints for Experience annotations.
 
-1. **Resolution:** Every ID in `stateRefs`, `graphRefs`, `phaseRef`, `touchpointRefs` **MUST** resolve to a [=Node=] within the current scope or imported modules.
+1. **Resolution:** Every ID in `stateRefs` **MUST** resolve to a [=State=] or [=CompositeState=]; every ID in `experienceRefs` **MUST** resolve to an [=ExperienceStep=]; `phaseRef` **MUST** resolve to a [=Phase=]; and every ID in `touchpointRefs` **MUST** resolve to a [=Touchpoint=]. All referenced IDs **MUST** be within the current scope or imported modules.
 2. **Non-Structural:** Experience objects **MUST NOT** introduce additional traversal semantics beyond [[UJG Graph]].
 
 ---
@@ -91,11 +93,23 @@ The rules below define the remaining resolution and non-structural constraints f
     },
 
     {
+      "@type": "ExperienceStep",
+      "@id": "urn:ujg:step:enter-payment",
+      "label": "Enter payment details",
+      "stateRefs": ["urn:ujg:state:payment"],
+      "phaseRef": "urn:ujg:phase:checkout",
+      "touchpointRefs": ["urn:ujg:touchpoint:web"]
+    },
+
+    {
       "@type": "PainPoint",
       "@id": "urn:ujg:pain:address-validation",
       "label": "Address validation friction",
       "severity": 0.7,
-      "graphRefs": ["urn:ujg:state:shipping-form" ]
+      "experienceRefs": [
+        "urn:ujg:step:enter-shipping",
+        "urn:ujg:step:enter-payment"
+      ]
     },
 
     {
