@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ujg.specs.openuji.org/ed/ns/design-system.schema.json",
+  "title": "UJG Design System Extension Payload",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "systemRef": { "$ref": "#/$defs/urnRef" },
+    "systemVersion": { "type": "string" },
+    "packageRef": { "type": "string" },
+    "patternRef": { "$ref": "#/$defs/urnRef" },
+    "componentRef": { "$ref": "#/$defs/urnRef" },
+    "sourceRefs": { "$ref": "#/$defs/sourceRefs" },
+    "tokenRefs": { "$ref": "#/$defs/urnRefArray" },
+    "contentRefs": { "$ref": "#/$defs/urnRefArray" },
+    "a11yRefs": { "$ref": "#/$defs/urnRefArray" }
+  },
+  "$defs": {
+    "sourceRefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "storybook": { "type": "string" },
+        "figma": { "type": "string" },
+        "repository": { "type": "string" }
+      },
+      "minProperties": 1
+    },
+    "urnRefArray": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/urnRef" },
+      "uniqueItems": true
+    },
+    "urnRef": {
+      "type": "string",
+      "pattern": "^urn:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    }
+  }
+}

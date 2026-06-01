@@ -1,0 +1,31 @@
+{
+    "id": "extensions/render",
+    "title": "Render",
+    "maturityLevel": "incubating",
+    "baseUrl": "${SPEC_BASE_URL}/ed",
+    "deps": [
+        "graph",
+        "modules/surface"
+    ],
+    "custom": {
+        "family": "extension",
+        "order": 100,
+        "publish": true
+    },
+    "respec": {
+        "noConformance": true,
+        "modificationDate": "${SPEC_MODIFICATION_DATE}",
+        "group": {
+            "name": "User Journal Graph Community Group",
+            "url": "https://www.w3.org/community/ujg/"
+        },
+        "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/ed/extensions/render/index.md",
+        "editors": [
+            {
+                "name": "Seva Dolgopolov",
+                "w3cid": "169225"
+            }
+        ],
+        "license": "W3C-Software-and-Document"
+    }
+}

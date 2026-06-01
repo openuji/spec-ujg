@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { access, readdir } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -27,16 +27,34 @@ const EXTENSIONS_DIRECTORY = fileURLToPath(
 );
 const SPEC_BASE_URL = getSpecBaseUrl(import.meta.env.SPEC_BASE_URL);
 
-export async function getStaticPaths() {
+async function shouldPublishExtensionSchema(extensionName: string): Promise<boolean> {
   if (import.meta.env.PUBLISH_UJG_EXTENSIONS !== 'true') {
-    return [];
+    try {
+      const configContent = await readFile(
+        join(EXTENSIONS_DIRECTORY, extensionName, 'config.json'),
+        'utf-8'
+      );
+      const config = JSON.parse(configContent) as { custom?: { publish?: unknown } };
+
+      return config.custom?.publish === true;
+    } catch {
+      return false;
+    }
   }
 
+  return true;
+}
+
+export async function getStaticPaths() {
   const entries = await readdir(EXTENSIONS_DIRECTORY, { withFileTypes: true });
   const staticPaths = await Promise.all(
     entries
       .filter((entry) => entry.isDirectory())
       .map(async (entry): Promise<SchemaStaticPath | null> => {
+        if (!(await shouldPublishExtensionSchema(entry.name))) {
+          return null;
+        }
+
         const schemaFilename = `${entry.name}.schema.json`;
 
         try {

@@ -1,0 +1,30 @@
+{
+    "id": "extensions/design-system",
+    "title": "Design System",
+    "maturityLevel": "incubating",
+    "baseUrl": "${SPEC_BASE_URL}/ed",
+    "deps": [
+        "modules/surface"
+    ],
+    "custom": {
+        "family": "extension",
+        "order": 101,
+        "publish": true
+    },
+    "respec": {
+        "noConformance": true,
+        "modificationDate": "${SPEC_MODIFICATION_DATE}",
+        "group": {
+            "name": "User Journal Graph Community Group",
+            "url": "https://www.w3.org/community/ujg/"
+        },
+        "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/ed/extensions/design-system/index.md",
+        "editors": [
+            {
+                "name": "Seva Dolgopolov",
+                "w3cid": "169225"
+            }
+        ],
+        "license": "W3C-Software-and-Document"
+    }
+}

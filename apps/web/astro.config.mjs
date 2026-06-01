@@ -8,6 +8,9 @@ import react from '@astrojs/react';
 // https://astro.build/config
 export default defineConfig({
   vite: {
+    optimizeDeps: {
+      include: ['@radix-ui/react-select', 'lucide-react'],
+    },
     plugins: [tailwindcss()],
     server: {
       watch: {

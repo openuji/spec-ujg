@@ -37,7 +37,9 @@ export function getDocumentFamily(doc: Document): EditorDraftDocumentFamily {
 
 function shouldPublishDocument(doc: Document): boolean {
   if (getDocumentFamily(doc) !== 'extension') return true;
-  return import.meta.env.PUBLISH_UJG_EXTENSIONS === 'true';
+  return (
+    import.meta.env.PUBLISH_UJG_EXTENSIONS === 'true' || getDocumentCustom(doc).publish === true
+  );
 }
 
 export function getDocumentOrder(doc: Document): number {

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ujg.specs.openuji.org/ed/ns/render.schema.json",
+  "title": "UJG Render Extension Payload",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "component": { "type": "string" },
+    "selection": { "$ref": "#/$defs/selection" },
+    "realizations": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/variantKey" },
+      "additionalProperties": { "$ref": "#/$defs/realization" }
+    },
+    "defaultRealization": { "$ref": "#/$defs/realization" },
+    "slots": { "$ref": "#/$defs/renderSlots" }
+  },
+  "$defs": {
+    "variantKey": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["experiment"]
+        },
+        "experimentId": { "type": "string" },
+        "fallbackVariant": { "$ref": "#/$defs/variantKey" }
+      },
+      "required": ["type", "experimentId", "fallbackVariant"]
+    },
+    "realization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "realizationId": { "type": "string" },
+        "label": { "type": "string" },
+        "props": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "designSystem": { "$ref": "#/$defs/designSystemBinding" }
+      },
+      "required": ["realizationId", "label", "props"]
+    },
+    "designSystemBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "componentVariantRef": { "$ref": "#/$defs/urnRef" },
+        "layoutRecipeRef": { "$ref": "#/$defs/urnRef" },
+        "tokenRefs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/urnRef" },
+          "uniqueItems": true
+        }
+      },
+      "required": ["componentVariantRef", "layoutRecipeRef"]
+    },
+    "renderSlots": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][A-Za-z0-9_-]*$"
+      },
+      "additionalProperties": { "$ref": "#/$defs/stateRef" }
+    },
+    "stateRef": { "type": "string" },
+    "urnRef": {
+      "type": "string",
+      "pattern": "^urn:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    }
+  }
+}

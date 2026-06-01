@@ -86,7 +86,7 @@ export default function BreadcrumbSelect(props: { valueHref: string; options: Op
               <div className="flex items-center gap-2 px-2">
                 <div className="h-px flex-1 bg-border" />
                 <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  Opaque Extensions
+                  Extensions
                 </span>
                 <div className="h-px flex-1 bg-border" />
               </div>
