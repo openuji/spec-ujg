@@ -29,8 +29,6 @@
       "@id": "ujgmapping:mappedStateRef",
       "@type": "@id"
     },
-    "mappingStatus": "ujgmapping:mappingStatus",
-    "stepStatus": "ujgmapping:stepStatus",
     "mappedScopeRef": {
       "@id": "ujgmapping:mappedScopeRef",
       "@type": "@id"

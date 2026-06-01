@@ -38,6 +38,10 @@
             "UJG Runtime": {
                 "title": "UJG Runtime",
                 "url": "/ed/runtime"                
+            },
+            "UJG Conditions": {
+                "title": "UJG Conditions",
+                "url": "/ed/modules/condition"
             }
         }
     }

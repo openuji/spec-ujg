@@ -32,8 +32,10 @@ with the Mapping context.
   `RuntimeEvent.stateRef`.
 - <dfn>Mapped scope</dfn>: The Graph `Journey` used to interpret one mapped step when nested or
   composite journeys require explicit disambiguation.
-- <dfn>In-model step</dfn>: A mapped step whose movement follows an effective Graph transition.
-- <dfn>Jump</dfn>: A mapped step where no effective Graph transition explains the observed movement.
+- <dfn>Relevant effective transition</dfn>: A Graph transition that can explain an observed movement
+  between two resolved runtime states.
+- <dfn>Jump</dfn>: A non-root mapped step where no relevant effective transition explains the
+  observed movement.
 
 ## Mapping Model
 
@@ -42,13 +44,11 @@ A `JourneyMapping` links:
 - `mapping:mappedRuntimeRef` to the Runtime `JourneyExecution` being mapped.
 - `mapping:mappedJourneyRef` to the Graph `Journey` that owns the interpreted chain.
 - `mapping:mappedStepRef` to the `MappedStep` records for events in the runtime chain.
-- `mapping:mappingStatus` to a compact status summary such as `in-model`, `jump`, or `mixed`.
 
 Each `MappedStep` links:
 
 - `mapping:mappedEventRef` to the Runtime `RuntimeEvent` being interpreted.
 - `mapping:mappedStateRef` to the resolved Graph `State` or `CompositeState`.
-- `mapping:stepStatus` to `origin`, `in-model`, or `jump`.
 - `mapping:mappedScopeRef`, when needed, to the active Graph `Journey` scope for that step.
 - `mapping:explainedByTransitionRef`, when present, to the effective `Transition` or
   `OutgoingTransition` that explains the movement.
@@ -92,20 +92,27 @@ the SHACL shape.
    identified by `mappedJourneyRef`.
 5. **Step order:** Mapping does not define a separate step order. Consumers MUST order mapped steps
    by applying Runtime chain reconstruction to each step's `mappedEventRef`.
-6. **Origin classification:** The root event step is `origin`. It records the starting resolved
-   state and is not considered a movement when computing aggregate `mappingStatus`.
-7. **In-model classification:** A mapped step is `in-model` when the observed movement follows a
-   Graph `Transition` in the mapped journey, including effective outgoing transitions contributed by
-   `OutgoingTransitionGroup`.
-8. **Jump classification:** A mapped step is `jump` when no effective Graph transition explains the
-   observed movement.
-9. **Composite and nested scope:** Composite or nested journeys MAY require explicit
+6. **Origin derivation:** The root event step is derived from the absence of
+   `RuntimeEvent.previousId`. It records the starting resolved state and is not an observed movement.
+7. **Relevant effective transition lookup:** A non-root mapped step is explained when
+   `explainedByTransitionRef` points to one relevant effective transition for the observed movement.
+   A relevant effective transition is either:
+   - a Graph `Transition` in the mapped scope whose `from` is the previous resolved state and whose
+     `to` is the current resolved state; or
+   - an effective `OutgoingTransition` contributed by an `OutgoingTransitionGroup` referenced by the
+     mapped scope, where the previous resolved state is in the mapped scope and the outgoing
+     transition's `to` is the current resolved state.
+8. **Condition eligibility:** If a consumer implements [[UJG Conditions]], a guarded transition only
+   explains a mapped step when the transition is eligible under Condition semantics.
+9. **Jump derivation:** A non-root mapped step is a jump when no relevant effective transition
+   explains the observed movement. A jump is a derived processing result, not serialized Mapping
+   vocabulary.
+10. **Composite and nested scope:** Composite or nested journeys MAY require explicit
    `mappedScopeRef` disambiguation when the same state identity could be interpreted in more than
    one active journey context. If `mappedScopeRef` is absent, it defaults to the `mappedJourneyRef`
    of the containing `JourneyMapping`.
-10. **No intent assumption:** A jump classification reports that the observed movement is not
-   explained by the mapped graph. It does not by itself decide whether the movement is legitimate or
-   erroneous.
+11. **No intent assumption:** A derived jump reports that the observed movement is not explained by
+   the mapped graph. It does not by itself decide whether the movement is legitimate or erroneous.
 
 ## Minimal Example
 
@@ -128,22 +135,19 @@ the SHACL shape.
         "urn:mapping:execution-12345:100",
         "urn:mapping:execution-12345:200",
         "urn:mapping:execution-12345:300"
-      ],
-      "mappingStatus": "in-model"
+      ]
     },
     {
       "@id": "urn:mapping:execution-12345:100",
       "@type": "MappedStep",
       "mappedEventRef": "urn:ujg:event:12345:100",
-      "mappedStateRef": "urn:ujg:state:cart",
-      "stepStatus": "origin"
+      "mappedStateRef": "urn:ujg:state:cart"
     },
     {
       "@id": "urn:mapping:execution-12345:200",
       "@type": "MappedStep",
       "mappedEventRef": "urn:ujg:event:12345:200",
       "mappedStateRef": "urn:ujg:state:payment",
-      "stepStatus": "in-model",
       "explainedByTransitionRef": "urn:ujg:transition:cart-to-payment"
     },
     {
@@ -151,7 +155,6 @@ the SHACL shape.
       "@type": "MappedStep",
       "mappedEventRef": "urn:ujg:event:12345:300",
       "mappedStateRef": "urn:ujg:state:confirmation",
-      "stepStatus": "in-model",
       "explainedByTransitionRef": "urn:ujg:transition:payment-to-confirmation"
     }
   ]
@@ -159,4 +162,10 @@ the SHACL shape.
 ```
 
 This example states that the causal event chain for `urn:ujg:execution:12345` has been resolved
-against the checkout journey and that each observed state movement follows the effective Graph model.
+against the checkout journey. The first mapped step is the root event. The later mapped steps record
+the relevant effective transitions that explain the observed movements.
+
+If a mapped movement is explained by a reusable outgoing transition, `explainedByTransitionRef`
+points to the `OutgoingTransition` resource. A movement explained by an effective
+`OutgoingTransition` from the mapped journey's `OutgoingTransitionGroup` is explained by the Graph
+model and does not need a serialized status value.

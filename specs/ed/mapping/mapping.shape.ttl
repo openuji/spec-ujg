@@ -3,7 +3,6 @@
 @prefix ujgmapping: <https://ujg.specs.openuji.org/ed/ns/mapping#> .
 @prefix ujgmappingshape: <https://ujg.specs.openuji.org/ed/ns/mapping.shape#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ujgmappingshape:StateLikeShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
@@ -44,13 +43,6 @@ ujgmappingshape:JourneyMappingShape a sh:NodeShape ;
     sh:class ujgmapping:MappedStep ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
-  ] ;
-
-  sh:property [
-    sh:path ujgmapping:mappingStatus ;
-    sh:datatype xsd:string ;
-    sh:in ( "in-model" "jump" "mixed" ) ;
-    sh:maxCount 1 ;
   ] .
 
 ujgmappingshape:MappedStepShape a sh:NodeShape ;
@@ -68,14 +60,6 @@ ujgmappingshape:MappedStepShape a sh:NodeShape ;
   sh:property [
     sh:path ujgmapping:mappedStateRef ;
     sh:node ujgmappingshape:StateLikeShape ;
-    sh:minCount 1 ;
-    sh:maxCount 1 ;
-  ] ;
-
-  sh:property [
-    sh:path ujgmapping:stepStatus ;
-    sh:datatype xsd:string ;
-    sh:in ( "origin" "in-model" "jump" ) ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
   ] ;

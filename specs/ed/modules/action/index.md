@@ -3,10 +3,9 @@
 This optional module defines a minimal graph-native vocabulary for attaching declared side effects
 to Graph `Transition` and `OutgoingTransition` nodes.
 
-The rationale follows the module discussion in `agent_findings.md`: without an action primitive,
-implementations tend to hide form submission, API invocation, analytics events, or
-navigate-with-payload behavior in opaque extensions. That makes a graph appear to advance while the
-effect that caused the transition remains non-portable.
+Without an action primitive, implementations tend to hide form submission, API invocation, analytics
+events, or navigate-with-payload behavior in opaque extensions. That makes a graph appear to advance
+while the effect that caused the transition remains non-portable.
 
 This first version is intentionally small. It declares that an effective transition has an associated
 `Action`; it does not define transport protocols, API request formats, queues, form libraries,

@@ -3,10 +3,10 @@
 This optional module defines a minimal graph-native vocabulary for attaching data context or binding
 identity to Graph `State` and `CompositeState` nodes.
 
-The rationale follows the module discussion in `agent_findings.md`: without a data primitive,
-implementations tend to invent incompatible state-management, data-context, and binding conventions
-inside opaque extensions. This module gives producers a shared place to say which addressable data
-resource belongs to a state-like node while leaving lifecycle and runtime details for later work.
+Without a data primitive, implementations tend to invent incompatible state-management,
+data-context, and binding conventions inside opaque extensions. This module gives producers a shared
+place to say which addressable data resource belongs to a state-like node while leaving lifecycle and
+runtime details for later work.
 
 This first version is intentionally small. It declares that a state-like node has an associated
 `Data` resource; it does not define schemas, reactive stores, fetch policies, cache directives,
