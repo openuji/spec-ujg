@@ -1,0 +1,20 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgactor": "https://ujg.specs.openuji.org/ed/ns/actor#",
+    "actor": "https://ujg.specs.openuji.org/ed/ns/actor#",
+
+    "Actor": "ujgactor:Actor",
+
+    "responsibleActorRef": {
+      "@id": "ujgactor:responsibleActorRef",
+      "@type": "@id"
+    },
+    "eligibleActorRefs": {
+      "@id": "ujgactor:eligibleActorRefs",
+      "@type": "@id",
+      "@container": "@set"
+    }
+  }
+}
