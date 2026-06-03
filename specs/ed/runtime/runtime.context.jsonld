@@ -3,15 +3,13 @@
     "@version": 1.1,
 
     "ujgruntime": "https://ujg.specs.openuji.org/ed/ns/runtime#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
 
     "JourneyExecution": "ujgruntime:JourneyExecution",
     "RuntimeEvent": "ujgruntime:RuntimeEvent",
+    "JourneyStack": "ujgruntime:JourneyStack",
+    "JourneyStackFrame": "ujgruntime:JourneyStackFrame",
 
-    "eventRefs": {
-      "@id": "ujgruntime:eventRefs",
-      "@type": "@id",
-      "@container": "@set"
-    },
     "executionId": {
       "@id": "ujgruntime:executionId",
       "@type": "@id"
@@ -23,6 +21,35 @@
     "stateRef": {
       "@id": "ujgruntime:stateRef",
       "@type": "@id"
+    },
+    "journeyStackRef": {
+      "@id": "ujgruntime:journeyStackRef",
+      "@type": "@id"
+    },
+    "frameRefs": {
+      "@id": "ujgruntime:frameRefs",
+      "@type": "@id",
+      "@container": "@list"
+    },
+    "journeyRef": {
+      "@id": "ujgruntime:journeyRef",
+      "@type": "@id"
+    },
+    "viaStateRef": {
+      "@id": "ujgruntime:viaStateRef",
+      "@type": "@id"
+    },
+    "instanceRef": {
+      "@id": "ujgruntime:instanceRef",
+      "@type": "@id"
+    },
+    "subjectRef": {
+      "@id": "ujgruntime:subjectRef",
+      "@type": "@id"
+    },
+    "depth": {
+      "@id": "ujgruntime:depth",
+      "@type": "xsd:integer"
     },
     "payload": {
       "@id": "ujgruntime:payload",

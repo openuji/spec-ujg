@@ -2,6 +2,7 @@
 @prefix ujgruntime: <https://ujg.specs.openuji.org/ed/ns/runtime#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix ujgruntimeshape: <https://ujg.specs.openuji.org/ed/ns/runtime.shape#> .
 
 
@@ -14,14 +15,7 @@ ujgruntimeshape:StateLikeShape a sh:NodeShape ;
 
 ujgruntimeshape:JourneyExecutionShape a sh:NodeShape ;
   sh:targetClass ujgruntime:JourneyExecution ;
-  sh:nodeKind sh:IRI ;
-
-  sh:property [
-    sh:path ujgruntime:eventRefs ;
-    sh:class ujgruntime:RuntimeEvent ;
-    sh:nodeKind sh:IRI ;
-    sh:minCount 1 ;
-  ] .
+  sh:nodeKind sh:IRI .
 
 ujgruntimeshape:RuntimeEventShape a sh:NodeShape ;
   sh:targetClass ujgruntime:RuntimeEvent ;
@@ -50,7 +44,70 @@ ujgruntimeshape:RuntimeEventShape a sh:NodeShape ;
   ] ;
 
   sh:property [
+    sh:path ujgruntime:journeyStackRef ;
+    sh:class ujgruntime:JourneyStack ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
     sh:path ujgruntime:payload ;
     sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgruntimeshape:JourneyStackShape a sh:NodeShape ;
+  sh:targetClass ujgruntime:JourneyStack ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgruntime:frameRefs ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ( ujgruntime:frameRefs [ sh:zeroOrMorePath rdf:rest ] rdf:first ) ;
+    sh:class ujgruntime:JourneyStackFrame ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+  ] .
+
+ujgruntimeshape:JourneyStackFrameShape a sh:NodeShape ;
+  sh:targetClass ujgruntime:JourneyStackFrame ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgruntime:journeyRef ;
+    sh:class ujggraph:Journey ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:viaStateRef ;
+    sh:class ujggraph:CompositeState ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:instanceRef ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:subjectRef ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:depth ;
+    sh:datatype xsd:integer ;
+    sh:minInclusive 0 ;
     sh:maxCount 1 ;
   ] .
