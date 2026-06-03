@@ -1,11 +1,11 @@
 ## Overview
 
 This module defines the basic vocabulary and processing model for mapping causally ordered Runtime
-events back to the intended Graph journey they belong to.
+events back to the intended Graph journey model.
 
 Runtime records what happened. Graph defines the intended journey topology. Mapping connects the two
-by resolving each `RuntimeEvent.stateRef` in a causal chain and associating that resolved chain with
-an explicit Graph `Journey`.
+by resolving each `RuntimeEvent.stateRef` in the local journey scope supplied by the event's
+`journeyStackRef`, then associating the resolved execution with an explicit root Graph `Journey`.
 
 Mapping surfaces model drift, tracking gaps, deep links, menu jumps, and other out-of-model
 movement. It does not assume every jump is an error.
@@ -24,14 +24,12 @@ with the Mapping context.
 ## Terminology
 
 - <dfn>JourneyMapping</dfn>: An addressable mapping record that binds one Runtime execution chain to
-  the Graph `Journey` it belongs to.
+  the root Graph `Journey` used to interpret it.
 - <dfn>MappedStep</dfn>: An addressable mapping record for one `RuntimeEvent` in the mapped chain.
 - <dfn>Mapped runtime</dfn>: The `JourneyExecution` whose causal `RuntimeEvent` chain is being
   resolved.
 - <dfn>Mapped state</dfn>: A Graph `State` or `CompositeState` resolved from a
   `RuntimeEvent.stateRef`.
-- <dfn>Mapped scope</dfn>: The Graph `Journey` used to interpret one mapped step when nested or
-  composite journeys require explicit disambiguation.
 - <dfn>Relevant effective transition</dfn>: A Graph transition that can explain an observed movement
   between two resolved runtime states.
 - <dfn>Jump</dfn>: A non-root mapped step where no relevant effective transition explains the
@@ -42,16 +40,20 @@ with the Mapping context.
 A `JourneyMapping` links:
 
 - `mapping:mappedRuntimeRef` to the Runtime `JourneyExecution` being mapped.
-- `mapping:mappedJourneyRef` to the Graph `Journey` that owns the interpreted chain.
+- `mapping:mappedJourneyRef` to the root Graph `Journey` for the interpreted execution.
 - `mapping:mappedStepRef` to the `MappedStep` records for events in the runtime chain.
 
 Each `MappedStep` links:
 
 - `mapping:mappedEventRef` to the Runtime `RuntimeEvent` being interpreted.
 - `mapping:mappedStateRef` to the resolved Graph `State` or `CompositeState`.
-- `mapping:mappedScopeRef`, when needed, to the active Graph `Journey` scope for that step.
 - `mapping:explainedByTransitionRef`, when present, to the effective `Transition` or
   `OutgoingTransition` that explains the movement.
+
+Mapping does not serialize a separate step scope. For each `MappedStep`, the local Graph `Journey`
+scope is derived from the referenced `RuntimeEvent`: resolve `RuntimeEvent.journeyStackRef` to its
+`JourneyStack`, read the ordered `frameRefs`, and use the `journeyRef` of the final
+`JourneyStackFrame`.
 
 The Runtime event order remains defined by Runtime's causal chain: a root event followed by the
 unique successor sequence obtained through `previousId`. `mappedStepRef` is a set of step records;
@@ -85,33 +87,46 @@ the SHACL shape.
    the Runtime causal chain model.
 2. **Step correspondence:** Each `MappedStep` MUST identify one `RuntimeEvent` in the mapped
    runtime chain through `mappedEventRef`.
-3. **State resolution:** Each `MappedStep.mappedStateRef` MUST be the Graph `State` or
-   `CompositeState` resolved from its `RuntimeEvent.stateRef` in the current scope or imported
+3. **Local scope derivation:** For each `MappedStep`, the Consumer MUST resolve the referenced
+   `RuntimeEvent.journeyStackRef` and use the `journeyRef` of the final `JourneyStackFrame` in
+   `frameRefs` as the step's local Graph `Journey` scope.
+4. **State resolution:** Each `MappedStep.mappedStateRef` MUST be the Graph `State` or
+   `CompositeState` resolved from its `RuntimeEvent.stateRef` in the derived local scope or imported
    documents.
-4. **Journey ownership:** The resolved event chain MUST be associated with the Graph `Journey`
-   identified by `mappedJourneyRef`.
-5. **Step order:** Mapping does not define a separate step order. Consumers MUST order mapped steps
+5. **Journey ownership:** `mappedJourneyRef` identifies the root Graph `Journey` for the mapped
+   execution. The first `JourneyStackFrame` of each mapped event's stack SHOULD reference the same
+   Graph `Journey`.
+6. **Step order:** Mapping does not define a separate step order. Consumers MUST order mapped steps
    by applying Runtime chain reconstruction to each step's `mappedEventRef`.
-6. **Origin derivation:** The root event step is derived from the absence of
+7. **Origin derivation:** The root event step is derived from the absence of
    `RuntimeEvent.previousId`. It records the starting resolved state and is not an observed movement.
-7. **Relevant effective transition lookup:** A non-root mapped step is explained when
-   `explainedByTransitionRef` points to one relevant effective transition for the observed movement.
-   A relevant effective transition is either:
-   - a Graph `Transition` in the mapped scope whose `from` is the previous resolved state and whose
-     `to` is the current resolved state; or
+8. **Same-scope transition lookup:** When the previous and current mapped steps have the same local
+   scope, a non-root mapped step is explained when `explainedByTransitionRef` points to one relevant
+   effective transition in that local scope. A relevant effective transition is either:
+   - a Graph `Transition` whose `from` is the previous resolved state and whose `to` is the current
+     resolved state; or
    - an effective `OutgoingTransition` contributed by an `OutgoingTransitionGroup` referenced by the
-     mapped scope, where the previous resolved state is in the mapped scope and the outgoing
+     local scope, where the previous resolved state is in the local scope and the outgoing
      transition's `to` is the current resolved state.
-8. **Condition eligibility:** If a consumer implements [[UJG Conditions]], a guarded transition only
+9. **Subjourney entry lookup:** When the current event's stack enters a subjourney relative to the
+   previous event's stack, the entering `JourneyStackFrame` SHOULD provide `viaStateRef`. A movement
+   into the subjourney is explained only when `explainedByTransitionRef` points to a relevant
+   effective transition in the parent scope whose `from` is the previous resolved state and whose
+   `to` is the entering frame's `viaStateRef`.
+10. **Subjourney exit lookup:** When the current event's stack exits a subjourney relative to the
+   previous event's stack, the exiting `JourneyStackFrame` SHOULD provide `viaStateRef`. A movement
+   out of the subjourney is explained only when `explainedByTransitionRef` points to a relevant
+   effective transition in the parent scope whose `from` is the exiting frame's `viaStateRef` and
+   whose `to` is the current resolved state.
+11. **Multiple boundary changes:** If a movement enters or exits more than one journey boundary,
+   Consumers MUST evaluate the boundary changes in stack order. If any required `viaStateRef` or
+   relevant effective transition is missing, the movement is a jump.
+12. **Condition eligibility:** If a consumer implements [[UJG Conditions]], a guarded transition only
    explains a mapped step when the transition is eligible under Condition semantics.
-9. **Jump derivation:** A non-root mapped step is a jump when no relevant effective transition
-   explains the observed movement. A jump is a derived processing result, not serialized Mapping
-   vocabulary.
-10. **Composite and nested scope:** Composite or nested journeys MAY require explicit
-   `mappedScopeRef` disambiguation when the same state identity could be interpreted in more than
-   one active journey context. If `mappedScopeRef` is absent, it defaults to the `mappedJourneyRef`
-   of the containing `JourneyMapping`.
-11. **No intent assumption:** A derived jump reports that the observed movement is not explained by
+13. **Jump derivation:** A non-root mapped step is a jump when no relevant effective transition
+   explains the observed movement, or when a stack boundary movement lacks the `viaStateRef` needed
+   to evaluate it. A jump is a derived processing result, not serialized Mapping vocabulary.
+14. **No intent assumption:** A derived jump reports that the observed movement is not explained by
    the mapped graph. It does not by itself decide whether the movement is legitimate or erroneous.
 
 ## Minimal Example
@@ -162,10 +177,100 @@ the SHACL shape.
 ```
 
 This example states that the causal event chain for `urn:ujg:execution:12345` has been resolved
-against the checkout journey. The first mapped step is the root event. The later mapped steps record
-the relevant effective transitions that explain the observed movements.
+against the checkout root journey. The first mapped step is the root event. The later mapped steps
+record the relevant effective transitions that explain the observed movements.
 
 If a mapped movement is explained by a reusable outgoing transition, `explainedByTransitionRef`
 points to the `OutgoingTransition` resource. A movement explained by an effective
 `OutgoingTransition` from the mapped journey's `OutgoingTransitionGroup` is explained by the Graph
 model and does not need a serialized status value.
+
+## Nested Scope Example
+
+```json
+{
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/mapping.context.jsonld"
+  ],
+  "@id": "https://example.com/ujg/mapping/nested-execution.jsonld",
+  "@type": "UJGDocument",
+  "specVersion": "1.0",
+  "nodes": [
+    {
+      "@type": "JourneyExecution",
+      "@id": "urn:ujg:execution:nested-1"
+    },
+    {
+      "@type": "JourneyStack",
+      "@id": "urn:ujg:stack:checkout",
+      "frameRefs": ["urn:ujg:stack-frame:checkout:0"]
+    },
+    {
+      "@type": "JourneyStackFrame",
+      "@id": "urn:ujg:stack-frame:checkout:0",
+      "journeyRef": "urn:ujg:journey:checkout",
+      "depth": 0
+    },
+    {
+      "@type": "JourneyStack",
+      "@id": "urn:ujg:stack:checkout:payment",
+      "frameRefs": [
+        "urn:ujg:stack-frame:checkout:0",
+        "urn:ujg:stack-frame:checkout:payment:1"
+      ]
+    },
+    {
+      "@type": "JourneyStackFrame",
+      "@id": "urn:ujg:stack-frame:checkout:payment:1",
+      "journeyRef": "urn:ujg:journey:payment",
+      "viaStateRef": "urn:ujg:state:checkout-payment",
+      "depth": 1
+    },
+    {
+      "@type": "RuntimeEvent",
+      "@id": "urn:ujg:event:nested-1:100",
+      "executionId": "urn:ujg:execution:nested-1",
+      "stateRef": "urn:ujg:state:cart",
+      "journeyStackRef": "urn:ujg:stack:checkout"
+    },
+    {
+      "@type": "RuntimeEvent",
+      "@id": "urn:ujg:event:nested-1:200",
+      "executionId": "urn:ujg:execution:nested-1",
+      "previousId": "urn:ujg:event:nested-1:100",
+      "stateRef": "urn:ujg:state:payment-card",
+      "journeyStackRef": "urn:ujg:stack:checkout:payment"
+    },
+    {
+      "@id": "urn:mapping:nested-1",
+      "@type": "JourneyMapping",
+      "mappedRuntimeRef": "urn:ujg:execution:nested-1",
+      "mappedJourneyRef": "urn:ujg:journey:checkout",
+      "mappedStepRef": [
+        "urn:mapping:nested-1:100",
+        "urn:mapping:nested-1:200"
+      ]
+    },
+    {
+      "@id": "urn:mapping:nested-1:100",
+      "@type": "MappedStep",
+      "mappedEventRef": "urn:ujg:event:nested-1:100",
+      "mappedStateRef": "urn:ujg:state:cart"
+    },
+    {
+      "@id": "urn:mapping:nested-1:200",
+      "@type": "MappedStep",
+      "mappedEventRef": "urn:ujg:event:nested-1:200",
+      "mappedStateRef": "urn:ujg:state:payment-card",
+      "explainedByTransitionRef": "urn:ujg:transition:cart-to-checkout-payment"
+    }
+  ]
+}
+```
+
+The second mapped step resolves its local scope from
+`urn:ujg:event:nested-1:200` to `urn:ujg:stack:checkout:payment`, then to the final
+`JourneyStackFrame` whose `journeyRef` is `urn:ujg:journey:payment`. The transition reference
+explains the boundary movement into the payment subjourney through the entering frame's
+`viaStateRef`.

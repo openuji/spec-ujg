@@ -43,10 +43,6 @@ ujgmapping:mappedStateRef a owl:ObjectProperty ;
     owl:unionOf ( ujggraph:State ujggraph:CompositeState )
   ] .
 
-ujgmapping:mappedScopeRef a owl:ObjectProperty ;
-  rdfs:domain ujgmapping:MappedStep ;
-  rdfs:range ujggraph:Journey .
-
 ujgmapping:explainedByTransitionRef a owl:ObjectProperty ;
   rdfs:domain ujgmapping:MappedStep ;
   rdfs:range [

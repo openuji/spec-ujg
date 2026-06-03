@@ -29,10 +29,6 @@
       "@id": "ujgmapping:mappedStateRef",
       "@type": "@id"
     },
-    "mappedScopeRef": {
-      "@id": "ujgmapping:mappedScopeRef",
-      "@type": "@id"
-    },
     "explainedByTransitionRef": {
       "@id": "ujgmapping:explainedByTransitionRef",
       "@type": "@id"

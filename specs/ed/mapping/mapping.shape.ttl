@@ -65,13 +65,6 @@ ujgmappingshape:MappedStepShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgmapping:mappedScopeRef ;
-    sh:class ujggraph:Journey ;
-    sh:nodeKind sh:IRI ;
-    sh:maxCount 1 ;
-  ] ;
-
-  sh:property [
     sh:path ujgmapping:explainedByTransitionRef ;
     sh:node ujgmappingshape:TransitionLikeShape ;
     sh:maxCount 1 ;
