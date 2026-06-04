@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { type Document } from '@openuji/speculator';
 
 import { buildWorkspaces } from '@openuji/speculator';
@@ -61,6 +62,23 @@ function compareDocuments(left: Document, right: Document): number {
   return (left.metadata?.title || left.id).localeCompare(right.metadata?.title || right.id);
 }
 
+function applyContentManifest(doc: Document): Document {
+  const documentPath = doc.sourcePos?.file;
+  if (!documentPath) {
+    throw new Error(`Document "${doc.id}" does not have a source file`);
+  }
+
+  const manifestPath = join(dirname(documentPath), 'content-manifest.json');
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as { updatedAt?: unknown };
+  if (typeof manifest.updatedAt !== 'string') {
+    throw new Error(`${manifestPath} does not contain a valid updatedAt timestamp`);
+  }
+
+  doc.metadata ??= {};
+  doc.metadata.lastUpdateDate = new Date(manifest.updatedAt).toISOString().slice(0, 10);
+  return doc;
+}
+
 export const getDocuments = async (workspace: SpecWorkspaceKey = 'ed'): Promise<Document[]> => {
   const workspaceContent = readFileSync('ujg.workspace.json', 'utf-8');
   const entryMap = JSON.parse(workspaceContent);
@@ -70,6 +88,7 @@ export const getDocuments = async (workspace: SpecWorkspaceKey = 'ed'): Promise<
     console.error('Errors building workspaces:', result.errors);
   }
   return [...(result.workspaces[workspace]?.documents || [])]
+    .map(applyContentManifest)
     .filter(shouldPublishDocument)
     .sort(compareDocuments);
 };

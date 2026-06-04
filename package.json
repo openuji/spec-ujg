@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "pnpm -r dev",
     "build": "pnpm -r build",
+    "content-manifests:check": "node scripts/content-manifests.js check",
+    "content-manifests:update": "node scripts/content-manifests.js update",
     "prepare": "husky"
   },
   "devDependencies": {
