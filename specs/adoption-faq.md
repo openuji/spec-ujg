@@ -398,6 +398,57 @@ Not: users are confused in checkout.
 But: users are confused at state checkout-payment-method when the saved-card fallback appears.
 ```
 
+## Is UJG useful for UX research platforms?
+
+Potentially yes, especially for tools that run usability studies, prototype tests, website tests,
+surveys, interviews, session recordings, journey research, or research repositories.
+
+For a UX research platform, UJG should not replace existing reports, dashboards, recordings,
+transcripts, tags, or repositories. The useful role is narrower:
+
+```text
+UJG can act as an export and handover layer for journey-based research evidence.
+```
+
+A research tool could use UJG to represent:
+
+* the intended journey or task flow
+* observed participant paths
+* task success, failure, or abandonment
+* friction points and usability issues
+* quotes, clips, notes, or findings attached to journey states
+* differences between the designed journey and the observed journey
+* aggregate metrics for a journey, state, transition, or surface
+
+This could make research outputs easier to reuse outside the research tool.
+
+Examples:
+
+* a product manager can see which journey state caused confusion
+* an engineer can see which surface or transition failed
+* an analytics team can compare observed study behavior with production behavior
+* an AI tool can summarize findings against a structured journey model
+* a client or stakeholder can receive a machine-readable handover, not only a PDF report
+
+The adoption path should be lightweight.
+
+A research platform does not need to implement UJG as a runtime system. A realistic first step could
+be an optional export for one study type:
+
+```text
+study task
++ intended task flow
++ observed participant paths
++ task outcomes
++ friction points
++ selected evidence
+= UJG-compatible research handover
+```
+
+For research platforms, UJG is most useful when it makes research findings portable without
+commoditizing the whole research product.
+
+
 ## Is UJG useful for legal, compliance, or trust teams?
 
 Potentially yes, especially in regulated or high-risk flows.
