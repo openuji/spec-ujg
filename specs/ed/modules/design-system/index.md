@@ -166,7 +166,8 @@ the SHACL shape.
    platform-specific behavior SHOULD remain outside this module unless a future module defines them
    as interoperable vocabulary.
 
-## Example A: Surface Without Realization
+## Examples
+### Example A: Surface Without Realization
 
 ```json
 {
@@ -193,7 +194,7 @@ the SHACL shape.
 
 This example assigns a state to a surface. It does not declare any design-system realization.
 
-## Example B: Component Realization
+### Example B: Component Realization
 
 ```json
 {
@@ -238,7 +239,7 @@ This example assigns a state to a surface. It does not declare any design-system
 The surface remains unchanged. The design system owns the realization node that points to the
 surface.
 
-## Example C: Template Realization
+### Example C: Template Realization
 
 ```json
 {
@@ -320,7 +321,7 @@ surface.
 
 The template declares slots. The realization binds those slots for this surface.
 
-## Example D: Composite Surface With Child Surfaces
+### Example D: Composite Surface With Child Surfaces
 
 ```json
 {
@@ -336,13 +337,24 @@ The template declares slots. The realization binds those slots for this surface.
       "@id": "urn:state:product-discovery",
       "@type": "CompositeState",
       "label": "Product discovery",
+      "subjourneyId": "urn:journey:product-discovery",
+      "surfaceRef": "urn:surface:product-discovery"
+    },
+    {
+      "@id": "urn:journey:product-discovery",
+      "@type": "Journey",
+      "startState": "urn:state:search-query",
       "stateRefs": [
         "urn:state:search-query",
         "urn:state:filters",
         "urn:state:results",
         "urn:state:product-preview"
       ],
-      "surfaceRef": "urn:surface:product-discovery"
+      "transitionRefs": [
+        "urn:transition:search-to-filters",
+        "urn:transition:filters-to-results",
+        "urn:transition:results-to-preview"
+      ]
     },
     {
       "@id": "urn:state:search-query",
@@ -367,6 +379,27 @@ The template declares slots. The realization binds those slots for this surface.
       "@type": "State",
       "label": "Product preview",
       "surfaceRef": "urn:surface:product-preview"
+    },
+    {
+      "@id": "urn:transition:search-to-filters",
+      "@type": "Transition",
+      "from": "urn:state:search-query",
+      "to": "urn:state:filters",
+      "label": "Refine"
+    },
+    {
+      "@id": "urn:transition:filters-to-results",
+      "@type": "Transition",
+      "from": "urn:state:filters",
+      "to": "urn:state:results",
+      "label": "Apply filters"
+    },
+    {
+      "@id": "urn:transition:results-to-preview",
+      "@type": "Transition",
+      "from": "urn:state:results",
+      "to": "urn:state:product-preview",
+      "label": "Preview product"
     },
     {
       "@id": "urn:surface:product-discovery",
@@ -455,10 +488,11 @@ The template declares slots. The realization binds those slots for this surface.
 }
 ```
 
-The composite state's surface is realized as a shell. The child surfaces are placed into slots for
-presentation only; Graph remains the source of containment and traversal semantics.
+The composite state's surface is realized as a shell. Child containment comes from the subjourney
+referenced by `subjourneyId`. The child surfaces are placed into slots for presentation only; Graph
+remains the source of containment and traversal semantics.
 
-## Example E: Multiple Design Systems
+### Example E: Multiple Design Systems
 
 ```json
 {

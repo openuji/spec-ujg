@@ -106,6 +106,12 @@ ujggraphshape:CompositeStateShape a sh:NodeShape ;
   ] ;
 
   sh:property [
+    sh:path ujggraph:stateRefs ;
+    sh:maxCount 0 ;
+    sh:message "A CompositeState must not use stateRefs; use subjourneyId to reference a Journey." ;
+  ] ;
+
+  sh:property [
     sh:path ujggraph:subjourneyId ;
     sh:class ujggraph:Journey ;
     sh:nodeKind sh:IRI ;

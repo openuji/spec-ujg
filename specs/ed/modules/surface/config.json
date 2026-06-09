@@ -1,7 +1,7 @@
 {
     "id": "modules/surface",
     "title": "Surface",
-    "maturityLevel": "incubating",
+    "maturityLevel": "draft",
     "baseUrl": "${SPEC_BASE_URL}/ed",
     "deps": [
         "graph"

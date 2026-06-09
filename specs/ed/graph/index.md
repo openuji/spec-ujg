@@ -35,7 +35,7 @@ graph LR
 
 ```
 
-## Composition (CompositeState)
+## Composition (CompositeState) {data-cop-concept="composition"}
 
 Composition allows a node to reference an entire sub-journey, enabling "zoomable" graph interactions.
 
@@ -53,6 +53,8 @@ graph LR
 ```
 
 The structural definition of [=CompositeState=] and `subjourneyId` is normative in the ontology and validation artifacts. This section defines only how consumers interpret that structure as nested or zoomable journey composition.
+
+<spec-statement>A [=CompositeState=] **MUST** reference its nested graph through `subjourneyId` and **MUST NOT** list child states directly with `stateRefs`.</spec-statement>
 
 ---
 

@@ -1,7 +1,7 @@
 {
     "id": "modules/design-system",
     "title": "Design System",
-    "maturityLevel": "incubating",
+    "maturityLevel": "draft",
     "baseUrl": "${SPEC_BASE_URL}/ed",
     "deps": [
         "graph",
