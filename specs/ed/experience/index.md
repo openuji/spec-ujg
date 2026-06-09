@@ -118,16 +118,9 @@ The rules below define the remaining resolution and non-structural constraints f
     },
 
     {
-      "@type": "JourneyStack",
-      "@id": "urn:ujg:stack:checkout",
-      "frameRefs": ["urn:ujg:stack-frame:checkout:0"]
-    },
-
-    {
-      "@type": "JourneyStackFrame",
-      "@id": "urn:ujg:stack-frame:checkout:0",
-      "journeyRef": "urn:ujg:journey:checkout",
-      "depth": 0
+      "@type": "JourneyInstance",
+      "@id": "urn:ujg:journey-instance:checkout:12345",
+      "journeyRef": "urn:ujg:journey:checkout"
     },
 
     {
@@ -135,7 +128,7 @@ The rules below define the remaining resolution and non-structural constraints f
       "@id": "urn:ujg:event:12345:100",
       "executionId": "urn:ujg:execution:12345",
       "stateRef": "urn:ujg:state:shipping-form",
-      "journeyStackRef": "urn:ujg:stack:checkout"
+      "journeyInstanceRef": "urn:ujg:journey-instance:checkout:12345"
     }
   ]
 }

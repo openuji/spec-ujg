@@ -4,7 +4,6 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 
 
@@ -20,10 +19,7 @@ ujgruntime:JourneyExecution a owl:Class ;
 ujgruntime:RuntimeEvent a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
-ujgruntime:JourneyStack a owl:Class ;
-  rdfs:subClassOf ujg:Node .
-
-ujgruntime:JourneyStackFrame a owl:Class ;
+ujgruntime:JourneyInstance a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
 ### Properties
@@ -40,33 +36,21 @@ ujgruntime:stateRef a owl:ObjectProperty ;
   rdfs:domain ujgruntime:RuntimeEvent ;
   rdfs:range ujggraph:State .
 
-ujgruntime:journeyStackRef a owl:ObjectProperty ;
+ujgruntime:journeyInstanceRef a owl:ObjectProperty ;
   rdfs:domain ujgruntime:RuntimeEvent ;
-  rdfs:range ujgruntime:JourneyStack .
-
-ujgruntime:frameRefs a owl:ObjectProperty ;
-  rdfs:domain ujgruntime:JourneyStack ;
-  rdfs:range rdf:List .
+  rdfs:range ujgruntime:JourneyInstance .
 
 ujgruntime:journeyRef a owl:ObjectProperty ;
-  rdfs:domain ujgruntime:JourneyStackFrame ;
+  rdfs:domain ujgruntime:JourneyInstance ;
   rdfs:range ujggraph:Journey .
 
+ujgruntime:parentInstanceRef a owl:ObjectProperty ;
+  rdfs:domain ujgruntime:JourneyInstance ;
+  rdfs:range ujgruntime:JourneyInstance .
+
 ujgruntime:viaStateRef a owl:ObjectProperty ;
-  rdfs:domain ujgruntime:JourneyStackFrame ;
+  rdfs:domain ujgruntime:JourneyInstance ;
   rdfs:range ujggraph:CompositeState .
-
-ujgruntime:instanceRef a owl:ObjectProperty ;
-  rdfs:domain ujgruntime:JourneyStackFrame ;
-  rdfs:range rdfs:Resource .
-
-ujgruntime:subjectRef a owl:ObjectProperty ;
-  rdfs:domain ujgruntime:JourneyStackFrame ;
-  rdfs:range rdfs:Resource .
-
-ujgruntime:depth a owl:DatatypeProperty ;
-  rdfs:domain ujgruntime:JourneyStackFrame ;
-  rdfs:range xsd:integer .
 
 ujgruntime:payload a owl:DatatypeProperty ;
   rdfs:domain ujgruntime:RuntimeEvent ;
