@@ -2,6 +2,8 @@
   "name": "spec-ujg",
   "compatibility_date": "2025-08-14",
   "assets": {
-    "directory": "./dist"
-  }
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "drop-trailing-slash",
+  },
 }

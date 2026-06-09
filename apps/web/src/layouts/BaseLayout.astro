@@ -2,11 +2,32 @@
 interface Props {
   title?: string;
   bodyClass?: string;
+  canonical?: string | false;
+  robots?: string;
 }
-const { title = 'User Journey Mapping Specifications', bodyClass = '' } = Astro.props;
+const {
+  title = 'User Journey Mapping Specifications',
+  bodyClass = '',
+  canonical,
+  robots,
+} = Astro.props;
 import '@/styles/design-system.css';
 import { ClientRouter } from 'astro:transitions';
 import Banner from '@/components/astro/Banner.astro';
+
+const canonicalBase = Astro.site ?? new URL('https://ujg.specs.openuji.org');
+const rawPathname = Astro.url.pathname;
+const normalizedPathname =
+  rawPathname === '/'
+    ? '/'
+    : rawPathname
+        .replace(/\/index\.html$/, '')
+        .replace(/\.html$/, '')
+        .replace(/\/$/, '') || '/';
+const canonicalHref =
+  canonical === false
+    ? undefined
+    : new URL(canonical ?? normalizedPathname, canonicalBase).toString();
 ---
 
 <!doctype html>
@@ -21,6 +42,8 @@ import Banner from '@/components/astro/Banner.astro';
       name="description"
       content="A family of open specifications that model user journeys as graphs of states and transitions."
     />
+    {robots && <meta name="robots" content={robots} />}
+    {canonicalHref && <link rel="canonical" href={canonicalHref} />}
     <slot name="head" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />

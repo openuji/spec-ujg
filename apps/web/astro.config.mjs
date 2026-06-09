@@ -7,6 +7,7 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://ujg.specs.openuji.org',
   vite: {
     optimizeDeps: {
       include: ['@radix-ui/react-select', 'lucide-react'],
@@ -16,13 +17,13 @@ export default defineConfig({
       watch: {
         // Watch the speculator package dist so HMR works during development
         ignored: ['!**/speculator/packages/speculator/dist/**'],
-      }
-    }
+      },
+    },
   },
 
   integrations: [react()],
   trailingSlash: 'never',
   build: {
-    format: 'file'
-  }
+    format: 'file',
+  },
 });

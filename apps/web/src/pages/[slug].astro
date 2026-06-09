@@ -1,34 +1,10 @@
 ---
 import PageLayout from '@/layouts/PageLayout.astro';
+import { TOP_LEVEL_CONTENT_PAGES } from '@/lib/static-pages';
 import type { TocEntry } from '@openuji/speculator';
 
 export async function getStaticPaths() {
-  const pages = [
-    {
-      slug: 'governance',
-      fileName: 'governance.md',
-      title: 'Governance',
-    },
-    {
-      slug: 'contributing',
-      fileName: 'contribution.md',
-      title: 'Contributing',
-    },
-    {
-      slug: 'adoption-faq',
-      fileName: 'adoption-faq.md',
-      title: 'Adoption FAQ',
-      toc: true,
-    },
-    {
-      slug: 'ai-governance-faq',
-      fileName: 'ai-governance-faq.md',
-      title: 'AI Governance',
-      toc: true,
-    },
-  ];
-
-  return pages.map(({ slug, fileName, title, toc = false }) => ({
+  return TOP_LEVEL_CONTENT_PAGES.map(({ slug, fileName, title, toc = false }) => ({
     params: { slug },
     props: { fileName, title, toc },
   }));

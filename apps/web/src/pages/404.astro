@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" bodyClass="static-page" canonical={false} robots="noindex">
+  <main class="page">
+    <section class="max-w-content mx-auto px-4 md:px-12 py-16 md:py-24">
+      <div class="max-w-[42rem]">
+        <p class="text-sm font-semibold text-accent uppercase tracking-[0.08em]">404</p>
+        <h1 class="mt-3 text-4xl md:text-5xl font-semibold text-primary">Page not found</h1>
+        <p class="mt-4 text-lg text-secondary-foreground leading-relaxed">
+          The page may have moved, or the URL may be incorrect.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a class="btn btn-primary" href="/">Home</a>
+          <a class="btn btn-secondary" href="/ed">Editor's Draft</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
