@@ -1,7 +1,7 @@
 {
     "id": "modules/l10n",
     "title": "Localization",
-    "maturityLevel": "incubating",
+    "maturityLevel": "draft",
     "baseUrl": "${SPEC_BASE_URL}/ed",
     "deps": [
         "graph"

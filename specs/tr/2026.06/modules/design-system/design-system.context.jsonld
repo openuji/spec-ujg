@@ -1,0 +1,76 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgds": "https://ujg.specs.openuji.org/tr/2026.06/ns/design-system#",
+    "designSystem": "https://ujg.specs.openuji.org/tr/2026.06/ns/design-system#",
+    "surface": "https://ujg.specs.openuji.org/tr/2026.06/ns/surface#",
+
+    "DesignSystem": "ujgds:DesignSystem",
+    "TokenSource": "ujgds:TokenSource",
+    "Component": "ujgds:Component",
+    "Template": "ujgds:Template",
+    "Slot": "ujgds:Slot",
+    "SurfaceRealization": {
+      "@id": "ujgds:SurfaceRealization",
+      "@context": {
+        "surfaceRef": {
+          "@id": "ujgds:surfaceRef",
+          "@type": "@id"
+        }
+      }
+    },
+    "SlotBinding": "ujgds:SlotBinding",
+
+    "tokenSourceRefs": {
+      "@id": "ujgds:tokenSourceRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "componentRefs": {
+      "@id": "ujgds:componentRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "templateRefs": {
+      "@id": "ujgds:templateRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "surfaceRealizationRefs": {
+      "@id": "ujgds:surfaceRealizationRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "componentRef": {
+      "@id": "ujgds:componentRef",
+      "@type": "@id"
+    },
+    "templateRef": {
+      "@id": "ujgds:templateRef",
+      "@type": "@id"
+    },
+    "slotBindingRefs": {
+      "@id": "ujgds:slotBindingRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "slotRefs": {
+      "@id": "ujgds:slotRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "slotRef": {
+      "@id": "ujgds:slotRef",
+      "@type": "@id"
+    },
+    "targetSurfaceRef": {
+      "@id": "ujgds:targetSurfaceRef",
+      "@type": "@id"
+    },
+    "targetComponentRef": {
+      "@id": "ujgds:targetComponentRef",
+      "@type": "@id"
+    }
+  }
+}

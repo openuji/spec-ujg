@@ -1,0 +1,87 @@
+---
+import BlockRenderer from '@/components/astro/speculator/BlockRenderer.astro';
+import CGLogo from '@/components/astro/speculator/w3c-cg/CGLogo.astro';
+import Footer from '@/components/astro/speculator/w3c-cg/Footer.astro';
+import Header from '@/components/astro/speculator/w3c-cg/Header.astro';
+import MaturityPill from '@/components/astro/speculator/w3c-cg/MaturityPill.astro';
+import SpecLayout from '@/layouts/SpecLayout.astro';
+import { getDocuments, loadDocument } from '@/lib/load';
+import { TECHNICAL_REPORTS, type TechnicalReport } from '@/lib/technical-reports';
+import { type Document } from '@openuji/speculator';
+
+export async function getStaticPaths() {
+  const paths = [];
+
+  for (const report of TECHNICAL_REPORTS) {
+    const specs = await getDocuments(report.workspace);
+
+    paths.push(
+      ...specs.map((spec: Document) => ({
+        params: {
+          report: report.slug,
+          spec: spec.id,
+        },
+        props: {
+          id: spec.id,
+          report,
+          title: spec.metadata?.title,
+        },
+      }))
+    );
+  }
+
+  return paths;
+}
+
+const { id, report, title } = Astro.props as {
+  id: string;
+  report: TechnicalReport;
+  title: string;
+};
+
+const document = await loadDocument(id, report.workspace);
+if (!document) {
+  throw new Error(`Document not found in ${report.workspace}: ${id}`);
+}
+
+const statementsJsonLd = document.computed?.statementsJsonLd;
+---
+
+<SpecLayout
+  title={`${title} - ${report.title}`}
+  parent={{ href: report.basePath, title: report.title }}
+  workspace={report.workspace}
+  toc={document.computed?.toc || []}
+>
+  {
+    statementsJsonLd && (
+      <script
+        type="application/ld+json"
+        slot="head"
+        set:html={JSON.stringify(statementsJsonLd, null, 2)}
+      />
+    )
+  }
+  <article>
+    <CGLogo metadata={document.metadata} />
+
+    <div class="flex items-center gap-md mt-md">
+      <h1>{title}</h1>
+      <MaturityPill metadata={document.metadata || {}} />
+    </div>
+    <Header metadata={document.metadata || {}} />
+    <div class="spec">
+      {
+        document.children.map((child) => (
+          <BlockRenderer
+            node={child}
+            documentPath={document.sourcePos?.file}
+            headingNumbers={document.computed?.headingNumbers}
+            basePath={report.basePath}
+          />
+        ))
+      }
+      <Footer metadata={document.metadata || {}} pkgName={`ujg/${id}`} />
+    </div>
+  </article>
+</SpecLayout>

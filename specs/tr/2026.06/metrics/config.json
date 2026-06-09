@@ -1,0 +1,37 @@
+{
+  "id": "metrics",
+  "title": "Metrics",
+  "maturityLevel": "draft",
+  "deps": [
+    "mapping"
+  ],
+  "custom": {
+    "family": "spec",
+    "order": 70
+  },
+  "respec": {
+    "noConformance": true,
+    "group": {
+      "name": "User Journal Graph Community Group",
+      "url": "https://www.w3.org/community/ujg/"
+    },
+    "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/tr/2026.06/metrics/index.md",
+    "editors": [
+      {
+        "name": "Seva Dolgopolov",
+        "w3cid": "169225"
+      }
+    ],
+    "license": "W3C-Software-and-Document",
+    "localBiblio": {
+      "UJG Mapping": {
+        "title": "UJG Mapping",
+        "url": "/tr/2026.06/mapping"
+      }
+    },
+    "specStatus": "CG-DRAFT",
+    "publishDate": "2026-06-09",
+    "version": "2026.06"
+  },
+  "baseUrl": "${SPEC_BASE_URL}/tr/2026.06"
+}

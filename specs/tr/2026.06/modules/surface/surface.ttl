@@ -1,0 +1,30 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/2026.06/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/2026.06/ns/graph#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/2026.06/ns/surface#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/tr/2026.06/ns/surface#> a owl:Ontology ;
+  rdfs:label "UJG Surface Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Surface ontology declaration" .
+
+### Classes
+
+ujgsurface:Surface a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgsurface:surfaceRef a owl:ObjectProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:State
+      ujggraph:CompositeState
+      ujggraph:Transition
+      ujggraph:OutgoingTransition
+      ujggraph:OutgoingTransitionGroup
+    )
+  ] ;
+  rdfs:range ujgsurface:Surface .

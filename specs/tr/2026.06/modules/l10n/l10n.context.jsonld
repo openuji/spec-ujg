@@ -1,0 +1,27 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgl10n": "https://ujg.specs.openuji.org/tr/2026.06/ns/l10n#",
+    "l10n": "https://ujg.specs.openuji.org/tr/2026.06/ns/l10n#",
+
+    "MessageBundle": "ujgl10n:MessageBundle",
+
+    "copyRef": {
+      "@id": "ujgl10n:copyRef",
+      "@type": "@id"
+    },
+    "namespace": "ujgl10n:namespace",
+    "messageKey": "ujgl10n:messageKey",
+    "defaultLocale": "ujgl10n:defaultLocale",
+    "fallbackLocales": {
+      "@id": "ujgl10n:fallbackLocales",
+      "@container": "@set"
+    },
+    "rtl": "ujgl10n:rtl",
+    "locales": {
+      "@id": "ujgl10n:locales",
+      "@type": "@json"
+    }
+  }
+}

@@ -1,0 +1,172 @@
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/2026.06/ns/graph#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ujggraphshape: <https://ujg.specs.openuji.org/tr/2026.06/ns/graph.shape#> .
+
+
+ujggraphshape:StateLikeShape a sh:NodeShape ;
+  sh:nodeKind sh:IRI ;
+  sh:or (
+    [ sh:class ujggraph:State ]
+    [ sh:class ujggraph:CompositeState ]
+  ) .
+
+ujggraphshape:JourneyShape a sh:NodeShape ;
+  sh:targetClass ujggraph:Journey ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:startState ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:node ujggraphshape:StateLikeShape ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:stateRefs ;
+    sh:minCount 1 ;
+    sh:node ujggraphshape:StateLikeShape ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:transitionRefs ;
+    sh:minCount 1 ;
+    sh:class ujggraph:Transition ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:outgoingTransitionGroupRefs ;
+    sh:class ujggraph:OutgoingTransitionGroup ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A transition in transitionRefs has a from state that is not listed in this journey's stateRefs." ;
+    sh:select """
+      SELECT $this ?transition ?from
+      WHERE {
+        $this ujggraph:transitionRefs ?transition .
+        ?transition ujggraph:from ?from .
+
+        FILTER (NOT EXISTS {
+          $this ujggraph:stateRefs ?from .
+        })
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A transition in transitionRefs has a to state that is not listed in this journey's stateRefs." ;
+    sh:select """
+      SELECT $this ?transition ?to
+      WHERE {
+        $this ujggraph:transitionRefs ?transition .
+        ?transition ujggraph:to ?to .
+
+        FILTER (NOT EXISTS {
+          $this ujggraph:stateRefs ?to .
+        })
+      }
+    """ ;
+  ] .
+
+ujggraphshape:StateShape a sh:NodeShape ;
+  sh:targetClass ujggraph:State ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] .
+
+ujggraphshape:CompositeStateShape a sh:NodeShape ;
+  sh:targetClass ujggraph:CompositeState ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:stateRefs ;
+    sh:maxCount 0 ;
+    sh:message "A CompositeState must not use stateRefs; use subjourneyId to reference a Journey." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyId ;
+    sh:class ujggraph:Journey ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujggraphshape:TransitionShape a sh:NodeShape ;
+  sh:targetClass ujggraph:Transition ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:from ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:node ujggraphshape:StateLikeShape ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:to ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:node ujggraphshape:StateLikeShape ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] .
+
+ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
+  sh:targetClass ujggraph:OutgoingTransition ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:to ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:node ujggraphshape:StateLikeShape ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] .
+
+ujggraphshape:OutgoingTransitionGroupShape a sh:NodeShape ;
+  sh:targetClass ujggraph:OutgoingTransitionGroup ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:class ujggraph:OutgoingTransition ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+  ] . 

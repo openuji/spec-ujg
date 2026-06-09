@@ -1,0 +1,51 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/2026.06/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/2026.06/ns/graph#> .
+@prefix ujgruntime: <https://ujg.specs.openuji.org/tr/2026.06/ns/runtime#> .
+@prefix ujgmapping: <https://ujg.specs.openuji.org/tr/2026.06/ns/mapping#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/tr/2026.06/ns/mapping#> a owl:Ontology ;
+  rdfs:label "UJG Mapping Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Mapping ontology declaration" .
+
+### Classes
+
+ujgmapping:JourneyMapping a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgmapping:MappedStep a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgmapping:mappedJourneyRef a owl:ObjectProperty ;
+  rdfs:domain ujgmapping:JourneyMapping ;
+  rdfs:range ujggraph:Journey .
+
+ujgmapping:mappedRuntimeRef a owl:ObjectProperty ;
+  rdfs:domain ujgmapping:JourneyMapping ;
+  rdfs:range ujgruntime:JourneyExecution .
+
+ujgmapping:mappedStepRef a owl:ObjectProperty ;
+  rdfs:domain ujgmapping:JourneyMapping ;
+  rdfs:range ujgmapping:MappedStep .
+
+ujgmapping:mappedEventRef a owl:ObjectProperty ;
+  rdfs:domain ujgmapping:MappedStep ;
+  rdfs:range ujgruntime:RuntimeEvent .
+
+ujgmapping:mappedStateRef a owl:ObjectProperty ;
+  rdfs:domain ujgmapping:MappedStep ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf ( ujggraph:State ujggraph:CompositeState )
+  ] .
+
+ujgmapping:explainedByTransitionRef a owl:ObjectProperty ;
+  rdfs:domain ujgmapping:MappedStep ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf ( ujggraph:Transition ujggraph:OutgoingTransition )
+  ] .

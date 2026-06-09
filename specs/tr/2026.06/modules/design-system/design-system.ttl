@@ -1,0 +1,83 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/2026.06/ns/core#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/2026.06/ns/surface#> .
+@prefix ujgds: <https://ujg.specs.openuji.org/tr/2026.06/ns/design-system#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/tr/2026.06/ns/design-system#> a owl:Ontology ;
+  rdfs:label "UJG Design System Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Design System ontology declaration" .
+
+### Classes
+
+ujgds:DesignSystem a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgds:TokenSource a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgds:Component a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgds:Template a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgds:Slot a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgds:SurfaceRealization a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgds:SlotBinding a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgds:tokenSourceRefs a owl:ObjectProperty ;
+  rdfs:domain ujgds:DesignSystem ;
+  rdfs:range ujgds:TokenSource .
+
+ujgds:componentRefs a owl:ObjectProperty ;
+  rdfs:domain ujgds:DesignSystem ;
+  rdfs:range ujgds:Component .
+
+ujgds:templateRefs a owl:ObjectProperty ;
+  rdfs:domain ujgds:DesignSystem ;
+  rdfs:range ujgds:Template .
+
+ujgds:surfaceRealizationRefs a owl:ObjectProperty ;
+  rdfs:domain ujgds:DesignSystem ;
+  rdfs:range ujgds:SurfaceRealization .
+
+ujgds:surfaceRef a owl:ObjectProperty ;
+  rdfs:domain ujgds:SurfaceRealization ;
+  rdfs:range ujgsurface:Surface .
+
+ujgds:componentRef a owl:ObjectProperty ;
+  rdfs:domain ujgds:SurfaceRealization ;
+  rdfs:range ujgds:Component .
+
+ujgds:templateRef a owl:ObjectProperty ;
+  rdfs:domain ujgds:SurfaceRealization ;
+  rdfs:range ujgds:Template .
+
+ujgds:slotBindingRefs a owl:ObjectProperty ;
+  rdfs:domain ujgds:SurfaceRealization ;
+  rdfs:range ujgds:SlotBinding .
+
+ujgds:slotRefs a owl:ObjectProperty ;
+  rdfs:domain ujgds:Template ;
+  rdfs:range ujgds:Slot .
+
+ujgds:slotRef a owl:ObjectProperty ;
+  rdfs:domain ujgds:SlotBinding ;
+  rdfs:range ujgds:Slot .
+
+ujgds:targetSurfaceRef a owl:ObjectProperty ;
+  rdfs:domain ujgds:SlotBinding ;
+  rdfs:range ujgsurface:Surface .
+
+ujgds:targetComponentRef a owl:ObjectProperty ;
+  rdfs:domain ujgds:SlotBinding ;
+  rdfs:range ujgds:Component .

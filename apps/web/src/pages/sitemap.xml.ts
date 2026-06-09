@@ -3,6 +3,7 @@ import type { APIRoute } from 'astro';
 import { getDocuments } from '@/lib/load';
 import { CANONICAL_SPEC_BASE_URL } from '@/lib/spec-artifacts';
 import { TOP_LEVEL_CONTENT_PAGES } from '@/lib/static-pages';
+import { TECHNICAL_REPORTS } from '@/lib/technical-reports';
 
 const staticAstroPageModules = import.meta.glob('./**/*.astro', { eager: true });
 
@@ -45,6 +46,17 @@ function sortPaths(paths: string[]): string[] {
 
 export const GET: APIRoute = async () => {
   const documents = await getDocuments('ed');
+  const reportPaths = (
+    await Promise.all(
+      TECHNICAL_REPORTS.map(async (report) => {
+        const reportDocuments = await getDocuments(report.workspace);
+        return [
+          report.basePath,
+          ...reportDocuments.map((document) => `${report.basePath}/${document.id}`),
+        ];
+      })
+    )
+  ).flat();
   const staticAstroPaths = Object.keys(staticAstroPageModules)
     .map(routePathFromStaticAstroPage)
     .filter((pathname): pathname is string => pathname !== undefined);
@@ -54,6 +66,7 @@ export const GET: APIRoute = async () => {
       ...staticAstroPaths,
       ...topLevelContentPaths,
       ...documents.map((document) => `/ed/${document.id}`),
+      ...reportPaths,
     ])
   );
 

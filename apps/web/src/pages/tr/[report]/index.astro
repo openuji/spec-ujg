@@ -1,0 +1,90 @@
+---
+import Panel from '@/components/astro/Panel.astro';
+import MaturityPill from '@/components/astro/speculator/w3c-cg/MaturityPill.astro';
+import EditorDraftLayout from '@/layouts/EditorDraftLayout.astro';
+import { getDocumentFamily, getDocumentModuleLevel, getDocuments } from '@/lib/load';
+import { TECHNICAL_REPORTS, type TechnicalReport } from '@/lib/technical-reports';
+import { type Document } from '@openuji/speculator';
+
+export function getStaticPaths() {
+  return TECHNICAL_REPORTS.map((report) => ({
+    params: { report: report.slug },
+    props: { report },
+  }));
+}
+
+const { report } = Astro.props as { report: TechnicalReport };
+const documents = await getDocuments(report.workspace);
+const moduleDocuments = documents.filter((doc) => getDocumentFamily(doc) === 'module');
+
+const familySections: Array<{
+  id: string;
+  title: string;
+  description: string;
+  documents: Document[];
+}> = [
+  {
+    id: 'spec-family',
+    title: 'Spec Family',
+    description:
+      'Foundational UJG modules and supporting drafts captured in this frozen technical report.',
+    documents: documents.filter((doc) => getDocumentFamily(doc) === 'spec'),
+  },
+  {
+    id: 'optional-modules',
+    title: 'First-Level Optional Modules',
+    description:
+      'Optional modules captured in this report that attach directly to Core or Graph concepts.',
+    documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) === 1),
+  },
+  {
+    id: 'second-level-optional-modules',
+    title: 'Second-Level Optional Modules',
+    description: 'Optional modules captured in this report through another optional module.',
+    documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) > 1),
+  },
+].filter((section) => section.documents.length > 0);
+---
+
+<EditorDraftLayout title={`${report.title} - UJG Specs`}>
+  <h1>{report.title}</h1>
+  <section class="card-grid">
+    <Panel variant="contrast">
+      <p>
+        This technical report is a frozen snapshot of selected draft UJG documents published on {
+          report.published
+        }. The live Editor's Draft continues at <a href="/ed">/ed</a>.
+      </p>
+    </Panel>
+  </section>
+
+  {
+    familySections.map((section) => (
+      <section class="flow" id={section.id}>
+        {section.id === 'optional-modules' && <a id="supported-extensions" aria-hidden="true" />}
+        <div class="flow__header">
+          <h2 class="font-bold pb-2">{section.title}</h2>
+          <p>{section.description}</p>
+        </div>
+        <div class="flow__grid report-grid">
+          {section.documents.map((doc: Document) => (
+            <a
+              href={`${report.basePath}/${doc.id}`}
+              class="card min-h-auto hover:bg-accent-soft/40 hover:translate-y-[1px] transition-[background-color,transform]"
+            >
+              <h3>{doc.metadata?.title}</h3>
+              <MaturityPill metadata={doc.metadata || {}} />
+              View Spec →
+            </a>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</EditorDraftLayout>
+
+<style>
+  .report-grid {
+    grid-template-columns: repeat(auto-fill, minmax(var(--min-width-card), 1fr));
+  }
+</style>

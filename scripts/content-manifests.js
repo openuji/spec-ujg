@@ -8,8 +8,10 @@ const MANIFEST_NAME = 'content-manifest.json';
 const MANIFEST_VERSION = 1;
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const ED_ROOT = join(REPO_ROOT, 'specs/ed');
+const TR_ROOT = join(REPO_ROOT, 'specs/tr');
+const SPEC_ROOTS = [ED_ROOT, TR_ROOT];
 
-function findDocumentDirectories(directory = ED_ROOT) {
+function findDocumentDirectories(directory) {
   const directories = [];
 
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
@@ -23,6 +25,12 @@ function findDocumentDirectories(directory = ED_ROOT) {
   }
 
   return directories.sort();
+}
+
+function findAllDocumentDirectories() {
+  return SPEC_ROOTS.filter(existsSync)
+    .flatMap((directory) => findDocumentDirectories(directory))
+    .sort();
 }
 
 function listContentFiles(directory, current = directory) {
@@ -129,7 +137,7 @@ function updateManifests() {
   let updated = 0;
   const now = new Date().toISOString();
 
-  for (const directory of findDocumentDirectories()) {
+  for (const directory of findAllDocumentDirectories()) {
     const path = join(directory, MANIFEST_NAME);
     const existing = readManifest(directory);
     const contentHash = calculateContentHash(directory);
@@ -160,7 +168,9 @@ function updateManifests() {
 function checkManifests() {
   const errors = [];
 
-  for (const directory of findDocumentDirectories()) {
+  const directories = findAllDocumentDirectories();
+
+  for (const directory of directories) {
     const manifest = readManifest(directory);
     errors.push(...validateManifest(directory, manifest, calculateContentHash(directory)));
   }
@@ -171,7 +181,7 @@ function checkManifests() {
     return;
   }
 
-  console.log(`${findDocumentDirectories().length} content manifest(s) valid`);
+  console.log(`${directories.length} content manifest(s) valid`);
 }
 
 const command = process.argv[2];

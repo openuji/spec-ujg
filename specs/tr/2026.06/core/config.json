@@ -1,0 +1,87 @@
+{
+  "id": "core",
+  "title": "Core",
+  "maturityLevel": "draft",
+  "baseUrl": "${SPEC_BASE_URL}/tr/2026.06",
+  "deps": [
+    "architecture"
+  ],
+  "custom": {
+    "family": "spec",
+    "order": 20
+  },
+  "respec": {
+    "noConformance": true,
+    "group": {
+      "name": "User Journal Graph Community Group",
+      "url": "https://www.w3.org/community/ujg/"
+    },
+    "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/tr/2026.06/core/index.md",
+    "editors": [
+      {
+        "name": "Seva Dolgopolov",
+        "w3cid": "169225"
+      }
+    ],
+    "license": "W3C-Software-and-Document",
+    "localBiblio": {
+      "RFC2119": {
+        "title": "Key words for use in RFCs to Indicate Requirement Levels",
+        "url": "https://datatracker.ietf.org/doc/html/rfc2119",
+        "authors": [
+          "S. Bradner"
+        ],
+        "date": "March 1997",
+        "publisher": "IETF",
+        "status": "Best Current Practice"
+      },
+      "RFC8174": {
+        "title": "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words",
+        "url": "https://datatracker.ietf.org/doc/html/rfc8174",
+        "authors": [
+          "B. Leiba"
+        ],
+        "date": "May 2017",
+        "publisher": "IETF",
+        "status": "Best Current Practice"
+      },
+      "HTML": {
+        "title": "HTML Standard",
+        "url": "https://html.spec.whatwg.org/multipage/",
+        "publisher": "WHATWG",
+        "status": "Living Standard"
+      },
+      "DOM": {
+        "title": "DOM Standard",
+        "url": "https://dom.spec.whatwg.org/"
+      },
+      "JSON": {
+        "title": "JSON",
+        "url": "https://www.rfc-editor.org/rfc/rfc8259"
+      },
+      "JSON-LD 1.1.": {
+        "title": "JSON 1.1.",
+        "url": "https://www.w3.org/TR/2020/REC-json-ld11-20200716/"
+      },
+      "RFC3339": {
+        "title": "RFC 3339",
+        "url": "https://www.rfc-editor.org/rfc/rfc3339"
+      },
+      "RFC3986": {
+        "title": "Uniform Resource Identifier (URI): Generic Syntax",
+        "url": "https://www.rfc-editor.org/rfc/rfc3986",
+        "authors": [
+          "T. Berners-Lee",
+          "R. Fielding",
+          "L. Masinter"
+        ],
+        "date": "January 2005",
+        "publisher": "IETF",
+        "status": "Internet Standard"
+      }
+    },
+    "specStatus": "CG-DRAFT",
+    "publishDate": "2026-06-09",
+    "version": "2026.06"
+  }
+}

@@ -1,0 +1,57 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/2026.06/ns/core#> .
+@prefix ujgl10n: <https://ujg.specs.openuji.org/tr/2026.06/ns/l10n#> .
+@prefix ujgl10nshape: <https://ujg.specs.openuji.org/tr/2026.06/ns/l10n.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ujgl10nshape:NodeCopyShape a sh:NodeShape ;
+  sh:targetClass ujg:Node ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgl10n:copyRef ;
+    sh:class ujgl10n:MessageBundle ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgl10nshape:MessageBundleShape a sh:NodeShape ;
+  sh:targetClass ujgl10n:MessageBundle ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgl10n:namespace ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:messageKey ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:defaultLocale ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:fallbackLocales ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:rtl ;
+    sh:datatype xsd:boolean ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:locales ;
+    sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
+  ] .

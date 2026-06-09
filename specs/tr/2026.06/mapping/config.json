@@ -1,0 +1,50 @@
+{
+  "id": "mapping",
+  "title": "Mapping",
+  "maturityLevel": "draft",
+  "baseUrl": "${SPEC_BASE_URL}/tr/2026.06",
+  "deps": [
+    "runtime",
+    "graph"
+  ],
+  "custom": {
+    "family": "spec",
+    "order": 60
+  },
+  "respec": {
+    "noConformance": true,
+    "group": {
+      "name": "User Journal Graph Community Group",
+      "url": "https://www.w3.org/community/ujg/"
+    },
+    "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/tr/2026.06/mapping/index.md",
+    "editors": [
+      {
+        "name": "Seva Dolgopolov",
+        "w3cid": "169225"
+      }
+    ],
+    "license": "W3C-Software-and-Document",
+    "localBiblio": {
+      "UJG Core": {
+        "title": "UJG Core",
+        "url": "/tr/2026.06/core"
+      },
+      "UJG Graph": {
+        "title": "UJG Graph",
+        "url": "/tr/2026.06/graph"
+      },
+      "UJG Runtime": {
+        "title": "UJG Runtime",
+        "url": "/tr/2026.06/runtime"
+      },
+      "UJG Conditions": {
+        "title": "UJG Conditions",
+        "url": "/tr/2026.06/modules/condition"
+      }
+    },
+    "specStatus": "CG-DRAFT",
+    "publishDate": "2026-06-09",
+    "version": "2026.06"
+  }
+}

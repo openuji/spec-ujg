@@ -5,7 +5,7 @@ import { type Document } from '@openuji/speculator';
 import { buildWorkspaces } from '@openuji/speculator';
 
 export type EditorDraftDocumentFamily = 'spec' | 'module';
-export type SpecWorkspaceKey = 'ed';
+export type SpecWorkspaceKey = 'ed' | 'tr-2026-06';
 
 export const WORKSPACE_CONFIG: Record<
   SpecWorkspaceKey,
@@ -15,6 +15,11 @@ export const WORKSPACE_CONFIG: Record<
     title: "Editor's Draft",
     basePath: '/ed',
     label: 'ED',
+  },
+  'tr-2026-06': {
+    title: 'First Editors\u2019 Draft',
+    basePath: '/tr/2026.06',
+    label: '2026.06',
   },
 };
 

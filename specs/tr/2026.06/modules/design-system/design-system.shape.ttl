@@ -1,0 +1,155 @@
+@prefix ujgds: <https://ujg.specs.openuji.org/tr/2026.06/ns/design-system#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/2026.06/ns/surface#> .
+@prefix ujgdsshape: <https://ujg.specs.openuji.org/tr/2026.06/ns/design-system.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgdsshape:DesignSystemShape a sh:NodeShape ;
+  sh:targetClass ujgds:DesignSystem ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgds:tokenSourceRefs ;
+    sh:class ujgds:TokenSource ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujgds:componentRefs ;
+    sh:class ujgds:Component ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujgds:templateRefs ;
+    sh:class ujgds:Template ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujgds:surfaceRealizationRefs ;
+    sh:class ujgds:SurfaceRealization ;
+    sh:nodeKind sh:IRI ;
+  ] .
+
+ujgdsshape:TokenSourceShape a sh:NodeShape ;
+  sh:targetClass ujgds:TokenSource ;
+  sh:nodeKind sh:IRI .
+
+ujgdsshape:ComponentShape a sh:NodeShape ;
+  sh:targetClass ujgds:Component ;
+  sh:nodeKind sh:IRI .
+
+ujgdsshape:TemplateShape a sh:NodeShape ;
+  sh:targetClass ujgds:Template ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgds:slotRefs ;
+    sh:class ujgds:Slot ;
+    sh:nodeKind sh:IRI ;
+  ] .
+
+ujgdsshape:SlotShape a sh:NodeShape ;
+  sh:targetClass ujgds:Slot ;
+  sh:nodeKind sh:IRI .
+
+ujgdsshape:SurfaceRealizationShape a sh:NodeShape ;
+  sh:targetClass ujgds:SurfaceRealization ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgds:surfaceRef ;
+    sh:class ujgsurface:Surface ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgds:componentRef ;
+    sh:class ujgds:Component ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgds:templateRef ;
+    sh:class ujgds:Template ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgds:slotBindingRefs ;
+    sh:class ujgds:SlotBinding ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A SurfaceRealization must reference exactly one primary realization through componentRef or templateRef." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        BIND (EXISTS { $this ujgds:componentRef ?component . } AS ?hasComponent)
+        BIND (EXISTS { $this ujgds:templateRef ?template . } AS ?hasTemplate)
+        FILTER ((?hasComponent && ?hasTemplate) || (!?hasComponent && !?hasTemplate))
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A SurfaceRealization may reference slotBindingRefs only when templateRef is present." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        $this ujgds:slotBindingRefs ?slotBinding .
+        FILTER (NOT EXISTS { $this ujgds:templateRef ?template . })
+      }
+    """ ;
+  ] .
+
+ujgdsshape:SlotBindingShape a sh:NodeShape ;
+  sh:targetClass ujgds:SlotBinding ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgds:slotRef ;
+    sh:class ujgds:Slot ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgds:targetSurfaceRef ;
+    sh:class ujgsurface:Surface ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgds:targetComponentRef ;
+    sh:class ujgds:Component ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A SlotBinding must reference exactly one target." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        BIND (EXISTS { $this ujgds:targetSurfaceRef ?surface . } AS ?hasSurface)
+        BIND (EXISTS { $this ujgds:targetComponentRef ?component . } AS ?hasComponent)
+        BIND (
+          IF(?hasSurface, 1, 0) +
+          IF(?hasComponent, 1, 0)
+          AS ?targetCount
+        )
+        FILTER (?targetCount != 1)
+      }
+    """ ;
+  ] .

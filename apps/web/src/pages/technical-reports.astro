@@ -1,0 +1,36 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import { TECHNICAL_REPORTS } from '@/lib/technical-reports';
+---
+
+<PageLayout title="Technical Reports">
+  <main class="page">
+    <article class="spec max-w-spec min-w-0 mx-auto p-md">
+      <h1>Technical Reports</h1>
+      <p>These are frozen technical reports published by the User Journey Graph editors.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th align="left">Name</th>
+            <th align="left">Status</th>
+            <th align="left">Published</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            TECHNICAL_REPORTS.map((report) => (
+              <tr>
+                <td align="left">
+                  <a href={report.basePath}>{report.title}</a>
+                </td>
+                <td align="left">{report.status}</td>
+                <td align="left">{report.published}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </article>
+  </main>
+</PageLayout>

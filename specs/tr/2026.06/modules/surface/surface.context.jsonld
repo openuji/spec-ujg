@@ -1,0 +1,15 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgsurface": "https://ujg.specs.openuji.org/tr/2026.06/ns/surface#",
+    "surface": "https://ujg.specs.openuji.org/tr/2026.06/ns/surface#",
+
+    "Surface": "ujgsurface:Surface",
+
+    "surfaceRef": {
+      "@id": "ujgsurface:surfaceRef",
+      "@type": "@id"
+    }
+  }
+}

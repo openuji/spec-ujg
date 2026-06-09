@@ -1,0 +1,46 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/2026.06/ns/core#> .
+@prefix ujgl10n: <https://ujg.specs.openuji.org/tr/2026.06/ns/l10n#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<https://ujg.specs.openuji.org/tr/2026.06/ns/l10n#> a owl:Ontology ;
+  rdfs:label "UJG Localization Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Localization ontology declaration" .
+
+### Classes
+
+ujgl10n:MessageBundle a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgl10n:copyRef a owl:ObjectProperty ;
+  rdfs:domain ujg:Node ;
+  rdfs:range ujgl10n:MessageBundle .
+
+ujgl10n:namespace a owl:DatatypeProperty ;
+  rdfs:domain ujgl10n:MessageBundle ;
+  rdfs:range xsd:string .
+
+ujgl10n:messageKey a owl:DatatypeProperty ;
+  rdfs:domain ujgl10n:MessageBundle ;
+  rdfs:range xsd:string .
+
+ujgl10n:defaultLocale a owl:DatatypeProperty ;
+  rdfs:domain ujgl10n:MessageBundle ;
+  rdfs:range xsd:string .
+
+ujgl10n:fallbackLocales a owl:DatatypeProperty ;
+  rdfs:domain ujgl10n:MessageBundle ;
+  rdfs:range xsd:string .
+
+ujgl10n:rtl a owl:DatatypeProperty ;
+  rdfs:domain ujgl10n:MessageBundle ;
+  rdfs:range xsd:boolean .
+
+ujgl10n:locales a owl:DatatypeProperty ;
+  rdfs:domain ujgl10n:MessageBundle ;
+  rdfs:range rdf:JSON .

@@ -1,0 +1,48 @@
+{
+  "id": "modules/design-system",
+  "title": "Design System",
+  "maturityLevel": "draft",
+  "baseUrl": "${SPEC_BASE_URL}/tr/2026.06",
+  "deps": [
+    "graph",
+    "modules/surface"
+  ],
+  "custom": {
+    "family": "module",
+    "order": 60,
+    "moduleLevel": 2,
+    "bridgeModule": "modules/surface"
+  },
+  "respec": {
+    "noConformance": true,
+    "group": {
+      "name": "User Journal Graph Community Group",
+      "url": "https://www.w3.org/community/ujg/"
+    },
+    "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/tr/2026.06/modules/design-system/index.md",
+    "editors": [
+      {
+        "name": "Seva Dolgopolov",
+        "w3cid": "169225"
+      }
+    ],
+    "license": "W3C-Software-and-Document",
+    "localBiblio": {
+      "UJG Core": {
+        "title": "UJG Core",
+        "url": "/tr/2026.06/core"
+      },
+      "UJG Graph": {
+        "title": "UJG Graph",
+        "url": "/tr/2026.06/graph"
+      },
+      "UJG Surface": {
+        "title": "UJG Surface",
+        "url": "/tr/2026.06/modules/surface"
+      }
+    },
+    "specStatus": "CG-DRAFT",
+    "publishDate": "2026-06-09",
+    "version": "2026.06"
+  }
+}

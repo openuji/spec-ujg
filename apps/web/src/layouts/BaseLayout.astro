@@ -13,7 +13,6 @@ const {
 } = Astro.props;
 import '@/styles/design-system.css';
 import { ClientRouter } from 'astro:transitions';
-import Banner from '@/components/astro/Banner.astro';
 
 const canonicalBase = Astro.site ?? new URL('https://ujg.specs.openuji.org');
 const rawPathname = Astro.url.pathname;
@@ -144,7 +143,6 @@ const canonicalHref =
     </script>
   </head>
   <body class={bodyClass}>
-    <Banner />
     <slot />
     <footer class="site-footer border-t border-border bg-panel backdrop-blur-md mt-auto">
       <div
