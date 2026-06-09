@@ -92,7 +92,6 @@ the SHACL shape.
   ],
   "@id": "https://example.com/ujg/routing/checkout.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@type": "State",

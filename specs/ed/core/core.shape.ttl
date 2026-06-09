@@ -10,13 +10,6 @@ ujgshape:UJGDocumentShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujg:specVersion ;
-    sh:datatype xsd:string ;
-    sh:minCount 1 ;
-    sh:maxCount 1 ;
-  ] ;
-
-  sh:property [
     sh:path ujg:documentImports ;
     sh:nodeKind sh:IRI ;
     sh:minCount 0 ;

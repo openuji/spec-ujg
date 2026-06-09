@@ -81,7 +81,6 @@ the SHACL shape.
   ],
   "@id": "https://example.com/ujg/action/checkout.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:transition:submit-payment",

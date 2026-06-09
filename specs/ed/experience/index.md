@@ -73,7 +73,6 @@ The rules below define the remaining resolution and non-structural constraints f
   "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
   "@id": "https://example.com/ujg/experience/checkout.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     { "@type": "State", "@id": "urn:ujg:state:shipping-form", "label": "Shipping" },
 

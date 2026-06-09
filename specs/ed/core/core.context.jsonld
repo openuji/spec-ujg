@@ -5,7 +5,6 @@
     "ujg": "https://ujg.specs.openuji.org/ed/ns/core#",
     "@vocab": "https://ujg.specs.openuji.org/ed/ns/core#",
 
-    "specVersion": "ujg:specVersion",
     "imports": {
       "@id": "ujg:documentImports", "@type": "@id", "@container": "@set"
     },

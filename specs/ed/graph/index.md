@@ -143,7 +143,6 @@ To ensure graph integrity, the following constraints **MUST** be met:
   "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
   "@id": "https://example.com/ujg/graph/main-site.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@type": "Journey",

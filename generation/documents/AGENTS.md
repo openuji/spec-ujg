@@ -151,7 +151,6 @@ Use:
 - `@context`
 - `@id`
 - `@type`
-- `specVersion`
 - `imports`
 - `nodes`
 

@@ -136,7 +136,6 @@ the SHACL shape.
   ],
   "@id": "https://example.com/ujg/surface/checkout.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:state:cart",
@@ -168,7 +167,6 @@ This example means:
   ],
   "@id": "https://example.com/ujg/surface/transition.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:state:cart",
@@ -208,7 +206,6 @@ the transition or change traversal semantics.
   ],
   "@id": "https://example.com/ujg/surface/outgoing-group.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:outgoing:home",

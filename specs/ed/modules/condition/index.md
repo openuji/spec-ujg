@@ -136,7 +136,6 @@ Codex chat branch-check example:
   ],
   "@id": "https://example.com/ujg/codex/branch-condition.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@type": "Journey",

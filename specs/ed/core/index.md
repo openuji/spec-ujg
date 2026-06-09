@@ -23,7 +23,7 @@ The normative Core ontology is defined in the Turtle document below and is publi
 
 ## JSON-LD Context {data-cop-concept="jsonld-context"}
 
-The normative Core JSON-LD context is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/core.context.jsonld`. Examples in this section use the compact terms from this context, including `@id`, `@type`, `specVersion`, `imports`, `nodes`, and `extensions`.
+The normative Core JSON-LD context is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/core.context.jsonld`. Examples in this section use the compact terms from this context, including `@id`, `@type`, `imports`, `nodes`, and `extensions`.
 
 :::include ./core.context.jsonld :::
 
@@ -111,8 +111,7 @@ The examples below are informative. Each example uses `https://ujg.specs.openuji
 {
   "@context": "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
   "@id": "https://example.com/ujg/core/minimal.jsonld",
-  "@type": "UJGDocument",
-  "specVersion": "1.0"
+  "@type": "UJGDocument"
 }
 ```
 
@@ -123,7 +122,6 @@ The examples below are informative. Each example uses `https://ujg.specs.openuji
   "@context": "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
   "@id": "https://example.com/ujg/flows/order/main.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "imports": [
     "./shared/states.jsonld",
     "../runtime/events.jsonld",
@@ -147,7 +145,6 @@ This follows [[RFC3986]] relative-reference resolution and the [[JSON-LD 1.1.]] 
   "@context": "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
   "@id": "https://example.com/ujg/core/nodes.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:ujg:node:alpha",

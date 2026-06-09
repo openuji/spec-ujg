@@ -176,7 +176,6 @@ the SHACL shape.
   ],
   "@id": "https://example.com/ujg/surface-only.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:state:cart",
@@ -205,7 +204,6 @@ This example assigns a state to a surface. It does not declare any design-system
   ],
   "@id": "https://example.com/ujg/cart-component.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:state:cart",
@@ -251,7 +249,6 @@ surface.
   ],
   "@id": "https://example.com/ujg/refund-template.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:state:refund",
@@ -334,7 +331,6 @@ The template declares slots. The realization binds those slots for this surface.
   ],
   "@id": "https://example.com/ujg/product-discovery.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:state:product-discovery",
@@ -473,7 +469,6 @@ presentation only; Graph remains the source of containment and traversal semanti
   ],
   "@id": "https://example.com/ujg/multiple-design-systems.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:state:checkout",

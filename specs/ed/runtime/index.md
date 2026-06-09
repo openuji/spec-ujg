@@ -151,7 +151,6 @@ A Consumer interpreting a runtime event's journey context MUST resolve the event
   "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
   "@id": "https://example.com/ujg/runtime/execution-12345.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@type": "JourneyExecution",

@@ -141,7 +141,6 @@ the SHACL shape.
   ],
   "@id": "https://example.com/ujg/mapping/execution-12345.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@id": "urn:mapping:execution-12345",
@@ -197,7 +196,6 @@ model and does not need a serialized status value.
   ],
   "@id": "https://example.com/ujg/mapping/nested-execution.jsonld",
   "@type": "UJGDocument",
-  "specVersion": "1.0",
   "nodes": [
     {
       "@type": "JourneyExecution",
