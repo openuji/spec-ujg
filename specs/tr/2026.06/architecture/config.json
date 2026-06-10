@@ -23,7 +23,7 @@
     ],
     "license": "W3C-Software-and-Document",
     "specStatus": "CG-DRAFT",
-    "publishDate": "2026-06-09",
+    "publishDate": "2026-06-10",
     "version": "2026.06"
   },
   "baseUrl": "${SPEC_BASE_URL}/tr/2026.06"
