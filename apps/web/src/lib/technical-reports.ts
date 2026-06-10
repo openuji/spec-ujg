@@ -14,7 +14,7 @@ export const TECHNICAL_REPORTS = [
     slug: '2026.06',
     title: 'First Editors\u2019 Draft',
     status: 'Draft',
-    published: '2026-06-09',
+    published: '2026-06-10',
     workspace: 'tr-2026-06',
     basePath: '/tr/2026.06',
   },
