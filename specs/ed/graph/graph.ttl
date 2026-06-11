@@ -21,6 +21,12 @@ ujggraph:State a owl:Class ;
 ujggraph:CompositeState a owl:Class ;
   rdfs:subClassOf ujggraph:State .
 
+ujggraph:BoundaryState a owl:Class ;
+  rdfs:subClassOf ujggraph:State ;
+  owl:disjointWith ujggraph:CompositeState ;
+  rdfs:label "Boundary State" ;
+  rdfs:comment "A terminal state that represents an exported outcome of a journey and may be referenced by JourneyExit.exitStateRef." .
+
 ujggraph:Transition a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
@@ -85,10 +91,18 @@ ujggraph:subjourneyId a owl:ObjectProperty ;
 
 ujggraph:exitStateRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:JourneyExit ;
-  rdfs:range ujggraph:State ;
+  rdfs:range ujggraph:BoundaryState ;
   rdfs:label "exit state ref" ;
-  rdfs:comment "References the boundary state local to the journey that declares this JourneyExit." .
+  rdfs:comment "References the BoundaryState that represents the exported outcome of the declaring journey." .
 
 ujggraph:outgoingTransitionRefs a owl:ObjectProperty ;
-  rdfs:domain ujggraph:OutgoingTransitionGroup ;
-  rdfs:range ujggraph:OutgoingTransition .
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:State
+      ujggraph:OutgoingTransitionGroup
+    )
+  ] ;
+  rdfs:range ujggraph:OutgoingTransition ;
+  rdfs:label "outgoing transition refs" ;
+  rdfs:comment "References outgoing navigational affordances. When used on an OutgoingTransitionGroup, the references define a reusable group. When used on a non-composite State, the references define outgoing affordances available from that specific state." .

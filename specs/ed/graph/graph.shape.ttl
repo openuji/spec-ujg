@@ -9,6 +9,7 @@ ujggraphshape:StateLikeShape a sh:NodeShape ;
   sh:or (
     [ sh:class ujggraph:State ]
     [ sh:class ujggraph:CompositeState ]
+    [ sh:class ujggraph:BoundaryState ]
   ) .
 
 ujggraphshape:JourneyShape a sh:NodeShape ;
@@ -132,6 +133,20 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
               ujggraph:transitionRefs ?transition .
         ?exit ujggraph:exitStateRef ?exitState .
         ?transition ujggraph:from ?exitState .
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A BoundaryState listed in a journey's stateRefs must not be used as the from value of a transition listed in the same journey." ;
+    sh:select """
+      SELECT $this ?boundaryState ?transition
+      WHERE {
+        $this ujggraph:stateRefs ?boundaryState ;
+              ujggraph:transitionRefs ?transition .
+        ?boundaryState a ujggraph:BoundaryState .
+        ?transition ujggraph:from ?boundaryState .
       }
     """ ;
   ] ;
@@ -274,6 +289,51 @@ ujggraphshape:StateShape a sh:NodeShape ;
   sh:property [
     sh:path ujggraph:tags ;
     sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:class ujggraph:OutgoingTransition ;
+    sh:nodeKind sh:IRI ;
+  ] .
+
+ujggraphshape:BoundaryStateShape a sh:NodeShape ;
+  sh:targetClass ujggraph:BoundaryState ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyId ;
+    sh:maxCount 0 ;
+    sh:message "A BoundaryState must not declare subjourneyId." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A BoundaryState must not declare outgoingTransitionRefs." ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A BoundaryState must not also be typed CompositeState." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        $this a ujggraph:CompositeState .
+      }
+    """ ;
   ] .
 
 ujggraphshape:CompositeStateShape a sh:NodeShape ;
@@ -296,6 +356,12 @@ ujggraphshape:CompositeStateShape a sh:NodeShape ;
     sh:path ujggraph:stateRefs ;
     sh:maxCount 0 ;
     sh:message "A CompositeState must not use stateRefs; use subjourneyId to reference a Journey." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A CompositeState must not declare outgoingTransitionRefs. Use an OutgoingTransitionGroup on the enclosing Journey, or attach outgoingTransitionRefs to concrete states inside the referenced subjourney." ;
   ] ;
 
   sh:property [
@@ -352,7 +418,7 @@ ujggraphshape:JourneyExitShape a sh:NodeShape ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
     sh:nodeKind sh:IRI ;
-    sh:node ujggraphshape:StateLikeShape ;
+    sh:class ujggraph:BoundaryState ;
   ] .
 
 ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;

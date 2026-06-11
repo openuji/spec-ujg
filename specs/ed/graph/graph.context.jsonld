@@ -7,6 +7,7 @@
     "Journey": "ujggraph:Journey",
     "State": "ujggraph:State",
     "CompositeState": "ujggraph:CompositeState",
+    "BoundaryState": "ujggraph:BoundaryState",
     "Transition": "ujggraph:Transition",
     "JourneyExit": "ujggraph:JourneyExit",
     "OutgoingTransition": "ujggraph:OutgoingTransition",
