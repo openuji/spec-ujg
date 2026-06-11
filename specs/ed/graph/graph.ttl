@@ -24,6 +24,11 @@ ujggraph:CompositeState a owl:Class ;
 ujggraph:Transition a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
+ujggraph:JourneyExit a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Journey Exit" ;
+  rdfs:comment "An exported exit contract for a journey, bound to a boundary state local to that journey." .
+
 ujggraph:OutgoingTransition a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
@@ -51,6 +56,12 @@ ujggraph:transitionRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
   rdfs:range ujggraph:Transition .
 
+ujggraph:exitRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:JourneyExit ;
+  rdfs:label "exit refs" ;
+  rdfs:comment "References the exported exits declared by a journey." .
+
 ujggraph:outgoingTransitionGroupRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
   rdfs:range ujggraph:OutgoingTransitionGroup .
@@ -62,9 +73,21 @@ ujggraph:from a owl:ObjectProperty ;
 ujggraph:to a owl:ObjectProperty ;
   rdfs:range ujggraph:State .
 
+ujggraph:exitRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Transition ;
+  rdfs:range ujggraph:JourneyExit ;
+  rdfs:label "exit ref" ;
+  rdfs:comment "Identifies the exported JourneyExit reached by the child journey of a CompositeState used as the transition's from value. This property is not a transition endpoint." .
+
 ujggraph:subjourneyId a owl:ObjectProperty ;
   rdfs:domain ujggraph:CompositeState ;
   rdfs:range ujggraph:Journey .
+
+ujggraph:exitStateRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:JourneyExit ;
+  rdfs:range ujggraph:State ;
+  rdfs:label "exit state ref" ;
+  rdfs:comment "References the boundary state local to the journey that declares this JourneyExit." .
 
 ujggraph:outgoingTransitionRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:OutgoingTransitionGroup ;

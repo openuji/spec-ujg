@@ -8,6 +8,7 @@
     "State": "ujggraph:State",
     "CompositeState": "ujggraph:CompositeState",
     "Transition": "ujggraph:Transition",
+    "JourneyExit": "ujggraph:JourneyExit",
     "OutgoingTransition": "ujggraph:OutgoingTransition",
     "OutgoingTransitionGroup": "ujggraph:OutgoingTransitionGroup",
 
@@ -30,6 +31,11 @@
       "@type": "@id",
       "@container": "@set"
     },
+    "exitRefs": {
+      "@id": "ujggraph:exitRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
     "outgoingTransitionGroupRefs": {
       "@id": "ujggraph:outgoingTransitionGroupRefs",
       "@type": "@id",
@@ -43,8 +49,16 @@
       "@id": "ujggraph:to",
       "@type": "@id"
     },
+    "exitRef": {
+      "@id": "ujggraph:exitRef",
+      "@type": "@id"
+    },
     "subjourneyId": {
       "@id": "ujggraph:subjourneyId",
+      "@type": "@id"
+    },
+    "exitStateRef": {
+      "@id": "ujggraph:exitStateRef",
       "@type": "@id"
     },
     "outgoingTransitionRefs": {
