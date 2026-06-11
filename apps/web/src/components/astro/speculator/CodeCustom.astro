@@ -1,18 +1,22 @@
 ---
 import type { CodeLanguage } from 'astro';
 import { Code } from 'astro:components';
-import { Copy } from 'lucide-react';
+import { ChevronDown, Copy } from 'lucide-react';
 
 interface Props {
   code: string;
   lang?: CodeLanguage;
   id?: string;
+  collapsible?: boolean;
 }
 
-const { code, lang = 'text', id } = Astro.props;
+const { code, lang = 'text', id, collapsible = false } = Astro.props;
+const wrapperClass = collapsible
+  ? 'code-block-wrapper code-block-wrapper--collapsible is-collapsed'
+  : 'code-block-wrapper';
 ---
 
-<div class="code-block-wrapper" id={id}>
+<div class={wrapperClass} id={id} data-code-collapsible={collapsible ? 'true' : undefined}>
   <div class="code-header">
     <span class="code-language">
       {lang}
@@ -31,6 +35,19 @@ const { code, lang = 'text', id } = Astro.props;
       <Code code={code} lang={lang} theme="github-dark" wrap={false} />
     </div>
   </div>
+  {
+    collapsible && (
+      <button
+        class="code-collapse-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-label="Show full code block"
+      >
+        <span class="code-collapse-toggle-label">SHOW FULL</span>
+        <ChevronDown className="code-collapse-toggle-chevron" aria-hidden="true" />
+      </button>
+    )
+  }
 </div>
 
 <script>
@@ -54,9 +71,44 @@ const { code, lang = 'text', id } = Astro.props;
     });
   }
 
+  function setupCollapsibleCodeBlocks() {
+    const toggles = document.querySelectorAll('.code-collapse-toggle');
+
+    toggles.forEach((toggle) => {
+      const newToggle = toggle.cloneNode(true) as HTMLButtonElement;
+      toggle.parentNode?.replaceChild(newToggle, toggle);
+
+      const wrapper = newToggle.closest('.code-block-wrapper--collapsible');
+      const label = newToggle.querySelector('.code-collapse-toggle-label');
+
+      if (!wrapper || !label) return;
+
+      const setExpanded = (expanded: boolean) => {
+        wrapper.classList.toggle('is-collapsed', !expanded);
+        wrapper.classList.toggle('is-expanded', expanded);
+        newToggle.setAttribute('aria-expanded', String(expanded));
+        newToggle.setAttribute(
+          'aria-label',
+          expanded ? 'Collapse code block' : 'Show full code block'
+        );
+        label.textContent = expanded ? 'COLLAPSE' : 'SHOW FULL';
+      };
+
+      setExpanded(false);
+
+      newToggle.addEventListener('click', () => {
+        setExpanded(newToggle.getAttribute('aria-expanded') !== 'true');
+      });
+    });
+  }
+
   // Run on initial load
   setupCopyButtons();
+  setupCollapsibleCodeBlocks();
 
   // Run on view transitions navigation
-  document.addEventListener('astro:page-load', setupCopyButtons);
+  document.addEventListener('astro:page-load', () => {
+    setupCopyButtons();
+    setupCollapsibleCodeBlocks();
+  });
 </script>

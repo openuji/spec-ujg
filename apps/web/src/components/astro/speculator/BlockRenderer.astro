@@ -11,15 +11,16 @@ interface Props {
   basePath?: string;
   documentPath?: string;
   headingNumbers?: { [k: string]: string | undefined };
+  currentSectionConcept?: string;
 }
 
-const { node, basePath, documentPath, headingNumbers } = Astro.props;
+const { node, basePath, documentPath, headingNumbers, currentSectionConcept } = Astro.props;
 
 // Shared props for InlineRenderer
 const inlineProps = { basePath };
 
 // Shared props for recursive BlockRenderer calls
-const blockProps = { basePath, documentPath, headingNumbers };
+const blockProps = { basePath, documentPath, headingNumbers, currentSectionConcept };
 
 // Helper to determine heading level for section
 type HeadingTagName = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
@@ -44,6 +45,8 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
         // Section logic
         const HeadingTag = node.heading ? getHeadingTag(node.heading) : 'h2'; // fallback
         const sectionNumber = getSectionNumber(node.id);
+        const sectionConcept =
+          node.dataCopConcept || node.heading?.dataCopConcept || currentSectionConcept;
         return (
           <section id={node.id} class="spec-section">
             {node.heading && (
@@ -53,7 +56,11 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
               </HeadingTag>
             )}
             {node.children.map((child) => (
-              <RecursiveBlockRenderer node={child} {...blockProps} />
+              <RecursiveBlockRenderer
+                node={child}
+                {...blockProps}
+                currentSectionConcept={sectionConcept}
+              />
             ))}
           </section>
         );
@@ -80,12 +87,17 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
         if (node.lang === 'mermaid') {
           return <Mermaid code={node.value} id={node.id} />;
         }
+        const collapsible =
+          (currentSectionConcept === 'ontology' && node.lang === 'turtle') ||
+          (currentSectionConcept === 'jsonld-context' && node.lang === 'json-ld') ||
+          (currentSectionConcept === 'validation' && node.lang === 'turtle');
         // Regular code block
         const codeBlock = (
           <CodeCustom
             id={node.id || undefined}
             code={node.value}
             lang={node.lang as CodeLanguage}
+            collapsible={collapsible}
           />
         );
         return codeBlock;

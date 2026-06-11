@@ -1022,9 +1022,30 @@
     margin-top: 0;
     margin-bottom: var(--spacing-spec-l);
     overflow: hidden;
+    position: relative;
     border-radius: 1.35rem;
     border: 1px solid var(--border);
     background: color-mix(in oklab, var(--card) 84%, var(--background));
+  }
+
+  .spec .code-block-wrapper--collapsible::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    height: 7rem;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in oklab, var(--card) 84%, var(--background)) 70%
+    );
+  }
+
+  .spec .code-block-wrapper--collapsible.is-expanded::after {
+    display: none;
   }
 
   .spec .code-header {
@@ -1087,6 +1108,67 @@
     font-size: 0.9rem;
     line-height: 1.65;
     background: color-mix(in oklab, var(--card) 84%, var(--background));
+  }
+
+  .spec .code-block-wrapper--collapsible.is-collapsed .code-content {
+    max-height: 18rem;
+    overflow-y: hidden;
+    padding-bottom: 4.25rem;
+  }
+
+  .spec .code-block-wrapper--collapsible.is-expanded .code-content {
+    max-height: none;
+  }
+
+  .spec .code-collapse-toggle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    min-height: 3.75rem;
+    padding: 1.25rem 1rem 1rem;
+    border: 0;
+    background: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.375rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+  }
+
+  .spec .code-collapse-toggle:hover {
+    color: var(--foreground);
+  }
+
+  .spec .code-collapse-toggle:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--ring) 70%, transparent);
+    outline-offset: -0.35rem;
+  }
+
+  .spec .code-collapse-toggle-chevron {
+    width: 0.9rem;
+    height: 0.9rem;
+    transition: transform 0.2s ease;
+  }
+
+  .spec .code-block-wrapper--collapsible.is-expanded .code-collapse-toggle {
+    position: static;
+    min-height: 3rem;
+    padding: 0.75rem 1rem 1rem;
+    background: color-mix(in oklab, var(--card) 84%, var(--background));
+  }
+
+  .spec .code-block-wrapper--collapsible.is-expanded .code-collapse-toggle-chevron {
+    transform: rotate(180deg);
   }
 
   .spec .code-theme--light {
