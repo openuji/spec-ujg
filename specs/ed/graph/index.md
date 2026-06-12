@@ -109,16 +109,16 @@ Example JSON node:
 
 ## Journey {data-cop-concept="journey"}
 
-A [=Journey=] is the local container for intended flow topology. It lists the states that belong to the journey and the transitions that connect those states.
+A [=Journey=] is the local container for intended flow topology. It lists the states that belong to the journey and, when present, the transitions that connect those states.
 
 <spec-statement>
 1. A [=Journey=] **MUST** be identified by an IRI.
 2. A [=Journey=] **MUST** declare exactly one `startStateRef`.
 3. A [=Journey=] **MUST** declare at least one `stateRefs` value.
-4. A [=Journey=] **MUST** declare at least one `transitionRefs` value.
+4. A [=Journey=] **MAY** declare `transitionRefs`.
 5. Each `stateRefs` value **MUST** reference a [=State=] or a valid [=State=] subclass defined by this module.
-6. Each `transitionRefs` value **MUST** reference a [=Transition=].
-7. A [=Journey=] **MUST** consist of [=State|States=] connected by [=Transition|Transitions=].
+6. If present, each `transitionRefs` value **MUST** reference a [=Transition=].
+7. A [=Journey=] **MUST** contain one or more [=State|States=] and **MAY** connect those states with [=Transition|Transitions=].
 </spec-statement>
 
 ```mermaid
@@ -163,6 +163,20 @@ Example JSON node:
   ],
   "transitionRefs": [
     "urn:ujg:transition:search-form-to-results"
+  ]
+}
+```
+
+A single-state journey can omit `transitionRefs`:
+
+```json
+{
+  "@type": "Journey",
+  "@id": "urn:ujg:journey:privacy-policy",
+  "label": "Privacy policy",
+  "startStateRef": "urn:ujg:state:privacy-policy",
+  "stateRefs": [
+    "urn:ujg:state:privacy-policy"
   ]
 }
 ```
@@ -708,92 +722,7 @@ To ensure graph integrity, the following constraints **MUST** be met:
 
 ---
 
-
 ## Examples
-### Exported Exit JSON Example
-
-This example shows a parent journey with a `CompositeState`, a child journey, a child `JourneyExit`, and a parent transition that uses `fromExitRef`. The parent transition's `from` value is the parent-local `CompositeState`, its `to` value is a parent-local `State`, and its `fromExitRef` identifies the exported child journey exit. The parent transition does not reference the child state directly.
-
-```json
-{
-  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-  "@id": "https://example.com/ujg/graph/w3c-search.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "Journey",
-      "@id": "urn:ujg:journey:w3c-search",
-      "label": "W3C search journey",
-      "startStateRef": "urn:ujg:state:w3c-search-searchpage",
-      "stateRefs": ["urn:ujg:state:w3c-search-searchpage", "urn:ujg:state:w3c-search-results"],
-      "transitionRefs": ["urn:ujg:transition:w3c-search-searchpage-to-results"]
-    },
-    {
-      "@type": "CompositeState",
-      "@id": "urn:ujg:state:w3c-search-searchpage",
-      "label": "SearchPage",
-      "subjourneyId": "urn:ujg:journey:w3c-searchpage"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:w3c-root-homepage",
-      "label": "Root homepage"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:w3c-search-results",
-      "label": "Results"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:ujg:transition:w3c-search-searchpage-to-results",
-      "label": "Search results",
-      "from": "urn:ujg:state:w3c-search-searchpage",
-      "to": "urn:ujg:state:w3c-search-results",
-      "fromExitRef": "urn:ujg:exit:w3c-searchpage-submitted"
-    },
-    {
-      "@type": "Journey",
-      "@id": "urn:ujg:journey:w3c-searchpage",
-      "label": "W3C search page journey",
-      "startStateRef": "urn:ujg:state:w3c-searchpage-form",
-      "stateRefs": ["urn:ujg:state:w3c-searchpage-form", "urn:ujg:state:w3c-searchpage-submitted"],
-      "transitionRefs": ["urn:ujg:transition:w3c-searchpage-form-to-submitted"],
-      "exitRefs": ["urn:ujg:exit:w3c-searchpage-submitted"]
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:w3c-searchpage-form",
-      "label": "Search form",
-      "outgoingTransitionRefs": ["urn:ujg:ot:w3c-searchpage-form-back-home"]
-    },
-    {
-      "@type": "BoundaryState",
-      "@id": "urn:ujg:state:w3c-searchpage-submitted",
-      "label": "Submitted"
-    },
-    {
-      "@type": "JourneyExit",
-      "@id": "urn:ujg:exit:w3c-searchpage-submitted",
-      "label": "Submitted",
-      "exitStateRef": "urn:ujg:state:w3c-searchpage-submitted"
-    },
-    {
-      "@type": "OutgoingTransition",
-      "@id": "urn:ujg:ot:w3c-searchpage-form-back-home",
-      "label": "Back to home page",
-      "to": "urn:ujg:state:w3c-root-homepage"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:ujg:transition:w3c-searchpage-form-to-submitted",
-      "label": "Submit search form",
-      "from": "urn:ujg:state:w3c-searchpage-form",
-      "to": "urn:ujg:state:w3c-searchpage-submitted"
-    }
-  ]
-}
-```
 
 ### Combined JSON Example
 

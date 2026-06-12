@@ -48,7 +48,6 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:property [
     sh:path ujggraph:transitionRefs ;
-    sh:minCount 1 ;
     sh:class ujggraph:Transition ;
     sh:nodeKind sh:IRI ;
   ] ;
