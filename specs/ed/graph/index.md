@@ -46,6 +46,17 @@ classDiagram
   }
 ```
 
+Example JSON node:
+
+```json
+{
+  "@type": "State",
+  "@id": "urn:ujg:state:search-form",
+  "label": "Search form",
+  "tags": ["phase:search"]
+}
+```
+
 ---
 
 ## Transition {data-cop-concept="transition"}
@@ -80,6 +91,18 @@ classDiagram
 
   Transition --> State : from
   Transition --> State : to
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "Transition",
+  "@id": "urn:ujg:transition:search-form-to-results",
+  "label": "Submit search",
+  "from": "urn:ujg:state:search-form",
+  "to": "urn:ujg:state:results"
+}
 ```
 
 ---
@@ -126,6 +149,24 @@ classDiagram
   Transition --> State : to
 ```
 
+Example JSON node:
+
+```json
+{
+  "@type": "Journey",
+  "@id": "urn:ujg:journey:site-search",
+  "label": "Site search",
+  "startStateRef": "urn:ujg:state:search-form",
+  "stateRefs": [
+    "urn:ujg:state:search-form",
+    "urn:ujg:state:results"
+  ],
+  "transitionRefs": [
+    "urn:ujg:transition:search-form-to-results"
+  ]
+}
+```
+
 ---
 
 ## CompositeState {data-cop-concept="composition"}
@@ -157,6 +198,17 @@ classDiagram
   CompositeState --> Journey : subjourneyId
 ```
 
+Example JSON node:
+
+```json
+{
+  "@type": "CompositeState",
+  "@id": "urn:ujg:state:checkout-flow",
+  "label": "Checkout flow",
+  "subjourneyId": "urn:ujg:journey:checkout"
+}
+```
+
 ---
 
 ## BoundaryState {data-cop-concept="boundary-state"}
@@ -174,12 +226,12 @@ Boundary states remain local states of the journey that declares them.
 6. Outgoing transition group injection **MUST NOT** create effective outgoing transitions from a [=BoundaryState=].
 </spec-statement>
 
+Informative visualization:
+
 ```mermaid
 classDiagram
   class State
-  class BoundaryState {
-    terminalOutcome
-  }
+  class BoundaryState
   class Journey {
     stateRefs
   }
@@ -191,6 +243,17 @@ classDiagram
   State <|-- BoundaryState
   Journey --> BoundaryState : stateRefs
   Transition --> BoundaryState : to
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "BoundaryState",
+  "@id": "urn:ujg:state:checkout-complete",
+  "label": "Checkout complete",
+  "tags": ["outcome:success"]
+}
 ```
 
 ---
@@ -231,9 +294,58 @@ classDiagram
   JourneyExit --> BoundaryState : exitStateRef
 ```
 
----
+Example JSON graph:
 
-## Parent Continuation with fromExitRef {data-cop-concept="parent-continuation"}
+```json
+{
+  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "@id": "https://example.com/ujg/checkout-exit.jsonld",
+  "@type": "UJGDocument",
+  "nodes": [
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:checkout",
+      "label": "Checkout journey",
+      "startStateRef": "urn:ujg:state:checkout-form",
+      "stateRefs": [
+        "urn:ujg:state:checkout-form",
+        "urn:ujg:state:checkout-complete"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:checkout-form-to-complete"
+      ],
+      "exitRefs": [
+        "urn:ujg:exit:checkout-complete"
+      ]
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:checkout-form",
+      "label": "Checkout form"
+    },
+    {
+      "@type": "BoundaryState",
+      "@id": "urn:ujg:state:checkout-complete",
+      "label": "Checkout complete"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:checkout-form-to-complete",
+      "label": "Submit checkout",
+      "from": "urn:ujg:state:checkout-form",
+      "to": "urn:ujg:state:checkout-complete"
+    },
+    {
+      "@type": "JourneyExit",
+      "@id": "urn:ujg:exit:checkout-complete",
+      "label": "Checkout complete",
+      "exitStateRef": "urn:ujg:state:checkout-complete"
+    }
+  ]
+}
+```
+
+### Parent Continuation with fromExitRef {data-cop-concept="parent-continuation"}
 
 `fromExitRef` is a mapping property on a parent [=Transition=]. It identifies which exported [=JourneyExit=] completed for the child journey of the transition's `from` [=CompositeState=].
 
@@ -295,6 +407,103 @@ classDiagram
   Transition --> JourneyExit : fromExitRef
 ```
 
+Example JSON graph:
+
+```json
+{
+  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "@id": "https://example.com/ujg/checkout-with-exit.jsonld",
+  "@type": "UJGDocument",
+  "nodes": [
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:shop",
+      "label": "Shop journey",
+      "startStateRef": "urn:ujg:state:cart",
+      "stateRefs": [
+        "urn:ujg:state:cart",
+        "urn:ujg:state:checkout-flow",
+        "urn:ujg:state:confirmation"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:cart-to-checkout",
+        "urn:ujg:transition:checkout-to-confirmation"
+      ]
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:cart",
+      "label": "Cart"
+    },
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:checkout-flow",
+      "label": "Checkout flow",
+      "subjourneyId": "urn:ujg:journey:checkout"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:confirmation",
+      "label": "Confirmation"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:cart-to-checkout",
+      "label": "Start checkout",
+      "from": "urn:ujg:state:cart",
+      "to": "urn:ujg:state:checkout-flow"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:checkout-to-confirmation",
+      "label": "Show confirmation",
+      "from": "urn:ujg:state:checkout-flow",
+      "to": "urn:ujg:state:confirmation",
+      "fromExitRef": "urn:ujg:exit:checkout-complete"
+    },
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:checkout",
+      "label": "Checkout child journey",
+      "startStateRef": "urn:ujg:state:checkout-form",
+      "stateRefs": [
+        "urn:ujg:state:checkout-form",
+        "urn:ujg:state:checkout-complete"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:checkout-form-to-complete"
+      ],
+      "exitRefs": [
+        "urn:ujg:exit:checkout-complete"
+      ]
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:checkout-form",
+      "label": "Checkout form"
+    },
+    {
+      "@type": "BoundaryState",
+      "@id": "urn:ujg:state:checkout-complete",
+      "label": "Checkout complete"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:checkout-form-to-complete",
+      "label": "Submit checkout",
+      "from": "urn:ujg:state:checkout-form",
+      "to": "urn:ujg:state:checkout-complete"
+    },
+    {
+      "@type": "JourneyExit",
+      "@id": "urn:ujg:exit:checkout-complete",
+      "label": "Checkout complete",
+      "exitStateRef": "urn:ujg:state:checkout-complete"
+    }
+  ]
+}
+```
+
 ---
 
 ## OutgoingTransition {data-cop-concept="outgoing-transition"}
@@ -325,6 +534,17 @@ classDiagram
 
   OutgoingTransition --> State : to
   OutgoingTransition --> CompositeState : to
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "OutgoingTransition",
+  "@id": "urn:ujg:ot:go-home",
+  "label": "Home",
+  "to": "urn:ujg:state:home"
+}
 ```
 
 ---
@@ -372,6 +592,19 @@ classDiagram
   OutgoingTransition --> CompositeState : to
 ```
 
+Example JSON node:
+
+```json
+{
+  "@type": "OutgoingTransitionGroup",
+  "@id": "urn:ujg:otg:global-header",
+  "outgoingTransitionRefs": [
+    "urn:ujg:ot:go-home",
+    "urn:ujg:ot:go-profile"
+  ]
+}
+```
+
 ---
 
 ## State-scoped Outgoing Affordances {data-cop-concept="state-scoped-outgoing"}
@@ -411,9 +644,7 @@ classDiagram
   note for BoundaryState "MUST NOT declare outgoingTransitionRefs"
 ```
 
-### Example: State-scoped Back to Home
-
-This example shows a search form state with a local "Back to home page" affordance. This is not a structural [=Transition=] from the SearchPage journey to the Root journey. It is a state-scoped navigational affordance. The `to` target must resolve to a known [=State=] or [=CompositeState=], but it does not need to be listed in the current journey's `stateRefs`.
+Example JSON nodes:
 
 ```json
 {
@@ -434,6 +665,8 @@ This example shows a search form state with a local "Back to home page" affordan
   "to": "urn:ujg:state:w3c-root-homepage"
 }
 ```
+
+This example shows a search form state with a local "Back to home page" affordance. This is not a structural [=Transition=] from the SearchPage journey to the Root journey. It is a state-scoped navigational affordance. The `to` target must resolve to a known [=State=] or [=CompositeState=], but it does not need to be listed in the current journey's `stateRefs`.
 
 ---
 
