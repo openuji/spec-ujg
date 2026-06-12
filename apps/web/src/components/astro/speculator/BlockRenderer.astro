@@ -87,17 +87,16 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
         if (node.lang === 'mermaid') {
           return <Mermaid code={node.value} id={node.id} />;
         }
-        const collapsible =
-          (currentSectionConcept === 'ontology' && node.lang === 'turtle') ||
-          (currentSectionConcept === 'jsonld-context' && node.lang === 'json-ld') ||
-          (currentSectionConcept === 'validation' && node.lang === 'turtle');
+
+        const lineCount = node.value.split(/\r\n|\r|\n/).length;
+
         // Regular code block
         const codeBlock = (
           <CodeCustom
             id={node.id || undefined}
             code={node.value}
             lang={node.lang as CodeLanguage}
-            collapsible={collapsible}
+            collapsible={lineCount > 10}
           />
         );
         return codeBlock;

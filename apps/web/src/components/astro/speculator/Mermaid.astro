@@ -46,6 +46,9 @@ const { code, id } = Astro.props;
           tertiaryTextColor: '#f3f4f8',
           mainBkg: '#1a2340',
           nodeBkg: '#1a2340',
+          noteBkgColor: '#2f2712',
+          noteTextColor: '#f8e7a1',
+          noteBorderColor: '#c99a2e',
           edgeLabelBackground: '#27272a',
           clusterBkg: '#10182e',
           clusterBorder: '#33416b',
@@ -180,5 +183,29 @@ const { code, id } = Astro.props;
   .mermaid-container :global(.cluster-label span p) {
     font-size: 0.82rem !important;
     padding: 0.2rem 0.4rem !important;
+  }
+
+  :global(:root[data-theme='dark']) .mermaid-container :global(.note) {
+    fill: #2f2712 !important;
+    stroke: #c99a2e !important;
+  }
+
+  :global(:root[data-theme='dark']) .mermaid-container :global(.noteText),
+  :global(:root[data-theme='dark']) .mermaid-container :global(.noteText tspan) {
+    fill: #f8e7a1 !important;
+    color: #f8e7a1 !important;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .mermaid-container :global(.note) {
+      fill: #2f2712 !important;
+      stroke: #c99a2e !important;
+    }
+
+    :global(:root:not([data-theme='light'])) .mermaid-container :global(.noteText),
+    :global(:root:not([data-theme='light'])) .mermaid-container :global(.noteText tspan) {
+      fill: #f8e7a1 !important;
+      color: #f8e7a1 !important;
+    }
   }
 </style>

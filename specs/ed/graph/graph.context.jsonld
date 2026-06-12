@@ -7,6 +7,7 @@
     "Journey": "ujggraph:Journey",
     "State": "ujggraph:State",
     "CompositeState": "ujggraph:CompositeState",
+    "BoundaryState": "ujggraph:BoundaryState",
     "Transition": "ujggraph:Transition",
     "JourneyExit": "ujggraph:JourneyExit",
     "OutgoingTransition": "ujggraph:OutgoingTransition",
@@ -17,8 +18,8 @@
       "@id": "ujggraph:tags",
       "@container": "@set"
     },
-    "startState": {
-      "@id": "ujggraph:startState",
+    "startStateRef": {
+      "@id": "ujggraph:startStateRef",
       "@type": "@id"
     },
     "stateRefs": {
@@ -49,8 +50,8 @@
       "@id": "ujggraph:to",
       "@type": "@id"
     },
-    "exitRef": {
-      "@id": "ujggraph:exitRef",
+    "fromExitRef": {
+      "@id": "ujggraph:fromExitRef",
       "@type": "@id"
     },
     "subjourneyId": {
