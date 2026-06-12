@@ -18,8 +18,8 @@
       "@id": "ujggraph:tags",
       "@container": "@set"
     },
-    "startState": {
-      "@id": "ujggraph:startState",
+    "startStateRef": {
+      "@id": "ujggraph:startStateRef",
       "@type": "@id"
     },
     "stateRefs": {
@@ -50,8 +50,8 @@
       "@id": "ujggraph:to",
       "@type": "@id"
     },
-    "exitRef": {
-      "@id": "ujggraph:exitRef",
+    "fromExitRef": {
+      "@id": "ujggraph:fromExitRef",
       "@type": "@id"
     },
     "subjourneyId": {
