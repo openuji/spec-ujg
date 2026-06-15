@@ -6,6 +6,7 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
 
     "Journey": "ujggraph:Journey",
+    "JourneyIndex": "ujggraph:JourneyIndex",
     "State": "ujggraph:State",
     "CompositeState": "ujggraph:CompositeState",
     "BoundaryState": "ujggraph:BoundaryState",

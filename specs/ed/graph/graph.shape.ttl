@@ -29,6 +29,23 @@ ujggraphshape:OutgoingTargetShape a sh:NodeShape ;
     """ ;
   ] .
 
+ujggraphshape:IndexStateShape a sh:NodeShape ;
+  sh:nodeKind sh:IRI ;
+  sh:or (
+    [ sh:class ujggraph:State ]
+    [ sh:class ujggraph:CompositeState ]
+  ) ;
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "JourneyIndex.stateRefs must not reference a BoundaryState." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        $this a ujggraph:BoundaryState .
+      }
+    """ ;
+  ] .
+
 ujggraphshape:JourneyShape a sh:NodeShape ;
   sh:targetClass ujggraph:Journey ;
   sh:nodeKind sh:IRI ;
@@ -289,6 +306,107 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
         FILTER (?transition != ?otherTransition)
       }
     """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:severity sh:Warning ;
+    sh:message "A state in Journey.stateRefs is not the start state, a local transition endpoint, or an exported exit state. Verify that it belongs to the journey's local topology and is not only a linked destination." ;
+    sh:select """
+      SELECT $this ?state
+      WHERE {
+        $this ujggraph:stateRefs ?state .
+
+        FILTER (NOT EXISTS {
+          $this ujggraph:startStateRef ?state .
+        })
+
+        FILTER (NOT EXISTS {
+          $this ujggraph:transitionRefs ?transition .
+          ?transition ujggraph:from ?state .
+        })
+
+        FILTER (NOT EXISTS {
+          $this ujggraph:transitionRefs ?transition .
+          ?transition ujggraph:to ?state .
+        })
+
+        FILTER (NOT EXISTS {
+          $this ujggraph:exitRefs ?exit .
+          ?exit ujggraph:exitStateRef ?state .
+        })
+      }
+    """ ;
+  ] .
+
+ujggraphshape:JourneyIndexShape a sh:NodeShape ;
+  sh:targetClass ujggraph:JourneyIndex ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:stateRefs ;
+    sh:minCount 1 ;
+    sh:node ujggraphshape:IndexStateShape ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:startStateRef ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare startStateRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:transitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare transitionRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:exitRefs ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare exitRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:outgoingTransitionGroupRefs ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare outgoingTransitionGroupRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:from ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare from." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:to ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare to." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:fromExitRef ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare fromExitRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyId ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare subjourneyId." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:exitStateRef ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare exitStateRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyIndex must not declare outgoingTransitionRefs." ;
   ] .
 
 ujggraphshape:StateShape a sh:NodeShape ;
