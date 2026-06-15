@@ -443,15 +443,46 @@ ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
 
   sh:property [
     sh:path ujggraph:to ;
-    sh:minCount 1 ;
     sh:maxCount 1 ;
     sh:node ujggraphshape:OutgoingTargetShape ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:toCurrentState ;
+    sh:datatype xsd:boolean ;
+    sh:maxCount 1 ;
   ] ;
 
   sh:property [
     sh:path ujggraph:label ;
     sh:datatype xsd:string ;
     sh:maxCount 1 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An OutgoingTransition must declare exactly one effective target mechanism: either exactly one to value or toCurrentState true." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        FILTER (
+          NOT EXISTS { $this ujggraph:to ?to . }
+          && NOT EXISTS { $this ujggraph:toCurrentState true . }
+        )
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An OutgoingTransition with toCurrentState true must not also declare to." ;
+    sh:select """
+      SELECT $this ?to
+      WHERE {
+        $this ujggraph:to ?to ;
+              ujggraph:toCurrentState true .
+      }
+    """ ;
   ] .
 
 ujggraphshape:OutgoingTransitionGroupShape a sh:NodeShape ;

@@ -1,4 +1,5 @@
 @prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
 @prefix ujgl10n: <https://ujg.specs.openuji.org/ed/ns/l10n#> .
 @prefix ujgl10nshape: <https://ujg.specs.openuji.org/ed/ns/l10n.shape#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
@@ -53,5 +54,15 @@ ujgl10nshape:MessageBundleShape a sh:NodeShape ;
   sh:property [
     sh:path ujgl10n:locales ;
     sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgl10nshape:OutgoingTransitionLocaleShape a sh:NodeShape ;
+  sh:targetClass ujggraph:OutgoingTransition ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgl10n:targetLocale ;
+    sh:datatype xsd:language ;
     sh:maxCount 1 ;
   ] .

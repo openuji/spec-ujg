@@ -81,6 +81,10 @@ ujggraph:from a owl:ObjectProperty ;
 ujggraph:to a owl:ObjectProperty ;
   rdfs:range ujggraph:State .
 
+ujggraph:toCurrentState a owl:DatatypeProperty ;
+  rdfs:domain ujggraph:OutgoingTransition ;
+  rdfs:range xsd:boolean .
+
 ujggraph:fromExitRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:Transition ;
   rdfs:range ujggraph:JourneyExit ;

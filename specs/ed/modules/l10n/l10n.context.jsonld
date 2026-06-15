@@ -4,6 +4,7 @@
 
     "ujgl10n": "https://ujg.specs.openuji.org/ed/ns/l10n#",
     "l10n": "https://ujg.specs.openuji.org/ed/ns/l10n#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
 
     "MessageBundle": "ujgl10n:MessageBundle",
 
@@ -22,6 +23,14 @@
     "locales": {
       "@id": "ujgl10n:locales",
       "@type": "@json"
+    },
+    "targetLocale": {
+      "@id": "ujgl10n:targetLocale",
+      "@type": "xsd:language"
+    },
+    "l10n:targetLocale": {
+      "@id": "ujgl10n:targetLocale",
+      "@type": "xsd:language"
     }
   }
 }

@@ -1,4 +1,5 @@
 @prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
 @prefix ujgl10n: <https://ujg.specs.openuji.org/ed/ns/l10n#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -44,3 +45,7 @@ ujgl10n:rtl a owl:DatatypeProperty ;
 ujgl10n:locales a owl:DatatypeProperty ;
   rdfs:domain ujgl10n:MessageBundle ;
   rdfs:range rdf:JSON .
+
+ujgl10n:targetLocale a owl:DatatypeProperty ;
+  rdfs:domain ujggraph:OutgoingTransition ;
+  rdfs:range xsd:language .

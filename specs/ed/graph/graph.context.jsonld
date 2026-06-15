@@ -3,6 +3,7 @@
     "@version": 1.1,
 
     "ujggraph": "https://ujg.specs.openuji.org/ed/ns/graph#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
 
     "Journey": "ujggraph:Journey",
     "State": "ujggraph:State",
@@ -49,6 +50,10 @@
     "to": {
       "@id": "ujggraph:to",
       "@type": "@id"
+    },
+    "toCurrentState": {
+      "@id": "ujggraph:toCurrentState",
+      "@type": "xsd:boolean"
     },
     "fromExitRef": {
       "@id": "ujggraph:fromExitRef",

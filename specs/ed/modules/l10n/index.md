@@ -36,6 +36,7 @@ with the Localization context.
 The module introduces real JSON-LD terms and RDF edges for localization attachment:
 
 * `l10n:copyRef` links any UJG node to a `MessageBundle`.
+* `l10n:targetLocale` declares the requested locale associated with an [=OutgoingTransition=].
 
 The module also defines non-reference properties such as `l10n:namespace`, `l10n:messageKey`,
 `l10n:defaultLocale`, `l10n:fallbackLocales`, `l10n:rtl`, and JSON-valued `l10n:locales`.
@@ -74,13 +75,34 @@ the SHACL shape.
 2. **Bundle semantics:** `l10n:messageKey` identifies the canonical message entry for the attached
    node, while `l10n:locales` carries optional locale-specific payloads for implementations that
    choose to embed translated values.
-3. **Graceful degradation:** A consumer that does not implement this module **MAY** ignore
+3. **Locale target metadata:** `l10n:targetLocale` declares the requested locale associated with an
+   outgoing affordance. It does not itself define graph traversal behavior. If a locale switch should
+   keep the user on the same graph state, use Graph's `toCurrentState: true` together with
+   `l10n:targetLocale`.
+4. **Graceful degradation:** A consumer that does not implement this module **MAY** ignore
    Localization semantics, but it **SHOULD** preserve recognized JSON-LD data during
    read-transform-write when possible.
-4. **Private runtime hints:** Platform-specific i18n loader configuration that is not intended for
+5. **Private runtime hints:** Platform-specific i18n loader configuration that is not intended for
    shared queryability or validation **SHOULD** remain in Core `extensions`.
 
 ---
+
+## Locale Switch Affordance Example {.unnumbered}
+
+```json
+{
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld"
+  ],
+  "@type": "OutgoingTransition",
+  "@id": "urn:example:ot:language-english",
+  "label": "English",
+  "toCurrentState": true,
+  "l10n:targetLocale": "en"
+}
+```
 
 ## Appendix: Combined JSON Example {.unnumbered}
 
