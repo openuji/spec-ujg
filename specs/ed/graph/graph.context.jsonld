@@ -5,6 +5,7 @@
     "ujggraph": "https://ujg.specs.openuji.org/ed/ns/graph#",
 
     "Journey": "ujggraph:Journey",
+    "JourneyIndex": "ujggraph:JourneyIndex",
     "State": "ujggraph:State",
     "CompositeState": "ujggraph:CompositeState",
     "BoundaryState": "ujggraph:BoundaryState",

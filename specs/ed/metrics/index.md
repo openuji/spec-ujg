@@ -58,13 +58,16 @@ Mapping is the canonical interpretation layer for analytics over UJG execution d
 what happened, Graph defines the intended journey topology, and Mapping resolves each Runtime event
 to Graph state and transition intent.
 
+Mapping-derived journey metrics attach to traversable [=Journey=] scopes. A [=JourneyIndex=] is a
+discovery catalogue and does not itself define executions, movements, or traversal metrics.
+
 Mapping-derived metrics use these primary attachment points:
 
 | Attachment point | Meaning | Appropriate metrics |
 | --- | --- | --- |
 | [=JourneyMapping=] | One interpreted execution chain | `stepCount`, `movementCount`, `explainedMovementCount`, `unexplainedMovementCount`, `unexplainedMovementRate`, `boundaryCrossingCount`, `maxScopeDepth` |
 | [=MappedStep=] | One interpreted runtime event | boolean per-step observations such as whether the step is root, explained, or unexplained |
-| [=Journey=] | Aggregate over mappings resolved to this root journey | `executionCount`, `stepCount`, `unexplainedMovementRate`, `stateVisitCount`, `transitionTraversalCount` |
+| [=Journey=] | Aggregate over mappings resolved to this root traversable journey | `executionCount`, `stepCount`, `unexplainedMovementRate`, `stateVisitCount`, `transitionTraversalCount` |
 | [=State=] or [=CompositeState=] | Aggregate over mapped steps resolving to this state | `stateVisitCount`, `boundaryEntryCount`, `boundaryExitCount` |
 | [=Transition=] or [=OutgoingTransition=] | Aggregate over explained movements | `transitionTraversalCount`, `outgoingTraversalCount` |
 

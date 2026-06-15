@@ -14,7 +14,8 @@ Examples in this page use an explicit context array composed from the published 
 
 ## Terminology
 
-- <dfn>Journey</dfn>: A named container for a user flow.
+- <dfn>Journey</dfn>: A named container for local traversable user flow topology.
+- <dfn>JourneyIndex</dfn>: A catalogue of addressable journey entry states that does not define traversal.
 - <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal).
 - <dfn>Transition</dfn>: A directed edge between two states.
 - <dfn>CompositeState</dfn>: A state that encapsulates another [=Journey=] (sub-journey).
@@ -111,6 +112,8 @@ Example JSON node:
 
 A [=Journey=] is the local container for intended flow topology. It lists the states that belong to the journey and, when present, the transitions that connect those states.
 
+Use [=Journey=] when the modeled object owns local traversal, progression, or structural order. If the model only needs to list known entry points into pages, surfaces, flows, or journeys, use [=JourneyIndex=] instead.
+
 <spec-statement>
 1. A [=Journey=] **MUST** be identified by an IRI.
 2. A [=Journey=] **MUST** declare exactly one `startStateRef`.
@@ -119,6 +122,9 @@ A [=Journey=] is the local container for intended flow topology. It lists the st
 5. Each `stateRefs` value **MUST** reference a [=State=] or a valid [=State=] subclass defined by this module.
 6. If present, each `transitionRefs` value **MUST** reference a [=Transition=].
 7. A [=Journey=] **MUST** contain one or more [=State|States=] and **MAY** connect those states with [=Transition|Transitions=].
+8. Every `stateRefs` value of a [=Journey=] **SHOULD** belong to that journey's local topology.
+9. A state belongs to a journey when it is the `startStateRef`, a `from` or `to` endpoint of a transition listed in that journey's `transitionRefs`, an exported boundary state referenced by a local [=JourneyExit=], or a local observable segment or condition connected by the journey's structural order.
+10. A [=Journey=] **SHOULD NOT** list a linked destination page, surface, flow, or journey entry inside `stateRefs` merely because an [=OutgoingTransition=] can reach it.
 </spec-statement>
 
 ```mermaid
@@ -180,6 +186,72 @@ A single-state journey can omit `transitionRefs`:
   ]
 }
 ```
+
+---
+
+## JourneyIndex {data-cop-concept="journey-index"}
+
+A [=JourneyIndex=] is a Graph class and Core [=Node=] that acts as a catalogue of addressable journey entry states. It is not a subclass of [=Journey=] and does not define traversal. A Consumer **MUST NOT** infer that indexed states are reachable from one another, ordered as a path, or part of a parent-owned progression.
+
+Use [=Journey=] when modeling local topology. Use [=JourneyIndex=] when listing known entry points into modeled journeys. A root [=Journey=] should only be used when the root itself owns real traversal, progression, or structural order.
+
+In common use, a [=JourneyIndex=] lists [=CompositeState=] entries whose `subjourneyId` values point to modeled pages, surfaces, flows, or journeys.
+
+<spec-statement>
+1. A [=JourneyIndex=] **MUST** be identified by an IRI.
+2. A [=JourneyIndex=] **MUST** declare at least one `stateRefs` value.
+3. Each `stateRefs` value **MUST** reference a resolvable [=State=] or [=CompositeState=].
+4. Each referenced state **MUST** be a top-level node in the same document or resolvable through imports.
+5. Each referenced state **SHOULD** be a [=CompositeState=] when it represents a page, surface, or nested journey entry.
+6. A [=JourneyIndex=] **MUST NOT** reference a [=BoundaryState=] in `stateRefs`.
+7. A [=JourneyIndex=] **MUST NOT** declare `startStateRef`.
+8. A [=JourneyIndex=] **MUST NOT** declare `transitionRefs`.
+9. A [=JourneyIndex=] **MUST NOT** declare `exitRefs`.
+10. A [=JourneyIndex=] **MUST NOT** declare `outgoingTransitionGroupRefs`.
+11. `stateRefs` on a [=JourneyIndex=] **MUST NOT** imply traversal order, reachability, user path, progression, or parent continuation.
+12. The order of values in `stateRefs` **MUST NOT** be interpreted normatively unless a future ordering mechanism is explicitly added.
+</spec-statement>
+
+[=JourneyIndex=] is intended for top-level page maps, product surface indexes, search-result target indexes, documentation indexes, route or catalogue manifests, and other collections of known journey entry points. Do not use [=JourneyIndex=] to model page-segment order, local journey progression, child completion, runtime observations, or experience annotations.
+
+```mermaid
+classDiagram
+  class JourneyIndex {
+    id
+    label
+    stateRefs
+  }
+
+  class State {
+    id
+    label
+  }
+
+  class CompositeState {
+    subjourneyId
+  }
+
+  JourneyIndex --> State : stateRefs
+  JourneyIndex --> CompositeState : stateRefs
+  CompositeState --> Journey : subjourneyId
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "JourneyIndex",
+  "@id": "urn:ujg:index:site-pages",
+  "label": "Site page index",
+  "stateRefs": [
+    "urn:ujg:state:home-page",
+    "urn:ujg:state:search-page",
+    "urn:ujg:state:profile-page"
+  ]
+}
+```
+
+The indexed states are known entry points. Their order above does not define a path from the home page to search to profile.
 
 ---
 
@@ -536,6 +608,8 @@ An [=OutgoingTransition=] has no explicit `from` property. Its effective source 
 7. An [=OutgoingTransition=] **MUST NOT** declare more than one `label`.
 </spec-statement>
 
+If the `to` target is a known page, surface, or flow entry, it should normally be listed in a [=JourneyIndex=]. Do not list that target in the source [=Journey=]'s `stateRefs` unless it also belongs to the source journey's local topology.
+
 ```mermaid
 classDiagram
   class OutgoingTransition {
@@ -680,13 +754,13 @@ Example JSON nodes:
 }
 ```
 
-This example shows a search form state with a local "Back to home page" affordance. This is not a structural [=Transition=] from the SearchPage journey to the Root journey. It is a state-scoped navigational affordance. The `to` target must resolve to a known [=State=] or [=CompositeState=], but it does not need to be listed in the current journey's `stateRefs`.
+This example shows a search form state with a local "Back to home page" affordance. This is not a structural [=Transition=] from the SearchPage journey to a root journey or [=JourneyIndex=]. It is a state-scoped navigational affordance. The `to` target must resolve to a known [=State=] or [=CompositeState=], but it does not need to be listed in the current journey's `stateRefs`. If the home page is a known page entry, it should normally be listed in a [=JourneyIndex=].
 
 ---
 
 ## Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `State`, `CompositeState`, `BoundaryState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `exitRefs`, `fromExitRef`, `exitStateRef`, and `outgoingTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyIndex`, `State`, `CompositeState`, `BoundaryState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `exitRefs`, `fromExitRef`, `exitStateRef`, and `outgoingTransitionRefs`.
 
 :::include ./graph.ttl :::
 
@@ -714,15 +788,240 @@ The rules below define additional graph integrity and resolution behavior beyond
 To ensure graph integrity, the following constraints **MUST** be met:
 1. **Reference Integrity:** All `startStateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, and `outgoingTransitionRefs` IDs **MUST** resolve to valid Nodes within the current scope or imported modules.
 2. **Transition Endpoint Resolution:** The `from` and `to` IDs of a [=Transition=] **MUST** resolve to valid Nodes, and are required to be members of the enclosing [=Journey=]'s `stateRefs`. A transition **MUST NOT** reference states belonging to other journeys.
-3. **Composition Safety:** `subjourneyId` **MUST** resolve to a valid [=Journey=].
-4. **Journey Exit Resolution:** Every ID in `exitRefs` **MUST** resolve to a [=JourneyExit=].
-5. **Group Resolution:** Every ID in `outgoingTransitionGroupRefs` **MUST** resolve to an [=OutgoingTransitionGroup=].
-6. **Outgoing Resolution:** Every ID in `outgoingTransitionRefs` **MUST** resolve to an [=OutgoingTransition=].
+3. **JourneyIndex Resolution:** Every `stateRefs` ID in a [=JourneyIndex=] **MUST** resolve to a [=State=] or [=CompositeState=]. A [=JourneyIndex=]'s `stateRefs` **MUST NOT** imply reachability among entries.
+4. **Composition Safety:** `subjourneyId` **MUST** resolve to a valid [=Journey=].
+5. **Journey Exit Resolution:** Every ID in `exitRefs` **MUST** resolve to a [=JourneyExit=].
+6. **Group Resolution:** Every ID in `outgoingTransitionGroupRefs` **MUST** resolve to an [=OutgoingTransitionGroup=].
+7. **Outgoing Resolution:** Every ID in `outgoingTransitionRefs` **MUST** resolve to an [=OutgoingTransition=].
 </spec-statement>
 
 ---
 
 ## Examples
+
+### JourneyIndex with External Outgoing Target
+
+This example lists known page entries in a [=JourneyIndex=]. The search page journey has a state-scoped [=OutgoingTransition=] to the profile page entry, but the profile page is not part of the search page journey's local `stateRefs`.
+
+```json
+{
+  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "@id": "https://example.com/ujg/graph/page-index.jsonld",
+  "@type": "UJGDocument",
+  "nodes": [
+    {
+      "@type": "JourneyIndex",
+      "@id": "urn:ujg:index:pages",
+      "label": "Page index",
+      "stateRefs": [
+        "urn:ujg:state:search-page",
+        "urn:ujg:state:profile-page"
+      ]
+    },
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:search-page",
+      "label": "Search page",
+      "subjourneyId": "urn:ujg:journey:search-page"
+    },
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:profile-page",
+      "label": "Profile page",
+      "subjourneyId": "urn:ujg:journey:profile-page"
+    },
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:search-page",
+      "label": "Search page journey",
+      "startStateRef": "urn:ujg:state:search-form",
+      "stateRefs": [
+        "urn:ujg:state:search-form",
+        "urn:ujg:state:search-results"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:search-form-to-results"
+      ]
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:search-form",
+      "label": "Search form"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:search-results",
+      "label": "Search results",
+      "outgoingTransitionRefs": [
+        "urn:ujg:ot:search-results-to-profile"
+      ]
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:search-form-to-results",
+      "label": "Submit search",
+      "from": "urn:ujg:state:search-form",
+      "to": "urn:ujg:state:search-results"
+    },
+    {
+      "@type": "OutgoingTransition",
+      "@id": "urn:ujg:ot:search-results-to-profile",
+      "label": "Open profile",
+      "to": "urn:ujg:state:profile-page"
+    },
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:profile-page",
+      "label": "Profile page journey",
+      "startStateRef": "urn:ujg:state:profile-summary",
+      "stateRefs": [
+        "urn:ujg:state:profile-summary"
+      ]
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:profile-summary",
+      "label": "Profile summary"
+    }
+  ]
+}
+```
+
+### Form Child Journey with Parent Continuation
+
+This example models a form as a child journey. The form exports `submitted` through [=BoundaryState=] and [=JourneyExit=]. The enclosing journey continues from the form [=CompositeState=] to a result-page [=CompositeState=] using `fromExitRef`.
+
+```json
+{
+  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "@id": "https://example.com/ujg/graph/form-continuation.jsonld",
+  "@type": "UJGDocument",
+  "nodes": [
+    {
+      "@type": "JourneyIndex",
+      "@id": "urn:ujg:index:form-example-pages",
+      "label": "Form example pages",
+      "stateRefs": [
+        "urn:ujg:state:contact-page",
+        "urn:ujg:state:result-page"
+      ]
+    },
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:contact-page",
+      "label": "Contact page journey",
+      "startStateRef": "urn:ujg:state:contact-form",
+      "stateRefs": [
+        "urn:ujg:state:contact-form",
+        "urn:ujg:state:result-page"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:contact-form-to-result"
+      ]
+    },
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:contact-page",
+      "label": "Contact page",
+      "subjourneyId": "urn:ujg:journey:contact-page"
+    },
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:contact-form",
+      "label": "Contact form",
+      "subjourneyId": "urn:ujg:journey:contact-form"
+    },
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:result-page",
+      "label": "Result page",
+      "subjourneyId": "urn:ujg:journey:result-page"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:contact-form-to-result",
+      "label": "Show result page",
+      "from": "urn:ujg:state:contact-form",
+      "to": "urn:ujg:state:result-page",
+      "fromExitRef": "urn:ujg:exit:contact-form-submitted"
+    },
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:contact-form",
+      "label": "Contact form journey",
+      "startStateRef": "urn:ujg:state:contact-form-editing",
+      "stateRefs": [
+        "urn:ujg:state:contact-form-editing",
+        "urn:ujg:state:contact-form-submitted"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:contact-form-submit"
+      ],
+      "exitRefs": [
+        "urn:ujg:exit:contact-form-submitted"
+      ]
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:contact-form-editing",
+      "label": "Contact form editing"
+    },
+    {
+      "@type": "BoundaryState",
+      "@id": "urn:ujg:state:contact-form-submitted",
+      "label": "Submitted"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:contact-form-submit",
+      "label": "Submit form",
+      "from": "urn:ujg:state:contact-form-editing",
+      "to": "urn:ujg:state:contact-form-submitted"
+    },
+    {
+      "@type": "JourneyExit",
+      "@id": "urn:ujg:exit:contact-form-submitted",
+      "label": "Submitted",
+      "exitStateRef": "urn:ujg:state:contact-form-submitted"
+    },
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:result-page",
+      "label": "Result page journey",
+      "startStateRef": "urn:ujg:state:result-summary",
+      "stateRefs": [
+        "urn:ujg:state:result-summary"
+      ]
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:result-summary",
+      "label": "Result summary"
+    }
+  ]
+}
+```
+
+### Anti-Example: Linked Destination in Source Journey
+
+The following source journey incorrectly lists `urn:ujg:state:profile-page` in `stateRefs` merely because an outgoing affordance can reach it. The profile page should be listed in a [=JourneyIndex=] and referenced by `OutgoingTransition.to`; it should not be promoted into the search page journey's local topology.
+
+```json
+{
+  "@type": "Journey",
+  "@id": "urn:ujg:journey:search-page",
+  "label": "Search page journey",
+  "startStateRef": "urn:ujg:state:search-form",
+  "stateRefs": [
+    "urn:ujg:state:search-form",
+    "urn:ujg:state:search-results",
+    "urn:ujg:state:profile-page"
+  ],
+  "transitionRefs": [
+    "urn:ujg:transition:search-form-to-results"
+  ]
+}
+```
 
 ### Combined JSON Example
 
