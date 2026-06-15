@@ -1032,8 +1032,41 @@ The following source journey incorrectly lists `urn:ujg:state:profile-page` in `
   "@type": "UJGDocument",
   "nodes": [
     {
+      "@type": "JourneyIndex",
+      "@id": "urn:ujg:index:main-site-pages",
+      "label": "Main site pages",
+      "stateRefs": [
+        "urn:ujg:state:home-page",
+        "urn:ujg:state:checkout-flow",
+        "urn:ujg:state:profile-page"
+      ]
+    },
+
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:home-page",
+      "label": "Home page",
+      "subjourneyId": "urn:ujg:journey:home-page"
+    },
+
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:checkout-flow",
+      "label": "Checkout process",
+      "subjourneyId": "urn:ujg:journey:checkout"
+    },
+
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:profile-page",
+      "label": "Profile page",
+      "subjourneyId": "urn:ujg:journey:profile"
+    },
+
+    {
       "@type": "Journey",
-      "@id": "urn:ujg:journey:main-site",
+      "@id": "urn:ujg:journey:home-page",
+      "label": "Home page journey",
       "startStateRef": "urn:ujg:state:home",
       "stateRefs": ["urn:ujg:state:home", "urn:ujg:state:checkout-flow"],
       "transitionRefs": ["urn:ujg:transition:home-to-checkout"],
@@ -1056,25 +1089,44 @@ The following source journey incorrectly lists `urn:ujg:state:profile-page` in `
     },
 
     {
-      "@type": "CompositeState",
-      "@id": "urn:ujg:state:checkout-flow",
-      "label": "Checkout Process",
-      "subjourneyId": "urn:ujg:journey:checkout"
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:checkout",
+      "label": "Checkout journey",
+      "startStateRef": "urn:ujg:state:checkout-cart",
+      "stateRefs": ["urn:ujg:state:checkout-cart"]
     },
 
-    { "@type": "State", "@id": "urn:ujg:state:profile", "label": "Profile" },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:checkout-cart",
+      "label": "Checkout cart"
+    },
+
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:profile",
+      "label": "Profile journey",
+      "startStateRef": "urn:ujg:state:profile-summary",
+      "stateRefs": ["urn:ujg:state:profile-summary"]
+    },
+
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:profile-summary",
+      "label": "Profile summary"
+    },
 
     {
       "@type": "OutgoingTransition",
       "@id": "urn:ujg:ot:go-home",
-      "to": "urn:ujg:state:home",
+      "to": "urn:ujg:state:home-page",
       "label": "Home"
     },
 
     {
       "@type": "OutgoingTransition",
       "@id": "urn:ujg:ot:go-profile",
-      "to": "urn:ujg:state:profile",
+      "to": "urn:ujg:state:profile-page",
       "label": "Profile"
     },
 
