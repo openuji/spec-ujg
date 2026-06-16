@@ -1,35 +1,186 @@
-# UJG ED Design System Modeling Skill
-
-Use this skill when modeling or reviewing Design System module terms for the active UJG Editor's Draft.
-
 ## Source of truth
 
-Use the active Editor's Draft Design System module:
+Use the active Editor's Draft unless the user explicitly asks for a dated snapshot:
 
 `https://ujg.specs.openuji.org/ed/modules/design-system`
 
-Treat `/ed` as moving. Do not silently mix dated snapshots with current ED.
+Generate only terms defined by the active ED Design System and Surface contexts unless the user explicitly requests an extension.
 
 ## Scope
 
-Design System guidance is module-specific. It depends on Graph and bridges through Surface.
+Design System describes how design-system artifacts realize `Surface` resources.
 
-Use this skill for:
+Correct layer order:
 
-- design-system vocabulary discipline,
-- token and theme references,
-- component or recipe binding when represented by ED terms,
-- relationships between design-system terms and surface structure,
-- deciding whether a visual concern belongs in Graph, Surface, Design System, or a private extension.
+```text
+Graph subject -> surfaceRef -> Surface
+SurfaceRealization -> surfaceRef + componentRef/templateRef
+DesignSystem -> componentRefs/templateRefs/tokenSourceRefs/surfaceRealizationRefs
+````
 
-## Boundaries
+Graph defines topology.
+Surface defines materialization boundaries.
+Design System realizes surfaces.
 
-Do not put traversal, journey ownership, exits, or target resolution into Design System terms. Those belong to Graph.
+## Required contexts
 
-Do not use Design System as a dumping ground for stack-specific implementation details such as React component paths, CSS class names, Flutter widget classes, or CMS plugin IDs.
+When using Design System terms, include the Surface and Design System contexts:
 
-Use Surface terms for structural surface contracts. Use Design System terms only when the concept is genuinely about design-system semantics, tokens, recipes, modes, or design binding.
+```json
+[
+  "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
+  "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld"
+]
+```
 
-## Cross-skill awareness
+## Vocabulary
 
-Consult the Graph skill when a design-system decision changes topology or traversal. Consult the root modeling skill when a task spans Graph, Surface, Runtime, Localization, and Design System together.
+Use only these Design System classes:
+
+```text
+DesignSystem
+TokenSource
+Component
+Template
+Slot
+SurfaceRealization
+SlotBinding
+```
+
+Use only these common Design System properties:
+
+```text
+tokenSourceRefs
+componentRefs
+templateRefs
+surfaceRealizationRefs
+surfaceRef
+componentRef
+templateRef
+slotRefs
+slotBindingRefs
+slotRef
+targetSurfaceRef
+targetComponentRef
+```
+
+Do not invent:
+
+```text
+UIView
+viewRef
+themeRef
+variant
+slots
+tokenRefs
+props
+componentName
+cssClass
+route
+url
+action
+transitionRef
+outgoingTransitionRef
+```
+
+## Binding rule
+
+Graph nodes must not point directly to components, templates, token sources, design-system variants, props, or registry items.
+
+Correct:
+
+```json
+{
+  "@type": "State",
+  "@id": "urn:example:state:registration-form",
+  "surfaceRef": "urn:example:surface:registration-form"
+}
+```
+
+Then realize the surface:
+
+```json
+{
+  "@type": "Surface",
+  "@id": "urn:example:surface:registration-form"
+},
+{
+  "@type": "Component",
+  "@id": "urn:example:component:RegistrationForm"
+},
+{
+  "@type": "SurfaceRealization",
+  "@id": "urn:example:realization:registration-form",
+  "surfaceRef": "urn:example:surface:registration-form",
+  "componentRef": "urn:example:component:RegistrationForm"
+}
+```
+
+## SurfaceRealization
+
+A `SurfaceRealization` must have:
+
+```text
+surfaceRef
+componentRef OR templateRef
+```
+
+Use `componentRef` for direct component realization.
+
+Use `templateRef` for composed layouts.
+
+Do not use both `componentRef` and `templateRef`.
+
+Use `slotBindingRefs` only with `templateRef`.
+
+## Template, Slot, SlotBinding
+
+Use `Template` for reusable layout structure.
+
+A `Template` declares slots with `slotRefs`.
+
+A `SlotBinding` connects one declared slot to exactly one target:
+
+```text
+slotRef + targetSurfaceRef
+or
+slotRef + targetComponentRef
+```
+
+Use `targetSurfaceRef` when the slotted content corresponds to a modeled surface.
+
+Use `targetComponentRef` when the slotted content is only a design-system component.
+
+Slot bindings are presentation composition only. They do not imply traversal, state order, nesting, runtime lifecycle, or form behavior.
+
+## TokenSource
+
+Use `TokenSource` only to reference a token source, package, manifest, or token set.
+
+Do not encode token values, CSS variables, aliases, themes, or style calculations unless the user explicitly asks for a project extension.
+
+## Navigation and forms
+
+Keep navigation in Graph.
+
+Use Graph `Transition`, `OutgoingTransition`, and `OutgoingTransitionGroup` for journey topology, links, CTAs, header/footer navigation, and locale switchers.
+
+Use Design System only to realize the surfaces that display those affordances.
+
+Keep form states and outcomes in Graph. Use Design System only to say which component or template realizes each form/result surface.
+
+## Checks before answering
+
+* Did Graph bind to Surface, not directly to Design System?
+* Are all Design System terms defined by ED?
+* Is every `SurfaceRealization` attached to a `Surface`?
+* Does every realization use exactly one of `componentRef` or `templateRef`?
+* Are slots declared by `Template` and filled through `SlotBinding`?
+* Did I avoid invented props, variants, class names, routes, URLs, CSS, runtime events, and business logic?
+* Did Design System avoid changing Graph traversal?
+
+```
+
+That’s much closer to a useful skill: small, sharp, and hard to misuse.
+```

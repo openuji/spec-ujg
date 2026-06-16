@@ -85,7 +85,7 @@
           "specHash": "sha256:9acdbcdd131c0731bb6fd24db0e07f8b61dceea870077e1eae91edf7f5552285"
         },
         {
-          "artifactHash": "sha256:d37e26fdde315aa55c3b3dfdc5e660e60701ecff1dfd6c680a06bfefb4f63ef6",
+          "artifactHash": "sha256:39647838a5da4ac477a1a896f0d7e452be89e120b50d6a226e20390d0369e1f2",
           "key": "design-system",
           "moduleId": "modules/design-system",
           "name": "ujg-ed-design-system-modeling",
@@ -97,7 +97,7 @@
             "modules/design-system"
           ],
           "source": "sources/ed/skills/design-system/skill.md",
-          "sourceHash": "sha256:572f6deaf15fa03eb36d2d3dab92fb5aba2637bc7da69b59330eac650f3a4b67",
+          "sourceHash": "sha256:8078d81a7fc356ff7d6b350bc5e36bdaf67240714edd38b0491927170d0db904",
           "specHash": "sha256:044f65a520a79b50c193b8d9895cc9d14b9429e5d85a6d3b71beffbdadb19ef4"
         }
       ],

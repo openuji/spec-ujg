@@ -28,7 +28,16 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/design-system
 
 ## Source Headings Likely Affected
 
-- UJG ED Design System Modeling Skill
+- Source of truth
+- Scope
+- Required contexts
+- Vocabulary
+- Binding rule
+- SurfaceRealization
+- Template, Slot, SlotBinding
+- TokenSource
+- Navigation and forms
+- Checks before answering
 
 ## Checklist
 
