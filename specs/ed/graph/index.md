@@ -15,7 +15,7 @@ Examples in this page use an explicit context array composed from the published 
 ## Terminology
 
 - <dfn>Journey</dfn>: A named container for local traversable user flow topology.
-- <dfn>JourneyIndex</dfn>: A catalogue of addressable journey entry states that does not define traversal.
+- <dfn>JourneyEntryIndex</dfn>: A catalogue of addressable journey entry states that does not define traversal.
 - <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal).
 - <dfn>Transition</dfn>: A directed edge between two states.
 - <dfn>CompositeState</dfn>: A state that encapsulates another [=Journey=] (sub-journey).
@@ -112,7 +112,7 @@ Example JSON node:
 
 A [=Journey=] is the local container for intended flow topology. It lists the states that belong to the journey and, when present, the transitions that connect those states.
 
-Use [=Journey=] when the modeled object owns local traversal, progression, or structural order. If the model only needs to list known entry points into pages, surfaces, flows, or journeys, use [=JourneyIndex=] instead.
+Use [=Journey=] when the modeled object owns local traversal, progression, or structural order. If the model only needs to list known entry points into pages, surfaces, flows, or journeys, use [=JourneyEntryIndex=] instead.
 
 <spec-statement>
 1. A [=Journey=] **MUST** be identified by an IRI.
@@ -189,40 +189,40 @@ A single-state journey can omit `transitionRefs`:
 
 ---
 
-## JourneyIndex {data-cop-concept="journey-index"}
+## JourneyEntryIndex {data-cop-concept="journey-index"}
 
-A [=JourneyIndex=] is a Graph class and Core [=Node=] that acts as a catalogue of addressable journey entry states. It is not a subclass of [=Journey=] and does not define traversal. A Consumer **MUST NOT** infer that indexed states are reachable from one another, ordered as a path, or part of a parent-owned progression.
+A [=JourneyEntryIndex=] is a Graph class and Core [=Node=] that acts as a catalogue of addressable journey entry states. It is not a subclass of [=Journey=] and does not define traversal. A Consumer **MUST NOT** infer that indexed states are reachable from one another, ordered as a path, or part of a parent-owned progression.
 
-Use [=Journey=] when modeling local topology. Use [=JourneyIndex=] when listing known entry points into modeled journeys. A root [=Journey=] should only be used when the root itself owns real traversal, progression, or structural order.
+Use [=Journey=] when modeling local topology. Use [=JourneyEntryIndex=] when listing known entry points into modeled journeys. A root [=Journey=] should only be used when the root itself owns real traversal, progression, or structural order.
 
-In common use, a [=JourneyIndex=] lists [=CompositeState=] entries whose `subjourneyId` values point to modeled pages, surfaces, flows, or journeys.
+In common use, a [=JourneyEntryIndex=] lists [=CompositeState=] entries whose `subjourneyId` values point to modeled pages, surfaces, flows, or journeys.
 
 <spec-statement>
-1. A [=JourneyIndex=] **MUST** be identified by an IRI.
-2. A [=JourneyIndex=] **MUST** declare at least one `stateRefs` value.
+1. A [=JourneyEntryIndex=] **MUST** be identified by an IRI.
+2. A [=JourneyEntryIndex=] **MUST** declare at least one `stateRefs` value.
 3. Each `stateRefs` value **MUST** reference a resolvable [=State=] or [=CompositeState=].
 4. Each referenced state **MUST** be a top-level node in the same document or resolvable through imports.
 5. Each referenced state **SHOULD** be a [=CompositeState=] when it represents a page, surface, or nested journey entry.
-6. A [=JourneyIndex=] **MUST NOT** reference a [=BoundaryState=] in `stateRefs`.
-7. A [=JourneyIndex=] **MUST NOT** declare `startStateRef`.
-8. A [=JourneyIndex=] **MUST NOT** declare `transitionRefs`.
-9. A [=JourneyIndex=] **MUST NOT** declare `exitRefs`.
-10. A [=JourneyIndex=] **MUST NOT** declare `outgoingTransitionGroupRefs`.
-11. A [=JourneyIndex=] **MUST NOT** declare `from`.
-12. A [=JourneyIndex=] **MUST NOT** declare `to`.
-13. A [=JourneyIndex=] **MUST NOT** declare `fromExitRef`.
-14. A [=JourneyIndex=] **MUST NOT** declare `subjourneyId`.
-15. A [=JourneyIndex=] **MUST NOT** declare `exitStateRef`.
-16. A [=JourneyIndex=] **MUST NOT** declare `outgoingTransitionRefs`.
-17. `stateRefs` on a [=JourneyIndex=] **MUST NOT** imply traversal order, reachability, user path, progression, or parent continuation.
+6. A [=JourneyEntryIndex=] **MUST NOT** reference a [=BoundaryState=] in `stateRefs`.
+7. A [=JourneyEntryIndex=] **MUST NOT** declare `startStateRef`.
+8. A [=JourneyEntryIndex=] **MUST NOT** declare `transitionRefs`.
+9. A [=JourneyEntryIndex=] **MUST NOT** declare `exitRefs`.
+10. A [=JourneyEntryIndex=] **MUST NOT** declare `outgoingTransitionGroupRefs`.
+11. A [=JourneyEntryIndex=] **MUST NOT** declare `from`.
+12. A [=JourneyEntryIndex=] **MUST NOT** declare `to`.
+13. A [=JourneyEntryIndex=] **MUST NOT** declare `fromExitRef`.
+14. A [=JourneyEntryIndex=] **MUST NOT** declare `subjourneyId`.
+15. A [=JourneyEntryIndex=] **MUST NOT** declare `exitStateRef`.
+16. A [=JourneyEntryIndex=] **MUST NOT** declare `outgoingTransitionRefs`.
+17. `stateRefs` on a [=JourneyEntryIndex=] **MUST NOT** imply traversal order, reachability, user path, progression, or parent continuation.
 18. The order of values in `stateRefs` **MUST NOT** be interpreted normatively unless a future ordering mechanism is explicitly added.
 </spec-statement>
 
-[=JourneyIndex=] is intended for top-level page maps, product surface indexes, search-result target indexes, documentation indexes, route or catalogue manifests, and other collections of known journey entry points. Do not use [=JourneyIndex=] to model page-segment order, local journey progression, child completion, runtime observations, or experience annotations.
+[=JourneyEntryIndex=] is intended for top-level page maps, product surface indexes, search-result target indexes, documentation indexes, route or catalogue manifests, and other collections of known journey entry points. Do not use [=JourneyEntryIndex=] to model page-segment order, local journey progression, child completion, runtime observations, or experience annotations.
 
 ```mermaid
 classDiagram
-  class JourneyIndex {
+  class JourneyEntryIndex {
     id
     label
     stateRefs
@@ -237,8 +237,8 @@ classDiagram
     subjourneyId
   }
 
-  JourneyIndex --> State : stateRefs
-  JourneyIndex --> CompositeState : stateRefs
+  JourneyEntryIndex --> State : stateRefs
+  JourneyEntryIndex --> CompositeState : stateRefs
   CompositeState --> Journey : subjourneyId
 ```
 
@@ -246,7 +246,7 @@ Example JSON node:
 
 ```json
 {
-  "@type": "JourneyIndex",
+  "@type": "JourneyEntryIndex",
   "@id": "urn:ujg:index:site-pages",
   "label": "Site page index",
   "stateRefs": [
@@ -617,7 +617,7 @@ An [=OutgoingTransition=] has no explicit `from` property. Its effective source 
 10. An [=OutgoingTransition=] **MUST NOT** declare more than one `label`.
 </spec-statement>
 
-If the `to` target is a known page, surface, or flow entry, it should normally be listed in a [=JourneyIndex=]. Do not list that target in the source [=Journey=]'s `stateRefs` unless it also belongs to the source journey's local topology.
+If the `to` target is a known page, surface, or flow entry, it should normally be listed in a [=JourneyEntryIndex=]. Do not list that target in the source [=Journey=]'s `stateRefs` unless it also belongs to the source journey's local topology.
 
 ```mermaid
 classDiagram
@@ -824,7 +824,7 @@ Example JSON nodes:
 }
 ```
 
-This example shows a search form state with a local "Back to home page" affordance. This is not a structural [=Transition=] from the SearchPage journey to a root journey or [=JourneyIndex=]. It is a state-scoped navigational affordance. The `to` target must resolve to a known [=State=] or [=CompositeState=], but it does not need to be listed in the current journey's `stateRefs`. If the home page is a known page entry, it should normally be listed in a [=JourneyIndex=].
+This example shows a search form state with a local "Back to home page" affordance. This is not a structural [=Transition=] from the SearchPage journey to a root journey or [=JourneyEntryIndex=]. It is a state-scoped navigational affordance. The `to` target must resolve to a known [=State=] or [=CompositeState=], but it does not need to be listed in the current journey's `stateRefs`. If the home page is a known page entry, it should normally be listed in a [=JourneyEntryIndex=].
 
 ---
 
@@ -869,9 +869,9 @@ To ensure graph integrity, the following constraints **MUST** be met:
 
 ## Examples
 
-### JourneyIndex with External Outgoing Target
+### JourneyEntryIndex with External Outgoing Target
 
-This example lists known page entries in a [=JourneyIndex=]. The search page journey has a state-scoped [=OutgoingTransition=] to the profile page entry, but the profile page is not part of the search page journey's local `stateRefs`.
+This example lists known page entries in a [=JourneyEntryIndex=]. The search page journey has a state-scoped [=OutgoingTransition=] to the profile page entry, but the profile page is not part of the search page journey's local `stateRefs`.
 
 ```json
 {
@@ -880,7 +880,7 @@ This example lists known page entries in a [=JourneyIndex=]. The search page jou
   "@type": "UJGDocument",
   "nodes": [
     {
-      "@type": "JourneyIndex",
+      "@type": "JourneyEntryIndex",
       "@id": "urn:ujg:index:pages",
       "label": "Page index",
       "stateRefs": [
@@ -968,7 +968,7 @@ This example models a form as a child journey. The form exports `submitted` thro
   "@type": "UJGDocument",
   "nodes": [
     {
-      "@type": "JourneyIndex",
+      "@type": "JourneyEntryIndex",
       "@id": "urn:ujg:index:form-example-pages",
       "label": "Form example pages",
       "stateRefs": [
@@ -1074,7 +1074,7 @@ This example models a form as a child journey. The form exports `submitted` thro
 
 ### Anti-Example: Linked Destination in Source Journey
 
-The following source journey incorrectly lists `urn:ujg:state:profile-page` in `stateRefs` merely because an outgoing affordance can reach it. The profile page should be listed in a [=JourneyIndex=] and referenced by `OutgoingTransition.to`; it should not be promoted into the search page journey's local topology.
+The following source journey incorrectly lists `urn:ujg:state:profile-page` in `stateRefs` merely because an outgoing affordance can reach it. The profile page should be listed in a [=JourneyEntryIndex=] and referenced by `OutgoingTransition.to`; it should not be promoted into the search page journey's local topology.
 
 ```json
 {
@@ -1102,7 +1102,7 @@ The following source journey incorrectly lists `urn:ujg:state:profile-page` in `
   "@type": "UJGDocument",
   "nodes": [
     {
-      "@type": "JourneyIndex",
+      "@type": "JourneyEntryIndex",
       "@id": "urn:ujg:index:main-site-pages",
       "label": "Main site pages",
       "stateRefs": [

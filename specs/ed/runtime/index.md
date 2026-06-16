@@ -18,7 +18,7 @@ Examples in this page use an explicit context array composed from the published 
 
 - <dfn>JourneyExecution</dfn>: A bounded execution identifier for one logical trace.
 - <dfn>RuntimeEvent</dfn>: An atomic record of a single observed runtime moment.
-- <dfn>JourneyInstance</dfn>: A concrete runtime occurrence of a graph [=Journey=], not a [=JourneyIndex=].
+- <dfn>JourneyInstance</dfn>: A concrete runtime occurrence of a graph [=Journey=], not a [=JourneyEntryIndex=].
 - <dfn>Event Chain</dfn>: A sequence where each event references its immediate predecessor via `previousId`.
 - <dfn>Root Event</dfn>: The event in a [=JourneyExecution=] whose `previousId` is omitted.
 
@@ -69,11 +69,11 @@ The core runtime-local address is the pair `RuntimeEvent.stateRef` plus `Runtime
 
 ## Journey Instance {data-cop-concept="journey-instance"}
 
-A [=JourneyInstance=] is a concrete runtime occurrence of a graph [=Journey=]. It is a scope node: it describes journey instantiation and nesting, not membership in an event stream. A [=JourneyIndex=] is not a runtime scope because it does not define traversal.
+A [=JourneyInstance=] is a concrete runtime occurrence of a graph [=Journey=]. It is a scope node: it describes journey instantiation and nesting, not membership in an event stream. A [=JourneyEntryIndex=] is not a runtime scope because it does not define traversal.
 
 <spec-statement>
 
-1. A [=JourneyInstance=] MUST reference exactly one graph [=Journey=] using `journeyRef`; it MUST NOT reference a [=JourneyIndex=].
+1. A [=JourneyInstance=] MUST reference exactly one graph [=Journey=] using `journeyRef`; it MUST NOT reference a [=JourneyEntryIndex=].
 2. A [=JourneyInstance=] MAY reference a parent [=JourneyInstance=] using `parentInstanceRef`.
 3. If a [=JourneyInstance=] represents a subjourney entered through a [=CompositeState=], it SHOULD provide `viaStateRef`.
 4. A [=JourneyInstance=] MUST NOT be required to reference a [=JourneyExecution=].

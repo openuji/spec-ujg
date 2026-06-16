@@ -8,7 +8,7 @@ by resolving each `RuntimeEvent.stateRef` in the local journey scope supplied by
 `journeyInstanceRef`, then associating the resolved execution with an explicit root Graph
 `Journey`.
 
-Mapping roots are traversable Graph [=Journey|Journeys=]. A [=JourneyIndex=] can help discover known
+Mapping roots are traversable Graph [=Journey|Journeys=]. A [=JourneyEntryIndex=] can help discover known
 entry states before mapping, but it is not a local traversal scope and is not the target of
 `mappedJourneyRef`.
 
@@ -30,7 +30,7 @@ with the Mapping context.
 
 - <dfn>JourneyMapping</dfn>: An addressable mapping record that binds one Runtime execution chain to
   the root Graph `Journey` used to interpret it. The mapped journey is a traversable topology, not a
-  `JourneyIndex`.
+  `JourneyEntryIndex`.
 - <dfn>MappedStep</dfn>: An addressable mapping record for one `RuntimeEvent` in the mapped chain.
 - <dfn>Mapped runtime</dfn>: The `JourneyExecution` whose causal `RuntimeEvent` chain is being
   resolved.
@@ -101,7 +101,7 @@ the SHACL shape.
 5. **Journey ownership:** `mappedJourneyRef` identifies the root Graph `Journey` for the mapped
    execution. The root [=JourneyInstance=] of each mapped event's derived ancestor chain SHOULD
    reference the same Graph `Journey`.
-   `mappedJourneyRef` MUST NOT reference a [=JourneyIndex=].
+   `mappedJourneyRef` MUST NOT reference a [=JourneyEntryIndex=].
 6. **Step order:** Mapping does not define a separate step order. Consumers MUST order mapped steps
    by applying Runtime chain reconstruction to each step's `mappedEventRef`.
 7. **Origin derivation:** The root event step is derived from the absence of

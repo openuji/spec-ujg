@@ -15,10 +15,10 @@
 ujggraph:Journey a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
-ujggraph:JourneyIndex a owl:Class ;
+ujggraph:JourneyEntryIndex a owl:Class ;
   rdfs:subClassOf ujg:Node ;
   rdfs:label "Journey Index" ;
-  rdfs:comment "A catalogue of addressable journey entry states. A JourneyIndex does not define traversal, ordering, reachability, or parent-owned progression." .
+  rdfs:comment "A catalogue of addressable journey entry states. A JourneyEntryIndex does not define traversal, ordering, reachability, or parent-owned progression." .
 
 ujggraph:State a owl:Class ;
   rdfs:subClassOf ujg:Node .
@@ -64,7 +64,7 @@ ujggraph:startStateRef a owl:ObjectProperty ;
 
 ujggraph:stateRefs a owl:ObjectProperty ;
   rdfs:range ujggraph:State ;
-  rdfs:comment "References graph states. On Journey, stateRefs lists local topology states. On JourneyIndex, stateRefs lists addressable entry states without traversal semantics." .
+  rdfs:comment "References graph states. On Journey, stateRefs lists local topology states. On JourneyEntryIndex, stateRefs lists addressable entry states without traversal semantics." .
 
 ujggraph:transitionRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;

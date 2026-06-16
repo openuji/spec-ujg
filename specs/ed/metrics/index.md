@@ -58,7 +58,7 @@ Mapping is the canonical interpretation layer for analytics over UJG execution d
 what happened, Graph defines the intended journey topology, and Mapping resolves each Runtime event
 to Graph state and transition intent.
 
-Mapping-derived journey metrics attach to traversable [=Journey=] scopes. A [=JourneyIndex=] is a
+Mapping-derived journey metrics attach to traversable [=Journey=] scopes. A [=JourneyEntryIndex=] is a
 discovery catalogue and does not itself define executions, movements, or traversal metrics.
 
 Mapping-derived metrics use these primary attachment points:
