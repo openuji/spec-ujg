@@ -48,13 +48,6 @@
           "moduleId": null
         },
         {
-          "key": "graph",
-          "title": "Graph Modeling",
-          "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
-          "nameSuffix": "graph-modeling",
-          "moduleId": "graph"
-        },
-        {
           "key": "design-system",
           "title": "Design System Modeling",
           "scope": "Design System module semantics and its relationship to Graph and Surface",

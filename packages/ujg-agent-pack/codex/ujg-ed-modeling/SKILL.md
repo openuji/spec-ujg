@@ -59,7 +59,7 @@ Do not put interoperable graph semantics in `extensions`. If a concept affects t
 
 Use only active ED Graph classes and properties.
 
-Common classes: `JourneyIndex`, `Journey`, `State`, `CompositeState`, `BoundaryState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
+Common classes: `JourneyEntryIndex`, `Journey`, `State`, `CompositeState`, `BoundaryState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
 
 Common properties: `label`, `tags`, `stateRefs`, `startStateRef`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `fromExitRef`, `subjourneyId`, `exitStateRef`, `outgoingTransitionRefs`.
 
@@ -95,13 +95,13 @@ Either keep the complete child-journey pattern or fold it back into same-journey
 
 Do not create extra parent/root exits merely to connect pages, screenshots, or observed order.
 
-## JourneyIndex
+## JourneyEntryIndex
 
-Use `JourneyIndex` for catalogues, route maps, product-surface indexes, documentation indexes, or collections of known entry states.
+Use `JourneyEntryIndex` for catalogues, route maps, product-surface indexes, documentation indexes, or collections of known entry states.
 
-A `JourneyIndex` is not a traversable journey. Do not infer order, reachability, progression, parent continuation, or user path from `stateRefs`.
+A `JourneyEntryIndex` is not a traversable journey. Do not infer order, reachability, progression, parent continuation, or user path from `stateRefs`.
 
-Do not replace a `JourneyIndex` with a fake root `Journey`.
+Do not replace a `JourneyEntryIndex` with a fake root `Journey`.
 
 For a page-level index, list page, route, surface, or component entry states. Do not list child journey states unless the index is explicitly component-level.
 
@@ -245,7 +245,7 @@ Use Experience only for journey-map annotations. Experience annotations must not
 
 ## Page and route modeling
 
-Use `JourneyIndex` to list known page, route, surface, or journey entry states.
+Use `JourneyEntryIndex` to list known page, route, surface, or journey entry states.
 
 A page or route can be a `CompositeState` only if it exposes a meaningful page-level `Journey`.
 
@@ -295,7 +295,7 @@ When generating JSON-LD:
 3. Provide a short self-audit.
 4. State uncertainty explicitly.
 
-Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyIndex` not traversable; `Journey` only local topology; transition endpoints local; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; runtime facts not in Graph; Experience does not affect traversal; graph is shallowest valid model.
+Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `Journey` only local topology; transition endpoints local; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; runtime facts not in Graph; Experience does not affect traversal; graph is shallowest valid model.
 
 ## Anti-overengineering and uncertainty
 

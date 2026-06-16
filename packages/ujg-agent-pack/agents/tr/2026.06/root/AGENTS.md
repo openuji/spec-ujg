@@ -12,7 +12,6 @@ Scope: whole UJG document modeling across Core, Graph, Runtime, Experience, Loca
 Module scope: whole target
 
 Related generated skills:
-- ujg-tr-2026-06-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
 - ujg-tr-2026-06-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.

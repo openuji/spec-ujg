@@ -14,7 +14,7 @@ Treat `/ed` as moving. Do not silently mix dated snapshots with current ED.
 
 Focus on intended topology:
 
-- `JourneyIndex`
+- `JourneyEntryIndex`
 - `Journey`
 - `State`
 - `CompositeState`
@@ -30,7 +30,7 @@ Keep runtime observations, selectors, typed values, timestamps, payloads, and an
 
 Prefer the shallowest valid graph.
 
-Use `JourneyIndex` for catalogues, route maps, product-surface indexes, documentation indexes, or collections of known entry states. Do not use it as a traversable journey.
+Use `JourneyEntryIndex` for catalogues, route maps, product-surface indexes, documentation indexes, or collections of known entry states. Do not use it as a traversable journey.
 
 Use `Journey` only for local traversable topology. A journey must have an IRI `@id`, exactly one `startStateRef`, and at least one `stateRefs` value.
 

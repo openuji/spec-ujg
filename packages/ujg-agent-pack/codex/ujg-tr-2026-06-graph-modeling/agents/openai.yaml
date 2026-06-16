@@ -1,4 +1,0 @@
-interface:
-  display_name: "UJG TR 2026.06 Graph Modeling"
-  short_description: "Model UJG Graph for TR 2026.06"
-  default_prompt: "Use $ujg-tr-2026-06-graph-modeling to generate or review UJG JSON-LD for this target and scope."

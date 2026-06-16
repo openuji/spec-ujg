@@ -89,7 +89,7 @@
       "deps": [
         "core"
       ],
-      "generatedSkill": "ujg-tr-2026-06-graph-modeling",
+      "generatedSkill": null,
       "title": "Graph"
     },
     "mapping": {
@@ -170,14 +170,6 @@
       "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06",
       "scope": "whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules",
       "source": "sources/tr/2026.06/skills/root/skill.md"
-    },
-    {
-      "key": "graph",
-      "moduleId": "graph",
-      "name": "ujg-tr-2026-06-graph-modeling",
-      "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06/graph",
-      "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
-      "source": "sources/tr/2026.06/skills/graph/skill.md"
     },
     {
       "key": "design-system",

@@ -8,7 +8,6 @@ Module scope: whole target
 
 ## Sibling Skills
 
-- ujg-tr-2026-06-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
 - ujg-tr-2026-06-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
 
 ## Upstream Spec Modules
