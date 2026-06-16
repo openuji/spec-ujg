@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:d37e26fdde315aa55c3b3dfdc5e660e60701ecff1dfd6c680a06bfefb4f63ef6",
+  "configHash": "sha256:3d1a682f864a97f3f86e4d2d29ec6739aaca704aae0b9983c56c5589f9ef55c2",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "design-system",
+    "moduleId": "modules/design-system",
+    "name": "ujg-ed-design-system-modeling"
+  },
+  "sourceHash": "sha256:572f6deaf15fa03eb36d2d3dab92fb5aba2637bc7da69b59330eac650f3a4b67",
+  "specHash": "sha256:73e8b86f7d6f48d1c521337ddf867858e90c05deae3847ab2c43e98e58f3d3b1",
+  "target": {
+    "id": "ed",
+    "label": "Editor's Draft"
+  }
+}

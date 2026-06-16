@@ -1,0 +1,243 @@
+{
+  "currentSkill": {
+    "key": "design-system",
+    "moduleId": "modules/design-system",
+    "name": "ujg-ed-design-system-modeling",
+    "publicUrl": "https://ujg.specs.openuji.org/ed/modules/design-system",
+    "relevantModuleIds": [
+      "architecture",
+      "core",
+      "graph",
+      "modules/surface",
+      "modules/design-system"
+    ],
+    "scope": "Design System module semantics and its relationship to Graph and Surface"
+  },
+  "moduleGraph": {
+    "architecture": {
+      "dependents": [
+        "core",
+        "modules/routing",
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/surface",
+        "runtime",
+        "modules/data",
+        "modules/action",
+        "experience",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [],
+      "generatedSkill": null,
+      "title": "Architecture"
+    },
+    "conformance": {
+      "dependents": [],
+      "deps": [
+        "profiles"
+      ],
+      "generatedSkill": null,
+      "title": "Conformance"
+    },
+    "core": {
+      "dependents": [
+        "modules/routing",
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/surface",
+        "runtime",
+        "modules/data",
+        "modules/action",
+        "experience",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "architecture"
+      ],
+      "generatedSkill": null,
+      "title": "Core"
+    },
+    "experience": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Experience"
+    },
+    "graph": {
+      "dependents": [
+        "modules/routing",
+        "modules/l10n",
+        "modules/condition",
+        "modules/surface",
+        "runtime",
+        "modules/data",
+        "modules/action",
+        "experience",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "core"
+      ],
+      "generatedSkill": "ujg-ed-graph-modeling",
+      "title": "Graph"
+    },
+    "mapping": {
+      "dependents": [
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "runtime",
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Mapping"
+    },
+    "metrics": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "mapping"
+      ],
+      "generatedSkill": null,
+      "title": "Metrics"
+    },
+    "modules/action": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Action"
+    },
+    "modules/condition": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Conditions"
+    },
+    "modules/data": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Data"
+    },
+    "modules/design-system": {
+      "dependents": [],
+      "deps": [
+        "graph",
+        "modules/surface"
+      ],
+      "generatedSkill": "ujg-ed-design-system-modeling",
+      "title": "Design System"
+    },
+    "modules/l10n": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Localization"
+    },
+    "modules/routing": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Routing"
+    },
+    "modules/surface": {
+      "dependents": [
+        "modules/design-system"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Surface"
+    },
+    "profiles": {
+      "dependents": [
+        "conformance"
+      ],
+      "deps": [
+        "core",
+        "runtime",
+        "graph",
+        "mapping",
+        "metrics"
+      ],
+      "generatedSkill": null,
+      "title": "Profiles"
+    },
+    "runtime": {
+      "dependents": [
+        "mapping",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Runtime"
+    }
+  },
+  "skills": [
+    {
+      "key": "root",
+      "moduleId": null,
+      "name": "ujg-ed-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed",
+      "scope": "whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules",
+      "source": "sources/ed/skills/root/skill.md"
+    },
+    {
+      "key": "graph",
+      "moduleId": "graph",
+      "name": "ujg-ed-graph-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/graph",
+      "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
+      "source": "sources/ed/skills/graph/skill.md"
+    },
+    {
+      "key": "design-system",
+      "moduleId": "modules/design-system",
+      "name": "ujg-ed-design-system-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/modules/design-system",
+      "scope": "Design System module semantics and its relationship to Graph and Surface",
+      "source": "sources/ed/skills/design-system/skill.md"
+    }
+  ],
+  "target": {
+    "id": "ed",
+    "label": "Editor's Draft",
+    "publicUrl": "https://ujg.specs.openuji.org/ed",
+    "specRoot": "specs/ed"
+  }
+}

@@ -1,4 +1,5 @@
 packages:
   - apps/*
+  - packages/*
   - specs
 #  - ../../speculator/packages/*

@@ -1,0 +1,175 @@
+{
+  "config": {
+    "hash": "sha256:3d1a682f864a97f3f86e4d2d29ec6739aaca704aae0b9983c56c5589f9ef55c2",
+    "path": "agent-pack.config.json"
+  },
+  "generatedFiles": [
+    "agents/ed/design-system/AGENTS.md",
+    "agents/ed/graph/AGENTS.md",
+    "agents/ed/root/AGENTS.md",
+    "agents/tr/2026.06/design-system/AGENTS.md",
+    "agents/tr/2026.06/graph/AGENTS.md",
+    "agents/tr/2026.06/root/AGENTS.md",
+    "codex/ujg-ed-design-system-modeling/SKILL.md",
+    "codex/ujg-ed-design-system-modeling/agents/openai.yaml",
+    "codex/ujg-ed-design-system-modeling/references/package-state.json",
+    "codex/ujg-ed-design-system-modeling/references/related-skills.md",
+    "codex/ujg-ed-design-system-modeling/references/skill-tree.json",
+    "codex/ujg-ed-graph-modeling/SKILL.md",
+    "codex/ujg-ed-graph-modeling/agents/openai.yaml",
+    "codex/ujg-ed-graph-modeling/references/package-state.json",
+    "codex/ujg-ed-graph-modeling/references/related-skills.md",
+    "codex/ujg-ed-graph-modeling/references/skill-tree.json",
+    "codex/ujg-ed-modeling/SKILL.md",
+    "codex/ujg-ed-modeling/agents/openai.yaml",
+    "codex/ujg-ed-modeling/references/package-state.json",
+    "codex/ujg-ed-modeling/references/related-skills.md",
+    "codex/ujg-ed-modeling/references/skill-tree.json",
+    "codex/ujg-tr-2026-06-design-system-modeling/SKILL.md",
+    "codex/ujg-tr-2026-06-design-system-modeling/agents/openai.yaml",
+    "codex/ujg-tr-2026-06-design-system-modeling/references/package-state.json",
+    "codex/ujg-tr-2026-06-design-system-modeling/references/related-skills.md",
+    "codex/ujg-tr-2026-06-design-system-modeling/references/skill-tree.json",
+    "codex/ujg-tr-2026-06-graph-modeling/SKILL.md",
+    "codex/ujg-tr-2026-06-graph-modeling/agents/openai.yaml",
+    "codex/ujg-tr-2026-06-graph-modeling/references/package-state.json",
+    "codex/ujg-tr-2026-06-graph-modeling/references/related-skills.md",
+    "codex/ujg-tr-2026-06-graph-modeling/references/skill-tree.json",
+    "codex/ujg-tr-2026-06-modeling/SKILL.md",
+    "codex/ujg-tr-2026-06-modeling/agents/openai.yaml",
+    "codex/ujg-tr-2026-06-modeling/references/package-state.json",
+    "codex/ujg-tr-2026-06-modeling/references/related-skills.md",
+    "codex/ujg-tr-2026-06-modeling/references/skill-tree.json"
+  ],
+  "id": "ujg-agent-pack",
+  "name": "@openuji/ujg-agent-pack",
+  "targets": [
+    {
+      "id": "ed",
+      "label": "Editor's Draft",
+      "publicUrl": "https://ujg.specs.openuji.org/ed",
+      "skills": [
+        {
+          "artifactHash": "sha256:cd1cc9517db26237dacfeadd300f6c9961481f3c1e9f8fb6bff775340fa9c7df",
+          "key": "root",
+          "moduleId": null,
+          "name": "ujg-ed-modeling",
+          "relevantModuleIds": [
+            "architecture",
+            "core",
+            "modules/routing",
+            "graph",
+            "modules/l10n",
+            "modules/condition",
+            "modules/surface",
+            "runtime",
+            "modules/data",
+            "modules/action",
+            "experience",
+            "mapping",
+            "modules/design-system",
+            "metrics",
+            "profiles",
+            "conformance"
+          ],
+          "source": "sources/ed/skills/root/skill.md",
+          "sourceHash": "sha256:c3bec2f748452f563a4b21cbb19cb79ed70303220b935b34511108a2024cd897",
+          "specHash": "sha256:12bf0785208fd2ae15cec6e013ec32b6c64d3710707f2e303a98ea232f38d9ff"
+        },
+        {
+          "artifactHash": "sha256:59f7cc673e176e47c1cec40fceaafc8a298fec0575049eaab1b17fa884680b3d",
+          "key": "graph",
+          "moduleId": "graph",
+          "name": "ujg-ed-graph-modeling",
+          "relevantModuleIds": [
+            "architecture",
+            "core",
+            "graph"
+          ],
+          "source": "sources/ed/skills/graph/skill.md",
+          "sourceHash": "sha256:eaae892da45ea4ef046bbb1ae2279b7588bd62cda7f0b1040550a5e893a3f89f",
+          "specHash": "sha256:74f0bf91d54cdc8042649b5d1a55099fe3eef54d159c0e2d68f06e460e8d51ea"
+        },
+        {
+          "artifactHash": "sha256:d37e26fdde315aa55c3b3dfdc5e660e60701ecff1dfd6c680a06bfefb4f63ef6",
+          "key": "design-system",
+          "moduleId": "modules/design-system",
+          "name": "ujg-ed-design-system-modeling",
+          "relevantModuleIds": [
+            "architecture",
+            "core",
+            "graph",
+            "modules/surface",
+            "modules/design-system"
+          ],
+          "source": "sources/ed/skills/design-system/skill.md",
+          "sourceHash": "sha256:572f6deaf15fa03eb36d2d3dab92fb5aba2637bc7da69b59330eac650f3a4b67",
+          "specHash": "sha256:73e8b86f7d6f48d1c521337ddf867858e90c05deae3847ab2c43e98e58f3d3b1"
+        }
+      ],
+      "specRoot": "specs/ed"
+    },
+    {
+      "id": "tr/2026.06",
+      "label": "Technical Report 2026.06",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06",
+      "skills": [
+        {
+          "artifactHash": "sha256:45d948112fa7de153625c5f5b3743a09ee076cd3ea5e6c5a5ed0184cbeb6d676",
+          "key": "root",
+          "moduleId": null,
+          "name": "ujg-tr-2026-06-modeling",
+          "relevantModuleIds": [
+            "architecture",
+            "core",
+            "graph",
+            "modules/l10n",
+            "modules/condition",
+            "modules/surface",
+            "runtime",
+            "experience",
+            "mapping",
+            "modules/design-system",
+            "metrics",
+            "conformance"
+          ],
+          "source": "sources/tr/2026.06/skills/root/skill.md",
+          "sourceHash": "sha256:0cd336962fa7f06cf797d460277d5103cf76aa3609393fbf70407c53bbe4dedb",
+          "specHash": "sha256:364177b1c7a1469e8579512324c111496195040398e2f6746503a622bd539e2a"
+        },
+        {
+          "artifactHash": "sha256:9d741df0237984aeb30e8b836218462daa415c17b7bea9341471bd9dcf0256ee",
+          "key": "graph",
+          "moduleId": "graph",
+          "name": "ujg-tr-2026-06-graph-modeling",
+          "relevantModuleIds": [
+            "architecture",
+            "core",
+            "graph"
+          ],
+          "source": "sources/tr/2026.06/skills/graph/skill.md",
+          "sourceHash": "sha256:44d02861ff9787851f6382349269d233adc971e1887f30f493092ec101fce0f2",
+          "specHash": "sha256:3c655e84addd4c961e9976f87fb6aafa5fdee81786f384f8bd3b3db6077fcdbe"
+        },
+        {
+          "artifactHash": "sha256:4b8566402bc92fddf2a38e6756447e623a5fa1b453e6745582613cbfc7e16644",
+          "key": "design-system",
+          "moduleId": "modules/design-system",
+          "name": "ujg-tr-2026-06-design-system-modeling",
+          "relevantModuleIds": [
+            "architecture",
+            "core",
+            "graph",
+            "modules/surface",
+            "modules/design-system"
+          ],
+          "source": "sources/tr/2026.06/skills/design-system/skill.md",
+          "sourceHash": "sha256:81e23cb0ccf9e54d24725c4ce2f09799b151b5646d08a1e98d1e1a94d6bcf31c",
+          "specHash": "sha256:afb4b01d2d44e258a32a0de8324ceebaae24ffe1aecaaba21094bea5d2d01e00"
+        }
+      ],
+      "specRoot": "specs/tr/2026.06"
+    }
+  ],
+  "version": "0.0.1"
+}

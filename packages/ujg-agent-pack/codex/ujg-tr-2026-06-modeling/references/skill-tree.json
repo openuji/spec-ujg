@@ -1,0 +1,197 @@
+{
+  "currentSkill": {
+    "key": "root",
+    "moduleId": null,
+    "name": "ujg-tr-2026-06-modeling",
+    "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06",
+    "relevantModuleIds": [
+      "architecture",
+      "core",
+      "graph",
+      "modules/l10n",
+      "modules/condition",
+      "modules/surface",
+      "runtime",
+      "experience",
+      "mapping",
+      "modules/design-system",
+      "metrics",
+      "conformance"
+    ],
+    "scope": "whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules"
+  },
+  "moduleGraph": {
+    "architecture": {
+      "dependents": [
+        "core",
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/surface",
+        "runtime",
+        "experience",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "conformance"
+      ],
+      "deps": [],
+      "generatedSkill": null,
+      "title": "Architecture"
+    },
+    "conformance": {
+      "dependents": [],
+      "deps": [
+        "metrics"
+      ],
+      "generatedSkill": null,
+      "title": "Conformance"
+    },
+    "core": {
+      "dependents": [
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/surface",
+        "runtime",
+        "experience",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "conformance"
+      ],
+      "deps": [
+        "architecture"
+      ],
+      "generatedSkill": null,
+      "title": "Core"
+    },
+    "experience": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Experience"
+    },
+    "graph": {
+      "dependents": [
+        "modules/l10n",
+        "modules/condition",
+        "modules/surface",
+        "runtime",
+        "experience",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "conformance"
+      ],
+      "deps": [
+        "core"
+      ],
+      "generatedSkill": "ujg-tr-2026-06-graph-modeling",
+      "title": "Graph"
+    },
+    "mapping": {
+      "dependents": [
+        "metrics",
+        "conformance"
+      ],
+      "deps": [
+        "runtime",
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Mapping"
+    },
+    "metrics": {
+      "dependents": [
+        "conformance"
+      ],
+      "deps": [
+        "mapping"
+      ],
+      "generatedSkill": null,
+      "title": "Metrics"
+    },
+    "modules/condition": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Conditions"
+    },
+    "modules/design-system": {
+      "dependents": [],
+      "deps": [
+        "graph",
+        "modules/surface"
+      ],
+      "generatedSkill": "ujg-tr-2026-06-design-system-modeling",
+      "title": "Design System"
+    },
+    "modules/l10n": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Localization"
+    },
+    "modules/surface": {
+      "dependents": [
+        "modules/design-system"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Surface"
+    },
+    "runtime": {
+      "dependents": [
+        "mapping",
+        "metrics",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Runtime"
+    }
+  },
+  "skills": [
+    {
+      "key": "root",
+      "moduleId": null,
+      "name": "ujg-tr-2026-06-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06",
+      "scope": "whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules",
+      "source": "sources/tr/2026.06/skills/root/skill.md"
+    },
+    {
+      "key": "graph",
+      "moduleId": "graph",
+      "name": "ujg-tr-2026-06-graph-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06/graph",
+      "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
+      "source": "sources/tr/2026.06/skills/graph/skill.md"
+    },
+    {
+      "key": "design-system",
+      "moduleId": "modules/design-system",
+      "name": "ujg-tr-2026-06-design-system-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06/modules/design-system",
+      "scope": "Design System module semantics and its relationship to Graph and Surface",
+      "source": "sources/tr/2026.06/skills/design-system/skill.md"
+    }
+  ],
+  "target": {
+    "id": "tr/2026.06",
+    "label": "Technical Report 2026.06",
+    "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06",
+    "specRoot": "specs/tr/2026.06"
+  }
+}

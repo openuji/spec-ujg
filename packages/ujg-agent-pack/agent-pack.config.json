@@ -1,0 +1,67 @@
+{
+  "targets": [
+    {
+      "id": "ed",
+      "kind": "ed",
+      "label": "Editor's Draft",
+      "shortLabel": "ED",
+      "specRoot": "../../specs/ed",
+      "publicUrl": "https://ujg.specs.openuji.org/ed",
+      "skills": [
+        {
+          "key": "root",
+          "title": "Modeling",
+          "scope": "whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules",
+          "nameSuffix": "modeling",
+          "moduleId": null
+        },
+        {
+          "key": "graph",
+          "title": "Graph Modeling",
+          "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
+          "nameSuffix": "graph-modeling",
+          "moduleId": "graph"
+        },
+        {
+          "key": "design-system",
+          "title": "Design System Modeling",
+          "scope": "Design System module semantics and its relationship to Graph and Surface",
+          "nameSuffix": "design-system-modeling",
+          "moduleId": "modules/design-system"
+        }
+      ]
+    },
+    {
+      "id": "tr/2026.06",
+      "kind": "tr",
+      "version": "2026.06",
+      "label": "Technical Report 2026.06",
+      "shortLabel": "TR 2026.06",
+      "specRoot": "../../specs/tr/2026.06",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06",
+      "skills": [
+        {
+          "key": "root",
+          "title": "Modeling",
+          "scope": "whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules",
+          "nameSuffix": "modeling",
+          "moduleId": null
+        },
+        {
+          "key": "graph",
+          "title": "Graph Modeling",
+          "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
+          "nameSuffix": "graph-modeling",
+          "moduleId": "graph"
+        },
+        {
+          "key": "design-system",
+          "title": "Design System Modeling",
+          "scope": "Design System module semantics and its relationship to Graph and Surface",
+          "nameSuffix": "design-system-modeling",
+          "moduleId": "modules/design-system"
+        }
+      ]
+    }
+  ]
+}

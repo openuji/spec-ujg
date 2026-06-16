@@ -1,0 +1,4 @@
+interface:
+  display_name: "UJG TR 2026.06 Design System Modeling"
+  short_description: "Model UJG Design System for TR 2026.06"
+  default_prompt: "Use $ujg-tr-2026-06-design-system-modeling to generate or review UJG JSON-LD for this target and scope."

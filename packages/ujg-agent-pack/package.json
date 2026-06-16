@@ -1,0 +1,29 @@
+{
+  "name": "@openuji/ujg-agent-pack",
+  "version": "0.0.1",
+  "type": "module",
+  "bin": {
+    "ujg-agent-pack": "./scripts/agent-pack.js"
+  },
+  "files": [
+    "README.md",
+    "agent-pack.config.json",
+    "agents",
+    "codex",
+    "manifest.json",
+    "reviews",
+    "scripts/agent-pack.js",
+    "sources"
+  ],
+  "scripts": {
+    "update": "node scripts/agent-pack.js update",
+    "check": "node scripts/agent-pack.js check",
+    "validate": "node scripts/agent-pack.js validate",
+    "review": "node scripts/agent-pack.js review",
+    "review:check": "node scripts/agent-pack.js review check",
+    "review:accept": "node scripts/agent-pack.js review accept",
+    "test:install": "node --test tests/install.test.js",
+    "pack:artifact": "node scripts/agent-pack.js pack",
+    "install:codex": "node scripts/agent-pack.js install codex"
+  }
+}

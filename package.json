@@ -5,6 +5,15 @@
   "scripts": {
     "dev": "pnpm -r dev",
     "build": "pnpm -r build",
+    "agent-pack:update": "pnpm --filter @openuji/ujg-agent-pack run update",
+    "agent-pack:check": "pnpm --filter @openuji/ujg-agent-pack run check",
+    "agent-pack:validate": "pnpm --filter @openuji/ujg-agent-pack run validate",
+    "agent-pack:review": "pnpm --filter @openuji/ujg-agent-pack run review",
+    "agent-pack:review:check": "pnpm --filter @openuji/ujg-agent-pack run review:check",
+    "agent-pack:review:accept": "pnpm --filter @openuji/ujg-agent-pack run review:accept",
+    "agent-pack:install:codex": "pnpm --filter @openuji/ujg-agent-pack run install:codex",
+    "agent-pack:test": "pnpm --filter @openuji/ujg-agent-pack run test:install",
+    "agent-pack:pack": "pnpm --filter @openuji/ujg-agent-pack run pack:artifact",
     "content-manifests:check": "node scripts/content-manifests.js check",
     "content-manifests:update": "node scripts/content-manifests.js update",
     "prepare": "husky"

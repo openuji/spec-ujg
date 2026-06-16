@@ -1,0 +1,4 @@
+interface:
+  display_name: "UJG ED Design System Modeling"
+  short_description: "Model UJG Design System for ED"
+  default_prompt: "Use $ujg-ed-design-system-modeling to generate or review UJG JSON-LD for this target and scope."

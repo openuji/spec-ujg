@@ -388,6 +388,8 @@ importers:
         specifier: ^8.55.0
         version: 8.55.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
+  packages/ujg-agent-pack: {}
+
 packages:
 
   '@antfu/install-pkg@1.1.0':
