@@ -39,6 +39,13 @@ For user-interface materialization, the Surface module is the first-level bridge
 `State`/`CompositeState` to an addressable `Surface`; design-system realization belongs in a
 Surface-dependent module, not directly on graph topology.
 
+The same layering principle applies outside visual UI semantics. Actor, Action, Artifact, and
+Evidence modules provide small bridge vocabularies for responsibility, side effects, exchanged
+resources, and observation evidence. Distributed Journey is modeled as a second-level module over
+those bridges: it describes cross-authority operations, protocol messages, portability, and
+consistency without attaching distributed-system semantics directly to Graph, Runtime, or Mapping
+nodes.
+
 ## Opaque Extensions
 
 Core `extensions` remains the pass-through mechanism for vendor-private or deployment-specific JSON

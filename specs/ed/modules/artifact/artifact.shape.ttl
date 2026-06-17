@@ -1,0 +1,24 @@
+@prefix ujgartifact: <https://ujg.specs.openuji.org/ed/ns/artifact#> .
+@prefix ujgartifactshape: <https://ujg.specs.openuji.org/ed/ns/artifact.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgartifactshape:ArtifactShape a sh:NodeShape ;
+  sh:targetClass ujgartifact:Artifact ;
+  sh:nodeKind sh:IRI .
+
+ujgartifactshape:ArtifactReferenceHostShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgartifact:producedArtifactRefs ;
+  sh:targetSubjectsOf ujgartifact:consumedArtifactRefs ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgartifact:producedArtifactRefs ;
+    sh:class ujgartifact:Artifact ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujgartifact:consumedArtifactRefs ;
+    sh:class ujgartifact:Artifact ;
+    sh:nodeKind sh:IRI ;
+  ] .

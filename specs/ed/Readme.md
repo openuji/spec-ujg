@@ -9,5 +9,7 @@ Serialization
 │     ├─ Conformance        (compares Runtime ↔ Designed; uses Runtime rules)
 │     └─ Observed           (aggregates Runtime; optionally aligns to Designed)
 │        └─ Metrics         (metric keys/units used in Observed artifacts)
-└─ Profiles & Optional Modules (includes `modules/*` optional vocabularies; opaque extensions stay private)
+└─ Profiles & Optional Modules
+   ├─ First-level bridges   (Surface, Actor, Action, Artifact, Evidence, and similar small attachments)
+   └─ Second-level modules  (Design System, Distributed Journey, and other bridge-mediated semantics)
 ```

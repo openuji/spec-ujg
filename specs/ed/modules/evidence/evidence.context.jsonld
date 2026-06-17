@@ -1,0 +1,45 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgevidence": "https://ujg.specs.openuji.org/ed/ns/evidence#",
+    "evidence": "https://ujg.specs.openuji.org/ed/ns/evidence#",
+
+    "EvidenceRecord": "ujgevidence:EvidenceRecord",
+    "EvidenceSet": "ujgevidence:EvidenceSet",
+    "EvidenceState": "ujgevidence:EvidenceState",
+    "ObservationScope": "ujgevidence:ObservationScope",
+    "RedactionState": "ujgevidence:RedactionState",
+
+    "evidenceSubjectRef": {
+      "@id": "ujgevidence:evidenceSubjectRef",
+      "@type": "@id"
+    },
+    "observedByActorRef": {
+      "@id": "ujgevidence:observedByActorRef",
+      "@type": "@id"
+    },
+    "evidenceStateRef": {
+      "@id": "ujgevidence:evidenceStateRef",
+      "@type": "@id"
+    },
+    "observationScopeRef": {
+      "@id": "ujgevidence:observationScopeRef",
+      "@type": "@id"
+    },
+    "redactionStateRef": {
+      "@id": "ujgevidence:redactionStateRef",
+      "@type": "@id"
+    },
+    "sourceEvidenceRefs": {
+      "@id": "ujgevidence:sourceEvidenceRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "evidenceRecordRefs": {
+      "@id": "ujgevidence:evidenceRecordRefs",
+      "@type": "@id",
+      "@container": "@set"
+    }
+  }
+}

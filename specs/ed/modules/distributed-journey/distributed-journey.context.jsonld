@@ -1,0 +1,72 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgdist": "https://ujg.specs.openuji.org/ed/ns/distributed-journey#",
+    "dist": "https://ujg.specs.openuji.org/ed/ns/distributed-journey#",
+
+    "Authority": "ujgdist:Authority",
+    "DistributedOperation": "ujgdist:DistributedOperation",
+    "DistributedArtifact": "ujgdist:DistributedArtifact",
+    "ProtocolMessage": "ujgdist:ProtocolMessage",
+    "PortabilityClaim": "ujgdist:PortabilityClaim",
+    "PortabilityGap": "ujgdist:PortabilityGap",
+    "ConsistencyExpectation": "ujgdist:ConsistencyExpectation",
+    "PropagationState": "ujgdist:PropagationState",
+    "PortabilityStatus": "ujgdist:PortabilityStatus",
+    "PortabilityGapKind": "ujgdist:PortabilityGapKind",
+    "ConsistencyMode": "ujgdist:ConsistencyMode",
+
+    "origin": {
+      "@id": "ujgdist:origin",
+      "@type": "@id"
+    },
+    "operationActionRef": {
+      "@id": "ujgdist:operationActionRef",
+      "@type": "@id"
+    },
+    "sourceAuthorityRef": {
+      "@id": "ujgdist:sourceAuthorityRef",
+      "@type": "@id"
+    },
+    "targetAuthorityRefs": {
+      "@id": "ujgdist:targetAuthorityRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "protocolMessageRefs": {
+      "@id": "ujgdist:protocolMessageRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "propagationStateRef": {
+      "@id": "ujgdist:propagationStateRef",
+      "@type": "@id"
+    },
+    "portabilityStatusRef": {
+      "@id": "ujgdist:portabilityStatusRef",
+      "@type": "@id"
+    },
+    "portabilityGapRefs": {
+      "@id": "ujgdist:portabilityGapRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "portabilityGapKindRef": {
+      "@id": "ujgdist:portabilityGapKindRef",
+      "@type": "@id"
+    },
+    "consistencySubjectRef": {
+      "@id": "ujgdist:consistencySubjectRef",
+      "@type": "@id"
+    },
+    "counterpartRef": {
+      "@id": "ujgdist:counterpartRef",
+      "@type": "@id"
+    },
+    "consistencyModeRef": {
+      "@id": "ujgdist:consistencyModeRef",
+      "@type": "@id"
+    }
+  }
+}

@@ -1,0 +1,94 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujgaction: <https://ujg.specs.openuji.org/ed/ns/action#> .
+@prefix ujgactor: <https://ujg.specs.openuji.org/ed/ns/actor#> .
+@prefix ujgartifact: <https://ujg.specs.openuji.org/ed/ns/artifact#> .
+@prefix ujgdist: <https://ujg.specs.openuji.org/ed/ns/distributed-journey#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/ed/ns/distributed-journey#> a owl:Ontology ;
+  rdfs:label "UJG Distributed Journey Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Distributed Journey ontology declaration" .
+
+### Classes
+
+ujgdist:Authority a owl:Class ;
+  rdfs:subClassOf ujgactor:Actor .
+
+ujgdist:DistributedOperation a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgdist:DistributedArtifact a owl:Class ;
+  rdfs:subClassOf ujgartifact:Artifact .
+
+ujgdist:ProtocolMessage a owl:Class ;
+  rdfs:subClassOf ujgdist:DistributedArtifact .
+
+ujgdist:PortabilityClaim a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgdist:PortabilityGap a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgdist:ConsistencyExpectation a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgdist:PropagationState a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgdist:PortabilityStatus a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgdist:PortabilityGapKind a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgdist:ConsistencyMode a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgdist:origin a owl:ObjectProperty ;
+  rdfs:domain ujgdist:Authority ;
+  rdfs:range rdfs:Resource .
+
+ujgdist:operationActionRef a owl:ObjectProperty ;
+  rdfs:domain ujgdist:DistributedOperation ;
+  rdfs:range ujgaction:Action .
+
+ujgdist:sourceAuthorityRef a owl:ObjectProperty ;
+  rdfs:range ujgdist:Authority .
+
+ujgdist:targetAuthorityRefs a owl:ObjectProperty ;
+  rdfs:range ujgdist:Authority .
+
+ujgdist:protocolMessageRefs a owl:ObjectProperty ;
+  rdfs:domain ujgdist:DistributedOperation ;
+  rdfs:range ujgdist:ProtocolMessage .
+
+ujgdist:propagationStateRef a owl:ObjectProperty ;
+  rdfs:range ujgdist:PropagationState .
+
+ujgdist:portabilityStatusRef a owl:ObjectProperty ;
+  rdfs:domain ujgdist:PortabilityClaim ;
+  rdfs:range ujgdist:PortabilityStatus .
+
+ujgdist:portabilityGapRefs a owl:ObjectProperty ;
+  rdfs:domain ujgdist:PortabilityClaim ;
+  rdfs:range ujgdist:PortabilityGap .
+
+ujgdist:portabilityGapKindRef a owl:ObjectProperty ;
+  rdfs:domain ujgdist:PortabilityGap ;
+  rdfs:range ujgdist:PortabilityGapKind .
+
+ujgdist:consistencySubjectRef a owl:ObjectProperty ;
+  rdfs:domain ujgdist:ConsistencyExpectation ;
+  rdfs:range ujg:Node .
+
+ujgdist:counterpartRef a owl:ObjectProperty ;
+  rdfs:domain ujgdist:ConsistencyExpectation ;
+  rdfs:range ujg:Node .
+
+ujgdist:consistencyModeRef a owl:ObjectProperty ;
+  rdfs:domain ujgdist:ConsistencyExpectation ;
+  rdfs:range ujgdist:ConsistencyMode .

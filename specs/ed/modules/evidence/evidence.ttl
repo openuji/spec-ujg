@@ -1,0 +1,57 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujgactor: <https://ujg.specs.openuji.org/ed/ns/actor#> .
+@prefix ujgevidence: <https://ujg.specs.openuji.org/ed/ns/evidence#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/ed/ns/evidence#> a owl:Ontology ;
+  rdfs:label "UJG Evidence Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Evidence ontology declaration" .
+
+### Classes
+
+ujgevidence:EvidenceRecord a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgevidence:EvidenceSet a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgevidence:EvidenceState a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgevidence:ObservationScope a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgevidence:RedactionState a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgevidence:evidenceSubjectRef a owl:ObjectProperty ;
+  rdfs:domain ujgevidence:EvidenceRecord ;
+  rdfs:range ujg:Node .
+
+ujgevidence:observedByActorRef a owl:ObjectProperty ;
+  rdfs:domain ujgevidence:EvidenceRecord ;
+  rdfs:range ujgactor:Actor .
+
+ujgevidence:evidenceStateRef a owl:ObjectProperty ;
+  rdfs:domain ujgevidence:EvidenceRecord ;
+  rdfs:range ujgevidence:EvidenceState .
+
+ujgevidence:observationScopeRef a owl:ObjectProperty ;
+  rdfs:domain ujgevidence:EvidenceRecord ;
+  rdfs:range ujgevidence:ObservationScope .
+
+ujgevidence:redactionStateRef a owl:ObjectProperty ;
+  rdfs:domain ujgevidence:EvidenceRecord ;
+  rdfs:range ujgevidence:RedactionState .
+
+ujgevidence:sourceEvidenceRefs a owl:ObjectProperty ;
+  rdfs:domain ujgevidence:EvidenceRecord ;
+  rdfs:range ujgevidence:EvidenceRecord .
+
+ujgevidence:evidenceRecordRefs a owl:ObjectProperty ;
+  rdfs:domain ujgevidence:EvidenceSet ;
+  rdfs:range ujgevidence:EvidenceRecord .

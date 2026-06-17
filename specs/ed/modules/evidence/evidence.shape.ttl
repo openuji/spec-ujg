@@ -1,0 +1,83 @@
+@prefix ujgactor: <https://ujg.specs.openuji.org/ed/ns/actor#> .
+@prefix ujgevidence: <https://ujg.specs.openuji.org/ed/ns/evidence#> .
+@prefix ujgevidenceshape: <https://ujg.specs.openuji.org/ed/ns/evidence.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgevidenceshape:EvidenceRecordShape a sh:NodeShape ;
+  sh:targetClass ujgevidence:EvidenceRecord ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgevidence:evidenceSubjectRef ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgevidence:observedByActorRef ;
+    sh:class ujgactor:Actor ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgevidence:evidenceStateRef ;
+    sh:class ujgevidence:EvidenceState ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgevidence:observationScopeRef ;
+    sh:class ujgevidence:ObservationScope ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgevidence:redactionStateRef ;
+    sh:class ujgevidence:RedactionState ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgevidence:sourceEvidenceRefs ;
+    sh:class ujgevidence:EvidenceRecord ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An EvidenceRecord must not reference itself through sourceEvidenceRefs." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        $this ujgevidence:sourceEvidenceRefs $this .
+      }
+    """ ;
+  ] .
+
+ujgevidenceshape:EvidenceSetShape a sh:NodeShape ;
+  sh:targetClass ujgevidence:EvidenceSet ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgevidence:evidenceRecordRefs ;
+    sh:class ujgevidence:EvidenceRecord ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+  ] .
+
+ujgevidenceshape:EvidenceStateShape a sh:NodeShape ;
+  sh:targetClass ujgevidence:EvidenceState ;
+  sh:nodeKind sh:IRI .
+
+ujgevidenceshape:ObservationScopeShape a sh:NodeShape ;
+  sh:targetClass ujgevidence:ObservationScope ;
+  sh:nodeKind sh:IRI .
+
+ujgevidenceshape:RedactionStateShape a sh:NodeShape ;
+  sh:targetClass ujgevidence:RedactionState ;
+  sh:nodeKind sh:IRI .
