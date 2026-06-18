@@ -1,15 +1,16 @@
 {
   "currentSkill": {
-    "key": "graph",
-    "moduleId": "graph",
-    "name": "ujg-ed-graph-modeling",
-    "publicUrl": "https://ujg.specs.openuji.org/ed/graph",
+    "key": "localization",
+    "moduleId": "modules/l10n",
+    "name": "ujg-ed-l10n-modeling",
+    "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
     "relevantModuleIds": [
       "architecture",
       "core",
-      "graph"
+      "graph",
+      "modules/l10n"
     ],
-    "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes"
+    "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata"
   },
   "moduleGraph": {
     "architecture": {

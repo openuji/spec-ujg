@@ -1,0 +1,4 @@
+interface:
+  display_name: "UJG ED Localization Modeling"
+  short_description: "Model UJG Localization for ED"
+  default_prompt: "Use $ujg-ed-l10n-modeling to generate or review UJG JSON-LD for this target and scope."

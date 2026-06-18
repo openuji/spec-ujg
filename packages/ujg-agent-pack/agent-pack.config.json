@@ -28,6 +28,13 @@
           "scope": "Design System module semantics and its relationship to Graph and Surface",
           "nameSuffix": "design-system-modeling",
           "moduleId": "modules/design-system"
+        },
+        {
+          "key": "localization",
+          "title": "Localization Modeling",
+          "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
+          "nameSuffix": "l10n-modeling",
+          "moduleId": "modules/l10n"
         }
       ]
     },

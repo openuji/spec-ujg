@@ -10,6 +10,7 @@ Module scope: graph
 
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
+- ujg-ed-l10n-modeling: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
 
 ## Upstream Spec Modules
 

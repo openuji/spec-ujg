@@ -216,7 +216,7 @@
       "deps": [
         "graph"
       ],
-      "generatedSkill": null,
+      "generatedSkill": "ujg-ed-l10n-modeling",
       "title": "Localization"
     },
     "modules/routing": {
@@ -290,6 +290,14 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed/modules/design-system",
       "scope": "Design System module semantics and its relationship to Graph and Surface",
       "source": "sources/ed/skills/design-system/skill.md"
+    },
+    {
+      "key": "localization",
+      "moduleId": "modules/l10n",
+      "name": "ujg-ed-l10n-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
+      "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
+      "source": "sources/ed/skills/localization/skill.md"
     }
   ],
   "target": {

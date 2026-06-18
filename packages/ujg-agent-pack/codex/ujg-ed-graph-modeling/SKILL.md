@@ -17,6 +17,7 @@ Module scope: graph
 Related generated skills:
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
+- ujg-ed-l10n-modeling: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
 
