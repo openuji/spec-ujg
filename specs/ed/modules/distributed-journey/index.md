@@ -1,13 +1,9 @@
 ## Overview
 
-This optional module defines a small vocabulary for human-facing journeys whose visible states,
+This module defines a vocabulary for human-facing journeys whose visible states,
 actions, artifacts, or outcomes depend on more than one independently operated authority.
 
-UJG still models human interaction with machine-presented systems. A distributed journey is not a
-model of what servers believe, how queues retry, or how protocols propagate state. Those details can
-be implementation context, Runtime facts, Runtime Evidence metadata, artifacts, or private
-extension data, but the journey remains about what a person sees, does, waits for, cannot access,
-must recover from, or completes.
+Distributed Journey does not model internal server truth.
 
 This module is intentionally second-level. It composes first-level bridge modules instead of adding
 distributed systems semantics directly to Core, Graph, or Runtime:

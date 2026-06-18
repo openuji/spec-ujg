@@ -1,7 +1,7 @@
 {
     "id": "modules/distributed-journey",
     "title": "Distributed Journey",
-    "maturityLevel": "incubating",
+    "maturityLevel": "draft",
     "baseUrl": "${SPEC_BASE_URL}/ed",
     "deps": [
         "modules/actor",
