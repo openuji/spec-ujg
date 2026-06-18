@@ -25,14 +25,14 @@ const familySections: Array<{
     id: 'optional-modules',
     title: 'First-Level Optional Modules',
     description:
-      'Optional modules that attach directly to Core or Graph concepts and publish their own ontology, JSON-LD context, and SHACL artifacts.',
+      'Optional bridge modules that attach directly to Core or Graph concepts and publish their own ontology, JSON-LD context, and SHACL artifacts.',
     documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) === 1),
   },
   {
     id: 'second-level-optional-modules',
     title: 'Second-Level Optional Modules',
     description:
-      'Optional modules mediated by another optional module, keeping specialized concerns out of Core and Graph.',
+      'Optional modules that compose one or more first-level bridges, keeping specialized concerns out of Core and Graph.',
     documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) > 1),
   },
 ].filter((section) => section.documents.length > 0);

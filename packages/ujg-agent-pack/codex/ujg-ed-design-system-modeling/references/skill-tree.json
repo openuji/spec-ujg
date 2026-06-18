@@ -23,7 +23,7 @@
         "modules/condition",
         "modules/surface",
         "runtime",
-        "modules/data",
+        "modules/state-data",
         "modules/action",
         "modules/actor",
         "modules/artifact",
@@ -56,7 +56,7 @@
         "modules/condition",
         "modules/surface",
         "runtime",
-        "modules/data",
+        "modules/state-data",
         "modules/action",
         "modules/actor",
         "modules/artifact",
@@ -90,7 +90,7 @@
         "modules/condition",
         "modules/surface",
         "runtime",
-        "modules/data",
+        "modules/state-data",
         "modules/action",
         "modules/actor",
         "modules/evidence",
@@ -171,14 +171,6 @@
       "generatedSkill": null,
       "title": "Conditions"
     },
-    "modules/data": {
-      "dependents": [],
-      "deps": [
-        "graph"
-      ],
-      "generatedSkill": null,
-      "title": "Data"
-    },
     "modules/design-system": {
       "dependents": [],
       "deps": [
@@ -226,6 +218,14 @@
       ],
       "generatedSkill": null,
       "title": "Routing"
+    },
+    "modules/state-data": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "State Data"
     },
     "modules/surface": {
       "dependents": [

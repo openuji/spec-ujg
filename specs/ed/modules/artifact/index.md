@@ -1,13 +1,16 @@
 ## Overview
 
-This optional module defines a minimal bridge vocabulary for addressable artifacts that are produced
-or consumed by UJG nodes.
+This optional module defines a minimal bridge vocabulary for addressable artifacts that are
+produced, consumed, exchanged, or evidenced by UJG nodes.
 
 An artifact is a portable identity for a file, media object, archive, token, invite, report,
 protocol object, generated document, or other resource that participates in a journey. The module
 does not define storage backends, transfer protocols, upload widgets, media processing, or artifact
 lifecycle state. Modules and profiles can specialize `Artifact` when they need more domain-specific
 semantics.
+
+Artifact is not the state-binding primitive for UJG. State-like data context or binding identity
+belongs in the State Data module.
 
 ## Normative Artifacts
 
@@ -22,7 +25,7 @@ Examples in this page compose the Core context with the Artifact context.
 ## Terminology
 
 - <dfn>Artifact</dfn>: An addressable resource that may be produced, consumed, exchanged, or
-  referenced during a journey.
+  evidenced during a journey.
 - <dfn>Produced artifact</dfn>: An artifact created, emitted, prepared, exported, generated, or made
   available by a UJG node.
 - <dfn>Consumed artifact</dfn>: An artifact accepted, imported, read, redeemed, or otherwise used by
@@ -39,6 +42,13 @@ The references are intentionally generic. Producers SHOULD attach them to the no
 artifact-producing or artifact-consuming semantics, such as an Action, a domain operation, or an
 evidence node. Producers SHOULD NOT use artifact references to create hidden Graph traversal or to
 replace Graph `Transition` semantics.
+
+Artifact and State Data intentionally remain separate. Use `Artifact` for portable resource identity
+such as a file, archive, report, invite, media object, token, protocol object, or generated
+document. Use `StateData` when a `State` or `CompositeState` needs a stable data-context or binding
+identity. If the same external thing is both the context behind a state and a transferred resource,
+model separate `StateData` and `Artifact` nodes unless a future module defines an explicit
+relationship between them.
 
 ## Non-Goals
 
@@ -84,7 +94,9 @@ the SHACL shape.
    traversal behavior.
 3. **Host responsibility:** Producers SHOULD attach artifact references to the node that owns the
    artifact-producing or artifact-consuming meaning.
-4. **Graceful degradation:** Consumers that do not implement this module MAY ignore Artifact
+4. **State Data boundary:** `Artifact` MUST NOT be interpreted as state-like data context or binding
+   identity. Use State Data for state-scoped data binding.
+5. **Graceful degradation:** Consumers that do not implement this module MAY ignore Artifact
    semantics, but SHOULD preserve recognized JSON-LD data during read-transform-write when possible.
 
 ## Minimal Example

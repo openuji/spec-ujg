@@ -12,7 +12,7 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/design-system
 
 ## Relevant Modules
 
-- architecture: sha256:49274a9977c2e384514ebe9b6a638bb9467719f2b8522bd75b6fe3be3f299e72
+- architecture: sha256:d55e9a936faa8492dc42be0e5a675c82f22d7af2b4020965dc78b128728c3361
 - core: sha256:8b0a9002f515933eff694aa84ef8ef20672f5ef431f19c42e75f8746476e2e2b
 - graph: sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e
 - modules/surface: sha256:834f9b89895363f3b5fa09a26acd5c9bea2d2f68a11e77c719961cb2c6878f00

@@ -10,6 +10,6 @@ Serialization
 │     └─ Observed           (aggregates Runtime; optionally aligns to Designed)
 │        └─ Metrics         (metric keys/units used in Observed artifacts)
 └─ Profiles & Optional Modules
-   ├─ First-level bridges   (Surface, Actor, Action, Artifact, Evidence, and similar small attachments)
-   └─ Second-level modules  (Design System, Distributed Journey, and other bridge-mediated semantics)
+   ├─ First-level bridges   (Surface, Actor, State Data, Action, Artifact, Evidence, and similar small attachments)
+   └─ Second-level modules  (Design System, Distributed Journey, and other bridge-composed semantics)
 ```

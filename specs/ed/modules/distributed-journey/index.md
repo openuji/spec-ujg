@@ -8,8 +8,8 @@ model of what servers believe, how queues retry, or how protocols propagate stat
 be implementation context or evidence, but the journey remains about what a person sees, does,
 waits for, cannot access, must recover from, or completes.
 
-This module is intentionally second-level. It composes bridge modules instead of adding distributed
-systems semantics directly to Graph or Runtime:
+This module is intentionally second-level. It composes first-level bridge modules instead of adding
+distributed systems semantics directly to Core, Graph, or Runtime:
 
 - Actor identifies responsible systems and eligible participants.
 - Surface identifies the machine-presented boundary a human sees or acts through.
@@ -17,6 +17,10 @@ systems semantics directly to Graph or Runtime:
 - Artifact identifies files, archives, reports, invites, media, or other resources involved in the
   journey.
 - Evidence records partial, merged, inferred, or redacted observations from the outside.
+
+State Data is not a dependency of this module unless a distributed-journey document also needs
+state-like data binding identity. Distributed Journey uses Artifact for portable resources that
+cross authority boundaries.
 
 Simple single-site forms, checkouts, dashboards, and app flows do not need this module.
 

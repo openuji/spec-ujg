@@ -24,7 +24,7 @@ Module scope: graph
 - modules/condition
 - modules/surface
 - runtime
-- modules/data
+- modules/state-data
 - modules/action
 - modules/actor
 - modules/evidence

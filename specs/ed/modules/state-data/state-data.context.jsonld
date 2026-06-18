@@ -1,0 +1,15 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgstatedata": "https://ujg.specs.openuji.org/ed/ns/state-data#",
+    "stateData": "https://ujg.specs.openuji.org/ed/ns/state-data#",
+
+    "StateData": "ujgstatedata:StateData",
+
+    "stateDataRef": {
+      "@id": "ujgstatedata:stateDataRef",
+      "@type": "@id"
+    }
+  }
+}

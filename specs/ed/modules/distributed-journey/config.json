@@ -14,7 +14,13 @@
         "family": "module",
         "order": 65,
         "moduleLevel": 2,
-        "bridgeModule": "modules/surface"
+        "bridgeModules": [
+            "modules/actor",
+            "modules/surface",
+            "modules/action",
+            "modules/artifact",
+            "modules/evidence"
+        ]
     },
     "respec": {
         "noConformance": true,

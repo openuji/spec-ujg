@@ -1,6 +1,6 @@
 {
-    "id": "modules/data",
-    "title": "Data",
+    "id": "modules/state-data",
+    "title": "State Data",
     "maturityLevel": "incubating",
     "baseUrl": "${SPEC_BASE_URL}/ed",
     "deps": [
@@ -17,7 +17,7 @@
             "name": "User Journal Graph Community Group",
             "url": "https://www.w3.org/community/ujg/"
         },
-        "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/ed/modules/data/index.md",
+        "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/ed/modules/state-data/index.md",
         "editors": [
             {
                 "name": "Seva Dolgopolov",

@@ -37,6 +37,12 @@ thing to point at. Later modules can build on that thing and describe it in more
 new capabilities become precise without forcing the shared baseline, or this architecture page, to
 know every specialized vocabulary that may be added later.
 
+First-level optional modules are small bridges that attach directly to Core or Graph concepts, such
+as Surface, Actor, State Data, Action, Artifact, and Evidence. Second-level optional modules compose
+one or more first-level bridges. Design System builds on Surface; Distributed Journey composes
+Actor, Surface, Action, Artifact, and Evidence without making those concerns part of Core, Graph, or
+Runtime.
+
 ## Opaque Extensions
 
 The specification distinguishes published module vocabularies from opaque deployment-private
