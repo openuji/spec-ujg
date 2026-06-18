@@ -16,6 +16,7 @@ Module scope: modules/design-system
 
 Related generated skills:
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules
+- ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.

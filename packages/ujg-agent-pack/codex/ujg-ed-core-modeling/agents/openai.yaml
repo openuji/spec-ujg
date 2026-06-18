@@ -1,0 +1,4 @@
+interface:
+  display_name: "UJG ED Core Modeling"
+  short_description: "Model UJG Core for ED"
+  default_prompt: "Use $ujg-ed-core-modeling to generate or review UJG JSON-LD for this target and scope."

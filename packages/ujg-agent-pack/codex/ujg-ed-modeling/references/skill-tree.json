@@ -13,11 +13,15 @@
       "modules/condition",
       "modules/surface",
       "runtime",
-      "modules/data",
+      "modules/state-data",
       "modules/action",
+      "modules/actor",
+      "modules/artifact",
+      "modules/runtime-evidence",
       "experience",
       "mapping",
       "modules/design-system",
+      "modules/distributed-journey",
       "metrics",
       "profiles",
       "conformance"
@@ -34,11 +38,15 @@
         "modules/condition",
         "modules/surface",
         "runtime",
-        "modules/data",
+        "modules/state-data",
         "modules/action",
+        "modules/actor",
+        "modules/artifact",
+        "modules/runtime-evidence",
         "experience",
         "mapping",
         "modules/design-system",
+        "modules/distributed-journey",
         "metrics",
         "profiles",
         "conformance"
@@ -63,11 +71,15 @@
         "modules/condition",
         "modules/surface",
         "runtime",
-        "modules/data",
+        "modules/state-data",
         "modules/action",
+        "modules/actor",
+        "modules/artifact",
+        "modules/runtime-evidence",
         "experience",
         "mapping",
         "modules/design-system",
+        "modules/distributed-journey",
         "metrics",
         "profiles",
         "conformance"
@@ -75,7 +87,7 @@
       "deps": [
         "architecture"
       ],
-      "generatedSkill": null,
+      "generatedSkill": "ujg-ed-core-modeling",
       "title": "Core"
     },
     "experience": {
@@ -93,11 +105,14 @@
         "modules/condition",
         "modules/surface",
         "runtime",
-        "modules/data",
+        "modules/state-data",
         "modules/action",
+        "modules/actor",
+        "modules/runtime-evidence",
         "experience",
         "mapping",
         "modules/design-system",
+        "modules/distributed-journey",
         "metrics",
         "profiles",
         "conformance"
@@ -133,12 +148,35 @@
       "title": "Metrics"
     },
     "modules/action": {
-      "dependents": [],
+      "dependents": [
+        "modules/distributed-journey"
+      ],
       "deps": [
         "graph"
       ],
       "generatedSkill": null,
       "title": "Action"
+    },
+    "modules/actor": {
+      "dependents": [
+        "modules/runtime-evidence",
+        "modules/distributed-journey"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Actor"
+    },
+    "modules/artifact": {
+      "dependents": [
+        "modules/distributed-journey"
+      ],
+      "deps": [
+        "core"
+      ],
+      "generatedSkill": null,
+      "title": "Artifact"
     },
     "modules/condition": {
       "dependents": [],
@@ -147,14 +185,6 @@
       ],
       "generatedSkill": null,
       "title": "Conditions"
-    },
-    "modules/data": {
-      "dependents": [],
-      "deps": [
-        "graph"
-      ],
-      "generatedSkill": null,
-      "title": "Data"
     },
     "modules/design-system": {
       "dependents": [],
@@ -165,12 +195,23 @@
       "generatedSkill": "ujg-ed-design-system-modeling",
       "title": "Design System"
     },
+    "modules/distributed-journey": {
+      "dependents": [],
+      "deps": [
+        "modules/actor",
+        "modules/surface",
+        "modules/action",
+        "modules/artifact"
+      ],
+      "generatedSkill": null,
+      "title": "Distributed Journey"
+    },
     "modules/l10n": {
       "dependents": [],
       "deps": [
         "graph"
       ],
-      "generatedSkill": null,
+      "generatedSkill": "ujg-ed-l10n-modeling",
       "title": "Localization"
     },
     "modules/routing": {
@@ -181,9 +222,27 @@
       "generatedSkill": null,
       "title": "Routing"
     },
+    "modules/runtime-evidence": {
+      "dependents": [],
+      "deps": [
+        "runtime",
+        "modules/actor"
+      ],
+      "generatedSkill": null,
+      "title": "Runtime Evidence"
+    },
+    "modules/state-data": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "State Data"
+    },
     "modules/surface": {
       "dependents": [
-        "modules/design-system"
+        "modules/design-system",
+        "modules/distributed-journey"
       ],
       "deps": [
         "graph"
@@ -207,6 +266,7 @@
     },
     "runtime": {
       "dependents": [
+        "modules/runtime-evidence",
         "mapping",
         "metrics",
         "profiles",
@@ -229,6 +289,14 @@
       "source": "sources/ed/skills/root/skill.md"
     },
     {
+      "key": "core",
+      "moduleId": "core",
+      "name": "ujg-ed-core-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/core",
+      "scope": "Core module document containers, imports, top-level nodes, and extensions",
+      "source": "sources/ed/skills/core/skill.md"
+    },
+    {
       "key": "graph",
       "moduleId": "graph",
       "name": "ujg-ed-graph-modeling",
@@ -243,6 +311,14 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed/modules/design-system",
       "scope": "Design System module semantics and its relationship to Graph and Surface",
       "source": "sources/ed/skills/design-system/skill.md"
+    },
+    {
+      "key": "localization",
+      "moduleId": "modules/l10n",
+      "name": "ujg-ed-l10n-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
+      "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
+      "source": "sources/ed/skills/localization/skill.md"
     }
   ],
   "target": {

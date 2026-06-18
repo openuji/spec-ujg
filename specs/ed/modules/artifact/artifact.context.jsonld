@@ -1,0 +1,21 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgartifact": "https://ujg.specs.openuji.org/ed/ns/artifact#",
+    "artifact": "https://ujg.specs.openuji.org/ed/ns/artifact#",
+
+    "Artifact": "ujgartifact:Artifact",
+
+    "producedArtifactRefs": {
+      "@id": "ujgartifact:producedArtifactRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "consumedArtifactRefs": {
+      "@id": "ujgartifact:consumedArtifactRefs",
+      "@type": "@id",
+      "@container": "@set"
+    }
+  }
+}

@@ -14,6 +14,19 @@ The Core module consists of:
 
 - <dfn>UJGDocument</dfn>: The Core document class for a JSON-LD bundle.
 - <dfn>Node</dfn>: The base Core class for addressable objects that may appear in `nodes`.
+- <dfn>Main spec family</dfn>: The shared UJG specification family that defines the common
+  interoperability baseline for UJG documents and tools.
+- <dfn>UJG module</dfn>: A published UJG specification unit that defines vocabulary terms, JSON-LD
+  context entries, validation shapes, or processing rules. A UJG module may belong to the
+  [=main spec family=] or to the optional module family.
+- <dfn>Optional module</dfn>: A UJG module for a capability that not every compliant UJG document or
+  tool needs.
+- <dfn>First-level UJG module</dfn>: An optional module that gives the shared UJG layers a simple
+  concept or attachment point to reference directly.
+- <dfn>First-level bridge module</dfn>: A first-level UJG module designed to stay small and reusable
+  so more specialized modules can build on it.
+- <dfn>Second-level UJG module</dfn>: An optional module that depends on at least one first-level
+  bridge module to describe a more specialized capability.
 
 ## Ontology {data-cop-concept="ontology"}
 
@@ -52,6 +65,24 @@ A composed context is expressed as a JSON-LD `@context` array in which the Core 
   ]
 }
 ```
+
+### Module Layering
+
+<spec-statement>A [=UJG module=] that defines compact terms not defined by Core **MUST** publish a JSON-LD context for those terms.</spec-statement>
+
+<spec-statement>A [=UJG module=] that depends on Core or another UJG module **MUST** identify the modules whose terms, classes, or validation semantics it relies on.</spec-statement>
+
+<spec-statement>A [=first-level UJG module=] **MAY** define references from Core [=Node=] instances or classes defined by lower-layer modules, including Graph and Runtime classes, provided those references do not alter Core identity, import resolution, reference resolution, graph traversal, or runtime ordering.</spec-statement>
+
+<spec-statement>A [=first-level bridge module=] **SHOULD** define a narrow, domain-neutral vocabulary that can be specialized by modules that depend on it.</spec-statement>
+
+<spec-statement>A [=second-level UJG module=] whose semantics specialize or interpret a bridge domain **MUST** depend on at least one lower-level bridge module for that domain.</spec-statement>
+
+<spec-statement>A [=second-level UJG module=] **MUST NOT** attach specialized domain semantics directly to Core or Graph nodes when an appropriate first-level bridge module exists for that domain.</spec-statement>
+
+<spec-statement>Module references **MUST NOT** create hidden graph traversal, runtime ordering, mapping conformance, or profile requirements unless those semantics are explicitly defined by the module that owns the references.</spec-statement>
+
+<spec-statement>Consumers that do not implement an [=optional module=] **MAY** ignore that module's terms, provided they preserve JSON-LD identity and unknown extension data according to Core processing rules.</spec-statement>
 
 ### Extensions
 

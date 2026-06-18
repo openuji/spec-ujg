@@ -16,6 +16,13 @@
           "moduleId": null
         },
         {
+          "key": "core",
+          "title": "Core Modeling",
+          "scope": "Core module document containers, imports, top-level nodes, and extensions",
+          "nameSuffix": "core-modeling",
+          "moduleId": "core"
+        },
+        {
           "key": "graph",
           "title": "Graph Modeling",
           "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
@@ -28,6 +35,13 @@
           "scope": "Design System module semantics and its relationship to Graph and Surface",
           "nameSuffix": "design-system-modeling",
           "moduleId": "modules/design-system"
+        },
+        {
+          "key": "localization",
+          "title": "Localization Modeling",
+          "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
+          "nameSuffix": "l10n-modeling",
+          "moduleId": "modules/l10n"
         }
       ]
     },

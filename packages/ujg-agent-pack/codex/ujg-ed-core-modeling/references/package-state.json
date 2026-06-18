@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:d2a9be521e7e3c4c5aff8ae0e36930baada0eaf00b47e59d906279a7d09e35f2",
+  "configHash": "sha256:1fa1686b40b3f88462fba96be849d9b95530ad486676c62a7a09a359c6c1d6ed",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "core",
+    "moduleId": "core",
+    "name": "ujg-ed-core-modeling"
+  },
+  "sourceHash": "sha256:187d953efcf1ab0012eb1d3d6415f25cc6621d52f17ce405697c50fd5ef47387",
+  "specHash": "sha256:00b5549e0ad85471aad54e0d4a7ba067dc469a5e44a15c2b06a426dc4f38697e",
+  "target": {
+    "id": "ed",
+    "label": "Editor's Draft"
+  }
+}

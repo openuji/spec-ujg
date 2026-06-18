@@ -1,0 +1,19 @@
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgstatedata: <https://ujg.specs.openuji.org/ed/ns/state-data#> .
+@prefix ujgstatedatashape: <https://ujg.specs.openuji.org/ed/ns/state-data.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgstatedatashape:StateDataHostShape a sh:NodeShape ;
+  sh:targetClass ujggraph:State, ujggraph:CompositeState ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgstatedata:stateDataRef ;
+    sh:class ujgstatedata:StateData ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgstatedatashape:StateDataShape a sh:NodeShape ;
+  sh:targetClass ujgstatedata:StateData ;
+  sh:nodeKind sh:IRI .

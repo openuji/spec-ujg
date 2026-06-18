@@ -1,0 +1,27 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgrtevidence": "https://ujg.specs.openuji.org/ed/ns/runtime-evidence#",
+    "runtimeEvidence": "https://ujg.specs.openuji.org/ed/ns/runtime-evidence#",
+
+    "RuntimeEvidenceRecord": "ujgrtevidence:RuntimeEvidenceRecord",
+
+    "journeyExecutionRef": {
+      "@id": "ujgrtevidence:journeyExecutionRef",
+      "@type": "@id"
+    },
+    "runtimeEventRef": {
+      "@id": "ujgrtevidence:runtimeEventRef",
+      "@type": "@id"
+    },
+    "observedByActorRef": {
+      "@id": "ujgrtevidence:observedByActorRef",
+      "@type": "@id"
+    },
+    "evidencePayload": {
+      "@id": "ujgrtevidence:evidencePayload",
+      "@type": "@json"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+@prefix ujgaction: <https://ujg.specs.openuji.org/ed/ns/action#> .
+@prefix ujgdist: <https://ujg.specs.openuji.org/ed/ns/distributed-journey#> .
+@prefix ujgdistshape: <https://ujg.specs.openuji.org/ed/ns/distributed-journey.shape#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/ed/ns/surface#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgdistshape:AuthorityShape a sh:NodeShape ;
+  sh:targetClass ujgdist:Authority ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgdist:origin ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgdistshape:SurfaceAuthorityShape a sh:NodeShape ;
+  sh:targetClass ujgsurface:Surface ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgdist:presentedByAuthorityRef ;
+    sh:class ujgdist:Authority ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgdistshape:ActionAuthorityShape a sh:NodeShape ;
+  sh:targetClass ujgaction:Action ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgdist:sourceAuthorityRef ;
+    sh:class ujgdist:Authority ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgdist:targetAuthorityRefs ;
+    sh:class ujgdist:Authority ;
+    sh:nodeKind sh:IRI ;
+  ] .
+
+ujgdistshape:DistributedArtifactShape a sh:NodeShape ;
+  sh:targetClass ujgdist:DistributedArtifact ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgdist:sourceAuthorityRef ;
+    sh:class ujgdist:Authority ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgdist:targetAuthorityRefs ;
+    sh:class ujgdist:Authority ;
+    sh:nodeKind sh:IRI ;
+  ] .

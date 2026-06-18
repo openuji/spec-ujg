@@ -1,0 +1,52 @@
+@prefix ujgactor: <https://ujg.specs.openuji.org/ed/ns/actor#> .
+@prefix ujgruntime: <https://ujg.specs.openuji.org/ed/ns/runtime#> .
+@prefix ujgrtevidence: <https://ujg.specs.openuji.org/ed/ns/runtime-evidence#> .
+@prefix ujgrtevidenceshape: <https://ujg.specs.openuji.org/ed/ns/runtime-evidence.shape#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgrtevidenceshape:RuntimeEvidenceRecordShape a sh:NodeShape ;
+  sh:targetClass ujgrtevidence:RuntimeEvidenceRecord ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgrtevidence:journeyExecutionRef ;
+    sh:class ujgruntime:JourneyExecution ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgrtevidence:runtimeEventRef ;
+    sh:class ujgruntime:RuntimeEvent ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgrtevidence:observedByActorRef ;
+    sh:class ujgactor:Actor ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgrtevidence:evidencePayload ;
+    sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A RuntimeEvidenceRecord runtimeEventRef must reference a RuntimeEvent in the same JourneyExecution as journeyExecutionRef." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        $this ujgrtevidence:journeyExecutionRef ?execution ;
+              ujgrtevidence:runtimeEventRef ?event .
+        ?event ujgruntime:executionId ?eventExecution .
+        FILTER (?eventExecution != ?execution)
+      }
+    """ ;
+  ] .

@@ -1,0 +1,35 @@
+@prefix ujgactor: <https://ujg.specs.openuji.org/ed/ns/actor#> .
+@prefix ujgartifact: <https://ujg.specs.openuji.org/ed/ns/artifact#> .
+@prefix ujgdist: <https://ujg.specs.openuji.org/ed/ns/distributed-journey#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/ed/ns/surface#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/ed/ns/distributed-journey#> a owl:Ontology ;
+  rdfs:label "UJG Distributed Journey Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Distributed Journey ontology declaration" .
+
+### Classes
+
+ujgdist:Authority a owl:Class ;
+  rdfs:subClassOf ujgactor:Actor .
+
+ujgdist:DistributedArtifact a owl:Class ;
+  rdfs:subClassOf ujgartifact:Artifact .
+
+### Properties
+
+ujgdist:origin a owl:ObjectProperty ;
+  rdfs:domain ujgdist:Authority ;
+  rdfs:range rdfs:Resource .
+
+ujgdist:presentedByAuthorityRef a owl:ObjectProperty ;
+  rdfs:domain ujgsurface:Surface ;
+  rdfs:range ujgdist:Authority .
+
+ujgdist:sourceAuthorityRef a owl:ObjectProperty ;
+  rdfs:range ujgdist:Authority .
+
+ujgdist:targetAuthorityRefs a owl:ObjectProperty ;
+  rdfs:range ujgdist:Authority .

@@ -9,7 +9,9 @@ Module scope: graph
 ## Sibling Skills
 
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules
+- ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
+- ujg-ed-l10n-modeling: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
 
 ## Upstream Spec Modules
 
@@ -23,11 +25,14 @@ Module scope: graph
 - modules/condition
 - modules/surface
 - runtime
-- modules/data
+- modules/state-data
 - modules/action
+- modules/actor
+- modules/runtime-evidence
 - experience
 - mapping
 - modules/design-system
+- modules/distributed-journey
 - metrics
 - profiles
 - conformance

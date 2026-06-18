@@ -1,0 +1,314 @@
+{
+  "currentSkill": {
+    "key": "localization",
+    "moduleId": "modules/l10n",
+    "name": "ujg-ed-l10n-modeling",
+    "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
+    "relevantModuleIds": [
+      "architecture",
+      "core",
+      "graph",
+      "modules/l10n"
+    ],
+    "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata"
+  },
+  "moduleGraph": {
+    "architecture": {
+      "dependents": [
+        "core",
+        "modules/routing",
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/surface",
+        "runtime",
+        "modules/state-data",
+        "modules/action",
+        "modules/actor",
+        "modules/artifact",
+        "modules/runtime-evidence",
+        "experience",
+        "mapping",
+        "modules/design-system",
+        "modules/distributed-journey",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [],
+      "generatedSkill": null,
+      "title": "Architecture"
+    },
+    "conformance": {
+      "dependents": [],
+      "deps": [
+        "profiles"
+      ],
+      "generatedSkill": null,
+      "title": "Conformance"
+    },
+    "core": {
+      "dependents": [
+        "modules/routing",
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/surface",
+        "runtime",
+        "modules/state-data",
+        "modules/action",
+        "modules/actor",
+        "modules/artifact",
+        "modules/runtime-evidence",
+        "experience",
+        "mapping",
+        "modules/design-system",
+        "modules/distributed-journey",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "architecture"
+      ],
+      "generatedSkill": "ujg-ed-core-modeling",
+      "title": "Core"
+    },
+    "experience": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Experience"
+    },
+    "graph": {
+      "dependents": [
+        "modules/routing",
+        "modules/l10n",
+        "modules/condition",
+        "modules/surface",
+        "runtime",
+        "modules/state-data",
+        "modules/action",
+        "modules/actor",
+        "modules/runtime-evidence",
+        "experience",
+        "mapping",
+        "modules/design-system",
+        "modules/distributed-journey",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "core"
+      ],
+      "generatedSkill": "ujg-ed-graph-modeling",
+      "title": "Graph"
+    },
+    "mapping": {
+      "dependents": [
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "runtime",
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Mapping"
+    },
+    "metrics": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "mapping"
+      ],
+      "generatedSkill": null,
+      "title": "Metrics"
+    },
+    "modules/action": {
+      "dependents": [
+        "modules/distributed-journey"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Action"
+    },
+    "modules/actor": {
+      "dependents": [
+        "modules/runtime-evidence",
+        "modules/distributed-journey"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Actor"
+    },
+    "modules/artifact": {
+      "dependents": [
+        "modules/distributed-journey"
+      ],
+      "deps": [
+        "core"
+      ],
+      "generatedSkill": null,
+      "title": "Artifact"
+    },
+    "modules/condition": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Conditions"
+    },
+    "modules/design-system": {
+      "dependents": [],
+      "deps": [
+        "graph",
+        "modules/surface"
+      ],
+      "generatedSkill": "ujg-ed-design-system-modeling",
+      "title": "Design System"
+    },
+    "modules/distributed-journey": {
+      "dependents": [],
+      "deps": [
+        "modules/actor",
+        "modules/surface",
+        "modules/action",
+        "modules/artifact"
+      ],
+      "generatedSkill": null,
+      "title": "Distributed Journey"
+    },
+    "modules/l10n": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": "ujg-ed-l10n-modeling",
+      "title": "Localization"
+    },
+    "modules/routing": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Routing"
+    },
+    "modules/runtime-evidence": {
+      "dependents": [],
+      "deps": [
+        "runtime",
+        "modules/actor"
+      ],
+      "generatedSkill": null,
+      "title": "Runtime Evidence"
+    },
+    "modules/state-data": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "State Data"
+    },
+    "modules/surface": {
+      "dependents": [
+        "modules/design-system",
+        "modules/distributed-journey"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Surface"
+    },
+    "profiles": {
+      "dependents": [
+        "conformance"
+      ],
+      "deps": [
+        "core",
+        "runtime",
+        "graph",
+        "mapping",
+        "metrics"
+      ],
+      "generatedSkill": null,
+      "title": "Profiles"
+    },
+    "runtime": {
+      "dependents": [
+        "modules/runtime-evidence",
+        "mapping",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Runtime"
+    }
+  },
+  "skills": [
+    {
+      "key": "root",
+      "moduleId": null,
+      "name": "ujg-ed-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed",
+      "scope": "whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules",
+      "source": "sources/ed/skills/root/skill.md"
+    },
+    {
+      "key": "core",
+      "moduleId": "core",
+      "name": "ujg-ed-core-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/core",
+      "scope": "Core module document containers, imports, top-level nodes, and extensions",
+      "source": "sources/ed/skills/core/skill.md"
+    },
+    {
+      "key": "graph",
+      "moduleId": "graph",
+      "name": "ujg-ed-graph-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/graph",
+      "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
+      "source": "sources/ed/skills/graph/skill.md"
+    },
+    {
+      "key": "design-system",
+      "moduleId": "modules/design-system",
+      "name": "ujg-ed-design-system-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/modules/design-system",
+      "scope": "Design System module semantics and its relationship to Graph and Surface",
+      "source": "sources/ed/skills/design-system/skill.md"
+    },
+    {
+      "key": "localization",
+      "moduleId": "modules/l10n",
+      "name": "ujg-ed-l10n-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
+      "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
+      "source": "sources/ed/skills/localization/skill.md"
+    }
+  ],
+  "target": {
+    "id": "ed",
+    "label": "Editor's Draft",
+    "publicUrl": "https://ujg.specs.openuji.org/ed",
+    "specRoot": "specs/ed"
+  }
+}

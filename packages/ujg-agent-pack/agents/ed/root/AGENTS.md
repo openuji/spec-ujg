@@ -12,8 +12,10 @@ Scope: whole UJG document modeling across Core, Graph, Runtime, Experience, Loca
 Module scope: whole target
 
 Related generated skills:
+- ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
+- ujg-ed-l10n-modeling: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
 
@@ -39,8 +41,15 @@ Graph: journeys, states, transitions, composition, exits, outgoing navigation, i
 Runtime: observed events, values, clicks, URLs, timestamps, payloads.
 Experience: journey-map annotations such as phases, touchpoints, steps, pain points.
 Localization: locale metadata, localized copy references, locale switch affordance metadata.
+State Data: state-like data context or binding identity attached with `stateDataRef`.
+Artifact: portable resources produced, consumed, exchanged, or referenced by UJG nodes.
+Distributed Journey: cross-authority human-facing journeys composed from first-level bridge modules.
 
 Core is required for UJG documents. Include Graph when modeling topology. Include Runtime only for observed behavior or traces. Include Experience only for journey-map annotations. Include Localization only when using l10n terms such as `l10n:targetLocale`, `copyRef`, `defaultLocale`, `fallbackLocales`, or `locales`.
+
+Include State Data only when using `StateData` or `stateDataRef`. Do not use State Data for files,
+archives, reports, invites, media, protocol objects, tokens, or other portable resources; use
+Artifact for those.
 
 Do not include Runtime, Experience, or Localization merely because screenshots, links, typed values, or translated UI are present. Screenshots can inform Graph structure, but Graph describes intended topology, not observed runtime facts.
 

@@ -1,0 +1,44 @@
+{
+    "id": "modules/runtime-evidence",
+    "title": "Runtime Evidence",
+    "maturityLevel": "incubating",
+    "baseUrl": "${SPEC_BASE_URL}/ed",
+    "deps": [
+        "runtime",
+        "modules/actor"
+    ],
+    "custom": {
+        "family": "module",
+        "order": 48,
+        "moduleLevel": 1
+    },
+    "respec": {
+        "noConformance": true,
+        "group": {
+            "name": "User Journal Graph Community Group",
+            "url": "https://www.w3.org/community/ujg/"
+        },
+        "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/ed/modules/runtime-evidence/index.md",
+        "editors": [
+            {
+                "name": "Seva Dolgopolov",
+                "w3cid": "169225"
+            }
+        ],
+        "license": "W3C-Software-and-Document",
+        "localBiblio": {
+            "UJG Core": {
+                "title": "UJG Core",
+                "url": "/ed/core"
+            },
+            "UJG Runtime": {
+                "title": "UJG Runtime",
+                "url": "/ed/runtime"
+            },
+            "UJG Actor": {
+                "title": "UJG Actor",
+                "url": "/ed/modules/actor"
+            }
+        }
+    }
+}

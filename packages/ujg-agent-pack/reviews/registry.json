@@ -1,9 +1,20 @@
 {
   "entries": {
+    "ed/core": {
+      "moduleHashes": {
+        "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
+        "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990"
+      },
+      "reportPath": "reviews/ed/core/latest.md",
+      "skill": "core",
+      "sourceHash": "sha256:187d953efcf1ab0012eb1d3d6415f25cc6621d52f17ce405697c50fd5ef47387",
+      "specHash": "sha256:00b5549e0ad85471aad54e0d4a7ba067dc469a5e44a15c2b06a426dc4f38697e",
+      "target": "ed"
+    },
     "ed/design-system": {
       "moduleHashes": {
-        "architecture": "sha256:ded03d1fe832daa62acb19262047174a670e480a50c40a995e918a5ecc003078",
-        "core": "sha256:ebddb568c1dc679274e7a825683bfe877af6b1de038a76e334cf590486d18ceb",
+        "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
+        "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
         "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e",
         "modules/design-system": "sha256:c30ec0912d435c986272f1ef0c30d23881fb41c4617802ffe5fc10000b9f501f",
         "modules/surface": "sha256:834f9b89895363f3b5fa09a26acd5c9bea2d2f68a11e77c719961cb2c6878f00"
@@ -11,44 +22,61 @@
       "reportPath": "reviews/ed/design-system/latest.md",
       "skill": "design-system",
       "sourceHash": "sha256:8078d81a7fc356ff7d6b350bc5e36bdaf67240714edd38b0491927170d0db904",
-      "specHash": "sha256:044f65a520a79b50c193b8d9895cc9d14b9429e5d85a6d3b71beffbdadb19ef4",
+      "specHash": "sha256:0774825a54d0654d8837c158c779cdd4343e5556a287ca1ff34b624bf5c60605",
       "target": "ed"
     },
     "ed/graph": {
       "moduleHashes": {
-        "architecture": "sha256:ded03d1fe832daa62acb19262047174a670e480a50c40a995e918a5ecc003078",
-        "core": "sha256:ebddb568c1dc679274e7a825683bfe877af6b1de038a76e334cf590486d18ceb",
+        "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
+        "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
         "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e"
       },
       "reportPath": "reviews/ed/graph/latest.md",
       "skill": "graph",
       "sourceHash": "sha256:fe3325bd7a11ce61abb603fce3ef789a2f32d3725c9eb2ea57f974144beb9f98",
-      "specHash": "sha256:9acdbcdd131c0731bb6fd24db0e07f8b61dceea870077e1eae91edf7f5552285",
+      "specHash": "sha256:82a8ad767af9732388c2e2711262fe4c5e9a890d7e070718577f174d10af4d5d",
+      "target": "ed"
+    },
+    "ed/localization": {
+      "moduleHashes": {
+        "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
+        "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
+        "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e",
+        "modules/l10n": "sha256:fe7cdc72b95afe567c7ed9d0dbfe356ccc825b49847d1c286298b35c5f49b64c"
+      },
+      "reportPath": "reviews/ed/localization/latest.md",
+      "skill": "localization",
+      "sourceHash": "sha256:1adb290ececbc67bcac4238201fcd2a9c60251b7510db2140ae32fb0725f63b8",
+      "specHash": "sha256:736ff91be0b70b12474473ec19cf3db060d9cd258ce052d9c3afe3b7d1a045f1",
       "target": "ed"
     },
     "ed/root": {
       "moduleHashes": {
-        "architecture": "sha256:ded03d1fe832daa62acb19262047174a670e480a50c40a995e918a5ecc003078",
+        "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
         "conformance": "sha256:b77f657cce8b9b7cc8d80768756ab2ef69677df3d2c010c07c4c835851cf0078",
-        "core": "sha256:ebddb568c1dc679274e7a825683bfe877af6b1de038a76e334cf590486d18ceb",
+        "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
         "experience": "sha256:3df01150e516db142414176143cd8a35ccfee0b41129f7da483e9b3f1ce3288c",
         "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e",
         "mapping": "sha256:3a7996ad1ef7c691b0f7fa1f0c803e3224f562fdc19dfa0fc471a44ea632101f",
         "metrics": "sha256:9a8414801ef1a2f9c497d3ac2872dbe6b90c9698c7a306db52eff0d1c80b65b4",
         "modules/action": "sha256:85bf439ada55ec13eadc7b95997cd240e356ff2b8e8d82e108db36d13e6de3d1",
+        "modules/actor": "sha256:8d2428b38e51ffc0336671bf5a7493f6eac384282532f815678e69013ff6b0ee",
+        "modules/artifact": "sha256:ef364efa0c76b918cb52ba0e1d842b7a72f2953e08a10de051a731113234eebe",
         "modules/condition": "sha256:e33a6b89c61e0ac036bd91d8943c093d9ea41dd066e2e10b3debfd2453c9c53b",
-        "modules/data": "sha256:bb8edcf449ee236475c3c3dfb5d0d4020da55ed807311cd4a5369777e1a894c2",
         "modules/design-system": "sha256:c30ec0912d435c986272f1ef0c30d23881fb41c4617802ffe5fc10000b9f501f",
+        "modules/distributed-journey": "sha256:6a96b7ebc383b13a1af64faa90913494ad26fb00618f2205502e0a3097919bf6",
         "modules/l10n": "sha256:fe7cdc72b95afe567c7ed9d0dbfe356ccc825b49847d1c286298b35c5f49b64c",
         "modules/routing": "sha256:e67394a66d3e631948ee3ebe1eb225c76f597e27eb0a7aca80e62c7e92b507ad",
+        "modules/runtime-evidence": "sha256:1f7dfac3ec57e4d63f8dc57a28aef0a6fa1155dcdaee83cb4d433372db98ee93",
+        "modules/state-data": "sha256:f48c0c698a95a071160aa46d920153f9a6e797b8793c0c703db15a6981ae0e96",
         "modules/surface": "sha256:834f9b89895363f3b5fa09a26acd5c9bea2d2f68a11e77c719961cb2c6878f00",
         "profiles": "sha256:6a574a75946444a774fcb53ee74efaf121051a0b52e4a667f789a50df1bc7a10",
         "runtime": "sha256:86c322e2f8509e4b9df217b739cb42323de4b435ba45c1c5fbd25bc2995f5075"
       },
       "reportPath": "reviews/ed/root/latest.md",
       "skill": "root",
-      "sourceHash": "sha256:99721adf9eef2cb431b0b8db6d64c1a9b24b8b24928122c9b2ddedf6000b5b9d",
-      "specHash": "sha256:874864796f0b159d16697cca0b3fd90860952e8a31c4cb8288667a42391d8fe2",
+      "sourceHash": "sha256:5e26b7b08656fcd28f113f9408a0ee44567e31890c99443f9c68e3611dc4b0cf",
+      "specHash": "sha256:21924fa9c48c0e18dc7a490f1e9d8533a7b056aee69309bdea4d6c5e6b5bf727",
       "target": "ed"
     },
     "tr/2026.06/design-system": {

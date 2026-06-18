@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:c2de547d2cba8eebcefedcc3bc91996481b99846b3bd0cab890b53d0f698f511",
+  "configHash": "sha256:1fa1686b40b3f88462fba96be849d9b95530ad486676c62a7a09a359c6c1d6ed",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "localization",
+    "moduleId": "modules/l10n",
+    "name": "ujg-ed-l10n-modeling"
+  },
+  "sourceHash": "sha256:1adb290ececbc67bcac4238201fcd2a9c60251b7510db2140ae32fb0725f63b8",
+  "specHash": "sha256:736ff91be0b70b12474473ec19cf3db060d9cd258ce052d9c3afe3b7d1a045f1",
+  "target": {
+    "id": "ed",
+    "label": "Editor's Draft"
+  }
+}
