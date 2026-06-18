@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:18a7f7e0029453406992c9b9f3997ebb4dfece76878d93a53d100f0ddac780ef",
+  "configHash": "sha256:340584d9b72f407cb6b75a89d79945103706fe0375cc4725e3d48d0af966fd6c",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "distributed-journey",
+    "moduleId": "modules/distributed-journey",
+    "name": "ujg-ed-distributed-journey-modeling"
+  },
+  "sourceHash": "sha256:21480a5ac540822d1ceb4af90a3f034874edaf11f3e8d9f9e83de8ea8e3adf80",
+  "specHash": "sha256:25ef76a91aa5e73ec1db79c86a12ccfaf9e2a91c24ef217b39c338fff3d48e3a",
+  "target": {
+    "id": "ed",
+    "label": "Editor's Draft"
+  }
+}

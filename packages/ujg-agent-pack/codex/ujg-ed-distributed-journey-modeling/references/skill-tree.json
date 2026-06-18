@@ -1,14 +1,20 @@
 {
   "currentSkill": {
-    "key": "core",
-    "moduleId": "core",
-    "name": "ujg-ed-core-modeling",
-    "publicUrl": "https://ujg.specs.openuji.org/ed/core",
+    "key": "distributed-journey",
+    "moduleId": "modules/distributed-journey",
+    "name": "ujg-ed-distributed-journey-modeling",
+    "publicUrl": "https://ujg.specs.openuji.org/ed/modules/distributed-journey",
     "relevantModuleIds": [
       "architecture",
-      "core"
+      "core",
+      "graph",
+      "modules/surface",
+      "modules/action",
+      "modules/actor",
+      "modules/artifact",
+      "modules/distributed-journey"
     ],
-    "scope": "Core module document containers, imports, top-level nodes, and extensions"
+    "scope": "Distributed Journey module semantics for cross-authority human-facing journeys, authorities, distributed artifacts, and authority references"
   },
   "moduleGraph": {
     "architecture": {

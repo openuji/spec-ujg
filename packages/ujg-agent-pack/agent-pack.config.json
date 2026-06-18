@@ -42,6 +42,13 @@
           "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
           "nameSuffix": "l10n-modeling",
           "moduleId": "modules/l10n"
+        },
+        {
+          "key": "distributed-journey",
+          "title": "Distributed Journey Modeling",
+          "scope": "Distributed Journey module semantics for cross-authority human-facing journeys, authorities, distributed artifacts, and authority references",
+          "nameSuffix": "distributed-journey-modeling",
+          "moduleId": "modules/distributed-journey"
         }
       ]
     },

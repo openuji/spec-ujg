@@ -187,7 +187,7 @@
         "modules/action",
         "modules/artifact"
       ],
-      "generatedSkill": null,
+      "generatedSkill": "ujg-ed-distributed-journey-modeling",
       "title": "Distributed Journey"
     },
     "modules/l10n": {
@@ -303,6 +303,14 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
       "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
       "source": "sources/ed/skills/localization/skill.md"
+    },
+    {
+      "key": "distributed-journey",
+      "moduleId": "modules/distributed-journey",
+      "name": "ujg-ed-distributed-journey-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/modules/distributed-journey",
+      "scope": "Distributed Journey module semantics for cross-authority human-facing journeys, authorities, distributed artifacts, and authority references",
+      "source": "sources/ed/skills/distributed-journey/skill.md"
     }
   ],
   "target": {

@@ -3,20 +3,24 @@
 # Related Skills
 
 Target: Editor's Draft
-Current skill: ujg-ed-modeling
-Module scope: whole target
+Current skill: ujg-ed-distributed-journey-modeling
+Module scope: modules/distributed-journey
 
 ## Sibling Skills
 
+- ujg-ed-modeling: whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules
 - ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
-- ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
-- ujg-ed-l10n-modeling: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
-- ujg-ed-distributed-journey-modeling: Distributed Journey module semantics for cross-authority human-facing journeys, authorities, distributed artifacts, and authority references
 
 ## Upstream Spec Modules
 
-- None
+- architecture
+- core
+- graph
+- modules/surface
+- modules/action
+- modules/actor
+- modules/artifact
 
 ## Downstream Spec Modules
 

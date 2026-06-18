@@ -1,0 +1,4 @@
+interface:
+  display_name: "UJG ED Distributed Journey Modeling"
+  short_description: "Model UJG Distributed Journey for ED"
+  default_prompt: "Use $ujg-ed-distributed-journey-modeling to generate or review UJG JSON-LD for this target and scope."

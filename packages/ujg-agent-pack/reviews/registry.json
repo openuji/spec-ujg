@@ -25,6 +25,23 @@
       "specHash": "sha256:0774825a54d0654d8837c158c779cdd4343e5556a287ca1ff34b624bf5c60605",
       "target": "ed"
     },
+    "ed/distributed-journey": {
+      "moduleHashes": {
+        "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
+        "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
+        "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e",
+        "modules/action": "sha256:85bf439ada55ec13eadc7b95997cd240e356ff2b8e8d82e108db36d13e6de3d1",
+        "modules/actor": "sha256:8d2428b38e51ffc0336671bf5a7493f6eac384282532f815678e69013ff6b0ee",
+        "modules/artifact": "sha256:ef364efa0c76b918cb52ba0e1d842b7a72f2953e08a10de051a731113234eebe",
+        "modules/distributed-journey": "sha256:a26b1fec364040becece10cab72632313078b1f3526a7dd41958aa9bdc3002cd",
+        "modules/surface": "sha256:834f9b89895363f3b5fa09a26acd5c9bea2d2f68a11e77c719961cb2c6878f00"
+      },
+      "reportPath": "reviews/ed/distributed-journey/latest.md",
+      "skill": "distributed-journey",
+      "sourceHash": "sha256:21480a5ac540822d1ceb4af90a3f034874edaf11f3e8d9f9e83de8ea8e3adf80",
+      "specHash": "sha256:25ef76a91aa5e73ec1db79c86a12ccfaf9e2a91c24ef217b39c338fff3d48e3a",
+      "target": "ed"
+    },
     "ed/graph": {
       "moduleHashes": {
         "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
@@ -64,7 +81,7 @@
         "modules/artifact": "sha256:ef364efa0c76b918cb52ba0e1d842b7a72f2953e08a10de051a731113234eebe",
         "modules/condition": "sha256:e33a6b89c61e0ac036bd91d8943c093d9ea41dd066e2e10b3debfd2453c9c53b",
         "modules/design-system": "sha256:c30ec0912d435c986272f1ef0c30d23881fb41c4617802ffe5fc10000b9f501f",
-        "modules/distributed-journey": "sha256:6a96b7ebc383b13a1af64faa90913494ad26fb00618f2205502e0a3097919bf6",
+        "modules/distributed-journey": "sha256:a26b1fec364040becece10cab72632313078b1f3526a7dd41958aa9bdc3002cd",
         "modules/l10n": "sha256:fe7cdc72b95afe567c7ed9d0dbfe356ccc825b49847d1c286298b35c5f49b64c",
         "modules/routing": "sha256:e67394a66d3e631948ee3ebe1eb225c76f597e27eb0a7aca80e62c7e92b507ad",
         "modules/runtime-evidence": "sha256:1f7dfac3ec57e4d63f8dc57a28aef0a6fa1155dcdaee83cb4d433372db98ee93",
@@ -76,7 +93,7 @@
       "reportPath": "reviews/ed/root/latest.md",
       "skill": "root",
       "sourceHash": "sha256:5e26b7b08656fcd28f113f9408a0ee44567e31890c99443f9c68e3611dc4b0cf",
-      "specHash": "sha256:21924fa9c48c0e18dc7a490f1e9d8533a7b056aee69309bdea4d6c5e6b5bf727",
+      "specHash": "sha256:1703d3601b2617034dfb0e931e04d74636df3a8576f10a1b1d4a67edab5efb5e",
       "target": "ed"
     },
     "tr/2026.06/design-system": {

@@ -4,6 +4,7 @@ This module defines a vocabulary for human-facing journeys whose visible states,
 actions, artifacts, or outcomes depend on more than one independently operated authority.
 
 Distributed Journey does not model internal server truth.
+Protocol messages and API responses are evidence, not the primary journey.
 
 This module is intentionally second-level. It composes first-level bridge modules instead of adding
 distributed systems semantics directly to Core, Graph, or Runtime:
