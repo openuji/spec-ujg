@@ -28,7 +28,7 @@ Spec URL: https://ujg.specs.openuji.org/ed
 - experience: sha256:3df01150e516db142414176143cd8a35ccfee0b41129f7da483e9b3f1ce3288c
 - mapping: sha256:3a7996ad1ef7c691b0f7fa1f0c803e3224f562fdc19dfa0fc471a44ea632101f
 - modules/design-system: sha256:c30ec0912d435c986272f1ef0c30d23881fb41c4617802ffe5fc10000b9f501f
-- modules/distributed-journey: sha256:a26b1fec364040becece10cab72632313078b1f3526a7dd41958aa9bdc3002cd
+- modules/distributed-journey: sha256:d0ea0b6e1d07ec45bdf56d4253ff6e755ae6b69bc23024e739feb038953694bb
 - metrics: sha256:9a8414801ef1a2f9c497d3ac2872dbe6b90c9698c7a306db52eff0d1c80b65b4
 - profiles: sha256:6a574a75946444a774fcb53ee74efaf121051a0b52e4a667f789a50df1bc7a10
 - conformance: sha256:b77f657cce8b9b7cc8d80768756ab2ef69677df3d2c010c07c4c835851cf0078

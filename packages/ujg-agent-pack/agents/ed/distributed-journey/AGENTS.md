@@ -19,6 +19,12 @@ Related generated skills:
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
 
 
+---
+
+name: ujg-ed-distributed-journey-modeling
+description: "Generate, review, and correct UJG ED Distributed Journey JSON-LD for cross-authority human-facing journeys with Authority, DistributedArtifact, presented surfaces, source/target authorities, and Runtime Evidence separation."
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 # UJG ED Distributed Journey Modeling
 
 Use this skill together with `ujg-ed-modeling`. Do not use it as a replacement for the parent modeling skill.
@@ -26,25 +32,20 @@ Use this skill together with `ujg-ed-modeling`. Do not use it as a replacement f
 ## Source of truth
 
 Use the active Editor's Draft unless the user explicitly asks for a dated snapshot:
-
 `https://ujg.specs.openuji.org/ed/modules/distributed-journey`
-
-Generate only terms defined by the active ED Distributed Journey context and its required bridge modules unless the user explicitly requests an extension.
+Generate only terms defined by the active ED Distributed Journey context and required bridge modules unless the user explicitly requests an extension.
 
 ## Scope
 
-Distributed Journey describes human-facing journeys whose visible states, surfaces, actions, artifacts, or outcomes depend on more than one independently operated authority.
-
+Distributed Journey describes human-facing journey models whose visible states, surfaces, actions, artifacts, or outcomes depend on more than one independently operated authority.
 Use it for federated sharing, cross-instance account migration, remote follow/subscribe flows, cross-authority invites, portable artifacts, or human-visible outcomes involving multiple authorities.
-
-Do not use it for simple single-site forms, checkouts, dashboards, or ordinary app flows.
-
+Do not use it for simple single-site forms, checkouts, dashboards, ordinary app flows, server-only integration flows, or artifact lifecycle diagrams.
 Distributed Journey does not define new journey classes, traversal semantics, runtime causality, protocol semantics, queue behavior, retry behavior, sync state, server truth, or database state.
+Multiple authorities do not automatically mean one distributed `Journey`. A distributed scenario may contain several related local journeys. Use `JourneyEntryIndex` to list related journey entries and Runtime Evidence to record observed order or interleaving.
 
 ## Contexts
 
-Always include Core context.
-
+Always include Core and Graph contexts.
 Include Distributed Journey context when using Distributed Journey terms:
 
 ```json
@@ -55,7 +56,7 @@ Include bridge-module contexts only when their terms are used:
 
 ```json
 [
-  "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+  "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/actor.context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
@@ -65,7 +66,7 @@ Include bridge-module contexts only when their terms are used:
 ]
 ```
 
-Do not include Action, Artifact, Surface, Actor, or Graph contexts unless their terms appear.
+Do not include Action, Artifact, Surface, Actor, Graph, Runtime, or Runtime Evidence contexts unless their terms appear.
 
 ## Vocabulary
 
@@ -103,16 +104,18 @@ retryPolicy
 serverState
 databaseState
 causalOrder
+handoff
+acceptedArtifactRefs
+declinedArtifactRefs
+revokedArtifactRefs
 ```
 
-Use private `extensions` only for project-specific details that are not interoperable Distributed Journey semantics.
+Use private `extensions` only for project-specific details that are not interoperable Distributed Journey semantics. Do not put interoperable distributed graph semantics in `extensions`.
 
 ## Authority
 
 Use `Authority` for an independently operated machine or system boundary relevant to a human-facing surface, action, artifact, or outcome.
-
 Each `Authority` must have exactly one `origin`.
-
 Example:
 
 ```json
@@ -123,53 +126,31 @@ Example:
 }
 ```
 
-Do not use `Authority` to assert internal server truth, ownership truth, database state, or protocol state.
+Do not use `Authority` to assert internal server truth, ownership truth, database state, protocol state, queue state, or synchronization state. Authority references do not create Graph traversal.
 
 ## Surfaces and presented authority
 
 Use `presentedByAuthorityRef` on a `Surface` to identify the authority that presents or controls the human-facing surface.
-
-Example:
-
-```json
-{
-  "@id": "urn:surface:remote-share-confirmation",
-  "@type": "Surface",
-  "presentedByAuthorityRef": "urn:authority:cloud-a"
-}
-```
-
-A `Surface` may have at most one `presentedByAuthorityRef`.
-
-Do not attach `presentedByAuthorityRef` directly to Graph states unless the Surface module defines that subject. Prefer:
+Prefer:
 
 ```text
 State -> surfaceRef -> Surface -> presentedByAuthorityRef -> Authority
 ```
 
+A `Surface` may have at most one `presentedByAuthorityRef`.
+Do not attach `presentedByAuthorityRef` directly to Graph states unless the active ED explicitly defines that subject.
+Do not create a new `Surface` for every status if the same UI surface presents multiple stable states.
+
 ## Actions across authorities
 
 Use `sourceAuthorityRef` and `targetAuthorityRefs` on an `Action` only when the human-facing action itself crosses authority boundaries and no more specific artifact carries that relationship.
-
-Example:
-
-```json
-{
-  "@id": "urn:action:send-remote-invite",
-  "@type": "Action",
-  "sourceAuthorityRef": "urn:authority:cloud-a",
-  "targetAuthorityRefs": ["urn:authority:cloud-b"]
-}
-```
-
 An `Action` may have at most one `sourceAuthorityRef`.
-
 Do not treat authority references as graph edges, runtime causality, delivery confirmation, or protocol messages.
+If a `DistributedArtifact` already carries `sourceAuthorityRef` and `targetAuthorityRefs`, avoid duplicating the same authority relationship on actions unless the action itself needs distinct authority semantics.
 
 ## DistributedArtifact
 
-Use `DistributedArtifact` for a file, archive, report, invite, media object, portable resource, or similar artifact that crosses authority boundaries.
-
+Use `DistributedArtifact` for a file, archive, report, invite, media object, portable resource, remote share, migration bundle, or similar artifact that crosses authority boundaries.
 Example:
 
 ```json
@@ -182,30 +163,106 @@ Example:
 ```
 
 A `DistributedArtifact` may have at most one `sourceAuthorityRef`.
-
 Prefer `DistributedArtifact` when the cross-authority relationship belongs to the resource rather than the action.
+A `DistributedArtifact` does not create traversal. It does not mean delivered, accepted, declined, synchronized, revoked, opened, or visible unless those outcomes are modeled as human-visible states or Runtime Evidence.
+Do not model the path an artifact takes as a user journey.
 
 ## Graph separation
 
-Keep human-visible statuses as ordinary Graph `State` nodes when users see or experience them.
+Keep human-visible statuses as ordinary Graph `State` nodes when users see or experience them, such as Pending, Failed, Partial, Unavailable, Accepted, Declined, Revoked, Blocked, Access removed, File available, or Remote recipient recognized.
+Distributed Journey terms must not create hidden graph edges, change transition endpoints, replace `Journey`, replace `Transition`, or imply traversal.
+Use Graph `Transition` and `OutgoingTransition` for human-facing topology and navigation only.
+Use Runtime, Runtime Evidence, Artifact, or private extensions for protocol messages, logs, API responses, queues, synchronization state, request payloads, server-internal facts, and deployment evidence unless directly exposed to a human as visible UI state or outcome.
 
-Examples:
+## Multi-actor distributed scenarios
+
+Do not model a distributed scenario as one `Journey` merely because one artifact, invite, file, request, permission, or remote share crosses authorities.
+A `Journey` still models a local human-facing path through machine-presented surfaces.
+When multiple human actors each have their own visible path, model each actor's path as a separate local `Journey`.
+Preferred pattern:
 
 ```text
-Pending
-Failed
-Partial
-Unavailable
-Accepted
-Revoked
-Blocked
+JourneyEntryIndex
+  -> CompositeState for Actor A's local journey
+  -> CompositeState for Actor B's local journey
+Runtime Evidence
+  -> observed order and interleaving
 ```
 
-Distributed Journey terms must not create hidden graph edges, change transition endpoints, replace `Journey`, replace `Transition`, or imply traversal.
+The JourneyEntryIndex does not compose those journeys into one parent journey; it only lists entry states.
 
-Use Graph `Transition` and `OutgoingTransition` for human-facing topology and navigation.
+Bad:
 
-Use Runtime, Runtime Evidence, Artifact, or private extensions for protocol messages, logs, API responses, queues, synchronization state, request payloads, and server-internal facts unless they are directly exposed to a human as visible UI state or outcome.
+```text
+Alice state -> Bob state -> Alice state -> Bob state
+```
+
+Good:
+
+```text
+Alice journey: Alice state -> Alice state -> Alice state
+Bob journey: Bob state -> Bob state -> Bob state
+Runtime Evidence: Alice event -> Bob event -> Alice event -> Bob event
+```
+
+Do not create a fake root `Journey` whose only purpose is to connect states from different actors, authorities, surfaces, or runtime moments.
+
+## Cross-actor transition rule
+
+Before adding any `Transition` in a Distributed Journey document, check:
+
+1. Are `from` and `to` both listed in the same `Journey.stateRefs`?
+2. Are both states part of the same local human-facing path?
+3. Is the transition performed or observed through the same actor's journey context?
+4. Would the transition still make sense without backend delivery, polling, protocol state, or another actor's action?
+   If any answer is no, do not use `Transition`.
+   Reject transitions like:
+
+```text
+Alice share confirmed -> Bob incoming share visible
+Bob file visible -> Alice share revoked
+Alice share revoked -> Bob access removed
+```
+
+Use Runtime Evidence to record this observed order instead.
+
+## JourneyEntryIndex pattern
+
+Use `JourneyEntryIndex` when a distributed example contains several related local journeys.
+Each entry can be a `CompositeState` with `subjourneyId`.
+The index is not traversable and does not imply order, progression, reachability, parent continuation, or scenario timing.
+
+## Runtime Evidence handoff rule
+
+If one actor's visible state becomes observable after another actor's action, do not encode that handoff as a Graph transition.
+Use Runtime Evidence.
+Example observed interleaving:
+
+```text
+RuntimeEvent: Alice sees share confirmed
+previousId -> RuntimeEvent: Bob sees incoming share
+previousId -> RuntimeEvent: Bob sees file available
+previousId -> RuntimeEvent: Alice sees share revoked
+previousId -> RuntimeEvent: Bob sees access removed
+```
+
+This records what happened in one execution without changing static graph topology.
+Do not move execution order, API checks, logs, screenshots, Playwright traces, or deployment metadata back into Graph.
+
+## Common patterns
+
+For Nextcloud federated sharing, do not create one journey that mixes Alice and Bob states. Use a `JourneyEntryIndex` with an Alice federated sharing entry and a Bob remote-share acceptance entry.
+Alice local journey: files ready -> share panel open -> remote recipient entered -> share confirmed -> share revoked.
+Bob local journey: incoming share visible -> share accepted -> file visible -> access removed.
+For account migration, a single journey is valid only when it is clearly one human actor's path across old-server and new-server surfaces.
+For remote follow or subscription, a single journey is valid only when all visible states belong to the requesting user's local path. If a remote actor, admin, or moderator has their own UI path, split it into a separate local journey.
+For decline paths, model the decline as the receiving actor's local journey. Do not put Bob's decline path inside Alice's journey.
+
+## Use with Automation or Design System modules
+
+Graph states may point to `Surface` nodes. Design System may realize those surfaces.
+Automation, Playwright, API probes, selectors, screenshots, and runtime checks are not Distributed Journey terms.
+If automation bindings are needed, use a clearly namespaced private extension or a separate Automation Binding module. Do not pretend terms such as `uiAssert`, `apiProbe`, `playwrightAction`, or `fallbackApiAction` are Distributed Journey terms.
 
 ## Checks before answering
 
@@ -216,6 +273,30 @@ Use Runtime, Runtime Evidence, Artifact, or private extensions for protocol mess
 * Is each `sourceAuthorityRef` singular?
 * Are `targetAuthorityRefs` references to `Authority` nodes?
 * Did I use `DistributedArtifact` when the artifact carries the cross-authority relationship?
+* Did I avoid duplicating authority refs on actions when the artifact already carries the relationship?
 * Did I keep visible statuses as ordinary Graph states?
 * Did I avoid protocol, queue, retry, sync, database, and server-truth semantics?
 * Did Distributed Journey avoid changing Graph traversal?
+* Am I modeling a user journey, or the path an artifact/request/permission takes?
+* Does one `Journey` contain states from multiple human actors?
+* Does any `Transition` cross from one actor's local state to another actor's local state?
+* Did I use a fake root `Journey` to connect a distributed scenario timeline?
+* Should this be a `JourneyEntryIndex` with multiple local journey entries instead?
+* Is execution order better represented as Runtime Evidence?
+* Are `sourceAuthorityRef`, `targetAuthorityRefs`, or `DistributedArtifact` being treated as hidden graph edges?
+
+## Output workflow
+
+When generating Distributed Journey JSON-LD:
+
+1. State that this skill is used together with `ujg-ed-modeling`.
+2. Identify whether the request is single-actor cross-authority or multi-actor cross-authority.
+3. Select only required contexts.
+4. Define authorities, surfaces, and human-visible states.
+5. Decide whether one local journey is valid or multiple local journeys are required.
+6. For multi-actor scenarios, use `JourneyEntryIndex` with local journey entries.
+7. Add `DistributedArtifact` only when an artifact crosses authorities.
+8. Add authority refs on actions only when needed.
+9. Keep transitions local to one journey.
+10. Keep runtime order, API checks, logs, screenshots, and traces out of Graph.
+11. Provide a short self-audit.

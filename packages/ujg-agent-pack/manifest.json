@@ -90,7 +90,7 @@
           ],
           "source": "sources/ed/skills/root/skill.md",
           "sourceHash": "sha256:5e26b7b08656fcd28f113f9408a0ee44567e31890c99443f9c68e3611dc4b0cf",
-          "specHash": "sha256:1703d3601b2617034dfb0e931e04d74636df3a8576f10a1b1d4a67edab5efb5e"
+          "specHash": "sha256:1da9b623ce05fa7677c45ceb246256e2735963936ecfb7802272a9a27315031e"
         },
         {
           "artifactHash": "sha256:536ee9bbcc838fcfe4deead138084331769a61058f4d43ebbdcc2c8a018bed11",
@@ -151,7 +151,7 @@
           "specHash": "sha256:736ff91be0b70b12474473ec19cf3db060d9cd258ce052d9c3afe3b7d1a045f1"
         },
         {
-          "artifactHash": "sha256:18a7f7e0029453406992c9b9f3997ebb4dfece76878d93a53d100f0ddac780ef",
+          "artifactHash": "sha256:6d7cf018a12fef824cb07da43eb13168283af4763ef71d8f5257b7836e916a3c",
           "key": "distributed-journey",
           "moduleId": "modules/distributed-journey",
           "name": "ujg-ed-distributed-journey-modeling",
@@ -166,8 +166,8 @@
             "modules/distributed-journey"
           ],
           "source": "sources/ed/skills/distributed-journey/skill.md",
-          "sourceHash": "sha256:21480a5ac540822d1ceb4af90a3f034874edaf11f3e8d9f9e83de8ea8e3adf80",
-          "specHash": "sha256:25ef76a91aa5e73ec1db79c86a12ccfaf9e2a91c24ef217b39c338fff3d48e3a"
+          "sourceHash": "sha256:c888611f1d094770ccbd8246cc536a46749b181ddd7a013d64b2f9a01d47858d",
+          "specHash": "sha256:263df067894e4514a116de9631bed895ff115ca7e7fbb47f6e85f9cc5249ffa1"
         }
       ],
       "specRoot": "specs/ed"

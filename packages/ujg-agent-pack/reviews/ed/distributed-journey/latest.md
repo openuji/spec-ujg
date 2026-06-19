@@ -19,7 +19,7 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/distributed-journey
 - modules/action: sha256:85bf439ada55ec13eadc7b95997cd240e356ff2b8e8d82e108db36d13e6de3d1
 - modules/actor: sha256:8d2428b38e51ffc0336671bf5a7493f6eac384282532f815678e69013ff6b0ee
 - modules/artifact: sha256:ef364efa0c76b918cb52ba0e1d842b7a72f2953e08a10de051a731113234eebe
-- modules/distributed-journey: sha256:a26b1fec364040becece10cab72632313078b1f3526a7dd41958aa9bdc3002cd
+- modules/distributed-journey: sha256:d0ea0b6e1d07ec45bdf56d4253ff6e755ae6b69bc23024e739feb038953694bb
 
 ## Changed Modules
 
