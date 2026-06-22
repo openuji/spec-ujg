@@ -124,8 +124,18 @@ the SHACL shape.
       "@id": "urn:journey:checkout",
       "@type": "Journey",
       "label": "Checkout",
-      "startStateRef": "urn:state:shipping-form",
-      "stateRefs": ["urn:state:shipping-form"]
+      "defaultEntryRef": "urn:entry:checkout-default",
+      "entryRefs": [
+        "urn:entry:checkout-default"
+      ],
+      "stateRefs": [
+        "urn:state:shipping-form"
+      ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:entry:checkout-default",
+      "ujggraph:stateRef": "urn:state:shipping-form"
     },
     {
       "@id": "urn:state:shipping-form",
@@ -147,14 +157,19 @@ the SHACL shape.
       "executionId": "urn:execution:12345",
       "stateRef": "urn:state:shipping-form",
       "journeyInstanceRef": "urn:journey-instance:checkout:12345",
-      "payload": { "action": "surface.enter" }
+      "payload": {
+        "action": "surface.enter"
+      }
     },
     {
       "@id": "urn:runtime-evidence:execution-accepted",
       "@type": "RuntimeEvidenceRecord",
       "journeyExecutionRef": "urn:execution:12345",
       "observedByActorRef": "urn:actor:server-observer",
-      "evidencePayload": { "source": "server-ingest", "status": "accepted" }
+      "evidencePayload": {
+        "source": "server-ingest",
+        "status": "accepted"
+      }
     },
     {
       "@id": "urn:runtime-evidence:event-100-observed",
@@ -162,7 +177,10 @@ the SHACL shape.
       "journeyExecutionRef": "urn:execution:12345",
       "runtimeEventRef": "urn:event:12345:100",
       "observedByActorRef": "urn:actor:server-observer",
-      "evidencePayload": { "source": "server-ingest", "record": "event-observed" }
+      "evidencePayload": {
+        "source": "server-ingest",
+        "record": "event-observed"
+      }
     }
   ]
 }

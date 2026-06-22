@@ -35,7 +35,7 @@ Include bridge-module contexts only when their terms are used:
 
 ```json
 [
-  "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/actor.context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",

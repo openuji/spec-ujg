@@ -24,8 +24,7 @@ This module is published through the following artifacts:
 - `design-system.context.jsonld`: JSON-LD term mappings, published at `https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld`
 - `design-system.shape.ttl`: SHACL validation rules, published at `https://ujg.specs.openuji.org/ed/ns/design-system.shape`
 
-Examples in this page compose the shared baseline context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`
-with the Surface and DesignSystem contexts.
+Examples in this page compose the Core, Graph, Surface, and Design System contexts explicitly.
 
 Non-goals:
 
@@ -172,7 +171,8 @@ the SHACL shape.
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld"
   ],
   "@id": "https://example.com/ujg/surface-only.jsonld",
@@ -199,7 +199,8 @@ This example assigns a state to a surface. It does not declare any design-system
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld"
   ],
@@ -219,8 +220,12 @@ This example assigns a state to a surface. It does not declare any design-system
     {
       "@id": "urn:ds:acme",
       "@type": "DesignSystem",
-      "componentRefs": ["urn:component:CartView"],
-      "surfaceRealizationRefs": ["urn:realization:cart-web"]
+      "componentRefs": [
+        "urn:component:CartView"
+      ],
+      "surfaceRealizationRefs": [
+        "urn:realization:cart-web"
+      ]
     },
     {
       "@id": "urn:component:CartView",
@@ -244,7 +249,8 @@ surface.
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld"
   ],
@@ -275,9 +281,15 @@ surface.
     {
       "@id": "urn:ds:acme",
       "@type": "DesignSystem",
-      "componentRefs": ["urn:component:RefundForm"],
-      "templateRefs": ["urn:template:FormShell"],
-      "surfaceRealizationRefs": ["urn:realization:refund-form"]
+      "componentRefs": [
+        "urn:component:RefundForm"
+      ],
+      "templateRefs": [
+        "urn:template:FormShell"
+      ],
+      "surfaceRealizationRefs": [
+        "urn:realization:refund-form"
+      ]
     },
     {
       "@id": "urn:component:RefundForm",
@@ -286,7 +298,10 @@ surface.
     {
       "@id": "urn:template:FormShell",
       "@type": "Template",
-      "slotRefs": ["urn:slot:main", "urn:slot:submit"]
+      "slotRefs": [
+        "urn:slot:main",
+        "urn:slot:submit"
+      ]
     },
     {
       "@id": "urn:slot:main",
@@ -313,7 +328,10 @@ surface.
       "@type": "SurfaceRealization",
       "surfaceRef": "urn:surface:refund",
       "templateRef": "urn:template:FormShell",
-      "slotBindingRefs": ["urn:binding:refund-main", "urn:binding:refund-submit"]
+      "slotBindingRefs": [
+        "urn:binding:refund-main",
+        "urn:binding:refund-submit"
+      ]
     }
   ]
 }
@@ -326,7 +344,8 @@ The template declares slots. The realization binds those slots for this surface.
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld"
   ],
@@ -343,7 +362,10 @@ The template declares slots. The realization binds those slots for this surface.
     {
       "@id": "urn:journey:product-discovery",
       "@type": "Journey",
-      "startState": "urn:state:search-query",
+      "defaultEntryRef": "urn:entry:product-discovery-default",
+      "entryRefs": [
+        "urn:entry:product-discovery-default"
+      ],
       "stateRefs": [
         "urn:state:search-query",
         "urn:state:filters",
@@ -355,6 +377,11 @@ The template declares slots. The realization binds those slots for this surface.
         "urn:transition:filters-to-results",
         "urn:transition:results-to-preview"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:entry:product-discovery-default",
+      "stateRef": "urn:state:search-query"
     },
     {
       "@id": "urn:state:search-query",
@@ -424,7 +451,12 @@ The template declares slots. The realization binds those slots for this surface.
     {
       "@id": "urn:template:ProductDiscovery",
       "@type": "Template",
-      "slotRefs": ["urn:slot:search", "urn:slot:filters", "urn:slot:results", "urn:slot:preview"]
+      "slotRefs": [
+        "urn:slot:search",
+        "urn:slot:filters",
+        "urn:slot:results",
+        "urn:slot:preview"
+      ]
     },
     {
       "@id": "urn:slot:search",
@@ -481,8 +513,12 @@ The template declares slots. The realization binds those slots for this surface.
     {
       "@id": "urn:ds:commerce",
       "@type": "DesignSystem",
-      "templateRefs": ["urn:template:ProductDiscovery"],
-      "surfaceRealizationRefs": ["urn:realization:product-discovery"]
+      "templateRefs": [
+        "urn:template:ProductDiscovery"
+      ],
+      "surfaceRealizationRefs": [
+        "urn:realization:product-discovery"
+      ]
     }
   ]
 }
@@ -497,7 +533,8 @@ remains the source of containment and traversal semantics.
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld"
   ],
@@ -547,20 +584,32 @@ remains the source of containment and traversal semantics.
     {
       "@id": "urn:ds:web",
       "@type": "DesignSystem",
-      "componentRefs": ["urn:component:WebCheckout"],
-      "surfaceRealizationRefs": ["urn:realization:checkout-web"]
+      "componentRefs": [
+        "urn:component:WebCheckout"
+      ],
+      "surfaceRealizationRefs": [
+        "urn:realization:checkout-web"
+      ]
     },
     {
       "@id": "urn:ds:kiosk",
       "@type": "DesignSystem",
-      "componentRefs": ["urn:component:KioskCheckout"],
-      "surfaceRealizationRefs": ["urn:realization:checkout-kiosk"]
+      "componentRefs": [
+        "urn:component:KioskCheckout"
+      ],
+      "surfaceRealizationRefs": [
+        "urn:realization:checkout-kiosk"
+      ]
     },
     {
       "@id": "urn:ds:cli",
       "@type": "DesignSystem",
-      "componentRefs": ["urn:component:CliCheckout"],
-      "surfaceRealizationRefs": ["urn:realization:checkout-cli"]
+      "componentRefs": [
+        "urn:component:CliCheckout"
+      ],
+      "surfaceRealizationRefs": [
+        "urn:realization:checkout-cli"
+      ]
     }
   ]
 }

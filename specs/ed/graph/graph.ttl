@@ -15,6 +15,11 @@
 ujggraph:Journey a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
+ujggraph:JourneyEntry a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Journey Entry" ;
+  rdfs:comment "An explicit entry contract for a Journey. A JourneyEntry points to the local State or CompositeState where traversal begins." .
+
 ujggraph:JourneyEntryIndex a owl:Class ;
   rdfs:subClassOf ujg:Node ;
   rdfs:label "Journey Index" ;
@@ -56,11 +61,23 @@ ujggraph:tags a owl:DatatypeProperty ;
   rdfs:domain ujg:Node ;
   rdfs:range xsd:string .
 
-ujggraph:startStateRef a owl:ObjectProperty ;
+ujggraph:defaultEntryRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:JourneyEntry ;
+  rdfs:label "default entry ref" ;
+  rdfs:comment "References the JourneyEntry used when traversal starts without a more specific entry selection." .
+
+ujggraph:entryRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:JourneyEntry ;
+  rdfs:label "entry refs" ;
+  rdfs:comment "References explicit entry contracts declared by a journey." .
+
+ujggraph:stateRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:JourneyEntry ;
   rdfs:range ujggraph:State ;
-  rdfs:label "start state ref" ;
-  rdfs:comment "References the start state of a journey." .
+  rdfs:label "state ref" ;
+  rdfs:comment "References the local State or CompositeState where a JourneyEntry begins traversal." .
 
 ujggraph:stateRefs a owl:ObjectProperty ;
   rdfs:range ujggraph:State ;
@@ -96,6 +113,12 @@ ujggraph:fromExitRef a owl:ObjectProperty ;
   rdfs:range ujggraph:JourneyExit ;
   rdfs:label "from exit ref" ;
   rdfs:comment "Identifies the exported JourneyExit completed by the child journey of the CompositeState used as the transition's from value. This property is not a transition endpoint." .
+
+ujggraph:toEntryRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Transition ;
+  rdfs:range ujggraph:JourneyEntry ;
+  rdfs:label "to entry ref" ;
+  rdfs:comment "Identifies the JourneyEntry selected when entering the child journey of the CompositeState used as the transition's to value. This property is not a transition endpoint." .
 
 ujggraph:subjourneyId a owl:ObjectProperty ;
   rdfs:domain ujggraph:CompositeState ;

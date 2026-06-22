@@ -10,11 +10,12 @@ This module is published through the following artifacts:
 - `graph.context.jsonld`: JSON-LD term mappings, published at `https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld`
 - `graph.shape.ttl`: SHACL validation rules, published at `https://ujg.specs.openuji.org/ed/ns/graph.shape`
 
-Examples in this page use an explicit context array composed from the published module contexts. The same composition is also published as the convenience context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`.
+Examples in this page use explicit Core and Graph context arrays. This keeps Graph's `stateRef` term scoped to [=JourneyEntry=] examples and avoids ambiguity with other modules that define their own compact `stateRef` terms.
 
 ## Terminology
 
 - <dfn>Journey</dfn>: A named container for local traversable user flow topology.
+- <dfn>JourneyEntry</dfn>: An explicit entry contract for a [=Journey=].
 - <dfn>JourneyEntryIndex</dfn>: A catalogue of addressable journey entry states that does not define traversal.
 - <dfn>LocalVertex</dfn>: An abstract local topology vertex of a [=Journey=].
 - <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal).
@@ -81,7 +82,9 @@ Example JSON node:
   "@type": "State",
   "@id": "urn:ujg:state:search-form",
   "label": "Search form",
-  "tags": ["phase:search"]
+  "tags": [
+    "phase:search"
+  ]
 }
 ```
 
@@ -102,7 +105,10 @@ A [=Transition=] is not owned by either endpoint state. It is owned by a journey
 6. Equivalently, `from` is a member of `stateRefs`, and `to` is a member of `stateRefs` union `exitRefs`.
 7. A [=Transition=] **MUST NOT** use a [=JourneyExit=] as its `from` value.
 8. A [=Transition=] **MUST NOT** use `from` or `to` to reference local vertices belonging to another journey.
-9. A [=Transition=] **MUST NOT** declare more than one `label`.
+9. A [=Transition=] **MAY** declare `toEntryRef` when its `to` value references a [=CompositeState=].
+10. A [=Transition=] **MUST NOT** declare more than one `toEntryRef`.
+11. `toEntryRef` **MUST NOT** weaken, replace, or bypass local transition endpoint validation.
+12. A [=Transition=] **MUST NOT** declare more than one `label`.
 </spec-statement>
 
 ```mermaid
@@ -144,20 +150,23 @@ Use [=Journey=] when the modeled object owns local traversal, progression, or st
 
 <spec-statement>
 1. A [=Journey=] **MUST** be identified by an IRI.
-2. A [=Journey=] **MUST** declare exactly one `startStateRef`.
-3. A [=Journey=] **MUST** declare at least one `stateRefs` value.
-4. A [=Journey=] **MAY** declare `transitionRefs`.
-5. A [=Journey=] **MAY** declare `exitRefs`.
-6. Each `stateRefs` value **MUST** reference a [=State=] or a valid [=State=] subclass defined by this module.
-7. If present, each `transitionRefs` value **MUST** reference a [=Transition=].
-8. If present, each `exitRefs` value **MUST** reference a [=JourneyExit=].
-9. A [=Journey=] **MUST** contain one or more [=State|States=] and **MAY** connect local vertices with [=Transition|Transitions=].
-10. The derived local vertex set of a [=Journey=] is `stateRefs` union `exitRefs`.
-11. `stateRefs` contains experiential local vertices.
-12. `exitRefs` contains terminal exported local vertices that participate in local topology but do not represent UX states.
-13. Every `stateRefs` value of a [=Journey=] **SHOULD** belong to that journey's local experiential topology.
-14. A state belongs to a journey when it is the `startStateRef`, a `from` or state-valued `to` endpoint of a transition listed in that journey's `transitionRefs`, or a local observable segment or condition connected by the journey's structural order.
-15. A [=Journey=] **MUST NOT** list a linked destination page, surface, flow, or journey entry inside `stateRefs` merely because an [=OutgoingTransition=] can reach it.
+2. A [=Journey=] **MUST** declare at least one `entryRefs` value.
+3. A [=Journey=] **MUST** declare exactly one `defaultEntryRef`.
+4. The `defaultEntryRef` value **MUST** be listed in the same [=Journey=]'s `entryRefs`.
+5. A [=Journey=] **MUST** declare at least one `stateRefs` value.
+6. A [=Journey=] **MAY** declare `transitionRefs`.
+7. A [=Journey=] **MAY** declare `exitRefs`.
+8. Each `entryRefs` value **MUST** reference a [=JourneyEntry=].
+9. Each `stateRefs` value **MUST** reference a [=State=] or a valid [=State=] subclass defined by this module.
+10. If present, each `transitionRefs` value **MUST** reference a [=Transition=].
+11. If present, each `exitRefs` value **MUST** reference a [=JourneyExit=].
+12. A [=Journey=] **MUST** contain one or more [=State|States=] and **MAY** connect local vertices with [=Transition|Transitions=].
+13. The derived local vertex set of a [=Journey=] is `stateRefs` union `exitRefs`.
+14. `stateRefs` contains experiential local vertices.
+15. `exitRefs` contains terminal exported local vertices that participate in local topology but do not represent UX states.
+16. Every `stateRefs` value of a [=Journey=] **SHOULD** belong to that journey's local experiential topology.
+17. A state belongs to a journey when it is referenced by a [=JourneyEntry=] listed in the journey's `entryRefs`, a `from` or state-valued `to` endpoint of a transition listed in that journey's `transitionRefs`, or a local observable segment or condition connected by the journey's structural order.
+18. A [=Journey=] **MUST NOT** list a linked destination page, surface, flow, or journey entry inside `stateRefs` merely because an [=OutgoingTransition=] can reach it.
 </spec-statement>
 
 ```mermaid
@@ -165,10 +174,16 @@ classDiagram
   class Journey {
     id
     label
-    startStateRef
+    defaultEntryRef
+    entryRefs
     stateRefs
     transitionRefs
     exitRefs
+  }
+
+  class JourneyEntry {
+    id
+    stateRef
   }
 
   class State {
@@ -187,7 +202,9 @@ classDiagram
     to
   }
 
-  Journey --> State : startStateRef
+  Journey --> JourneyEntry : defaultEntryRef
+  Journey --> JourneyEntry : entryRefs
+  JourneyEntry --> State : stateRef
   Journey --> State : stateRefs
   Journey --> JourneyExit : exitRefs
   Journey --> Transition : transitionRefs
@@ -199,32 +216,103 @@ classDiagram
 Example JSON node:
 
 ```json
-{
-  "@type": "Journey",
-  "@id": "urn:ujg:journey:site-search",
-  "label": "Site search",
-  "startStateRef": "urn:ujg:state:search-form",
-  "stateRefs": [
-    "urn:ujg:state:search-form",
-    "urn:ujg:state:results"
-  ],
-  "transitionRefs": [
-    "urn:ujg:transition:search-form-to-results"
-  ]
-}
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:site-search",
+    "label": "Site search",
+    "defaultEntryRef": "urn:ujg:entry:site-search-default",
+    "entryRefs": [
+      "urn:ujg:entry:site-search-default"
+    ],
+    "stateRefs": [
+      "urn:ujg:state:search-form",
+      "urn:ujg:state:results"
+    ],
+    "transitionRefs": [
+      "urn:ujg:transition:search-form-to-results"
+    ]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:site-search-default",
+    "stateRef": "urn:ujg:state:search-form"
+  }
+]
 ```
 
 A single-state journey can omit `transitionRefs`:
 
 ```json
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:privacy-policy",
+    "label": "Privacy policy",
+    "defaultEntryRef": "urn:ujg:entry:privacy-policy-default",
+    "entryRefs": [
+      "urn:ujg:entry:privacy-policy-default"
+    ],
+    "stateRefs": [
+      "urn:ujg:state:privacy-policy"
+    ]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:privacy-policy-default",
+    "stateRef": "urn:ujg:state:privacy-policy"
+  }
+]
+```
+
+---
+
+## JourneyEntry {data-cop-concept="journey-entry"}
+
+A [=JourneyEntry=] is an explicit entry contract for a [=Journey=]. It identifies the local [=State=] or [=CompositeState=] where traversal begins without making that entry node part of the local transition topology.
+
+<spec-statement>
+1. A [=JourneyEntry=] **MUST** be identified by an IRI.
+2. A [=JourneyEntry=] **MUST** declare exactly one `stateRef`.
+3. The `stateRef` value **MUST** reference a [=State=] or [=CompositeState=].
+4. The `stateRef` value **MUST** be listed in the `stateRefs` of the same [=Journey=] that lists the [=JourneyEntry=] in `entryRefs`.
+5. A [=JourneyEntry=] **MUST** be listed in exactly one [=Journey=]'s `entryRefs`.
+6. A [=JourneyEntry=] **MUST NOT** reference a [=JourneyExit=].
+7. A [=JourneyEntry=] **MUST NOT** be used as a [=Transition=]'s `from` or `to` value.
+8. A [=JourneyEntry=] **MAY** declare one `label`.
+9. A [=JourneyEntry=] **MAY** declare one or more `tags`.
+</spec-statement>
+
+Top-level execution of a [=Journey=] begins at the `stateRef` of the [=Journey=]'s `defaultEntryRef`. Child journey execution can select a more specific entry through a parent transition's `toEntryRef`; otherwise it also begins at the child journey's `defaultEntryRef`.
+
+```mermaid
+classDiagram
+  class Journey {
+    defaultEntryRef
+    entryRefs
+    stateRefs
+  }
+  class JourneyEntry {
+    id
+    stateRef
+  }
+  class State
+  class CompositeState
+
+  Journey --> JourneyEntry : defaultEntryRef
+  Journey --> JourneyEntry : entryRefs
+  JourneyEntry --> State : stateRef
+  JourneyEntry --> CompositeState : stateRef
+```
+
+Example JSON node:
+
+```json
 {
-  "@type": "Journey",
-  "@id": "urn:ujg:journey:privacy-policy",
-  "label": "Privacy policy",
-  "startStateRef": "urn:ujg:state:privacy-policy",
-  "stateRefs": [
-    "urn:ujg:state:privacy-policy"
-  ]
+  "@type": "JourneyEntry",
+  "@id": "urn:ujg:entry:site-search-default",
+  "label": "Default search entry",
+  "stateRef": "urn:ujg:state:search-form"
 }
 ```
 
@@ -245,17 +333,20 @@ In common use, a [=JourneyEntryIndex=] lists [=CompositeState=] entries whose `s
 4. Each referenced state **MUST** be a top-level node in the same document or resolvable through imports.
 5. Each referenced state **SHOULD** be a [=CompositeState=] when it represents a page, surface, or nested journey entry.
 6. A [=JourneyEntryIndex=] **MUST NOT** reference a [=JourneyExit=] in `stateRefs`.
-7. A [=JourneyEntryIndex=] **MUST NOT** declare `startStateRef`.
-8. A [=JourneyEntryIndex=] **MUST NOT** declare `transitionRefs`.
-9. A [=JourneyEntryIndex=] **MUST NOT** declare `exitRefs`.
-10. A [=JourneyEntryIndex=] **MUST NOT** declare `outgoingTransitionGroupRefs`.
-11. A [=JourneyEntryIndex=] **MUST NOT** declare `from`.
-12. A [=JourneyEntryIndex=] **MUST NOT** declare `to`.
-13. A [=JourneyEntryIndex=] **MUST NOT** declare `fromExitRef`.
-14. A [=JourneyEntryIndex=] **MUST NOT** declare `subjourneyId`.
-15. A [=JourneyEntryIndex=] **MUST NOT** declare `outgoingTransitionRefs`.
-16. `stateRefs` on a [=JourneyEntryIndex=] **MUST NOT** imply traversal order, reachability, user path, progression, or parent continuation.
-17. The order of values in `stateRefs` **MUST NOT** be interpreted normatively unless a future ordering mechanism is explicitly added.
+7. A [=JourneyEntryIndex=] **MUST NOT** declare `defaultEntryRef`.
+8. A [=JourneyEntryIndex=] **MUST NOT** declare `entryRefs`.
+9. A [=JourneyEntryIndex=] **MUST NOT** declare `stateRef`.
+10. A [=JourneyEntryIndex=] **MUST NOT** declare `transitionRefs`.
+11. A [=JourneyEntryIndex=] **MUST NOT** declare `exitRefs`.
+12. A [=JourneyEntryIndex=] **MUST NOT** declare `outgoingTransitionGroupRefs`.
+13. A [=JourneyEntryIndex=] **MUST NOT** declare `from`.
+14. A [=JourneyEntryIndex=] **MUST NOT** declare `to`.
+15. A [=JourneyEntryIndex=] **MUST NOT** declare `fromExitRef`.
+16. A [=JourneyEntryIndex=] **MUST NOT** declare `toEntryRef`.
+17. A [=JourneyEntryIndex=] **MUST NOT** declare `subjourneyId`.
+18. A [=JourneyEntryIndex=] **MUST NOT** declare `outgoingTransitionRefs`.
+19. `stateRefs` on a [=JourneyEntryIndex=] **MUST NOT** imply traversal order, reachability, user path, progression, or parent continuation.
+20. The order of values in `stateRefs` **MUST NOT** be interpreted normatively unless a future ordering mechanism is explicitly added.
 </spec-statement>
 
 [=JourneyEntryIndex=] is intended for top-level page maps, product surface indexes, search-result target indexes, documentation indexes, route or catalogue manifests, and other collections of known journey entry points. Do not use [=JourneyEntryIndex=] to model page-segment order, local journey progression, child completion, runtime observations, or experience annotations.
@@ -389,7 +480,10 @@ Example JSON graph:
 
 ```json
 {
-  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld"
+  ],
   "@id": "https://example.com/ujg/checkout-exit.jsonld",
   "@type": "UJGDocument",
   "nodes": [
@@ -397,7 +491,10 @@ Example JSON graph:
       "@type": "Journey",
       "@id": "urn:ujg:journey:checkout",
       "label": "Checkout journey",
-      "startStateRef": "urn:ujg:state:checkout-form",
+      "defaultEntryRef": "urn:ujg:entry:checkout-default",
+      "entryRefs": [
+        "urn:ujg:entry:checkout-default"
+      ],
       "stateRefs": [
         "urn:ujg:state:checkout-form"
       ],
@@ -407,6 +504,11 @@ Example JSON graph:
       "exitRefs": [
         "urn:ujg:exit:checkout-complete"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:checkout-default",
+      "stateRef": "urn:ujg:state:checkout-form"
     },
     {
       "@type": "State",
@@ -429,26 +531,36 @@ Example JSON graph:
 }
 ```
 
-### Parent Continuation with fromExitRef {data-cop-concept="parent-continuation"}
+### Boundary Entry and Exit Mapping {data-cop-concept="boundary-mapping"}
 
-`fromExitRef` is a mapping property on a parent [=Transition=]. It identifies which exported [=JourneyExit=] completed for the child journey of the transition's `from` [=CompositeState=].
+`toEntryRef` and `fromExitRef` are mapping properties on parent [=Transition=] resources. They describe how a parent-local [=CompositeState=] connects to the entry and exit contracts of its child [=Journey=].
 
-`fromExitRef` is not a transition endpoint. The transition's `from` and `to` values remain local to the enclosing journey and `fromExitRef` disambiguates which child exit caused the parent transition to become applicable.
+These properties are not transition endpoints. The transition's `from` and `to` values remain local to the enclosing journey.
 
 <spec-statement>
-1. A [=Transition=] **MAY** declare `fromExitRef`.
-2. A [=Transition=] **MUST NOT** declare more than one `fromExitRef`.
-3. A [=Transition=] with `fromExitRef` **MUST** have a `from` value that references a [=CompositeState=].
-4. The [=CompositeState=] referenced by `from` **MUST** declare exactly one `subjourneyId`.
-5. The `subjourneyId` value **MUST** resolve to a [=Journey=].
-6. The `fromExitRef` value **MUST** be listed in the `exitRefs` of the journey referenced by the `from` composite state's `subjourneyId`.
-7. `fromExitRef` **MUST NOT** weaken, replace, or bypass local transition endpoint validation.
-8. A parent transition **MUST NOT** directly reference a child journey's state as `from`, `to`, or through any child-state-specific transition property.
-9. A journey **MUST NOT** contain more than one transition with the same `from` value and the same `fromExitRef` value.
+1. A [=Transition=] **MAY** declare `toEntryRef`.
+2. A [=Transition=] **MUST NOT** declare more than one `toEntryRef`.
+3. A [=Transition=] with `toEntryRef` **MUST** have a `to` value that references a [=CompositeState=].
+4. The [=CompositeState=] referenced by `to` **MUST** declare exactly one `subjourneyId`.
+5. The `subjourneyId` value of that `to` [=CompositeState=] **MUST** resolve to a [=Journey=].
+6. The `toEntryRef` value **MUST** be listed in the `entryRefs` of the journey referenced by the `to` composite state's `subjourneyId`.
+7. A [=Transition=] **MAY** declare `fromExitRef`.
+8. A [=Transition=] **MUST NOT** declare more than one `fromExitRef`.
+9. A [=Transition=] with `fromExitRef` **MUST** have a `from` value that references a [=CompositeState=].
+10. The [=CompositeState=] referenced by `from` **MUST** declare exactly one `subjourneyId`.
+11. The `subjourneyId` value of that `from` [=CompositeState=] **MUST** resolve to a [=Journey=].
+12. The `fromExitRef` value **MUST** be listed in the `exitRefs` of the journey referenced by the `from` composite state's `subjourneyId`.
+13. `toEntryRef` and `fromExitRef` **MUST NOT** weaken, replace, or bypass local transition endpoint validation.
+14. A parent transition **MUST NOT** directly reference a child journey's state as `from`, `to`, or through any child-state-specific transition property.
+15. A journey **MUST NOT** contain more than one transition with the same `from` value and the same `fromExitRef` value.
 </spec-statement>
 
 <spec-statement>
 When a Consumer enters a [=CompositeState=], it **MAY** resolve the composite state's `subjourneyId` and interpret the referenced child [=Journey=].
+
+If the parent transition whose `to` value enters the [=CompositeState=] declares `toEntryRef`, child traversal begins at the `stateRef` of that [=JourneyEntry=].
+
+If the parent transition does not declare `toEntryRef`, child traversal begins at the `stateRef` of the child [=Journey=]'s `defaultEntryRef`.
 
 If interpretation of the child journey reaches a [=JourneyExit=] listed in that child journey's `exitRefs`, that [=JourneyExit=] becomes the exported exit of the child journey.
 
@@ -463,12 +575,12 @@ If no matching parent transition exists, the Consumer **MUST NOT** synthesize an
 
 If more than one matching parent transition exists, the graph is invalid. A Consumer **MUST NOT** choose one arbitrarily.
 
-A Consumer **MUST NOT** treat `fromExitRef` as a replacement for `from` or `to`.
+A Consumer **MUST NOT** treat `toEntryRef` or `fromExitRef` as a replacement for `from` or `to`.
 
 A Consumer **MUST NOT** treat a parent transition without `fromExitRef` as a fallback for an exported child journey exit.
 </spec-statement>
 
-Use [=JourneyExit=] and `fromExitRef` when a nested journey has multiple explicit child outcomes that the parent journey needs to distinguish. Do not use [=JourneyExit=] for ordinary transitions inside the child journey; use normal child [=Transition=] resources for internal child movement.
+Use `toEntryRef` when a parent transition must choose a specific child entry other than the child journey's default entry. Use [=JourneyExit=] and `fromExitRef` when a nested journey has multiple explicit child outcomes that the parent journey needs to distinguish. Do not use [=JourneyExit=] for ordinary transitions inside the child journey; use normal child [=Transition=] resources for internal child movement.
 
 ```mermaid
 classDiagram
@@ -476,15 +588,20 @@ classDiagram
   class CompositeState {
     subjourneyId
   }
+  class JourneyEntry
   class JourneyExit
   class Transition {
     from
     to
+    toEntryRef
     fromExitRef
   }
 
   CompositeState --> Journey : subjourneyId
+  Journey --> JourneyEntry : entryRefs
   Journey --> JourneyExit : exitRefs
+  Transition --> CompositeState : to
+  Transition --> JourneyEntry : toEntryRef
   Transition --> CompositeState : from
   Transition --> JourneyExit : fromExitRef
 ```
@@ -493,7 +610,10 @@ Example JSON graph:
 
 ```json
 {
-  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld"
+  ],
   "@id": "https://example.com/ujg/checkout-with-exit.jsonld",
   "@type": "UJGDocument",
   "nodes": [
@@ -501,7 +621,10 @@ Example JSON graph:
       "@type": "Journey",
       "@id": "urn:ujg:journey:shop",
       "label": "Shop journey",
-      "startStateRef": "urn:ujg:state:cart",
+      "defaultEntryRef": "urn:ujg:entry:shop-default",
+      "entryRefs": [
+        "urn:ujg:entry:shop-default"
+      ],
       "stateRefs": [
         "urn:ujg:state:cart",
         "urn:ujg:state:checkout-flow",
@@ -511,6 +634,11 @@ Example JSON graph:
         "urn:ujg:transition:cart-to-checkout",
         "urn:ujg:transition:checkout-to-confirmation"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:shop-default",
+      "stateRef": "urn:ujg:state:cart"
     },
     {
       "@type": "State",
@@ -533,7 +661,8 @@ Example JSON graph:
       "@id": "urn:ujg:transition:cart-to-checkout",
       "label": "Start checkout",
       "from": "urn:ujg:state:cart",
-      "to": "urn:ujg:state:checkout-flow"
+      "to": "urn:ujg:state:checkout-flow",
+      "toEntryRef": "urn:ujg:entry:checkout-default"
     },
     {
       "@type": "Transition",
@@ -547,7 +676,10 @@ Example JSON graph:
       "@type": "Journey",
       "@id": "urn:ujg:journey:checkout",
       "label": "Checkout child journey",
-      "startStateRef": "urn:ujg:state:checkout-form",
+      "defaultEntryRef": "urn:ujg:entry:checkout-default",
+      "entryRefs": [
+        "urn:ujg:entry:checkout-default"
+      ],
       "stateRefs": [
         "urn:ujg:state:checkout-form"
       ],
@@ -557,6 +689,11 @@ Example JSON graph:
       "exitRefs": [
         "urn:ujg:exit:checkout-complete"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:checkout-default",
+      "stateRef": "urn:ujg:state:checkout-form"
     },
     {
       "@type": "State",
@@ -574,6 +711,97 @@ Example JSON graph:
       "@type": "JourneyExit",
       "@id": "urn:ujg:exit:checkout-complete",
       "label": "Checkout complete"
+    }
+  ]
+}
+```
+
+Example JSON graph with an explicit child entry selection:
+
+```json
+{
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld"
+  ],
+  "@id": "https://example.com/ujg/mfa-entry.jsonld",
+  "@type": "UJGDocument",
+  "nodes": [
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:account-access",
+      "label": "Account access",
+      "defaultEntryRef": "urn:ujg:entry:account-access-default",
+      "entryRefs": [
+        "urn:ujg:entry:account-access-default"
+      ],
+      "stateRefs": [
+        "urn:ujg:state:password-check",
+        "urn:ujg:state:mfa-challenge"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:password-to-mfa"
+      ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:account-access-default",
+      "stateRef": "urn:ujg:state:password-check"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:password-check",
+      "label": "Password check"
+    },
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:mfa-challenge",
+      "label": "MFA challenge",
+      "subjourneyId": "urn:ujg:journey:mfa"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:password-to-mfa",
+      "label": "Require MFA",
+      "from": "urn:ujg:state:password-check",
+      "to": "urn:ujg:state:mfa-challenge",
+      "toEntryRef": "urn:ujg:entry:mfa-code-entry"
+    },
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:mfa",
+      "label": "MFA",
+      "defaultEntryRef": "urn:ujg:entry:mfa-default",
+      "entryRefs": [
+        "urn:ujg:entry:mfa-default",
+        "urn:ujg:entry:mfa-code-entry"
+      ],
+      "stateRefs": [
+        "urn:ujg:state:mfa-method-choice",
+        "urn:ujg:state:mfa-code"
+      ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:mfa-default",
+      "label": "Choose MFA method",
+      "stateRef": "urn:ujg:state:mfa-method-choice"
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:mfa-code-entry",
+      "label": "Enter MFA code",
+      "stateRef": "urn:ujg:state:mfa-code"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:mfa-method-choice",
+      "label": "MFA method choice"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:mfa-code",
+      "label": "MFA code entry"
     }
   ]
 }
@@ -813,7 +1041,7 @@ This example shows a search form state with a local "Back to home page" affordan
 
 ## Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `exitRefs`, `fromExitRef`, `toCurrentState`, and `outgoingTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `toCurrentState`, and `outgoingTransitionRefs`.
 
 :::include ./graph.ttl :::
 
@@ -839,13 +1067,15 @@ The rules below define additional graph integrity and resolution behavior beyond
 
 <spec-statement>
 To ensure graph integrity, the following constraints **MUST** be met:
-1. **Reference Integrity:** All `startStateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, and `outgoingTransitionRefs` IDs **MUST** resolve to valid Nodes within the current scope or imported modules.
+1. **Reference Integrity:** All `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, and `outgoingTransitionRefs` IDs **MUST** resolve to valid Nodes within the current scope or imported modules.
 2. **Transition Endpoint Resolution:** The `from` ID of a [=Transition=] **MUST** resolve to a [=State=] or [=CompositeState=] listed in the enclosing [=Journey=]'s `stateRefs`. The `to` ID of a [=Transition=] **MUST** resolve to a [=State=] or [=CompositeState=] listed in the enclosing [=Journey=]'s `stateRefs`, or a [=JourneyExit=] listed in the enclosing [=Journey=]'s `exitRefs`. A transition **MUST NOT** reference local vertices belonging to other journeys.
-3. **Composition Safety:** `subjourneyId` **MUST** resolve to a valid [=Journey=].
-4. **Journey Exit Resolution:** Every ID in `exitRefs` **MUST** resolve to a [=JourneyExit=].
-5. **Group Resolution:** Every ID in `outgoingTransitionGroupRefs` **MUST** resolve to an [=OutgoingTransitionGroup=].
-6. **Outgoing Resolution:** Every ID in `outgoingTransitionRefs` **MUST** resolve to an [=OutgoingTransition=].
-7. **Outgoing Target Resolution:** Each [=OutgoingTransition=] **MUST** resolve through exactly one effective target mechanism: a fixed `to` target, or `toCurrentState: true` resolved at the current effective source where the outgoing affordance is available.
+3. **Entry Resolution:** Every ID in `entryRefs` **MUST** resolve to a [=JourneyEntry=], and each [=JourneyEntry=]'s `stateRef` **MUST** resolve to a [=State=] or [=CompositeState=] listed in the same [=Journey=]'s `stateRefs`.
+4. **Composition Safety:** `subjourneyId` **MUST** resolve to a valid [=Journey=].
+5. **Boundary Mapping Resolution:** A `toEntryRef` value **MUST** resolve to a [=JourneyEntry=] of the child journey referenced by the transition's `to` [=CompositeState=], and a `fromExitRef` value **MUST** resolve to a [=JourneyExit=] of the child journey referenced by the transition's `from` [=CompositeState=].
+6. **Journey Exit Resolution:** Every ID in `exitRefs` **MUST** resolve to a [=JourneyExit=].
+7. **Group Resolution:** Every ID in `outgoingTransitionGroupRefs` **MUST** resolve to an [=OutgoingTransitionGroup=].
+8. **Outgoing Resolution:** Every ID in `outgoingTransitionRefs` **MUST** resolve to an [=OutgoingTransition=].
+9. **Outgoing Target Resolution:** Each [=OutgoingTransition=] **MUST** resolve through exactly one effective target mechanism: a fixed `to` target, or `toCurrentState: true` resolved at the current effective source where the outgoing affordance is available.
 </spec-statement>
 
 ---
@@ -871,6 +1101,25 @@ If the old `BoundaryState` represented a real user-visible screen, page, modal, 
 
 ---
 
+## Migration from startStateRef {data-cop-concept="start-state-ref-migration"}
+
+Previous versions identified a journey's starting state directly with `startStateRef`. The entry model replaces that direct pointer with an explicit [=JourneyEntry=].
+
+Migration rule:
+
+```text
+Journey J where J.startStateRef = S
+
+becomes:
+
+Journey J where J.defaultEntryRef = E and J.entryRefs includes E
+JourneyEntry E where E.stateRef = S
+```
+
+When a journey has only one possible entry, create one [=JourneyEntry=] and use it as both the `defaultEntryRef` and the only value in `entryRefs`. When a journey has multiple valid entries, list each as a [=JourneyEntry=] and choose the default entry explicitly with `defaultEntryRef`.
+
+---
+
 ## Examples
 
 ### JourneyEntryIndex with External Outgoing Target
@@ -879,7 +1128,10 @@ This example lists known page entries in a [=JourneyEntryIndex=]. The search pag
 
 ```json
 {
-  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld"
+  ],
   "@id": "https://example.com/ujg/graph/page-index.jsonld",
   "@type": "UJGDocument",
   "nodes": [
@@ -908,7 +1160,10 @@ This example lists known page entries in a [=JourneyEntryIndex=]. The search pag
       "@type": "Journey",
       "@id": "urn:ujg:journey:search-page",
       "label": "Search page journey",
-      "startStateRef": "urn:ujg:state:search-form",
+      "defaultEntryRef": "urn:ujg:entry:search-page-default",
+      "entryRefs": [
+        "urn:ujg:entry:search-page-default"
+      ],
       "stateRefs": [
         "urn:ujg:state:search-form",
         "urn:ujg:state:search-results"
@@ -916,6 +1171,11 @@ This example lists known page entries in a [=JourneyEntryIndex=]. The search pag
       "transitionRefs": [
         "urn:ujg:transition:search-form-to-results"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:search-page-default",
+      "stateRef": "urn:ujg:state:search-form"
     },
     {
       "@type": "State",
@@ -947,10 +1207,18 @@ This example lists known page entries in a [=JourneyEntryIndex=]. The search pag
       "@type": "Journey",
       "@id": "urn:ujg:journey:profile-page",
       "label": "Profile page journey",
-      "startStateRef": "urn:ujg:state:profile-summary",
+      "defaultEntryRef": "urn:ujg:entry:profile-page-default",
+      "entryRefs": [
+        "urn:ujg:entry:profile-page-default"
+      ],
       "stateRefs": [
         "urn:ujg:state:profile-summary"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:profile-page-default",
+      "stateRef": "urn:ujg:state:profile-summary"
     },
     {
       "@type": "State",
@@ -967,7 +1235,10 @@ This example models a form as a child journey. The form exports `submitted` thro
 
 ```json
 {
-  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld"
+  ],
   "@id": "https://example.com/ujg/graph/form-continuation.jsonld",
   "@type": "UJGDocument",
   "nodes": [
@@ -984,7 +1255,10 @@ This example models a form as a child journey. The form exports `submitted` thro
       "@type": "Journey",
       "@id": "urn:ujg:journey:contact-page",
       "label": "Contact page journey",
-      "startStateRef": "urn:ujg:state:contact-form",
+      "defaultEntryRef": "urn:ujg:entry:contact-page-default",
+      "entryRefs": [
+        "urn:ujg:entry:contact-page-default"
+      ],
       "stateRefs": [
         "urn:ujg:state:contact-form",
         "urn:ujg:state:result-page"
@@ -992,6 +1266,11 @@ This example models a form as a child journey. The form exports `submitted` thro
       "transitionRefs": [
         "urn:ujg:transition:contact-form-to-result"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:contact-page-default",
+      "stateRef": "urn:ujg:state:contact-form"
     },
     {
       "@type": "CompositeState",
@@ -1023,7 +1302,10 @@ This example models a form as a child journey. The form exports `submitted` thro
       "@type": "Journey",
       "@id": "urn:ujg:journey:contact-form",
       "label": "Contact form journey",
-      "startStateRef": "urn:ujg:state:contact-form-editing",
+      "defaultEntryRef": "urn:ujg:entry:contact-form-default",
+      "entryRefs": [
+        "urn:ujg:entry:contact-form-default"
+      ],
       "stateRefs": [
         "urn:ujg:state:contact-form-editing"
       ],
@@ -1033,6 +1315,11 @@ This example models a form as a child journey. The form exports `submitted` thro
       "exitRefs": [
         "urn:ujg:exit:contact-form-submitted"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:contact-form-default",
+      "stateRef": "urn:ujg:state:contact-form-editing"
     },
     {
       "@type": "State",
@@ -1055,10 +1342,18 @@ This example models a form as a child journey. The form exports `submitted` thro
       "@type": "Journey",
       "@id": "urn:ujg:journey:result-page",
       "label": "Result page journey",
-      "startStateRef": "urn:ujg:state:result-summary",
+      "defaultEntryRef": "urn:ujg:entry:result-page-default",
+      "entryRefs": [
+        "urn:ujg:entry:result-page-default"
+      ],
       "stateRefs": [
         "urn:ujg:state:result-summary"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:result-page-default",
+      "stateRef": "urn:ujg:state:result-summary"
     },
     {
       "@type": "State",
@@ -1074,27 +1369,40 @@ This example models a form as a child journey. The form exports `submitted` thro
 The following source journey incorrectly lists `urn:ujg:state:profile-page` in `stateRefs` merely because an outgoing affordance can reach it. The profile page should be listed in a [=JourneyEntryIndex=] and referenced by `OutgoingTransition.to`; it should not be promoted into the search page journey's local topology.
 
 ```json
-{
-  "@type": "Journey",
-  "@id": "urn:ujg:journey:search-page",
-  "label": "Search page journey",
-  "startStateRef": "urn:ujg:state:search-form",
-  "stateRefs": [
-    "urn:ujg:state:search-form",
-    "urn:ujg:state:search-results",
-    "urn:ujg:state:profile-page"
-  ],
-  "transitionRefs": [
-    "urn:ujg:transition:search-form-to-results"
-  ]
-}
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:search-page",
+    "label": "Search page journey",
+    "defaultEntryRef": "urn:ujg:entry:search-page-default",
+    "entryRefs": [
+      "urn:ujg:entry:search-page-default"
+    ],
+    "stateRefs": [
+      "urn:ujg:state:search-form",
+      "urn:ujg:state:search-results",
+      "urn:ujg:state:profile-page"
+    ],
+    "transitionRefs": [
+      "urn:ujg:transition:search-form-to-results"
+    ]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:search-page-default",
+    "stateRef": "urn:ujg:state:search-form"
+  }
+]
 ```
 
 ### Combined JSON Example
 
 ```json
 {
-  "@context": "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld"
+  ],
   "@id": "https://example.com/ujg/graph/main-site.jsonld",
   "@type": "UJGDocument",
   "nodes": [
@@ -1108,38 +1416,48 @@ The following source journey incorrectly lists `urn:ujg:state:profile-page` in `
         "urn:ujg:state:profile-page"
       ]
     },
-
     {
       "@type": "CompositeState",
       "@id": "urn:ujg:state:home-page",
       "label": "Home page",
       "subjourneyId": "urn:ujg:journey:home-page"
     },
-
     {
       "@type": "CompositeState",
       "@id": "urn:ujg:state:checkout-flow",
       "label": "Checkout process",
       "subjourneyId": "urn:ujg:journey:checkout"
     },
-
     {
       "@type": "CompositeState",
       "@id": "urn:ujg:state:profile-page",
       "label": "Profile page",
       "subjourneyId": "urn:ujg:journey:profile"
     },
-
     {
       "@type": "Journey",
       "@id": "urn:ujg:journey:home-page",
       "label": "Home page journey",
-      "startStateRef": "urn:ujg:state:home",
-      "stateRefs": ["urn:ujg:state:home", "urn:ujg:state:checkout-flow"],
-      "transitionRefs": ["urn:ujg:transition:home-to-checkout"],
-      "outgoingTransitionGroupRefs": ["urn:ujg:otg:global-header"]
+      "defaultEntryRef": "urn:ujg:entry:home-page-default",
+      "entryRefs": [
+        "urn:ujg:entry:home-page-default"
+      ],
+      "stateRefs": [
+        "urn:ujg:state:home",
+        "urn:ujg:state:checkout-flow"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:home-to-checkout"
+      ],
+      "outgoingTransitionGroupRefs": [
+        "urn:ujg:otg:global-header"
+      ]
     },
-
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:home-page-default",
+      "stateRef": "urn:ujg:state:home"
+    },
     {
       "@type": "Transition",
       "@id": "urn:ujg:transition:home-to-checkout",
@@ -1147,60 +1465,77 @@ The following source journey incorrectly lists `urn:ujg:state:profile-page` in `
       "to": "urn:ujg:state:checkout-flow",
       "label": "Buy Now"
     },
-
     {
       "@type": "State",
       "@id": "urn:ujg:state:home",
       "label": "Home Page",
-      "tags": ["phase:landing"]
+      "tags": [
+        "phase:landing"
+      ]
     },
-
     {
       "@type": "Journey",
       "@id": "urn:ujg:journey:checkout",
       "label": "Checkout journey",
-      "startStateRef": "urn:ujg:state:checkout-cart",
-      "stateRefs": ["urn:ujg:state:checkout-cart"]
+      "defaultEntryRef": "urn:ujg:entry:checkout-default",
+      "entryRefs": [
+        "urn:ujg:entry:checkout-default"
+      ],
+      "stateRefs": [
+        "urn:ujg:state:checkout-cart"
+      ]
     },
-
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:checkout-default",
+      "stateRef": "urn:ujg:state:checkout-cart"
+    },
     {
       "@type": "State",
       "@id": "urn:ujg:state:checkout-cart",
       "label": "Checkout cart"
     },
-
     {
       "@type": "Journey",
       "@id": "urn:ujg:journey:profile",
       "label": "Profile journey",
-      "startStateRef": "urn:ujg:state:profile-summary",
-      "stateRefs": ["urn:ujg:state:profile-summary"]
+      "defaultEntryRef": "urn:ujg:entry:profile-default",
+      "entryRefs": [
+        "urn:ujg:entry:profile-default"
+      ],
+      "stateRefs": [
+        "urn:ujg:state:profile-summary"
+      ]
     },
-
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:profile-default",
+      "stateRef": "urn:ujg:state:profile-summary"
+    },
     {
       "@type": "State",
       "@id": "urn:ujg:state:profile-summary",
       "label": "Profile summary"
     },
-
     {
       "@type": "OutgoingTransition",
       "@id": "urn:ujg:ot:go-home",
       "to": "urn:ujg:state:home-page",
       "label": "Home"
     },
-
     {
       "@type": "OutgoingTransition",
       "@id": "urn:ujg:ot:go-profile",
       "to": "urn:ujg:state:profile-page",
       "label": "Profile"
     },
-
     {
       "@type": "OutgoingTransitionGroup",
       "@id": "urn:ujg:otg:global-header",
-      "outgoingTransitionRefs": ["urn:ujg:ot:go-home", "urn:ujg:ot:go-profile"]
+      "outgoingTransitionRefs": [
+        "urn:ujg:ot:go-home",
+        "urn:ujg:ot:go-profile"
+      ]
     }
   ]
 }

@@ -36,7 +36,8 @@ Examples in this page compose the shared baseline context:
 
 ```json
 [
-  "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+  "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld"
 ]
 ```
@@ -131,7 +132,8 @@ Codex chat branch-check example:
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld"
   ],
   "@id": "https://example.com/ujg/codex/branch-condition.jsonld",
@@ -139,8 +141,11 @@ Codex chat branch-check example:
   "nodes": [
     {
       "@type": "Journey",
+      "defaultEntryRef": "urn:ujg:entry:codex-chat-in-ide-default",
+      "entryRefs": [
+        "urn:ujg:entry:codex-chat-in-ide-default"
+      ],
       "@id": "urn:ujg:journey:codex-chat-in-ide",
-      "startState": "urn:ujg:state:user-asks-codex-to-code",
       "stateRefs": [
         "urn:ujg:state:user-asks-codex-to-code",
         "urn:ujg:state:codex-starts-coding",
@@ -156,7 +161,11 @@ Codex chat branch-check example:
         "urn:ujg:transition:switch-back-to-start-coding"
       ]
     },
-
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:codex-chat-in-ide-default",
+      "stateRef": "urn:ujg:state:user-asks-codex-to-code"
+    },
     {
       "@type": "State",
       "@id": "urn:ujg:state:user-asks-codex-to-code",
@@ -182,7 +191,6 @@ Codex chat branch-check example:
       "@id": "urn:ujg:state:codex-starts-coding-on-original-branch",
       "label": "Codex starts coding on the original branch"
     },
-
     {
       "@type": "Transition",
       "@id": "urn:ujg:transition:ask-code-to-start-coding",
@@ -220,7 +228,6 @@ Codex chat branch-check example:
       "to": "urn:ujg:state:codex-starts-coding-on-original-branch",
       "label": "Continue coding"
     },
-
     {
       "@type": "ConditionSet",
       "@id": "urn:ujg:condition-set:resolve-branch-context-before-coding",
@@ -230,7 +237,6 @@ Codex chat branch-check example:
         "urn:ujg:transition:ask-code-to-branch-popup"
       ]
     },
-
     {
       "@type": "Condition",
       "@id": "urn:ujg:condition:current-branch-equals-chat-branch",

@@ -6,6 +6,7 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
 
     "Journey": "ujggraph:Journey",
+    "JourneyEntry": "ujggraph:JourneyEntry",
     "JourneyEntryIndex": "ujggraph:JourneyEntryIndex",
     "LocalVertex": "ujggraph:LocalVertex",
     "State": "ujggraph:State",
@@ -20,8 +21,17 @@
       "@id": "ujggraph:tags",
       "@container": "@set"
     },
-    "startStateRef": {
-      "@id": "ujggraph:startStateRef",
+    "defaultEntryRef": {
+      "@id": "ujggraph:defaultEntryRef",
+      "@type": "@id"
+    },
+    "entryRefs": {
+      "@id": "ujggraph:entryRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "stateRef": {
+      "@id": "ujggraph:stateRef",
       "@type": "@id"
     },
     "stateRefs": {
@@ -58,6 +68,10 @@
     },
     "fromExitRef": {
       "@id": "ujggraph:fromExitRef",
+      "@type": "@id"
+    },
+    "toEntryRef": {
+      "@id": "ujggraph:toEntryRef",
       "@type": "@id"
     },
     "subjourneyId": {

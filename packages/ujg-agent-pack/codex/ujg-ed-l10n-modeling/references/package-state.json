@@ -12,7 +12,7 @@
     "name": "ujg-ed-l10n-modeling"
   },
   "sourceHash": "sha256:1adb290ececbc67bcac4238201fcd2a9c60251b7510db2140ae32fb0725f63b8",
-  "specHash": "sha256:8ea89310228d8daf736c6808c960a032ca9ae58d5ee40a4d13d2d25f4500b10b",
+  "specHash": "sha256:e09e3da78c4086fe143bce6ae233eef1d2f15671d477a033c0a12a6ac6a67595",
   "target": {
     "id": "ed",
     "label": "Editor's Draft"

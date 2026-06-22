@@ -130,7 +130,8 @@ the SHACL shape.
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/actor.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/action.context.jsonld",
@@ -183,7 +184,10 @@ the SHACL shape.
       "@id": "urn:journey:alice-federated-sharing",
       "@type": "Journey",
       "label": "Alice federated sharing",
-      "startStateRef": "urn:state:alice-share-panel",
+      "defaultEntryRef": "urn:entry:alice-federated-sharing-default",
+      "entryRefs": [
+        "urn:entry:alice-federated-sharing-default"
+      ],
       "stateRefs": [
         "urn:state:alice-share-panel",
         "urn:state:alice-recipient-recognized",
@@ -197,10 +201,18 @@ the SHACL shape.
       ]
     },
     {
+      "@type": "JourneyEntry",
+      "@id": "urn:entry:alice-federated-sharing-default",
+      "stateRef": "urn:state:alice-share-panel"
+    },
+    {
       "@id": "urn:journey:bob-remote-share-acceptance",
       "@type": "Journey",
       "label": "Bob remote-share acceptance",
-      "startStateRef": "urn:state:bob-incoming-share",
+      "defaultEntryRef": "urn:entry:bob-remote-share-acceptance-default",
+      "entryRefs": [
+        "urn:entry:bob-remote-share-acceptance-default"
+      ],
       "stateRefs": [
         "urn:state:bob-incoming-share",
         "urn:state:bob-file-available",
@@ -212,12 +224,19 @@ the SHACL shape.
       ]
     },
     {
+      "@type": "JourneyEntry",
+      "@id": "urn:entry:bob-remote-share-acceptance-default",
+      "stateRef": "urn:state:bob-incoming-share"
+    },
+    {
       "@id": "urn:state:alice-share-panel",
       "@type": "State",
       "label": "Alice sees the share panel",
       "surfaceRef": "urn:surface:alice-share-panel",
       "responsibleActorRef": "urn:authority:cloud-a",
-      "eligibleActorRefs": ["urn:actor:alice"]
+      "eligibleActorRefs": [
+        "urn:actor:alice"
+      ]
     },
     {
       "@id": "urn:state:alice-recipient-recognized",
@@ -225,7 +244,9 @@ the SHACL shape.
       "label": "Alice sees Bob recognized as a remote recipient",
       "surfaceRef": "urn:surface:alice-recipient-recognized",
       "responsibleActorRef": "urn:authority:cloud-a",
-      "eligibleActorRefs": ["urn:actor:alice"]
+      "eligibleActorRefs": [
+        "urn:actor:alice"
+      ]
     },
     {
       "@id": "urn:state:alice-share-confirmed",
@@ -233,7 +254,9 @@ the SHACL shape.
       "label": "Alice sees shared with Bob",
       "surfaceRef": "urn:surface:alice-share-confirmed",
       "responsibleActorRef": "urn:authority:cloud-a",
-      "eligibleActorRefs": ["urn:actor:alice"]
+      "eligibleActorRefs": [
+        "urn:actor:alice"
+      ]
     },
     {
       "@id": "urn:state:alice-share-revoked",
@@ -241,7 +264,9 @@ the SHACL shape.
       "label": "Alice sees the share revoked",
       "surfaceRef": "urn:surface:alice-share-revoked",
       "responsibleActorRef": "urn:authority:cloud-a",
-      "eligibleActorRefs": ["urn:actor:alice"]
+      "eligibleActorRefs": [
+        "urn:actor:alice"
+      ]
     },
     {
       "@id": "urn:state:bob-incoming-share",
@@ -249,7 +274,9 @@ the SHACL shape.
       "label": "Bob sees an incoming remote share",
       "surfaceRef": "urn:surface:bob-incoming-share",
       "responsibleActorRef": "urn:authority:cloud-b",
-      "eligibleActorRefs": ["urn:actor:bob"]
+      "eligibleActorRefs": [
+        "urn:actor:bob"
+      ]
     },
     {
       "@id": "urn:state:bob-file-available",
@@ -257,7 +284,9 @@ the SHACL shape.
       "label": "Bob can open the shared folder",
       "surfaceRef": "urn:surface:bob-file-available",
       "responsibleActorRef": "urn:authority:cloud-b",
-      "eligibleActorRefs": ["urn:actor:bob"]
+      "eligibleActorRefs": [
+        "urn:actor:bob"
+      ]
     },
     {
       "@id": "urn:state:bob-access-removed",
@@ -265,7 +294,9 @@ the SHACL shape.
       "label": "Bob sees access removed",
       "surfaceRef": "urn:surface:bob-access-removed",
       "responsibleActorRef": "urn:authority:cloud-b",
-      "eligibleActorRefs": ["urn:actor:bob"]
+      "eligibleActorRefs": [
+        "urn:actor:bob"
+      ]
     },
     {
       "@id": "urn:surface:alice-share-panel",
@@ -338,27 +369,39 @@ the SHACL shape.
     {
       "@id": "urn:action:share-with-bob",
       "@type": "Action",
-      "producedArtifactRefs": ["urn:artifact:remote-share"],
+      "producedArtifactRefs": [
+        "urn:artifact:remote-share"
+      ],
       "sourceAuthorityRef": "urn:authority:cloud-a",
-      "targetAuthorityRefs": ["urn:authority:cloud-b"]
+      "targetAuthorityRefs": [
+        "urn:authority:cloud-b"
+      ]
     },
     {
       "@id": "urn:action:bob-accepts-share",
       "@type": "Action",
-      "consumedArtifactRefs": ["urn:artifact:remote-share"]
+      "consumedArtifactRefs": [
+        "urn:artifact:remote-share"
+      ]
     },
     {
       "@id": "urn:action:alice-revoke-share",
       "@type": "Action",
-      "consumedArtifactRefs": ["urn:artifact:remote-share"],
+      "consumedArtifactRefs": [
+        "urn:artifact:remote-share"
+      ],
       "sourceAuthorityRef": "urn:authority:cloud-a",
-      "targetAuthorityRefs": ["urn:authority:cloud-b"]
+      "targetAuthorityRefs": [
+        "urn:authority:cloud-b"
+      ]
     },
     {
       "@id": "urn:artifact:remote-share",
       "@type": "DistributedArtifact",
       "sourceAuthorityRef": "urn:authority:cloud-a",
-      "targetAuthorityRefs": ["urn:authority:cloud-b"]
+      "targetAuthorityRefs": [
+        "urn:authority:cloud-b"
+      ]
     }
   ]
 }
@@ -386,7 +429,9 @@ instances without adding evidence nodes to the distributed graph itself:
   ],
   "@id": "https://example.com/ujg/runtime-evidence/execution-12345.jsonld",
   "@type": "UJGDocument",
-  "imports": ["https://example.com/ujg/distributed/nextcloud-share.jsonld"],
+  "imports": [
+    "https://example.com/ujg/distributed/nextcloud-share.jsonld"
+  ],
   "nodes": [
     {
       "@id": "urn:authority:cloud-a",
@@ -416,7 +461,9 @@ instances without adding evidence nodes to the distributed graph itself:
       "executionId": "urn:execution:nextcloud-share-12345",
       "stateRef": "urn:state:alice-share-confirmed",
       "journeyInstanceRef": "urn:journey-instance:alice-federated-sharing:12345",
-      "payload": { "action": "surface.visible" }
+      "payload": {
+        "action": "surface.visible"
+      }
     },
     {
       "@id": "urn:event:nextcloud-share-12345:bob-incoming-share",
@@ -425,7 +472,9 @@ instances without adding evidence nodes to the distributed graph itself:
       "previousId": "urn:event:nextcloud-share-12345:alice-share-confirmed",
       "stateRef": "urn:state:bob-incoming-share",
       "journeyInstanceRef": "urn:journey-instance:bob-remote-share-acceptance:12345",
-      "payload": { "action": "surface.visible" }
+      "payload": {
+        "action": "surface.visible"
+      }
     },
     {
       "@id": "urn:event:nextcloud-share-12345:bob-file-available",
@@ -434,7 +483,9 @@ instances without adding evidence nodes to the distributed graph itself:
       "previousId": "urn:event:nextcloud-share-12345:bob-incoming-share",
       "stateRef": "urn:state:bob-file-available",
       "journeyInstanceRef": "urn:journey-instance:bob-remote-share-acceptance:12345",
-      "payload": { "action": "surface.visible" }
+      "payload": {
+        "action": "surface.visible"
+      }
     },
     {
       "@id": "urn:event:nextcloud-share-12345:alice-share-revoked",
@@ -443,7 +494,9 @@ instances without adding evidence nodes to the distributed graph itself:
       "previousId": "urn:event:nextcloud-share-12345:bob-file-available",
       "stateRef": "urn:state:alice-share-revoked",
       "journeyInstanceRef": "urn:journey-instance:alice-federated-sharing:12345",
-      "payload": { "action": "surface.visible" }
+      "payload": {
+        "action": "surface.visible"
+      }
     },
     {
       "@id": "urn:event:nextcloud-share-12345:bob-access-removed",
@@ -452,7 +505,9 @@ instances without adding evidence nodes to the distributed graph itself:
       "previousId": "urn:event:nextcloud-share-12345:alice-share-revoked",
       "stateRef": "urn:state:bob-access-removed",
       "journeyInstanceRef": "urn:journey-instance:bob-remote-share-acceptance:12345",
-      "payload": { "action": "surface.visible" }
+      "payload": {
+        "action": "surface.visible"
+      }
     },
     {
       "@id": "urn:runtime-evidence:nextcloud-share:alice-share-confirmed",
@@ -460,7 +515,10 @@ instances without adding evidence nodes to the distributed graph itself:
       "journeyExecutionRef": "urn:execution:nextcloud-share-12345",
       "runtimeEventRef": "urn:event:nextcloud-share-12345:alice-share-confirmed",
       "observedByActorRef": "urn:authority:cloud-a",
-      "evidencePayload": { "source": "cloud-a-runtime", "record": "state-observed" }
+      "evidencePayload": {
+        "source": "cloud-a-runtime",
+        "record": "state-observed"
+      }
     },
     {
       "@id": "urn:runtime-evidence:nextcloud-share:bob-file-available",
@@ -468,7 +526,10 @@ instances without adding evidence nodes to the distributed graph itself:
       "journeyExecutionRef": "urn:execution:nextcloud-share-12345",
       "runtimeEventRef": "urn:event:nextcloud-share-12345:bob-file-available",
       "observedByActorRef": "urn:authority:cloud-b",
-      "evidencePayload": { "source": "cloud-b-runtime", "record": "state-observed" }
+      "evidencePayload": {
+        "source": "cloud-b-runtime",
+        "record": "state-observed"
+      }
     },
     {
       "@id": "urn:runtime-evidence:nextcloud-share:alice-share-revoked",
@@ -476,7 +537,10 @@ instances without adding evidence nodes to the distributed graph itself:
       "journeyExecutionRef": "urn:execution:nextcloud-share-12345",
       "runtimeEventRef": "urn:event:nextcloud-share-12345:alice-share-revoked",
       "observedByActorRef": "urn:authority:cloud-a",
-      "evidencePayload": { "source": "cloud-a-runtime", "record": "state-observed" }
+      "evidencePayload": {
+        "source": "cloud-a-runtime",
+        "record": "state-observed"
+      }
     },
     {
       "@id": "urn:runtime-evidence:nextcloud-share:bob-access-removed",
@@ -484,7 +548,10 @@ instances without adding evidence nodes to the distributed graph itself:
       "journeyExecutionRef": "urn:execution:nextcloud-share-12345",
       "runtimeEventRef": "urn:event:nextcloud-share-12345:bob-access-removed",
       "observedByActorRef": "urn:authority:cloud-b",
-      "evidencePayload": { "source": "cloud-b-runtime", "record": "state-observed" }
+      "evidencePayload": {
+        "source": "cloud-b-runtime",
+        "record": "state-observed"
+      }
     }
   ]
 }
@@ -495,7 +562,8 @@ instances without adding evidence nodes to the distributed graph itself:
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/actor.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/action.context.jsonld",
@@ -519,7 +587,10 @@ instances without adding evidence nodes to the distributed graph itself:
       "@id": "urn:journey:account-migration",
       "@type": "Journey",
       "label": "Account migration",
-      "startStateRef": "urn:state:export-settings",
+      "defaultEntryRef": "urn:entry:account-migration-default",
+      "entryRefs": [
+        "urn:entry:account-migration-default"
+      ],
       "stateRefs": [
         "urn:state:export-settings",
         "urn:state:archive-ready",
@@ -533,6 +604,11 @@ instances without adding evidence nodes to the distributed graph itself:
         "urn:transition:import-archive",
         "urn:transition:show-warning"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:entry:account-migration-default",
+      "stateRef": "urn:state:export-settings"
     },
     {
       "@id": "urn:state:export-settings",
@@ -623,18 +699,24 @@ instances without adding evidence nodes to the distributed graph itself:
     {
       "@id": "urn:action:request-export",
       "@type": "Action",
-      "producedArtifactRefs": ["urn:artifact:account-archive"]
+      "producedArtifactRefs": [
+        "urn:artifact:account-archive"
+      ]
     },
     {
       "@id": "urn:action:import-archive",
       "@type": "Action",
-      "consumedArtifactRefs": ["urn:artifact:account-archive"]
+      "consumedArtifactRefs": [
+        "urn:artifact:account-archive"
+      ]
     },
     {
       "@id": "urn:artifact:account-archive",
       "@type": "DistributedArtifact",
       "sourceAuthorityRef": "urn:authority:old",
-      "targetAuthorityRefs": ["urn:authority:new"]
+      "targetAuthorityRefs": [
+        "urn:authority:new"
+      ]
     }
   ]
 }
@@ -660,7 +742,9 @@ confirmation as metadata attached to a runtime event:
   ],
   "@id": "https://example.com/ujg/runtime-evidence/execution-23456.jsonld",
   "@type": "UJGDocument",
-  "imports": ["https://example.com/ujg/distributed/account-migration.jsonld"],
+  "imports": [
+    "https://example.com/ujg/distributed/account-migration.jsonld"
+  ],
   "nodes": [
     {
       "@id": "urn:authority:new",
@@ -681,7 +765,9 @@ confirmation as metadata attached to a runtime event:
       "executionId": "urn:execution:account-migration-23456",
       "stateRef": "urn:state:partial-import-confirmed",
       "journeyInstanceRef": "urn:journey-instance:account-migration:23456",
-      "payload": { "action": "surface.visible" }
+      "payload": {
+        "action": "surface.visible"
+      }
     },
     {
       "@id": "urn:runtime-evidence:account-migration:partial-import-confirmed",
@@ -689,7 +775,10 @@ confirmation as metadata attached to a runtime event:
       "journeyExecutionRef": "urn:execution:account-migration-23456",
       "runtimeEventRef": "urn:event:account-migration-23456:partial-import-confirmed",
       "observedByActorRef": "urn:authority:new",
-      "evidencePayload": { "source": "new-server-runtime", "record": "state-observed" }
+      "evidencePayload": {
+        "source": "new-server-runtime",
+        "record": "state-observed"
+      }
     }
   ]
 }
@@ -700,7 +789,8 @@ confirmation as metadata attached to a runtime event:
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/actor.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/action.context.jsonld",
@@ -723,7 +813,10 @@ confirmation as metadata attached to a runtime event:
       "@id": "urn:journey:remote-follow",
       "@type": "Journey",
       "label": "Remote follow",
-      "startStateRef": "urn:state:remote-search",
+      "defaultEntryRef": "urn:entry:remote-follow-default",
+      "entryRefs": [
+        "urn:entry:remote-follow-default"
+      ],
       "stateRefs": [
         "urn:state:remote-search",
         "urn:state:remote-result-visible",
@@ -741,6 +834,11 @@ confirmation as metadata attached to a runtime event:
         "urn:transition:remote-unavailable",
         "urn:transition:updates-visible"
       ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:entry:remote-follow-default",
+      "stateRef": "urn:state:remote-search"
     },
     {
       "@id": "urn:state:remote-search",
@@ -867,7 +965,9 @@ confirmation as metadata attached to a runtime event:
       "@id": "urn:action:click-follow",
       "@type": "Action",
       "sourceAuthorityRef": "urn:authority:local",
-      "targetAuthorityRefs": ["urn:authority:remote"]
+      "targetAuthorityRefs": [
+        "urn:authority:remote"
+      ]
     }
   ]
 }
@@ -891,7 +991,9 @@ becoming visible while leaving the invisible federation request outside the grap
   ],
   "@id": "https://example.com/ujg/runtime-evidence/execution-34567.jsonld",
   "@type": "UJGDocument",
-  "imports": ["https://example.com/ujg/distributed/remote-follow.jsonld"],
+  "imports": [
+    "https://example.com/ujg/distributed/remote-follow.jsonld"
+  ],
   "nodes": [
     {
       "@id": "urn:authority:local",
@@ -912,7 +1014,9 @@ becoming visible while leaving the invisible federation request outside the grap
       "executionId": "urn:execution:remote-follow-34567",
       "stateRef": "urn:state:remote-feed-visible",
       "journeyInstanceRef": "urn:journey-instance:remote-follow:34567",
-      "payload": { "action": "surface.visible" }
+      "payload": {
+        "action": "surface.visible"
+      }
     },
     {
       "@id": "urn:runtime-evidence:remote-follow:remote-feed-visible",
@@ -920,7 +1024,10 @@ becoming visible while leaving the invisible federation request outside the grap
       "journeyExecutionRef": "urn:execution:remote-follow-34567",
       "runtimeEventRef": "urn:event:remote-follow-34567:remote-feed-visible",
       "observedByActorRef": "urn:authority:local",
-      "evidencePayload": { "source": "local-runtime", "record": "state-observed" }
+      "evidencePayload": {
+        "source": "local-runtime",
+        "record": "state-observed"
+      }
     }
   ]
 }

@@ -43,9 +43,9 @@ Do not put interoperable graph semantics in `extensions`. If a concept affects t
 
 Use only active ED Graph classes and properties.
 
-Common classes: `JourneyEntryIndex`, `Journey`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
+Common classes: `JourneyEntryIndex`, `Journey`, `JourneyEntry`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
 
-Common properties: `label`, `tags`, `stateRefs`, `startStateRef`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `fromExitRef`, `subjourneyId`, `outgoingTransitionRefs`.
+Common properties: `label`, `tags`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `subjourneyId`, `outgoingTransitionRefs`.
 
 Do not invent Graph fields such as `startState`, `states`, `transitions`, `toJourney`, `toState`, `trigger`, `outcome`, `eventType`, `selector`, Graph-native `url`, or `RuntimeTrace`.
 
@@ -73,7 +73,7 @@ Classify each modeled item before writing JSON-LD: index entry, page/surface ent
 
 Do not mix roles accidentally.
 
-If a component is modeled as a child journey, keep the full pattern coherent: parent `CompositeState`; exactly one `subjourneyId`; no child states in parent `stateRefs`; child states and transitions stay in child journey; exported outcome is a child-local terminal `JourneyExit` listed in child `exitRefs`; parent continuation is a parent-local `Transition` from the `CompositeState` to another parent-local local vertex using `fromExitRef`.
+If a component is modeled as a child journey, keep the full pattern coherent: parent `CompositeState`; exactly one `subjourneyId`; no child states in parent `stateRefs`; child states and transitions stay in child journey; child traversal starts at the child journey's `defaultEntryRef` unless the parent transition into the composite declares `toEntryRef`; exported outcome is a child-local terminal `JourneyExit` listed in child `exitRefs`; parent continuation is a parent-local `Transition` from the `CompositeState` to another parent-local local vertex using `fromExitRef`.
 
 Either keep the complete child-journey pattern or fold it back into same-journey states. Do not keep only part of the pattern.
 
@@ -93,7 +93,11 @@ For a page-level index, list page, route, surface, or component entry states. Do
 
 Use `Journey` for local traversable topology.
 
-A `Journey` must have an IRI `@id`, exactly one `startStateRef`, and at least one `stateRefs` value. It may have `transitionRefs`, `exitRefs`, and `outgoingTransitionGroupRefs`. Its local vertices are `stateRefs` union `exitRefs`.
+A `Journey` must have an IRI `@id`, exactly one `defaultEntryRef`, at least one `entryRefs` value, and at least one `stateRefs` value. It may have `transitionRefs`, `exitRefs`, and `outgoingTransitionGroupRefs`. Its local vertices are `stateRefs` union `exitRefs`.
+
+Each `entryRefs` value must reference a `JourneyEntry`. The `defaultEntryRef` must reference one of those entries.
+
+A `JourneyEntry` must have exactly one `stateRef` pointing to a `State` or `CompositeState` listed in the same journey's `stateRefs`. A `JourneyEntry` is not a local vertex and must not be used as `Transition.from` or `Transition.to`.
 
 A journey owns stable states in its local scope, local progression, local outgoing affordances, nested journeys reachable inside its scope, and exported exits when a parent reacts to completed child outcomes.
 
@@ -123,15 +127,19 @@ Before using `CompositeState`, ask whether ordinary `State` would preserve the s
 
 Use `Transition` for local intended topology inside one journey.
 
-A `Transition` must have `from` and `to`. `from` must be listed in the same journey's `stateRefs`. `to` must be listed in the same journey's `stateRefs` or `exitRefs`. Never use a `JourneyExit` as `from`.
+A `Transition` must have `from` and `to`. `from` must be listed in the same journey's `stateRefs`. `to` must be listed in the same journey's `stateRefs` or `exitRefs`. Never use a `JourneyExit` or `JourneyEntry` as `from`.
 
-Use `Transition` for local page order, local state progression, local rendering progression, terminal progression to a `JourneyExit`, parent-owned continuation between parent-local states, and parent continuation after child exit using `fromExitRef`.
+Use `Transition` for local page order, local state progression, local rendering progression, terminal progression to a `JourneyExit`, parent-owned continuation between parent-local states, parent entry into a child journey using `toEntryRef`, and parent continuation after child exit using `fromExitRef`.
 
 Do not use `Transition` for runtime facts, clicks, URLs, selectors, ordinary link metadata, header navigation, footer navigation, language switchers, result links, or ordinary external navigation.
 
 Do not reference child states from a parent transition. Do not create parent transitions merely to connect observed screens.
 
-## JourneyExit and fromExitRef
+## JourneyEntry, JourneyExit, and boundary refs
+
+Use `JourneyEntry` to name valid entry points into a journey. Top-level traversal begins at `defaultEntryRef.stateRef`.
+
+Use `toEntryRef` only on a parent-local transition whose `to` is the corresponding `CompositeState`. The `toEntryRef` value selects a `JourneyEntry` listed in the child journey referenced by that composite's `subjourneyId`. If `toEntryRef` is absent, child traversal starts at the child journey's `defaultEntryRef`.
 
 Use `JourneyExit` only when a parent journey must react to a completed child outcome, or when a journey needs to expose a terminal completion contract.
 
@@ -279,7 +287,7 @@ When generating JSON-LD:
 3. Provide a short self-audit.
 4. State uncertainty explicitly.
 
-Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `Journey` only local topology; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; runtime facts not in Graph; Experience does not affect traversal; graph is shallowest valid model.
+Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `Journey` only local topology; each `Journey` has `defaultEntryRef`, `entryRefs`, and `stateRefs`; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; runtime facts not in Graph; Experience does not affect traversal; graph is shallowest valid model.
 
 ## Anti-overengineering and uncertainty
 

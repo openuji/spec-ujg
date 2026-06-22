@@ -14,12 +14,12 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/distributed-journey
 
 - architecture: sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d
 - core: sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990
-- graph: sha256:579744d3874771c0f58c73614d7f4271a8e7016e6ea7b3fbd2ee33b7e18fd17e
+- graph: sha256:b252187a3e5aab43ed84b7d1cce16ce6366b33c33197c09d9e867bd60e351dab
 - modules/surface: sha256:834f9b89895363f3b5fa09a26acd5c9bea2d2f68a11e77c719961cb2c6878f00
 - modules/action: sha256:85bf439ada55ec13eadc7b95997cd240e356ff2b8e8d82e108db36d13e6de3d1
-- modules/actor: sha256:8d2428b38e51ffc0336671bf5a7493f6eac384282532f815678e69013ff6b0ee
+- modules/actor: sha256:9c7374565d78a5b3af0b698aaf36d3eb59f18fc0babda1e6d6d5b9c73acb5f32
 - modules/artifact: sha256:ef364efa0c76b918cb52ba0e1d842b7a72f2953e08a10de051a731113234eebe
-- modules/distributed-journey: sha256:d0ea0b6e1d07ec45bdf56d4253ff6e755ae6b69bc23024e739feb038953694bb
+- modules/distributed-journey: sha256:325833d28345e51004ed25e03b8a19b3d8c7376b309f56f236a9e6ab156ea49e
 
 ## Changed Modules
 
