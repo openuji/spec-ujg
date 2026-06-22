@@ -62,7 +62,7 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed",
       "skills": [
         {
-          "artifactHash": "sha256:3c1e7b2f37af069794aca8053ded6198c46ccf84939c40ab6e04f669d861fa82",
+          "artifactHash": "sha256:c0f39c4b6079ee7b796305777396dba6f5e86bc0b42963eaa7a5c2a47309c3d0",
           "key": "root",
           "moduleId": null,
           "name": "ujg-ed-modeling",
@@ -89,8 +89,8 @@
             "conformance"
           ],
           "source": "sources/ed/skills/root/skill.md",
-          "sourceHash": "sha256:5e26b7b08656fcd28f113f9408a0ee44567e31890c99443f9c68e3611dc4b0cf",
-          "specHash": "sha256:1da9b623ce05fa7677c45ceb246256e2735963936ecfb7802272a9a27315031e"
+          "sourceHash": "sha256:7f23c644dd0a0be23087dd251b98172157154e5ada1c143db9e314a18c454351",
+          "specHash": "sha256:7f787f1be9fb32e0c506a7021ad8bf66f83677d757083cbe90d915ebd7286028"
         },
         {
           "artifactHash": "sha256:536ee9bbcc838fcfe4deead138084331769a61058f4d43ebbdcc2c8a018bed11",
@@ -106,7 +106,7 @@
           "specHash": "sha256:00b5549e0ad85471aad54e0d4a7ba067dc469a5e44a15c2b06a426dc4f38697e"
         },
         {
-          "artifactHash": "sha256:c38d1e287e1c2f3854a4fa8e6244661ec42a4e554d67f9aea6b5ce09055bfa8a",
+          "artifactHash": "sha256:825b852797825034049328ee63532974f92197d6abaa1affd545fd069e10eaab",
           "key": "graph",
           "moduleId": "graph",
           "name": "ujg-ed-graph-modeling",
@@ -116,8 +116,8 @@
             "graph"
           ],
           "source": "sources/ed/skills/graph/skill.md",
-          "sourceHash": "sha256:fe3325bd7a11ce61abb603fce3ef789a2f32d3725c9eb2ea57f974144beb9f98",
-          "specHash": "sha256:82a8ad767af9732388c2e2711262fe4c5e9a890d7e070718577f174d10af4d5d"
+          "sourceHash": "sha256:95238ff3e7b32e20b911c88344cd53926211ece3d5061d1497ecc8057013f9cd",
+          "specHash": "sha256:8a3c33e83dbd1ad8cbbfc463e2c9ac1a1dbbd9384fd87576711509dbb036f198"
         },
         {
           "artifactHash": "sha256:01645e3c14fd868418f3cead0075e6c5fb3be6f9126728dff36e91c37fa4f057",
@@ -133,7 +133,7 @@
           ],
           "source": "sources/ed/skills/design-system/skill.md",
           "sourceHash": "sha256:8078d81a7fc356ff7d6b350bc5e36bdaf67240714edd38b0491927170d0db904",
-          "specHash": "sha256:0774825a54d0654d8837c158c779cdd4343e5556a287ca1ff34b624bf5c60605"
+          "specHash": "sha256:c847dba085f6c954623d6e6f8c4dc83e3cfaa44dfa33f25e3af3558b5f4d01d1"
         },
         {
           "artifactHash": "sha256:a7b26a0fa6169e37334f2ceb160f94d7e7c72cfea3e7d95e88d262c6e0ac0425",
@@ -148,7 +148,7 @@
           ],
           "source": "sources/ed/skills/localization/skill.md",
           "sourceHash": "sha256:1adb290ececbc67bcac4238201fcd2a9c60251b7510db2140ae32fb0725f63b8",
-          "specHash": "sha256:736ff91be0b70b12474473ec19cf3db060d9cd258ce052d9c3afe3b7d1a045f1"
+          "specHash": "sha256:8ea89310228d8daf736c6808c960a032ca9ae58d5ee40a4d13d2d25f4500b10b"
         },
         {
           "artifactHash": "sha256:6d7cf018a12fef824cb07da43eb13168283af4763ef71d8f5257b7836e916a3c",
@@ -167,7 +167,7 @@
           ],
           "source": "sources/ed/skills/distributed-journey/skill.md",
           "sourceHash": "sha256:c888611f1d094770ccbd8246cc536a46749b181ddd7a013d64b2f9a01d47858d",
-          "specHash": "sha256:263df067894e4514a116de9631bed895ff115ca7e7fbb47f6e85f9cc5249ffa1"
+          "specHash": "sha256:dde5294b2257f32ec1fa735937405dcd2910dcae37b72858f045719ca67a3173"
         }
       ],
       "specRoot": "specs/ed"

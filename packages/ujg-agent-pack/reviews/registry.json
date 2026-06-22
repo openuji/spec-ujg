@@ -15,21 +15,21 @@
       "moduleHashes": {
         "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
         "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
-        "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e",
+        "graph": "sha256:579744d3874771c0f58c73614d7f4271a8e7016e6ea7b3fbd2ee33b7e18fd17e",
         "modules/design-system": "sha256:c30ec0912d435c986272f1ef0c30d23881fb41c4617802ffe5fc10000b9f501f",
         "modules/surface": "sha256:834f9b89895363f3b5fa09a26acd5c9bea2d2f68a11e77c719961cb2c6878f00"
       },
       "reportPath": "reviews/ed/design-system/latest.md",
       "skill": "design-system",
       "sourceHash": "sha256:8078d81a7fc356ff7d6b350bc5e36bdaf67240714edd38b0491927170d0db904",
-      "specHash": "sha256:0774825a54d0654d8837c158c779cdd4343e5556a287ca1ff34b624bf5c60605",
+      "specHash": "sha256:c847dba085f6c954623d6e6f8c4dc83e3cfaa44dfa33f25e3af3558b5f4d01d1",
       "target": "ed"
     },
     "ed/distributed-journey": {
       "moduleHashes": {
         "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
         "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
-        "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e",
+        "graph": "sha256:579744d3874771c0f58c73614d7f4271a8e7016e6ea7b3fbd2ee33b7e18fd17e",
         "modules/action": "sha256:85bf439ada55ec13eadc7b95997cd240e356ff2b8e8d82e108db36d13e6de3d1",
         "modules/actor": "sha256:8d2428b38e51ffc0336671bf5a7493f6eac384282532f815678e69013ff6b0ee",
         "modules/artifact": "sha256:ef364efa0c76b918cb52ba0e1d842b7a72f2953e08a10de051a731113234eebe",
@@ -39,32 +39,32 @@
       "reportPath": "reviews/ed/distributed-journey/latest.md",
       "skill": "distributed-journey",
       "sourceHash": "sha256:c888611f1d094770ccbd8246cc536a46749b181ddd7a013d64b2f9a01d47858d",
-      "specHash": "sha256:263df067894e4514a116de9631bed895ff115ca7e7fbb47f6e85f9cc5249ffa1",
+      "specHash": "sha256:dde5294b2257f32ec1fa735937405dcd2910dcae37b72858f045719ca67a3173",
       "target": "ed"
     },
     "ed/graph": {
       "moduleHashes": {
         "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
         "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
-        "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e"
+        "graph": "sha256:579744d3874771c0f58c73614d7f4271a8e7016e6ea7b3fbd2ee33b7e18fd17e"
       },
       "reportPath": "reviews/ed/graph/latest.md",
       "skill": "graph",
-      "sourceHash": "sha256:fe3325bd7a11ce61abb603fce3ef789a2f32d3725c9eb2ea57f974144beb9f98",
-      "specHash": "sha256:82a8ad767af9732388c2e2711262fe4c5e9a890d7e070718577f174d10af4d5d",
+      "sourceHash": "sha256:95238ff3e7b32e20b911c88344cd53926211ece3d5061d1497ecc8057013f9cd",
+      "specHash": "sha256:8a3c33e83dbd1ad8cbbfc463e2c9ac1a1dbbd9384fd87576711509dbb036f198",
       "target": "ed"
     },
     "ed/localization": {
       "moduleHashes": {
         "architecture": "sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d",
         "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
-        "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e",
+        "graph": "sha256:579744d3874771c0f58c73614d7f4271a8e7016e6ea7b3fbd2ee33b7e18fd17e",
         "modules/l10n": "sha256:fe7cdc72b95afe567c7ed9d0dbfe356ccc825b49847d1c286298b35c5f49b64c"
       },
       "reportPath": "reviews/ed/localization/latest.md",
       "skill": "localization",
       "sourceHash": "sha256:1adb290ececbc67bcac4238201fcd2a9c60251b7510db2140ae32fb0725f63b8",
-      "specHash": "sha256:736ff91be0b70b12474473ec19cf3db060d9cd258ce052d9c3afe3b7d1a045f1",
+      "specHash": "sha256:8ea89310228d8daf736c6808c960a032ca9ae58d5ee40a4d13d2d25f4500b10b",
       "target": "ed"
     },
     "ed/root": {
@@ -73,7 +73,7 @@
         "conformance": "sha256:b77f657cce8b9b7cc8d80768756ab2ef69677df3d2c010c07c4c835851cf0078",
         "core": "sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990",
         "experience": "sha256:3df01150e516db142414176143cd8a35ccfee0b41129f7da483e9b3f1ce3288c",
-        "graph": "sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e",
+        "graph": "sha256:579744d3874771c0f58c73614d7f4271a8e7016e6ea7b3fbd2ee33b7e18fd17e",
         "mapping": "sha256:3a7996ad1ef7c691b0f7fa1f0c803e3224f562fdc19dfa0fc471a44ea632101f",
         "metrics": "sha256:9a8414801ef1a2f9c497d3ac2872dbe6b90c9698c7a306db52eff0d1c80b65b4",
         "modules/action": "sha256:85bf439ada55ec13eadc7b95997cd240e356ff2b8e8d82e108db36d13e6de3d1",
@@ -92,8 +92,8 @@
       },
       "reportPath": "reviews/ed/root/latest.md",
       "skill": "root",
-      "sourceHash": "sha256:5e26b7b08656fcd28f113f9408a0ee44567e31890c99443f9c68e3611dc4b0cf",
-      "specHash": "sha256:1da9b623ce05fa7677c45ceb246256e2735963936ecfb7802272a9a27315031e",
+      "sourceHash": "sha256:7f23c644dd0a0be23087dd251b98172157154e5ada1c143db9e314a18c454351",
+      "specHash": "sha256:7f787f1be9fb32e0c506a7021ad8bf66f83677d757083cbe90d915ebd7286028",
       "target": "ed"
     },
     "tr/2026.06/design-system": {

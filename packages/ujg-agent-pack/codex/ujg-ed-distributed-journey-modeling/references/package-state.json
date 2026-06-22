@@ -12,7 +12,7 @@
     "name": "ujg-ed-distributed-journey-modeling"
   },
   "sourceHash": "sha256:c888611f1d094770ccbd8246cc536a46749b181ddd7a013d64b2f9a01d47858d",
-  "specHash": "sha256:263df067894e4514a116de9631bed895ff115ca7e7fbb47f6e85f9cc5249ffa1",
+  "specHash": "sha256:dde5294b2257f32ec1fa735937405dcd2910dcae37b72858f045719ca67a3173",
   "target": {
     "id": "ed",
     "label": "Editor's Draft"

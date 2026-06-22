@@ -9,7 +9,14 @@ ujggraphshape:StateLikeShape a sh:NodeShape ;
   sh:or (
     [ sh:class ujggraph:State ]
     [ sh:class ujggraph:CompositeState ]
-    [ sh:class ujggraph:BoundaryState ]
+  ) .
+
+ujggraphshape:LocalVertexShape a sh:NodeShape ;
+  sh:nodeKind sh:IRI ;
+  sh:or (
+    [ sh:class ujggraph:State ]
+    [ sh:class ujggraph:CompositeState ]
+    [ sh:class ujggraph:JourneyExit ]
   ) .
 
 ujggraphshape:OutgoingTargetShape a sh:NodeShape ;
@@ -17,34 +24,14 @@ ujggraphshape:OutgoingTargetShape a sh:NodeShape ;
   sh:or (
     [ sh:class ujggraph:State ]
     [ sh:class ujggraph:CompositeState ]
-  ) ;
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "OutgoingTransition.to must not reference a BoundaryState." ;
-    sh:select """
-      SELECT $this
-      WHERE {
-        $this a ujggraph:BoundaryState .
-      }
-    """ ;
-  ] .
+  ) .
 
 ujggraphshape:IndexStateShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
   sh:or (
     [ sh:class ujggraph:State ]
     [ sh:class ujggraph:CompositeState ]
-  ) ;
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "JourneyEntryIndex.stateRefs must not reference a BoundaryState." ;
-    sh:select """
-      SELECT $this
-      WHERE {
-        $this a ujggraph:BoundaryState .
-      }
-    """ ;
-  ] .
+  ) .
 
 ujggraphshape:JourneyShape a sh:NodeShape ;
   sh:targetClass ujggraph:Journey ;
@@ -83,7 +70,7 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A transition in transitionRefs has a from state that is not listed in this journey's stateRefs." ;
+    sh:message "A transition in transitionRefs has a from value that is not listed in this journey's stateRefs." ;
     sh:select """
       SELECT $this ?transition ?from
       WHERE {
@@ -99,87 +86,68 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A transition in transitionRefs has a to state that is not listed in this journey's stateRefs." ;
+    sh:message "A transition in transitionRefs has a from value that references a JourneyExit." ;
+    sh:select """
+      SELECT $this ?transition ?from
+      WHERE {
+        $this ujggraph:transitionRefs ?transition .
+        ?transition ujggraph:from ?from .
+        ?from a ujggraph:JourneyExit .
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A transition in transitionRefs has a to value that is not listed in this journey's stateRefs or exitRefs." ;
     sh:select """
       SELECT $this ?transition ?to
       WHERE {
         $this ujggraph:transitionRefs ?transition .
         ?transition ujggraph:to ?to .
 
-        FILTER (NOT EXISTS {
-          $this ujggraph:stateRefs ?to .
-        })
+        FILTER (
+          NOT EXISTS { $this ujggraph:stateRefs ?to . }
+          && NOT EXISTS { $this ujggraph:exitRefs ?to . }
+        )
       }
     """ ;
   ] ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A JourneyExit in exitRefs has an exitStateRef that is not listed in this journey's stateRefs." ;
+    sh:message "A JourneyExit must be listed in the exitRefs of exactly one journey." ;
     sh:select """
-      SELECT $this ?exit ?exitState
+      SELECT $this ?exit
       WHERE {
         $this ujggraph:exitRefs ?exit .
-        ?exit ujggraph:exitStateRef ?exitState .
+
+        FILTER (
+          EXISTS {
+            ?otherJourney ujggraph:exitRefs ?exit .
+            FILTER ($this != ?otherJourney)
+          }
+          || NOT EXISTS {
+            ?declaringJourney ujggraph:exitRefs ?exit .
+          }
+        )
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A JourneyExit used as Transition.to must be listed in the same enclosing journey's exitRefs." ;
+    sh:select """
+      SELECT $this ?transition ?exit
+      WHERE {
+        $this ujggraph:transitionRefs ?transition .
+        ?transition ujggraph:to ?exit .
+        ?exit a ujggraph:JourneyExit .
 
         FILTER (NOT EXISTS {
-          $this ujggraph:stateRefs ?exitState .
+          $this ujggraph:exitRefs ?exit .
         })
-      }
-    """ ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "A JourneyExit must not be listed in the exitRefs of more than one journey." ;
-    sh:select """
-      SELECT $this ?exit ?otherJourney
-      WHERE {
-        $this ujggraph:exitRefs ?exit .
-        ?otherJourney ujggraph:exitRefs ?exit .
-        FILTER ($this != ?otherJourney)
-      }
-    """ ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "A journey must not list more than one JourneyExit with the same exitStateRef." ;
-    sh:select """
-      SELECT $this ?exitState ?exit ?otherExit
-      WHERE {
-        $this ujggraph:exitRefs ?exit, ?otherExit .
-        ?exit ujggraph:exitStateRef ?exitState .
-        ?otherExit ujggraph:exitStateRef ?exitState .
-        FILTER (?exit != ?otherExit)
-      }
-    """ ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "A state referenced by JourneyExit.exitStateRef must not be used as the from value of a transition listed in the same journey." ;
-    sh:select """
-      SELECT $this ?exit ?exitState ?transition
-      WHERE {
-        $this ujggraph:exitRefs ?exit ;
-              ujggraph:transitionRefs ?transition .
-        ?exit ujggraph:exitStateRef ?exitState .
-        ?transition ujggraph:from ?exitState .
-      }
-    """ ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "A BoundaryState listed in a journey's stateRefs must not be used as the from value of a transition listed in the same journey." ;
-    sh:select """
-      SELECT $this ?boundaryState ?transition
-      WHERE {
-        $this ujggraph:stateRefs ?boundaryState ;
-              ujggraph:transitionRefs ?transition .
-        ?boundaryState a ujggraph:BoundaryState .
-        ?transition ujggraph:from ?boundaryState .
       }
     """ ;
   ] ;
@@ -277,7 +245,7 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A transition with fromExitRef must have a to value listed in the enclosing journey's stateRefs." ;
+    sh:message "A transition with fromExitRef must have a to value listed in the enclosing journey's stateRefs or exitRefs." ;
     sh:select """
       SELECT $this ?transition ?to
       WHERE {
@@ -285,9 +253,10 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
         ?transition ujggraph:fromExitRef ?exit ;
                     ujggraph:to ?to .
 
-        FILTER (NOT EXISTS {
-          $this ujggraph:stateRefs ?to .
-        })
+        FILTER (
+          NOT EXISTS { $this ujggraph:stateRefs ?to . }
+          && NOT EXISTS { $this ujggraph:exitRefs ?to . }
+        )
       }
     """ ;
   ] ;
@@ -311,7 +280,7 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
   sh:sparql [
     a sh:SPARQLConstraint ;
     sh:severity sh:Warning ;
-    sh:message "A state in Journey.stateRefs is not the start state, a local transition endpoint, or an exported exit state. Verify that it belongs to the journey's local topology and is not only a linked destination." ;
+    sh:message "A state in Journey.stateRefs is not the start state or a local transition endpoint. Verify that it belongs to the journey's experiential local topology and is not only a linked destination." ;
     sh:select """
       SELECT $this ?state
       WHERE {
@@ -329,11 +298,6 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
         FILTER (NOT EXISTS {
           $this ujggraph:transitionRefs ?transition .
           ?transition ujggraph:to ?state .
-        })
-
-        FILTER (NOT EXISTS {
-          $this ujggraph:exitRefs ?exit .
-          ?exit ujggraph:exitStateRef ?state .
         })
       }
     """ ;
@@ -398,12 +362,6 @@ ujggraphshape:JourneyEntryIndexShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:exitStateRef ;
-    sh:maxCount 0 ;
-    sh:message "A JourneyEntryIndex must not declare exitStateRef." ;
-  ] ;
-
-  sh:property [
     sh:path ujggraph:outgoingTransitionRefs ;
     sh:maxCount 0 ;
     sh:message "A JourneyEntryIndex must not declare outgoingTransitionRefs." ;
@@ -429,45 +387,6 @@ ujggraphshape:StateShape a sh:NodeShape ;
     sh:path ujggraph:outgoingTransitionRefs ;
     sh:class ujggraph:OutgoingTransition ;
     sh:nodeKind sh:IRI ;
-  ] .
-
-ujggraphshape:BoundaryStateShape a sh:NodeShape ;
-  sh:targetClass ujggraph:BoundaryState ;
-  sh:nodeKind sh:IRI ;
-
-  sh:property [
-    sh:path ujggraph:label ;
-    sh:datatype xsd:string ;
-    sh:minCount 1 ;
-    sh:maxCount 1 ;
-  ] ;
-
-  sh:property [
-    sh:path ujggraph:tags ;
-    sh:datatype xsd:string ;
-  ] ;
-
-  sh:property [
-    sh:path ujggraph:subjourneyId ;
-    sh:maxCount 0 ;
-    sh:message "A BoundaryState must not declare subjourneyId." ;
-  ] ;
-
-  sh:property [
-    sh:path ujggraph:outgoingTransitionRefs ;
-    sh:maxCount 0 ;
-    sh:message "A BoundaryState must not declare outgoingTransitionRefs." ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "A BoundaryState must not also be typed CompositeState." ;
-    sh:select """
-      SELECT $this
-      WHERE {
-        $this a ujggraph:CompositeState .
-      }
-    """ ;
   ] .
 
 ujggraphshape:CompositeStateShape a sh:NodeShape ;
@@ -521,7 +440,7 @@ ujggraphshape:TransitionShape a sh:NodeShape ;
     sh:path ujggraph:to ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
-    sh:node ujggraphshape:StateLikeShape ;
+    sh:node ujggraphshape:LocalVertexShape ;
   ] ;
 
   sh:property [
@@ -548,11 +467,54 @@ ujggraphshape:JourneyExitShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:exitStateRef ;
-    sh:minCount 1 ;
-    sh:maxCount 1 ;
-    sh:nodeKind sh:IRI ;
-    sh:class ujggraph:BoundaryState ;
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyExit must not declare outgoingTransitionRefs." ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A JourneyExit must not also be typed State." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        $this a ujggraph:State .
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A JourneyExit must be listed in the exitRefs of exactly one journey." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        FILTER (
+          NOT EXISTS { ?journey ujggraph:exitRefs $this . }
+          || EXISTS {
+            ?journeyA ujggraph:exitRefs $this .
+            ?journeyB ujggraph:exitRefs $this .
+            FILTER (?journeyA != ?journeyB)
+          }
+        )
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A JourneyExit must not be used as the from value of a Transition." ;
+    sh:select """
+      SELECT $this ?transition
+      WHERE {
+        ?transition ujggraph:from $this .
+      }
+    """ ;
   ] .
 
 ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;

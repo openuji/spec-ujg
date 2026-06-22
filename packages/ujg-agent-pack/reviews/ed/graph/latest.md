@@ -14,7 +14,7 @@ Spec URL: https://ujg.specs.openuji.org/ed/graph
 
 - architecture: sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d
 - core: sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990
-- graph: sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e
+- graph: sha256:579744d3874771c0f58c73614d7f4271a8e7016e6ea7b3fbd2ee33b7e18fd17e
 
 ## Changed Modules
 

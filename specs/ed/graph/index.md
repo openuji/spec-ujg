@@ -16,13 +16,40 @@ Examples in this page use an explicit context array composed from the published 
 
 - <dfn>Journey</dfn>: A named container for local traversable user flow topology.
 - <dfn>JourneyEntryIndex</dfn>: A catalogue of addressable journey entry states that does not define traversal.
+- <dfn>LocalVertex</dfn>: An abstract local topology vertex of a [=Journey=].
 - <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal).
-- <dfn>Transition</dfn>: A directed edge between two states.
+- <dfn>Transition</dfn>: A structural directed edge between local vertices of a [=Journey=].
 - <dfn>CompositeState</dfn>: A state that encapsulates another [=Journey=] (sub-journey).
-- <dfn>BoundaryState</dfn>: A terminal [=State=] that represents an exported outcome of a [=Journey=].
-- <dfn>JourneyExit</dfn>: An exported boundary contract declared by a [=Journey=].
+- <dfn>JourneyExit</dfn>: A terminal local graph vertex and exported completion contract declared by a [=Journey=].
 - <dfn>OutgoingTransition</dfn>: A navigational affordance pointing to a next possible [=State=] or [=CompositeState=].
 - <dfn>OutgoingTransitionGroup</dfn>: A reusable set of outgoing transitions that a Consumer can treat as present on multiple states (e.g., global nav).
+
+---
+
+## LocalVertex {data-cop-concept="local-vertex"}
+
+A [=LocalVertex=] is the abstract topology node type for the local topology of a [=Journey=].
+
+[=State=] and [=JourneyExit=] are sibling kinds of [=LocalVertex=]. A [=CompositeState=] is a specialized [=State=]. A [=JourneyExit=] is not a [=State=].
+
+<spec-statement>
+1. A [=State=] **MUST** be a [=LocalVertex=].
+2. A [=CompositeState=] **MUST** be a [=State=].
+3. A [=JourneyExit=] **MUST** be a [=LocalVertex=].
+4. A [=JourneyExit=] **MUST NOT** be a [=State=].
+</spec-statement>
+
+```mermaid
+classDiagram
+  class LocalVertex
+  class State
+  class CompositeState
+  class JourneyExit
+
+  LocalVertex <|-- State
+  State <|-- CompositeState
+  LocalVertex <|-- JourneyExit
+```
 
 ---
 
@@ -62,7 +89,7 @@ Example JSON node:
 
 ## Transition {data-cop-concept="transition"}
 
-A [=Transition=] is a structural directed edge between graph states. It models ordinary progression inside the local topology of a [=Journey=].
+A [=Transition=] is a structural directed edge between local vertices of a [=Journey=]. It models ordinary progression inside the local topology of a [=Journey=].
 
 A [=Transition=] is not owned by either endpoint state. It is owned by a journey through `transitionRefs`.
 
@@ -70,18 +97,18 @@ A [=Transition=] is not owned by either endpoint state. It is owned by a journey
 1. A [=Transition=] **MUST** be identified by an IRI.
 2. A [=Transition=] **MUST** declare exactly one `from` value.
 3. A [=Transition=] **MUST** declare exactly one `to` value.
-4. The `from` and `to` values of a [=Transition=] **MUST** reference a [=State=] or a valid [=State=] subclass defined by this module.
-5. A [=Transition=] listed in a [=Journey=]'s `transitionRefs` **MUST** have `from` and `to` values listed in that same journey's `stateRefs`.
-6. A [=Transition=] **MUST NOT** use `from` or `to` to reference states belonging to another journey.
-7. A [=Transition=] **MUST NOT** declare more than one `label`.
+4. The `from` value of a [=Transition=] listed in a [=Journey=]'s `transitionRefs` **MUST** reference a [=State=] or [=CompositeState=] listed in that same journey's `stateRefs`.
+5. The `to` value of a [=Transition=] listed in a [=Journey=]'s `transitionRefs` **MUST** reference either a [=State=] or [=CompositeState=] listed in that same journey's `stateRefs`, or a [=JourneyExit=] listed in that same journey's `exitRefs`.
+6. Equivalently, `from` is a member of `stateRefs`, and `to` is a member of `stateRefs` union `exitRefs`.
+7. A [=Transition=] **MUST NOT** use a [=JourneyExit=] as its `from` value.
+8. A [=Transition=] **MUST NOT** use `from` or `to` to reference local vertices belonging to another journey.
+9. A [=Transition=] **MUST NOT** declare more than one `label`.
 </spec-statement>
 
 ```mermaid
 classDiagram
-  class State {
-    id
-    label
-  }
+  class State
+  class JourneyExit
 
   class Transition {
     id
@@ -92,6 +119,7 @@ classDiagram
 
   Transition --> State : from
   Transition --> State : to
+  Transition --> JourneyExit : to
 ```
 
 Example JSON node:
@@ -110,7 +138,7 @@ Example JSON node:
 
 ## Journey {data-cop-concept="journey"}
 
-A [=Journey=] is the local container for intended flow topology. It lists the states that belong to the journey and, when present, the transitions that connect those states.
+A [=Journey=] is the local container for intended flow topology. It lists the experiential states that belong to the journey, the terminal exits exported by the journey, and, when present, the transitions that connect those local vertices.
 
 Use [=Journey=] when the modeled object owns local traversal, progression, or structural order. If the model only needs to list known entry points into pages, surfaces, flows, or journeys, use [=JourneyEntryIndex=] instead.
 
@@ -119,12 +147,17 @@ Use [=Journey=] when the modeled object owns local traversal, progression, or st
 2. A [=Journey=] **MUST** declare exactly one `startStateRef`.
 3. A [=Journey=] **MUST** declare at least one `stateRefs` value.
 4. A [=Journey=] **MAY** declare `transitionRefs`.
-5. Each `stateRefs` value **MUST** reference a [=State=] or a valid [=State=] subclass defined by this module.
-6. If present, each `transitionRefs` value **MUST** reference a [=Transition=].
-7. A [=Journey=] **MUST** contain one or more [=State|States=] and **MAY** connect those states with [=Transition|Transitions=].
-8. Every `stateRefs` value of a [=Journey=] **SHOULD** belong to that journey's local topology.
-9. A state belongs to a journey when it is the `startStateRef`, a `from` or `to` endpoint of a transition listed in that journey's `transitionRefs`, an exported boundary state referenced by a local [=JourneyExit=], or a local observable segment or condition connected by the journey's structural order.
-10. A [=Journey=] **MUST NOT** list a linked destination page, surface, flow, or journey entry inside `stateRefs` merely because an [=OutgoingTransition=] can reach it.
+5. A [=Journey=] **MAY** declare `exitRefs`.
+6. Each `stateRefs` value **MUST** reference a [=State=] or a valid [=State=] subclass defined by this module.
+7. If present, each `transitionRefs` value **MUST** reference a [=Transition=].
+8. If present, each `exitRefs` value **MUST** reference a [=JourneyExit=].
+9. A [=Journey=] **MUST** contain one or more [=State|States=] and **MAY** connect local vertices with [=Transition|Transitions=].
+10. The derived local vertex set of a [=Journey=] is `stateRefs` union `exitRefs`.
+11. `stateRefs` contains experiential local vertices.
+12. `exitRefs` contains terminal exported local vertices that participate in local topology but do not represent UX states.
+13. Every `stateRefs` value of a [=Journey=] **SHOULD** belong to that journey's local experiential topology.
+14. A state belongs to a journey when it is the `startStateRef`, a `from` or state-valued `to` endpoint of a transition listed in that journey's `transitionRefs`, or a local observable segment or condition connected by the journey's structural order.
+15. A [=Journey=] **MUST NOT** list a linked destination page, surface, flow, or journey entry inside `stateRefs` merely because an [=OutgoingTransition=] can reach it.
 </spec-statement>
 
 ```mermaid
@@ -135,9 +168,15 @@ classDiagram
     startStateRef
     stateRefs
     transitionRefs
+    exitRefs
   }
 
   class State {
+    id
+    label
+  }
+
+  class JourneyExit {
     id
     label
   }
@@ -150,9 +189,11 @@ classDiagram
 
   Journey --> State : startStateRef
   Journey --> State : stateRefs
+  Journey --> JourneyExit : exitRefs
   Journey --> Transition : transitionRefs
   Transition --> State : from
   Transition --> State : to
+  Transition --> JourneyExit : to
 ```
 
 Example JSON node:
@@ -203,7 +244,7 @@ In common use, a [=JourneyEntryIndex=] lists [=CompositeState=] entries whose `s
 3. Each `stateRefs` value **MUST** reference a resolvable [=State=] or [=CompositeState=].
 4. Each referenced state **MUST** be a top-level node in the same document or resolvable through imports.
 5. Each referenced state **SHOULD** be a [=CompositeState=] when it represents a page, surface, or nested journey entry.
-6. A [=JourneyEntryIndex=] **MUST NOT** reference a [=BoundaryState=] in `stateRefs`.
+6. A [=JourneyEntryIndex=] **MUST NOT** reference a [=JourneyExit=] in `stateRefs`.
 7. A [=JourneyEntryIndex=] **MUST NOT** declare `startStateRef`.
 8. A [=JourneyEntryIndex=] **MUST NOT** declare `transitionRefs`.
 9. A [=JourneyEntryIndex=] **MUST NOT** declare `exitRefs`.
@@ -212,10 +253,9 @@ In common use, a [=JourneyEntryIndex=] lists [=CompositeState=] entries whose `s
 12. A [=JourneyEntryIndex=] **MUST NOT** declare `to`.
 13. A [=JourneyEntryIndex=] **MUST NOT** declare `fromExitRef`.
 14. A [=JourneyEntryIndex=] **MUST NOT** declare `subjourneyId`.
-15. A [=JourneyEntryIndex=] **MUST NOT** declare `exitStateRef`.
-16. A [=JourneyEntryIndex=] **MUST NOT** declare `outgoingTransitionRefs`.
-17. `stateRefs` on a [=JourneyEntryIndex=] **MUST NOT** imply traversal order, reachability, user path, progression, or parent continuation.
-18. The order of values in `stateRefs` **MUST NOT** be interpreted normatively unless a future ordering mechanism is explicitly added.
+15. A [=JourneyEntryIndex=] **MUST NOT** declare `outgoingTransitionRefs`.
+16. `stateRefs` on a [=JourneyEntryIndex=] **MUST NOT** imply traversal order, reachability, user path, progression, or parent continuation.
+17. The order of values in `stateRefs` **MUST NOT** be interpreted normatively unless a future ordering mechanism is explicitly added.
 </spec-statement>
 
 [=JourneyEntryIndex=] is intended for top-level page maps, product surface indexes, search-result target indexes, documentation indexes, route or catalogue manifests, and other collections of known journey entry points. Do not use [=JourneyEntryIndex=] to model page-segment order, local journey progression, child completion, runtime observations, or experience annotations.
@@ -303,72 +343,31 @@ Example JSON node:
 
 ---
 
-## BoundaryState {data-cop-concept="boundary-state"}
-
-A [=BoundaryState=] is a terminal [=State=] that represents an exported outcome of a journey. A nested journey uses boundary states to expose completed outcomes to a parent journey through [=JourneyExit=].
-
-Boundary states remain local states of the journey that declares them.
-
-<spec-statement>
-1. A [=BoundaryState=] **MUST** be a [=State=].
-2. A [=BoundaryState=] **MUST NOT** also be a [=CompositeState=].
-3. A [=BoundaryState=] **MUST NOT** declare `subjourneyId`.
-4. A [=BoundaryState=] **MUST NOT** declare `outgoingTransitionRefs`.
-5. A [=BoundaryState=] listed in a [=Journey=]'s `stateRefs` **MUST NOT** be used as the `from` value of another [=Transition=] listed in that same journey's `transitionRefs`.
-6. Outgoing transition group injection **MUST NOT** create effective outgoing transitions from a [=BoundaryState=].
-</spec-statement>
-
-Informative visualization:
-
-```mermaid
-classDiagram
-  class State
-  class BoundaryState
-  class Journey {
-    stateRefs
-  }
-  class Transition {
-    from
-    to
-  }
-
-  State <|-- BoundaryState
-  Journey --> BoundaryState : stateRefs
-  Transition --> BoundaryState : to
-```
-
-Example JSON node:
-
-```json
-{
-  "@type": "BoundaryState",
-  "@id": "urn:ujg:state:checkout-complete",
-  "label": "Checkout complete",
-  "tags": ["outcome:success"]
-}
-```
-
----
-
 ## JourneyExit {data-cop-concept="journey-exits"}
 
-A [=JourneyExit=] is an exported boundary contract declared by a [=Journey=]. It identifies one local [=BoundaryState=] using `exitStateRef`.
+A [=JourneyExit=] is a terminal local graph vertex and exported completion contract declared by a [=Journey=]. It represents a terminal journey outcome that can be reached by a local [=Transition=].
 
 A parent journey can use exported exits to distinguish which outcome of a child journey was reached, without directly referencing child states.
 
 <spec-statement>
 1. A [=Journey=] **MAY** declare `exitRefs`.
 2. Each value of `exitRefs` **MUST** reference a [=JourneyExit=].
-3. A [=JourneyExit=] **MUST** declare exactly one `exitStateRef`.
-4. The `exitStateRef` of a [=JourneyExit=] declared by a journey **MUST** reference a [=BoundaryState=] listed in that same journey's `stateRefs`.
-5. A [=JourneyExit=] `exitStateRef` **MUST NOT** reference a [=CompositeState=].
-6. A [=JourneyExit=] **MUST** be declared by no more than one [=Journey=].
-7. A [=Journey=] **MUST NOT** list more than one [=JourneyExit=] with the same `exitStateRef`.
-8. A [=JourneyExit=] **MUST NOT** be used for ordinary internal child transitions.
+3. A [=JourneyExit=] **MUST** be declared in exactly one [=Journey=]'s `exitRefs`.
+4. A [=JourneyExit=] **MAY** be the `to` endpoint of a [=Transition=] listed in the declaring journey's `transitionRefs`.
+5. A [=JourneyExit=] **MUST NOT** be the `from` endpoint of a [=Transition=].
+6. A [=JourneyExit=] **MUST NOT** declare `outgoingTransitionRefs`.
+7. Outgoing transition group injection **MUST NOT** create effective outgoing transitions from a [=JourneyExit=].
+8. A [=JourneyExit=] **MUST NOT** be used for ordinary internal child transitions when a normal [=State=] or [=Transition=] preserves the same meaning.
 9. Runtime observations, user actions, form values, clicked elements, submitted values, selected values, analytics facts, or other runtime facts **MUST NOT** be modeled in the Graph module through [=JourneyExit=].
 </spec-statement>
 
-If a [=CompositeState=] completes and needs to export an outcome upward, the declaring journey SHOULD transition to a local [=BoundaryState=], and the [=JourneyExit=] SHOULD reference that [=BoundaryState=].
+If a completion point is an actual user-visible screen, page, modal, or step, it should remain a normal [=State=]. A journey can then transition from that state to a [=JourneyExit=] that represents the exported terminal outcome.
+
+Informative pattern:
+
+```text
+CheckoutForm -> SuccessScreen -> CheckoutCompleteExit
+```
 
 ```mermaid
 classDiagram
@@ -376,14 +375,14 @@ classDiagram
     stateRefs
     exitRefs
   }
-  class BoundaryState
-  class JourneyExit {
-    exitStateRef
-  }
+  class State
+  class JourneyExit
+  class Transition
 
-  Journey --> BoundaryState : stateRefs
+  Journey --> State : stateRefs
   Journey --> JourneyExit : exitRefs
-  JourneyExit --> BoundaryState : exitStateRef
+  Transition --> State : from
+  Transition --> JourneyExit : to
 ```
 
 Example JSON graph:
@@ -400,8 +399,7 @@ Example JSON graph:
       "label": "Checkout journey",
       "startStateRef": "urn:ujg:state:checkout-form",
       "stateRefs": [
-        "urn:ujg:state:checkout-form",
-        "urn:ujg:state:checkout-complete"
+        "urn:ujg:state:checkout-form"
       ],
       "transitionRefs": [
         "urn:ujg:transition:checkout-form-to-complete"
@@ -416,22 +414,16 @@ Example JSON graph:
       "label": "Checkout form"
     },
     {
-      "@type": "BoundaryState",
-      "@id": "urn:ujg:state:checkout-complete",
-      "label": "Checkout complete"
-    },
-    {
       "@type": "Transition",
       "@id": "urn:ujg:transition:checkout-form-to-complete",
       "label": "Submit checkout",
       "from": "urn:ujg:state:checkout-form",
-      "to": "urn:ujg:state:checkout-complete"
+      "to": "urn:ujg:exit:checkout-complete"
     },
     {
       "@type": "JourneyExit",
       "@id": "urn:ujg:exit:checkout-complete",
-      "label": "Checkout complete",
-      "exitStateRef": "urn:ujg:state:checkout-complete"
+      "label": "Checkout complete"
     }
   ]
 }
@@ -441,7 +433,7 @@ Example JSON graph:
 
 `fromExitRef` is a mapping property on a parent [=Transition=]. It identifies which exported [=JourneyExit=] completed for the child journey of the transition's `from` [=CompositeState=].
 
-`fromExitRef` is not a transition endpoint. The transition's `from` and `to` values remain local to the enclosing journey.
+`fromExitRef` is not a transition endpoint. The transition's `from` and `to` values remain local to the enclosing journey and `fromExitRef` disambiguates which child exit caused the parent transition to become applicable.
 
 <spec-statement>
 1. A [=Transition=] **MAY** declare `fromExitRef`.
@@ -458,7 +450,7 @@ Example JSON graph:
 <spec-statement>
 When a Consumer enters a [=CompositeState=], it **MAY** resolve the composite state's `subjourneyId` and interpret the referenced child [=Journey=].
 
-If interpretation of the child journey reaches a [=BoundaryState=] that is the `exitStateRef` of a [=JourneyExit=] listed in that child journey's `exitRefs`, that [=JourneyExit=] becomes the exported exit of the child journey.
+If interpretation of the child journey reaches a [=JourneyExit=] listed in that child journey's `exitRefs`, that [=JourneyExit=] becomes the exported exit of the child journey.
 
 The enclosing journey may then continue only by taking a parent transition whose:
 
@@ -476,7 +468,7 @@ A Consumer **MUST NOT** treat `fromExitRef` as a replacement for `from` or `to`.
 A Consumer **MUST NOT** treat a parent transition without `fromExitRef` as a fallback for an exported child journey exit.
 </spec-statement>
 
-Use [=JourneyExit=] and `fromExitRef` when a nested journey has multiple explicit boundary outcomes that the parent journey needs to distinguish. Do not use [=JourneyExit=] for ordinary transitions inside the child journey; use normal child [=Transition=] resources for internal child movement.
+Use [=JourneyExit=] and `fromExitRef` when a nested journey has multiple explicit child outcomes that the parent journey needs to distinguish. Do not use [=JourneyExit=] for ordinary transitions inside the child journey; use normal child [=Transition=] resources for internal child movement.
 
 ```mermaid
 classDiagram
@@ -484,7 +476,6 @@ classDiagram
   class CompositeState {
     subjourneyId
   }
-  class BoundaryState
   class JourneyExit
   class Transition {
     from
@@ -494,7 +485,6 @@ classDiagram
 
   CompositeState --> Journey : subjourneyId
   Journey --> JourneyExit : exitRefs
-  JourneyExit --> BoundaryState : exitStateRef
   Transition --> CompositeState : from
   Transition --> JourneyExit : fromExitRef
 ```
@@ -559,8 +549,7 @@ Example JSON graph:
       "label": "Checkout child journey",
       "startStateRef": "urn:ujg:state:checkout-form",
       "stateRefs": [
-        "urn:ujg:state:checkout-form",
-        "urn:ujg:state:checkout-complete"
+        "urn:ujg:state:checkout-form"
       ],
       "transitionRefs": [
         "urn:ujg:transition:checkout-form-to-complete"
@@ -575,22 +564,16 @@ Example JSON graph:
       "label": "Checkout form"
     },
     {
-      "@type": "BoundaryState",
-      "@id": "urn:ujg:state:checkout-complete",
-      "label": "Checkout complete"
-    },
-    {
       "@type": "Transition",
       "@id": "urn:ujg:transition:checkout-form-to-complete",
       "label": "Submit checkout",
       "from": "urn:ujg:state:checkout-form",
-      "to": "urn:ujg:state:checkout-complete"
+      "to": "urn:ujg:exit:checkout-complete"
     },
     {
       "@type": "JourneyExit",
       "@id": "urn:ujg:exit:checkout-complete",
-      "label": "Checkout complete",
-      "exitStateRef": "urn:ujg:state:checkout-complete"
+      "label": "Checkout complete"
     }
   ]
 }
@@ -611,7 +594,7 @@ An [=OutgoingTransition=] has no explicit `from` property. Its effective source 
 4. An [=OutgoingTransition=] with neither `to` nor `toCurrentState: true` is invalid.
 5. `toCurrentState: false` is equivalent to the property being absent and does not satisfy the target requirement.
 6. `OutgoingTransition.to` **MAY** reference a resolvable [=State=] or [=CompositeState=] outside the journey that contributes the affordance.
-7. `OutgoingTransition.to` **MUST NOT** reference a [=BoundaryState=].
+7. `OutgoingTransition.to` **MUST NOT** reference a [=JourneyExit=].
 8. An [=OutgoingTransition=] **MUST NOT** be listed in a [=Journey=]'s `transitionRefs`.
 9. An [=OutgoingTransition=] **MUST NOT** be used for ordinary internal journey progression when a local [=Transition=] is appropriate.
 10. An [=OutgoingTransition=] **MUST NOT** declare more than one `label`.
@@ -685,11 +668,11 @@ Group injection does not add structural [=Transition=] resources to `transitionR
 For journey-level group injection:
 
 1. The Consumer **MUST** resolve each referenced [=OutgoingTransitionGroup=] and each group `outgoingTransitionRefs` entry to an [=OutgoingTransition=].
-2. The Consumer **MUST** iterate over every [=State=] and [=CompositeState=] ID in `stateRefs` except [=BoundaryState=] instances.
+2. The Consumer **MUST** iterate over every [=State=] and [=CompositeState=] ID in `stateRefs`.
 3. The Consumer **MUST** resolve each [=OutgoingTransition=] target at the iterated state where the group is applied.
 4. For a resolved [=OutgoingTransition=] with `toCurrentState: true`, the effective target is the current iterated [=State=] or [=CompositeState=].
 5. For a resolved [=OutgoingTransition=] with `to`, the effective target is the referenced `to` state.
-6. The Consumer **MUST NOT** create effective outgoing transitions from a [=BoundaryState=].
+6. The Consumer **MUST NOT** create effective outgoing transitions from a [=JourneyExit=].
 7. A Consumer **SHOULD** treat duplicate effective outgoing edges with the same effective source state and same effective target as one effective edge.
 </spec-statement>
 
@@ -770,7 +753,7 @@ Direct state-scoped affordances are for local navigational options, not for ordi
 <spec-statement>
 1. A [=State=] **MAY** declare `outgoingTransitionRefs`.
 2. A [=CompositeState=] **MUST NOT** declare `outgoingTransitionRefs`.
-3. A [=BoundaryState=] **MUST NOT** declare `outgoingTransitionRefs`.
+3. A [=JourneyExit=] **MUST NOT** declare `outgoingTransitionRefs`.
 4. Each state-scoped `outgoingTransitionRefs` value **MUST** reference an [=OutgoingTransition=].
 5. The effective source of a state-scoped [=OutgoingTransition=] is the [=State=] that declares the `outgoingTransitionRefs` value.
 6. For a state-scoped [=OutgoingTransition=] with `toCurrentState: true`, the effective target is the [=State=] that declares the `outgoingTransitionRefs` value.
@@ -787,7 +770,7 @@ classDiagram
     outgoingTransitionRefs
   }
   class CompositeState
-  class BoundaryState
+  class JourneyExit
   class OutgoingTransition {
     to
     toCurrentState
@@ -799,7 +782,7 @@ classDiagram
   note for OutgoingTransition "target mechanism is either to or toCurrentState"
 
   note for CompositeState "MUST NOT declare outgoingTransitionRefs"
-  note for BoundaryState "MUST NOT declare outgoingTransitionRefs"
+  note for JourneyExit "MUST NOT declare outgoingTransitionRefs"
 ```
 
 Example JSON nodes:
@@ -830,7 +813,7 @@ This example shows a search form state with a local "Back to home page" affordan
 
 ## Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `State`, `CompositeState`, `BoundaryState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `exitRefs`, `fromExitRef`, `exitStateRef`, `toCurrentState`, and `outgoingTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `exitRefs`, `fromExitRef`, `toCurrentState`, and `outgoingTransitionRefs`.
 
 :::include ./graph.ttl :::
 
@@ -857,13 +840,34 @@ The rules below define additional graph integrity and resolution behavior beyond
 <spec-statement>
 To ensure graph integrity, the following constraints **MUST** be met:
 1. **Reference Integrity:** All `startStateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, and `outgoingTransitionRefs` IDs **MUST** resolve to valid Nodes within the current scope or imported modules.
-2. **Transition Endpoint Resolution:** The `from` and `to` IDs of a [=Transition=] **MUST** resolve to valid Nodes, and are required to be members of the enclosing [=Journey=]'s `stateRefs`. A transition **MUST NOT** reference states belonging to other journeys.
+2. **Transition Endpoint Resolution:** The `from` ID of a [=Transition=] **MUST** resolve to a [=State=] or [=CompositeState=] listed in the enclosing [=Journey=]'s `stateRefs`. The `to` ID of a [=Transition=] **MUST** resolve to a [=State=] or [=CompositeState=] listed in the enclosing [=Journey=]'s `stateRefs`, or a [=JourneyExit=] listed in the enclosing [=Journey=]'s `exitRefs`. A transition **MUST NOT** reference local vertices belonging to other journeys.
 3. **Composition Safety:** `subjourneyId` **MUST** resolve to a valid [=Journey=].
 4. **Journey Exit Resolution:** Every ID in `exitRefs` **MUST** resolve to a [=JourneyExit=].
 5. **Group Resolution:** Every ID in `outgoingTransitionGroupRefs` **MUST** resolve to an [=OutgoingTransitionGroup=].
 6. **Outgoing Resolution:** Every ID in `outgoingTransitionRefs` **MUST** resolve to an [=OutgoingTransition=].
 7. **Outgoing Target Resolution:** Each [=OutgoingTransition=] **MUST** resolve through exactly one effective target mechanism: a fixed `to` target, or `toCurrentState: true` resolved at the current effective source where the outgoing affordance is available.
 </spec-statement>
+
+---
+
+## Migration from BoundaryState {data-cop-concept="boundary-state-migration"}
+
+Previous versions modeled journey exits through a `BoundaryState` plus `JourneyExit.exitStateRef`. This has been simplified. A `BoundaryState` should be migrated to a [=JourneyExit=], and transitions that previously targeted the `BoundaryState` should instead target the corresponding [=JourneyExit=]. The `exitStateRef` property is removed.
+
+Migration rule:
+
+```text
+BoundaryState B
+JourneyExit E where E.exitStateRef = B
+Transition T where T.to = B
+
+becomes:
+
+JourneyExit E
+Transition T where T.to = E
+```
+
+If the old `BoundaryState` represented a real user-visible screen, page, modal, or step, migrate it to a normal [=State=] and add an explicit transition from that state to the [=JourneyExit=].
 
 ---
 
@@ -959,7 +963,7 @@ This example lists known page entries in a [=JourneyEntryIndex=]. The search pag
 
 ### Form Child Journey with Parent Continuation
 
-This example models a form as a child journey. The form exports `submitted` through [=BoundaryState=] and [=JourneyExit=]. The enclosing journey continues from the form [=CompositeState=] to a result-page [=CompositeState=] using `fromExitRef`.
+This example models a form as a child journey. The form exports `submitted` through a [=JourneyExit=]. The enclosing journey continues from the form [=CompositeState=] to a result-page [=CompositeState=] using `fromExitRef`.
 
 ```json
 {
@@ -1021,8 +1025,7 @@ This example models a form as a child journey. The form exports `submitted` thro
       "label": "Contact form journey",
       "startStateRef": "urn:ujg:state:contact-form-editing",
       "stateRefs": [
-        "urn:ujg:state:contact-form-editing",
-        "urn:ujg:state:contact-form-submitted"
+        "urn:ujg:state:contact-form-editing"
       ],
       "transitionRefs": [
         "urn:ujg:transition:contact-form-submit"
@@ -1037,22 +1040,16 @@ This example models a form as a child journey. The form exports `submitted` thro
       "label": "Contact form editing"
     },
     {
-      "@type": "BoundaryState",
-      "@id": "urn:ujg:state:contact-form-submitted",
-      "label": "Submitted"
-    },
-    {
       "@type": "Transition",
       "@id": "urn:ujg:transition:contact-form-submit",
       "label": "Submit form",
       "from": "urn:ujg:state:contact-form-editing",
-      "to": "urn:ujg:state:contact-form-submitted"
+      "to": "urn:ujg:exit:contact-form-submitted"
     },
     {
       "@type": "JourneyExit",
       "@id": "urn:ujg:exit:contact-form-submitted",
-      "label": "Submitted",
-      "exitStateRef": "urn:ujg:state:contact-form-submitted"
+      "label": "Submitted"
     },
     {
       "@type": "Journey",

@@ -20,25 +20,25 @@ ujggraph:JourneyEntryIndex a owl:Class ;
   rdfs:label "Journey Index" ;
   rdfs:comment "A catalogue of addressable journey entry states. A JourneyEntryIndex does not define traversal, ordering, reachability, or parent-owned progression." .
 
+ujggraph:LocalVertex a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Local Vertex" ;
+  rdfs:comment "An abstract local topology vertex of a Journey. State, CompositeState, and JourneyExit are local vertex kinds." .
+
 ujggraph:State a owl:Class ;
-  rdfs:subClassOf ujg:Node .
+  rdfs:subClassOf ujggraph:LocalVertex .
 
 ujggraph:CompositeState a owl:Class ;
   rdfs:subClassOf ujggraph:State .
-
-ujggraph:BoundaryState a owl:Class ;
-  rdfs:subClassOf ujggraph:State ;
-  owl:disjointWith ujggraph:CompositeState ;
-  rdfs:label "Boundary State" ;
-  rdfs:comment "A terminal state that represents an exported outcome of a journey and may be referenced by JourneyExit.exitStateRef." .
 
 ujggraph:Transition a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
 ujggraph:JourneyExit a owl:Class ;
-  rdfs:subClassOf ujg:Node ;
+  rdfs:subClassOf ujggraph:LocalVertex ;
+  owl:disjointWith ujggraph:State ;
   rdfs:label "Journey Exit" ;
-  rdfs:comment "An exported exit contract for a journey, bound to a boundary state local to that journey." .
+  rdfs:comment "A terminal local graph vertex and exported completion contract of a journey." .
 
 ujggraph:OutgoingTransition a owl:Class ;
   rdfs:subClassOf ujg:Node .
@@ -64,7 +64,7 @@ ujggraph:startStateRef a owl:ObjectProperty ;
 
 ujggraph:stateRefs a owl:ObjectProperty ;
   rdfs:range ujggraph:State ;
-  rdfs:comment "References graph states. On Journey, stateRefs lists local topology states. On JourneyEntryIndex, stateRefs lists addressable entry states without traversal semantics." .
+  rdfs:comment "References graph states. On Journey, stateRefs lists experiential local vertices. On JourneyEntryIndex, stateRefs lists addressable entry states without traversal semantics." .
 
 ujggraph:transitionRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
@@ -74,7 +74,7 @@ ujggraph:exitRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
   rdfs:range ujggraph:JourneyExit ;
   rdfs:label "exit refs" ;
-  rdfs:comment "References the exported exits declared by a journey." .
+  rdfs:comment "References the terminal exported local vertices declared by a journey." .
 
 ujggraph:outgoingTransitionGroupRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
@@ -85,7 +85,7 @@ ujggraph:from a owl:ObjectProperty ;
   rdfs:range ujggraph:State .
 
 ujggraph:to a owl:ObjectProperty ;
-  rdfs:range ujggraph:State .
+  rdfs:range ujggraph:LocalVertex .
 
 ujggraph:toCurrentState a owl:DatatypeProperty ;
   rdfs:domain ujggraph:OutgoingTransition ;
@@ -100,12 +100,6 @@ ujggraph:fromExitRef a owl:ObjectProperty ;
 ujggraph:subjourneyId a owl:ObjectProperty ;
   rdfs:domain ujggraph:CompositeState ;
   rdfs:range ujggraph:Journey .
-
-ujggraph:exitStateRef a owl:ObjectProperty ;
-  rdfs:domain ujggraph:JourneyExit ;
-  rdfs:range ujggraph:BoundaryState ;
-  rdfs:label "exit state ref" ;
-  rdfs:comment "References the BoundaryState that represents the exported outcome of the declaring journey." .
 
 ujggraph:outgoingTransitionRefs a owl:ObjectProperty ;
   rdfs:domain [
