@@ -62,12 +62,12 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed",
       "skills": [
         {
-          "artifactHash": "sha256:8800896c30ef4f8026ea8f39746ac39faac29dad705497581992549c8eb2e3e1",
+          "artifactHash": "sha256:36daf74dccf330fa42957de9b46b9441a6c2e19fc607116935b8959c48307283",
           "key": "root",
           "moduleId": null,
           "name": "ujg-ed-modeling",
           "source": "sources/ed/skills/root/skill.md",
-          "sourceHash": "sha256:acc93952f9a0a1fc309fa7662d0bd80aa414d349a9d804282fd4a84594c75d89",
+          "sourceHash": "sha256:8a3812e1bdeb6e11b527ad2c11758ccc0ad326424af567f9a7864d7022e0d476",
           "specHash": "sha256:3475570dfe11a2ac2265838530f81f02cf60c574b2d3bcd32b2822c907517500"
         },
         {

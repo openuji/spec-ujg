@@ -211,19 +211,15 @@ Use `OutgoingTransition` for navigation affordances exposed by a state or shared
 
 Use `OutgoingTransitionGroup` for shared affordance sets such as header, footer, utility navigation, repeated CTAs, or language switchers.
 
+Do not use `OutgoingTransition` as a substitute for ordinary local `Transition`.
+
+If the source state and target state are both local vertices of the same journey, and the user action represents recovery, retry, back, next, validation handling, or normal progression inside that journey, model it as `Transition`, not `OutgoingTransition`.
+
+Use `OutgoingTransition` when the affordance leaves the local progression context: for example, help, support, account recovery, external document, another route, another page, another journey entry, or a distinct modeled destination that is not part of the current journey’s local topology.
+
 An `OutgoingTransition` must declare exactly one target mechanism: either one `to`, or `toCurrentState: true`.
 
 Do not declare both. Do not omit both. Do not use `toCurrentState: false`.
-
-Use `to` when the affordance points to a specific state or composite: another page, route, document, result surface, detail page, help page, or distinct modeled locale state.
-
-Use `toCurrentState: true` when the affordance intentionally preserves the current effective graph state and changes only a non-topological dimension such as locale, theme, presentation mode, display density, view mode, or same-state sort/filter context.
-
-`toCurrentState` does not imply a runtime event, click, URL change, selected value, locale payload, new state, local `Transition`, child journey, or `JourneyExit`.
-
-Do not use `toCurrentState` merely because an affordance appears in a header/footer or because the resulting page looks visually similar.
-
-Outgoing navigation may target a state or composite outside the source journey. Do not duplicate outgoing targets into source `stateRefs` unless they also belong to local topology.
 
 Use state-scoped `outgoingTransitionRefs` only on ordinary `State` nodes. Do not put `outgoingTransitionRefs` on `CompositeState` or `JourneyExit`.
 
