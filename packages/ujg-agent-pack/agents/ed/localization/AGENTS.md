@@ -19,12 +19,6 @@ Related generated skills:
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
 
 
----
-
-name: ujg-ed-l10n-modeling
-description: "Generate, review, and correct UJG ED Localization JSON-LD. Use when attaching MessageBundle copy metadata or locale-switch metadata through l10n terms without changing Graph topology."
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  
 # UJG ED Localization Modeling
 
 Use this skill together with `ujg-ed-modeling`. Do not use it as a replacement for the parent modeling skill.

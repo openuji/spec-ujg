@@ -36,7 +36,7 @@ ujgruntimeshape:RuntimeEventShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgruntime:stateRef ;
+    sh:path ujgruntime:eventStateRef ;
     sh:node ujgruntimeshape:StateLikeShape ;
     sh:minCount 1 ;
     sh:maxCount 1 ;

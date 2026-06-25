@@ -16,8 +16,8 @@
       "@id": "ujgruntime:previousId",
       "@type": "@id"
     },
-    "stateRef": {
-      "@id": "ujgruntime:stateRef",
+    "eventStateRef": {
+      "@id": "ujgruntime:eventStateRef",
       "@type": "@id"
     },
     "journeyInstanceRef": {

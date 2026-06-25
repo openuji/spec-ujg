@@ -6,10 +6,11 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#",
 
     "Journey": "ujggraph:Journey",
+    "JourneyEntry": "ujggraph:JourneyEntry",
     "JourneyEntryIndex": "ujggraph:JourneyEntryIndex",
+    "LocalVertex": "ujggraph:LocalVertex",
     "State": "ujggraph:State",
     "CompositeState": "ujggraph:CompositeState",
-    "BoundaryState": "ujggraph:BoundaryState",
     "Transition": "ujggraph:Transition",
     "JourneyExit": "ujggraph:JourneyExit",
     "OutgoingTransition": "ujggraph:OutgoingTransition",
@@ -20,8 +21,17 @@
       "@id": "ujggraph:tags",
       "@container": "@set"
     },
-    "startStateRef": {
-      "@id": "ujggraph:startStateRef",
+    "defaultEntryRef": {
+      "@id": "ujggraph:defaultEntryRef",
+      "@type": "@id"
+    },
+    "entryRefs": {
+      "@id": "ujggraph:entryRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "stateRef": {
+      "@id": "ujggraph:stateRef",
       "@type": "@id"
     },
     "stateRefs": {
@@ -60,12 +70,12 @@
       "@id": "ujggraph:fromExitRef",
       "@type": "@id"
     },
-    "subjourneyId": {
-      "@id": "ujggraph:subjourneyId",
+    "toEntryRef": {
+      "@id": "ujggraph:toEntryRef",
       "@type": "@id"
     },
-    "exitStateRef": {
-      "@id": "ujggraph:exitStateRef",
+    "subjourneyId": {
+      "@id": "ujggraph:subjourneyId",
       "@type": "@id"
     },
     "outgoingTransitionRefs": {

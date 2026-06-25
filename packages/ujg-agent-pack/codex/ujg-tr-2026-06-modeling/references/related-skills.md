@@ -10,10 +10,6 @@ Module scope: whole target
 
 - ujg-tr-2026-06-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
 
-## Upstream Spec Modules
-
-- None
-
 ## Downstream Spec Modules
 
 - None

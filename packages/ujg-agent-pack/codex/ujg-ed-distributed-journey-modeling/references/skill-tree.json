@@ -4,16 +4,6 @@
     "moduleId": "modules/distributed-journey",
     "name": "ujg-ed-distributed-journey-modeling",
     "publicUrl": "https://ujg.specs.openuji.org/ed/modules/distributed-journey",
-    "relevantModuleIds": [
-      "architecture",
-      "core",
-      "graph",
-      "modules/surface",
-      "modules/action",
-      "modules/actor",
-      "modules/artifact",
-      "modules/distributed-journey"
-    ],
     "scope": "Distributed Journey module semantics for cross-authority human-facing journeys, authorities, distributed artifacts, and authority references"
   },
   "moduleGraph": {
@@ -189,7 +179,8 @@
         "modules/actor",
         "modules/surface",
         "modules/action",
-        "modules/artifact"
+        "modules/artifact",
+        "modules/runtime-evidence"
       ],
       "generatedSkill": "ujg-ed-distributed-journey-modeling",
       "title": "Distributed Journey"
@@ -211,7 +202,9 @@
       "title": "Routing"
     },
     "modules/runtime-evidence": {
-      "dependents": [],
+      "dependents": [
+        "modules/distributed-journey"
+      ],
       "deps": [
         "runtime",
         "modules/actor"
@@ -256,6 +249,7 @@
       "dependents": [
         "modules/runtime-evidence",
         "mapping",
+        "modules/distributed-journey",
         "metrics",
         "profiles",
         "conformance"

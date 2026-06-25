@@ -48,18 +48,18 @@ A [=JourneyExecution=] identifies one logical trace. It is not required to enume
 
 A [=RuntimeEvent=] records one runtime moment and may reference its immediate predecessor via `previousId`; if `previousId` is omitted, the event is the [=Root Event=].
 
-A [=RuntimeEvent=] references exactly one [=JourneyInstance=] using `journeyInstanceRef`. The referenced [=JourneyInstance=] supplies the local graph [=Journey=] scope needed to interpret the event's `stateRef`, especially when the event occurred inside a subjourney reached through a [=CompositeState=].
+A [=RuntimeEvent=] references exactly one [=JourneyInstance=] using `journeyInstanceRef`. The referenced [=JourneyInstance=] supplies the local graph [=Journey=] scope needed to interpret the event's `eventStateRef`, especially when the event occurred inside a subjourney reached through a [=CompositeState=].
 
-The core runtime-local address is the pair `RuntimeEvent.stateRef` plus `RuntimeEvent.journeyInstanceRef`. This pair identifies the concrete runtime-local occurrence of the referenced [=State=] or [=CompositeState=].
+The core runtime-local address is the pair `RuntimeEvent.eventStateRef` plus `RuntimeEvent.journeyInstanceRef`. This pair identifies the concrete runtime-local occurrence of the referenced [=State=] or [=CompositeState=].
 
 ## Runtime Event {data-cop-concept="runtime-event"}
 
 <spec-statement>
 
 1. A [=RuntimeEvent=] MUST reference exactly one [=JourneyExecution=] using `executionId`.
-2. A [=RuntimeEvent=] MUST reference exactly one graph [=State=] or [=CompositeState=] using `stateRef`.
+2. A [=RuntimeEvent=] MUST reference exactly one graph [=State=] or [=CompositeState=] using `eventStateRef`.
 3. A [=RuntimeEvent=] MUST reference exactly one [=JourneyInstance=] using `journeyInstanceRef`.
-4. The pair `stateRef` and `journeyInstanceRef` MUST be sufficient to identify the runtime-local state occurrence.
+4. The pair `eventStateRef` and `journeyInstanceRef` MUST be sufficient to identify the runtime-local state occurrence.
 5. A [=RuntimeEvent=] MAY reference its immediate predecessor using `previousId`.
 6. If `previousId` is omitted, the event is a [=Root Event=] in the execution chain.
 7. Runtime event order MUST be reconstructed using `previousId` links, not timestamps.
@@ -172,7 +172,7 @@ A Consumer interpreting a runtime event's journey context MUST resolve the event
       "@type": "RuntimeEvent",
       "@id": "urn:ujg:event:12345:100",
       "executionId": "urn:ujg:execution:12345",
-      "stateRef": "urn:ujg:state:shipping-form",
+      "eventStateRef": "urn:ujg:state:shipping-form",
       "journeyInstanceRef": "urn:ujg:journey-instance:checkout:12345",
       "payload": { "action": "surface.enter" }
     },
@@ -181,7 +181,7 @@ A Consumer interpreting a runtime event's journey context MUST resolve the event
       "@id": "urn:ujg:event:12345:200",
       "executionId": "urn:ujg:execution:12345",
       "previousId": "urn:ujg:event:12345:100",
-      "stateRef": "urn:ujg:state:payment-card",
+      "eventStateRef": "urn:ujg:state:payment-card",
       "journeyInstanceRef": "urn:ujg:journey-instance:checkout:12345:payment",
       "payload": { "action": "field.complete", "field": "card-number" }
     }

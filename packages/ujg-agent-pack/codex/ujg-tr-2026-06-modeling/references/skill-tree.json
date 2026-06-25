@@ -4,20 +4,6 @@
     "moduleId": null,
     "name": "ujg-tr-2026-06-modeling",
     "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06",
-    "relevantModuleIds": [
-      "architecture",
-      "core",
-      "graph",
-      "modules/l10n",
-      "modules/condition",
-      "modules/surface",
-      "runtime",
-      "experience",
-      "mapping",
-      "modules/design-system",
-      "metrics",
-      "conformance"
-    ],
     "scope": "whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules"
   },
   "moduleGraph": {

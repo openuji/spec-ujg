@@ -19,8 +19,7 @@ This module is published through the following artifacts:
 - `actor.context.jsonld`: JSON-LD term mappings, published at `https://ujg.specs.openuji.org/ed/ns/actor.context.jsonld`
 - `actor.shape.ttl`: SHACL validation rules, published at `https://ujg.specs.openuji.org/ed/ns/actor.shape`
 
-Examples in this page compose the shared baseline context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`
-with the Actor context.
+Examples in this page compose the Core, Graph, and Actor contexts explicitly.
 
 ## Terminology
 
@@ -125,7 +124,8 @@ the SHACL shape.
 ```json
 {
   "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/actor.context.jsonld"
   ],
   "@id": "https://example.com/ujg/actor/physical-ai-decision.jsonld",
@@ -149,13 +149,23 @@ the SHACL shape.
     {
       "@id": "urn:ujg:journey:physical-ai-review",
       "@type": "Journey",
-      "startStateRef": "urn:ujg:state:engineer-approval-required",
       "stateRefs": [
         "urn:ujg:state:engineer-approval-required",
         "urn:ujg:state:decision-approved"
       ],
-      "transitionRefs": ["urn:ujg:transition:approve-ai-decision"],
-      "responsibleActorRef": "urn:ujg:actor:production-engineer"
+      "transitionRefs": [
+        "urn:ujg:transition:approve-ai-decision"
+      ],
+      "responsibleActorRef": "urn:ujg:actor:production-engineer",
+      "defaultEntryRef": "urn:ujg:entry:physical-ai-review-default",
+      "entryRefs": [
+        "urn:ujg:entry:physical-ai-review-default"
+      ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:physical-ai-review-default",
+      "stateRef": "urn:ujg:state:engineer-approval-required"
     },
     {
       "@id": "urn:ujg:state:engineer-approval-required",

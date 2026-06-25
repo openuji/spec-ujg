@@ -4,12 +4,6 @@
     "moduleId": "modules/l10n",
     "name": "ujg-ed-l10n-modeling",
     "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
-    "relevantModuleIds": [
-      "architecture",
-      "core",
-      "graph",
-      "modules/l10n"
-    ],
     "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata"
   },
   "moduleGraph": {
@@ -185,7 +179,8 @@
         "modules/actor",
         "modules/surface",
         "modules/action",
-        "modules/artifact"
+        "modules/artifact",
+        "modules/runtime-evidence"
       ],
       "generatedSkill": "ujg-ed-distributed-journey-modeling",
       "title": "Distributed Journey"
@@ -207,7 +202,9 @@
       "title": "Routing"
     },
     "modules/runtime-evidence": {
-      "dependents": [],
+      "dependents": [
+        "modules/distributed-journey"
+      ],
       "deps": [
         "runtime",
         "modules/actor"
@@ -252,6 +249,7 @@
       "dependents": [
         "modules/runtime-evidence",
         "mapping",
+        "modules/distributed-journey",
         "metrics",
         "profiles",
         "conformance"

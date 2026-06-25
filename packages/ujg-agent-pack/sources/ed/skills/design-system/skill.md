@@ -16,7 +16,7 @@ Correct layer order:
 Graph subject -> surfaceRef -> Surface
 SurfaceRealization -> surfaceRef + componentRef/templateRef
 DesignSystem -> componentRefs/templateRefs/tokenSourceRefs/surfaceRealizationRefs
-````
+```
 
 Graph defines topology.
 Surface defines materialization boundaries.
@@ -179,8 +179,3 @@ Keep form states and outcomes in Graph. Use Design System only to say which comp
 * Are slots declared by `Template` and filled through `SlotBinding`?
 * Did I avoid invented props, variants, class names, routes, URLs, CSS, runtime events, and business logic?
 * Did Design System avoid changing Graph traversal?
-
-```
-
-That’s much closer to a useful skill: small, sharp, and hard to misuse.
-```

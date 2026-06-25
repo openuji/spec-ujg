@@ -8,21 +8,12 @@ Spec URL: https://ujg.specs.openuji.org/ed/graph
 ## Status
 
 - Previous review state found.
-- No relevant spec module hash changes detected.
+- Source and spec hashes are unchanged.
 
-## Relevant Modules
+## Review Inputs
 
-- architecture: sha256:135c6d8ca91f5cb04a69dfcd50c75cac605695d718bcf3fbbe0723a2fad8384d
-- core: sha256:36056cb41e184a44433a644ebe39008580c831cd7b091de551801815e2a49990
-- graph: sha256:061397db2543ec1108d257510671c96b699889a9599def195f9d07883add267e
-
-## Changed Modules
-
-- None
-
-## Changed Context/TTL/Shape Files To Inspect
-
-- None
+- Source hash: sha256:20db3dd43c6d5f1edd2dce8baf55f8af215f2885ebf0a11efc77d9d8fab50fc2
+- Spec hash: sha256:e4a7ec931a50943ed199a60ed9194f0cbc3c9c559df695173305fc466254c59e
 
 ## Source Headings Likely Affected
 

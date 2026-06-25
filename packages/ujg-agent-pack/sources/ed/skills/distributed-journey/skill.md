@@ -1,9 +1,3 @@
----
-
-name: ujg-ed-distributed-journey-modeling
-description: "Generate, review, and correct UJG ED Distributed Journey JSON-LD for cross-authority human-facing journeys with Authority, DistributedArtifact, presented surfaces, source/target authorities, and Runtime Evidence separation."
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 # UJG ED Distributed Journey Modeling
 
 Use this skill together with `ujg-ed-modeling`. Do not use it as a replacement for the parent modeling skill.
@@ -35,7 +29,7 @@ Include bridge-module contexts only when their terms are used:
 
 ```json
 [
-  "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
+  "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/actor.context.jsonld",
   "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
@@ -215,6 +209,9 @@ The index is not traversable and does not imply order, progression, reachability
 
 If one actor's visible state becomes observable after another actor's action, do not encode that handoff as a Graph transition.
 Use Runtime Evidence.
+
+When serializing Runtime Evidence, include Runtime and Runtime Evidence contexts. A `RuntimeEvent` uses `executionId`, `eventStateRef`, and `journeyInstanceRef`; use `previousId` only for observed event order.
+
 Example observed interleaving:
 
 ```text

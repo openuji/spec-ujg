@@ -39,9 +39,10 @@ Focus on intended topology:
 
 - `JourneyEntryIndex`
 - `Journey`
+- `JourneyEntry`
+- `LocalVertex`
 - `State`
 - `CompositeState`
-- `BoundaryState`
 - `Transition`
 - `JourneyExit`
 - `OutgoingTransition`
@@ -55,13 +56,19 @@ Prefer the shallowest valid graph.
 
 Use `JourneyEntryIndex` for catalogues, route maps, product-surface indexes, documentation indexes, or collections of known entry states. Do not use it as a traversable journey.
 
-Use `Journey` only for local traversable topology. A journey must have an IRI `@id`, exactly one `startStateRef`, and at least one `stateRefs` value.
+Use `Journey` only for local traversable topology. A journey must have an IRI `@id`, exactly one `defaultEntryRef`, at least one `entryRefs` value, and at least one `stateRefs` value. Its local vertices are `stateRefs` union `exitRefs`.
+
+Use `JourneyEntry` for explicit journey entry contracts. Each entry must have exactly one `stateRef` that points to a `State` or `CompositeState` in the same journey's `stateRefs`. A `JourneyEntry` is not a transition endpoint.
 
 Use ordinary `State` and local `Transition` for stable conditions on the same page, route, surface, modal, panel, or screen.
 
 Use `CompositeState` only when a parent journey contains or exposes a nested journey with `subjourneyId`.
 
-Use `BoundaryState`, `JourneyExit`, and `fromExitRef` only for exported child outcomes that a parent genuinely reacts to.
+Use `toEntryRef` only when a parent transition into a `CompositeState` must select a specific child `JourneyEntry`; otherwise the child journey starts at its `defaultEntryRef`.
+
+Use `JourneyExit` and `fromExitRef` only for exported child outcomes that a parent genuinely reacts to. Model the child outcome as a direct terminal `JourneyExit`, not as a pseudo-state.
+
+Use `Transition` between local vertices. `from` must be in the enclosing journey's `stateRefs`; `to` must be in the enclosing journey's `stateRefs` or `exitRefs`. Never use `JourneyExit` as `from`.
 
 Use `OutgoingTransition` for ordinary navigation affordances. Use `toCurrentState: true` only when the effective graph state is preserved and only a non-topological dimension changes.
 

@@ -7,7 +7,8 @@
         "modules/actor",
         "modules/surface",
         "modules/action",
-        "modules/artifact"
+        "modules/artifact",
+        "modules/runtime-evidence"
     ],
     "custom": {
         "family": "module",
@@ -54,6 +55,10 @@
             "UJG Artifact": {
                 "title": "UJG Artifact",
                 "url": "/ed/modules/artifact"
+            },
+            "UJG Runtime Evidence": {
+                "title": "UJG Runtime Evidence",
+                "url": "/ed/modules/runtime-evidence"
             }
         }
     }

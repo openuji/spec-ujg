@@ -126,7 +126,7 @@ The rules below define the remaining resolution and non-structural constraints f
       "@type": "RuntimeEvent",
       "@id": "urn:ujg:event:12345:100",
       "executionId": "urn:ujg:execution:12345",
-      "stateRef": "urn:ujg:state:shipping-form",
+      "eventStateRef": "urn:ujg:state:shipping-form",
       "journeyInstanceRef": "urn:ujg:journey-instance:checkout:12345"
     }
   ]

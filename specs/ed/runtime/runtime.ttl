@@ -32,7 +32,7 @@ ujgruntime:previousId a owl:ObjectProperty ;
   rdfs:domain ujgruntime:RuntimeEvent ;
   rdfs:range ujgruntime:RuntimeEvent .
 
-ujgruntime:stateRef a owl:ObjectProperty ;
+ujgruntime:eventStateRef a owl:ObjectProperty ;
   rdfs:domain ujgruntime:RuntimeEvent ;
   rdfs:range ujggraph:State .
 

@@ -66,9 +66,9 @@ Do not put interoperable graph semantics in `extensions`. If a concept affects t
 
 Use only active ED Graph classes and properties.
 
-Common classes: `JourneyEntryIndex`, `Journey`, `State`, `CompositeState`, `BoundaryState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
+Common classes: `JourneyEntryIndex`, `Journey`, `JourneyEntry`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
 
-Common properties: `label`, `tags`, `stateRefs`, `startStateRef`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `fromExitRef`, `subjourneyId`, `exitStateRef`, `outgoingTransitionRefs`.
+Common properties: `label`, `tags`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `subjourneyId`, `outgoingTransitionRefs`.
 
 Do not invent Graph fields such as `startState`, `states`, `transitions`, `toJourney`, `toState`, `trigger`, `outcome`, `eventType`, `selector`, Graph-native `url`, or `RuntimeTrace`.
 
@@ -82,7 +82,7 @@ Prefer ordinary `State` and local `Transition` for stable conditions on the same
 
 Same surface plus stable alternate UI usually means same journey.
 
-Do not introduce `CompositeState`, `BoundaryState`, `JourneyExit`, or `fromExitRef` merely to make the graph look complete, represent ordinary component outcomes, or connect screenshots.
+Do not introduce `CompositeState`, `JourneyExit`, or `fromExitRef` merely to make the graph look complete, represent ordinary component outcomes, or connect screenshots.
 
 Use nesting only when the child flow is opaque, reusable, independently zoomable, has substantial hidden topology, or completes before genuine parent-owned continuation.
 
@@ -96,7 +96,7 @@ Classify each modeled item before writing JSON-LD: index entry, page/surface ent
 
 Do not mix roles accidentally.
 
-If a component is modeled as a child journey, keep the full pattern coherent: parent `CompositeState`; exactly one `subjourneyId`; no child states in parent `stateRefs`; child states and transitions stay in child journey; exported outcome uses child-local `BoundaryState`; child lists `JourneyExit`; `exitStateRef` points to that boundary; parent continuation is a parent-local `Transition` from the `CompositeState` to another parent-local state using `fromExitRef`.
+If a component is modeled as a child journey, keep the full pattern coherent: parent `CompositeState`; exactly one `subjourneyId`; no child states in parent `stateRefs`; child states and transitions stay in child journey; child traversal starts at the child journey's `defaultEntryRef` unless the parent transition into the composite declares `toEntryRef`; exported outcome is a child-local terminal `JourneyExit` listed in child `exitRefs`; parent continuation is a parent-local `Transition` from the `CompositeState` to another parent-local local vertex using `fromExitRef`.
 
 Either keep the complete child-journey pattern or fold it back into same-journey states. Do not keep only part of the pattern.
 
@@ -116,7 +116,11 @@ For a page-level index, list page, route, surface, or component entry states. Do
 
 Use `Journey` for local traversable topology.
 
-A `Journey` must have an IRI `@id`, exactly one `startStateRef`, and at least one `stateRefs` value. It may have `transitionRefs`, `exitRefs`, and `outgoingTransitionGroupRefs`.
+A `Journey` must have an IRI `@id`, exactly one `defaultEntryRef`, at least one `entryRefs` value, and at least one `stateRefs` value. It may have `transitionRefs`, `exitRefs`, and `outgoingTransitionGroupRefs`. Its local vertices are `stateRefs` union `exitRefs`.
+
+Each `entryRefs` value must reference a `JourneyEntry`. The `defaultEntryRef` must reference one of those entries.
+
+A `JourneyEntry` must have exactly one `stateRef` pointing to a `State` or `CompositeState` listed in the same journey's `stateRefs`. A `JourneyEntry` is not a local vertex and must not be used as `Transition.from` or `Transition.to`.
 
 A journey owns stable states in its local scope, local progression, local outgoing affordances, nested journeys reachable inside its scope, and exported exits when a parent reacts to completed child outcomes.
 
@@ -146,23 +150,27 @@ Before using `CompositeState`, ask whether ordinary `State` would preserve the s
 
 Use `Transition` for local intended topology inside one journey.
 
-A `Transition` must have `from` and `to`. Both endpoints must be listed in the same journey’s `stateRefs`.
+A `Transition` must have `from` and `to`. `from` must be listed in the same journey's `stateRefs`. `to` must be listed in the same journey's `stateRefs` or `exitRefs`. Never use a `JourneyExit` or `JourneyEntry` as `from`.
 
-Use `Transition` for local page order, local state progression, local rendering progression, parent-owned continuation between parent-local states, and parent continuation after child exit using `fromExitRef`.
+Use `Transition` for local page order, local state progression, local rendering progression, terminal progression to a `JourneyExit`, parent-owned continuation between parent-local states, parent entry into a child journey using `toEntryRef`, and parent continuation after child exit using `fromExitRef`.
 
 Do not use `Transition` for runtime facts, clicks, URLs, selectors, ordinary link metadata, header navigation, footer navigation, language switchers, result links, or ordinary external navigation.
 
 Do not reference child states from a parent transition. Do not create parent transitions merely to connect observed screens.
 
-## BoundaryState, JourneyExit, fromExitRef
+## JourneyEntry, JourneyExit, and boundary refs
 
-Use `BoundaryState` only for a terminal local state that exports a completed outcome from a journey.
+Use `JourneyEntry` to name valid entry points into a journey. Top-level traversal begins at `defaultEntryRef.stateRef`.
 
-Use `JourneyExit` only when a parent journey must react to a completed child outcome.
+Use `toEntryRef` only on a parent-local transition whose `to` is the corresponding `CompositeState`. The `toEntryRef` value selects a `JourneyEntry` listed in the child journey referenced by that composite's `subjourneyId`. If `toEntryRef` is absent, child traversal starts at the child journey's `defaultEntryRef`.
 
-A child exports an outcome by transitioning to a child-local `BoundaryState`, listing a `JourneyExit` in `exitRefs`, and pointing `JourneyExit.exitStateRef` to that boundary state.
+Use `JourneyExit` only when a parent journey must react to a completed child outcome, or when a journey needs to expose a terminal completion contract.
 
-Use `fromExitRef` only on a parent-local transition from the corresponding `CompositeState` to another parent-local state.
+A `JourneyExit` is a terminal local vertex, not a `State`. It is listed in exactly one journey's `exitRefs`.
+
+A child exports an outcome by transitioning directly to a child-local `JourneyExit` listed in the child journey's `exitRefs`.
+
+Use `fromExitRef` only on a parent-local transition from the corresponding `CompositeState` to another parent-local local vertex.
 
 Do not use exits for clicks, links, menu choices, selected values, header/footer navigation, language switches, ordinary navigation, runtime observations, simple same-page result states, convenient page-to-page connection, or screenshot order.
 
@@ -200,23 +208,19 @@ Use `OutgoingTransition` for navigation affordances exposed by a state or shared
 
 Use `OutgoingTransitionGroup` for shared affordance sets such as header, footer, utility navigation, repeated CTAs, or language switchers.
 
+Do not use `OutgoingTransition` as a substitute for ordinary local `Transition`.
+
+If the source state and target state are both local vertices of the same journey, and the user action represents recovery, retry, back, next, validation handling, or normal progression inside that journey, model it as `Transition`, not `OutgoingTransition`.
+
+Use `OutgoingTransition` when the affordance leaves the local progression context: for example, help, support, account recovery, external document, another route, another page, another journey entry, or a distinct modeled destination that is not part of the current journey’s local topology.
+
 An `OutgoingTransition` must declare exactly one target mechanism: either one `to`, or `toCurrentState: true`.
 
 Do not declare both. Do not omit both. Do not use `toCurrentState: false`.
 
-Use `to` when the affordance points to a specific state or composite: another page, route, document, result surface, detail page, help page, or distinct modeled locale state.
+Use state-scoped `outgoingTransitionRefs` only on ordinary `State` nodes. Do not put `outgoingTransitionRefs` on `CompositeState` or `JourneyExit`.
 
-Use `toCurrentState: true` when the affordance intentionally preserves the current effective graph state and changes only a non-topological dimension such as locale, theme, presentation mode, display density, view mode, or same-state sort/filter context.
-
-`toCurrentState` does not imply a runtime event, click, URL change, selected value, locale payload, new state, local `Transition`, child journey, `BoundaryState`, or `JourneyExit`.
-
-Do not use `toCurrentState` merely because an affordance appears in a header/footer or because the resulting page looks visually similar.
-
-Outgoing navigation may target a state or composite outside the source journey. Do not duplicate outgoing targets into source `stateRefs` unless they also belong to local topology.
-
-Use state-scoped `outgoingTransitionRefs` only on ordinary `State` nodes. Do not put `outgoingTransitionRefs` on `CompositeState` or `BoundaryState`.
-
-Do not inject outgoing transitions from `BoundaryState`.
+Do not inject outgoing transitions from `JourneyExit`.
 
 ## Localization and locale switchers
 
@@ -247,6 +251,8 @@ Do not model locale choice in Runtime unless the task asks for observed events, 
 Graph models intended topology. Runtime models observed behavior.
 
 Keep runtime facts out of Graph, including typed query, input value, clicked element, submitted value, selected result, timestamp, URL at interaction time, DOM selector, analytics metadata, runtime locale selection, and payload.
+
+For Runtime traces, a `RuntimeEvent` must identify the execution with `executionId`, the observed graph state with `eventStateRef`, and the local journey scope with `journeyInstanceRef`. Use `previousId` only to reconstruct observed event order.
 
 Use Experience only for journey-map annotations. Experience annotations must not change Graph traversal or repair missing Graph topology.
 
@@ -302,7 +308,7 @@ When generating JSON-LD:
 3. Provide a short self-audit.
 4. State uncertainty explicitly.
 
-Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `Journey` only local topology; transition endpoints local; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; runtime facts not in Graph; Experience does not affect traversal; graph is shallowest valid model.
+Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `Journey` only local topology; each `Journey` has `defaultEntryRef`, `entryRefs`, and `stateRefs`; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; runtime facts not in Graph; Experience does not affect traversal; graph is shallowest valid model.
 
 ## Anti-overengineering and uncertainty
 

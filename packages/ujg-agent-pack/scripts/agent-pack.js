@@ -122,6 +122,19 @@ function readConfig() {
     if (!Array.isArray(target.skills)) {
       throw new Error(`agent-pack.config.json target ${target.id} must define a skills array`);
     }
+    const allowedSkillKeys = new Set([
+      'key',
+      'title',
+      'scope',
+      'nameSuffix',
+      'moduleId',
+    ]);
+    for (const skill of target.skills) {
+      const unsupportedKeys = Object.keys(skill).filter((key) => !allowedSkillKeys.has(key));
+      if (unsupportedKeys.length > 0) {
+        throw new Error(`Skill ${skill.key} contains unsupported config keys: ${unsupportedKeys.join(', ')}`);
+      }
+    }
 
     target.specRootAbs = resolve(PACKAGE_ROOT, target.specRoot);
     if (!existsSync(target.specRootAbs)) {
@@ -247,9 +260,6 @@ function buildTargetContext(config, target) {
     .map((skill) => {
       const name = skillName(target, skill);
       const source = sourcePath(target, skill);
-      const relevantModuleIds = skill.moduleId
-        ? dependencyClosure(modules, skill.moduleId)
-        : sortedModuleIds(modules, modules.keys());
 
       return {
         ...skill,
@@ -258,7 +268,6 @@ function buildTargetContext(config, target) {
         source,
         sourceRelativePath: rel(source, PACKAGE_ROOT),
         publicUrl: publicSpecUrl(target, skill.moduleId),
-        relevantModuleIds,
       };
     });
 
@@ -273,13 +282,19 @@ function buildAllContexts(config) {
   return config.targets.map((target) => buildTargetContext(config, target));
 }
 
+function skillModuleIds(context, skill) {
+  return skill.moduleId
+    ? dependencyClosure(context.modules, skill.moduleId)
+    : sortedModuleIds(context.modules, context.modules.keys());
+}
+
 function sourceHash(skill) {
   return sha256(readText(skill.source));
 }
 
-function moduleHashes(context, skill) {
+function specHashInput(context, skill) {
   return Object.fromEntries(
-    skill.relevantModuleIds.map((id) => {
+    skillModuleIds(context, skill).map((id) => {
       const module = context.modules.get(id);
       return [id, module?.hash || 'missing'];
     })
@@ -287,7 +302,7 @@ function moduleHashes(context, skill) {
 }
 
 function specHash(context, skill) {
-  return sha256(stableJson(moduleHashes(context, skill)));
+  return sha256(stableJson(specHashInput(context, skill)));
 }
 
 function outputPathsForSkill(context, skill) {
@@ -353,7 +368,6 @@ function generatedSkillTree(context, currentSkill) {
       moduleId: currentSkill.moduleId,
       scope: currentSkill.scope,
       publicUrl: currentSkill.publicUrl,
-      relevantModuleIds: currentSkill.relevantModuleIds,
     },
     skills: context.skills.map((skill) => ({
       key: skill.key,
@@ -373,7 +387,7 @@ function relatedSkills(context, currentSkill) {
   }
 
   const relatedNames = new Set(['root']);
-  for (const moduleId of currentSkill.relevantModuleIds) {
+  for (const moduleId of skillModuleIds(context, currentSkill)) {
     const upstreamSkill = context.skills.find((skill) => skill.moduleId === moduleId);
     if (upstreamSkill) relatedNames.add(upstreamSkill.key);
   }
@@ -391,9 +405,6 @@ function relatedSkills(context, currentSkill) {
 
 function relatedSkillsMarkdown(context, currentSkill) {
   const related = relatedSkills(context, currentSkill);
-  const upstreamModules = currentSkill.moduleId
-    ? dependencyClosure(context.modules, currentSkill.moduleId).filter((id) => id !== currentSkill.moduleId)
-    : [];
   const downstreamModules = currentSkill.moduleId
     ? dependentClosure(context.modules, currentSkill.moduleId)
     : [];
@@ -409,10 +420,6 @@ Module scope: ${currentSkill.moduleId || 'whole target'}
 ## Sibling Skills
 
 ${related.length > 0 ? related.map((skill) => `- ${skill.name}: ${skill.scope}`).join('\n') : '- None'}
-
-## Upstream Spec Modules
-
-${upstreamModules.length > 0 ? upstreamModules.map((id) => `- ${id}`).join('\n') : '- None'}
 
 ## Downstream Spec Modules
 
@@ -553,7 +560,6 @@ function buildManifest(contexts, outputs) {
         sourceHash: sourceHash(skill),
         specHash: specHash(context, skill),
         artifactHash: artifactHash(codexArtifactContents(context, skill)),
-        relevantModuleIds: skill.relevantModuleIds,
       })),
     })),
     generatedFiles: [...outputs.keys()].map((path) => rel(path, PACKAGE_ROOT)).sort(),
@@ -786,29 +792,8 @@ function currentReviewState(context, skill) {
     skill: skill.key,
     sourceHash: sourceHash(skill),
     specHash: specHash(context, skill),
-    moduleHashes: moduleHashes(context, skill),
     reportPath: rel(reviewPath(context, skill), PACKAGE_ROOT),
   };
-}
-
-function changedModules(previous, current) {
-  const changes = [];
-  const previousHashes = previous?.moduleHashes || {};
-
-  for (const [moduleId, hash] of Object.entries(current.moduleHashes)) {
-    if (!previous) {
-      changes.push({ moduleId, status: 'unreviewed', previousHash: null, hash });
-    } else if (previousHashes[moduleId] !== hash) {
-      changes.push({
-        moduleId,
-        status: previousHashes[moduleId] ? 'changed' : 'new',
-        previousHash: previousHashes[moduleId] || null,
-        hash,
-      });
-    }
-  }
-
-  return changes;
 }
 
 function sourceHeadings(skill) {
@@ -818,16 +803,9 @@ function sourceHeadings(skill) {
     .map((line) => line.replace(/^#{1,3}\s+/, '').trim());
 }
 
-function likelyAffectedHeadings(context, skill, changes) {
+function likelyAffectedHeadings(skill) {
   const headings = sourceHeadings(skill);
   const tokens = new Set([skill.key, skill.moduleId, skill.title].filter(Boolean).map((value) => value.toLowerCase()));
-
-  for (const change of changes) {
-    const module = context.modules.get(change.moduleId);
-    tokens.add(change.moduleId.toLowerCase());
-    for (const part of change.moduleId.split('/')) tokens.add(part.toLowerCase());
-    if (module?.title) tokens.add(module.title.toLowerCase());
-  }
 
   const matches = headings.filter((heading) => {
     const lower = heading.toLowerCase();
@@ -839,8 +817,9 @@ function likelyAffectedHeadings(context, skill, changes) {
 
 function buildReviewReport(context, skill, previous) {
   const current = currentReviewState(context, skill);
-  const changes = changedModules(previous, current);
-  const headings = likelyAffectedHeadings(context, skill, changes);
+  const sourceChanged = !previous || previous.sourceHash !== current.sourceHash;
+  const specChanged = !previous || previous.specHash !== current.specHash;
+  const headings = likelyAffectedHeadings(skill);
 
   return `# Skill Review: ${skill.name}
 
@@ -852,19 +831,12 @@ Spec URL: ${skill.publicUrl}
 ## Status
 
 ${previous ? '- Previous review state found.' : '- No previous accepted review state found.'}
-${changes.length > 0 ? '- Review is required before check can pass.' : '- No relevant spec module hash changes detected.'}
+- ${sourceChanged || specChanged ? 'Review is required before check can pass.' : 'Source and spec hashes are unchanged.'}
 
-## Relevant Modules
+## Review Inputs
 
-${skill.relevantModuleIds.map((id) => `- ${id}: ${context.modules.get(id)?.hash || 'missing'}`).join('\n')}
-
-## Changed Modules
-
-${changes.length > 0 ? changes.map((change) => `- ${change.moduleId}: ${change.status} (${change.previousHash || 'none'} -> ${change.hash})`).join('\n') : '- None'}
-
-## Changed Context/TTL/Shape Files To Inspect
-
-${changes.length > 0 ? changes.flatMap((change) => context.modules.get(change.moduleId)?.interestingFiles || []).map((file) => `- ${file}`).join('\n') : '- None'}
+- Source hash: ${current.sourceHash}
+- Spec hash: ${current.specHash}
 
 ## Source Headings Likely Affected
 
@@ -965,8 +937,17 @@ function checkReviews(options = {}) {
 function acceptReviews(options = {}) {
   const registry = readRegistry();
   registry.entries ||= {};
+  const pairs = filteredContextSkills(options);
+  const selectedKeys = new Set(pairs.map(({ context, skill }) => reviewKey(context, skill)));
 
-  for (const { context, skill } of filteredContextSkills(options)) {
+  if (!options.skill) {
+    for (const [key, entry] of Object.entries(registry.entries)) {
+      if (options.target && entry.target !== options.target) continue;
+      if (!selectedKeys.has(key)) delete registry.entries[key];
+    }
+  }
+
+  for (const { context, skill } of pairs) {
     const key = reviewKey(context, skill);
     const current = currentReviewState(context, skill);
     const path = reviewPath(context, skill);

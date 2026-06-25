@@ -4,11 +4,6 @@
     "moduleId": "graph",
     "name": "ujg-ed-graph-modeling",
     "publicUrl": "https://ujg.specs.openuji.org/ed/graph",
-    "relevantModuleIds": [
-      "architecture",
-      "core",
-      "graph"
-    ],
     "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes"
   },
   "moduleGraph": {
@@ -184,7 +179,8 @@
         "modules/actor",
         "modules/surface",
         "modules/action",
-        "modules/artifact"
+        "modules/artifact",
+        "modules/runtime-evidence"
       ],
       "generatedSkill": "ujg-ed-distributed-journey-modeling",
       "title": "Distributed Journey"
@@ -206,7 +202,9 @@
       "title": "Routing"
     },
     "modules/runtime-evidence": {
-      "dependents": [],
+      "dependents": [
+        "modules/distributed-journey"
+      ],
       "deps": [
         "runtime",
         "modules/actor"
@@ -251,6 +249,7 @@
       "dependents": [
         "modules/runtime-evidence",
         "mapping",
+        "modules/distributed-journey",
         "metrics",
         "profiles",
         "conformance"

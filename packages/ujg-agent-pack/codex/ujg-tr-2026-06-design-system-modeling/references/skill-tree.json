@@ -4,13 +4,6 @@
     "moduleId": "modules/design-system",
     "name": "ujg-tr-2026-06-design-system-modeling",
     "publicUrl": "https://ujg.specs.openuji.org/tr/2026.06/modules/design-system",
-    "relevantModuleIds": [
-      "architecture",
-      "core",
-      "graph",
-      "modules/surface",
-      "modules/design-system"
-    ],
     "scope": "Design System module semantics and its relationship to Graph and Surface"
   },
   "moduleGraph": {

@@ -10,13 +10,6 @@ Module scope: modules/design-system
 
 - ujg-tr-2026-06-modeling: whole UJG document modeling across Core, Graph, Runtime, Experience, Localization, and optional modules
 
-## Upstream Spec Modules
-
-- architecture
-- core
-- graph
-- modules/surface
-
 ## Downstream Spec Modules
 
 - None

@@ -4,7 +4,7 @@ This module defines the basic vocabulary and processing model for mapping causal
 events back to the intended Graph journey model.
 
 Runtime records what happened. Graph defines the intended journey topology. Mapping connects the two
-by resolving each `RuntimeEvent.stateRef` in the local journey scope supplied by the event's
+by resolving each `RuntimeEvent.eventStateRef` in the local journey scope supplied by the event's
 `journeyInstanceRef`, then associating the resolved execution with an explicit root Graph
 `Journey`.
 
@@ -35,7 +35,7 @@ with the Mapping context.
 - <dfn>Mapped runtime</dfn>: The `JourneyExecution` whose causal `RuntimeEvent` chain is being
   resolved.
 - <dfn>Mapped state</dfn>: A Graph `State` or `CompositeState` resolved from a
-  `RuntimeEvent.stateRef`.
+  `RuntimeEvent.eventStateRef`.
 - <dfn>Relevant effective transition</dfn>: A Graph transition that can explain an observed movement
   between two resolved runtime states.
 - <dfn>Jump</dfn>: A non-root mapped step where no relevant effective transition explains the
@@ -96,7 +96,7 @@ the SHACL shape.
    `RuntimeEvent.journeyInstanceRef` and use that [=JourneyInstance=]'s `journeyRef` as the step's
    local Graph `Journey` scope.
 4. **State resolution:** Each `MappedStep.mappedStateRef` MUST be the Graph `State` or
-   `CompositeState` resolved from its `RuntimeEvent.stateRef` in the derived local scope or imported
+   `CompositeState` resolved from its `RuntimeEvent.eventStateRef` in the derived local scope or imported
    documents.
 5. **Journey ownership:** `mappedJourneyRef` identifies the root Graph `Journey` for the mapped
    execution. The root [=JourneyInstance=] of each mapped event's derived ancestor chain SHOULD
@@ -223,7 +223,7 @@ model and does not need a serialized status value.
       "@type": "RuntimeEvent",
       "@id": "urn:ujg:event:nested-1:100",
       "executionId": "urn:ujg:execution:nested-1",
-      "stateRef": "urn:ujg:state:cart",
+      "eventStateRef": "urn:ujg:state:cart",
       "journeyInstanceRef": "urn:ujg:journey-instance:checkout:nested-1"
     },
     {
@@ -231,7 +231,7 @@ model and does not need a serialized status value.
       "@id": "urn:ujg:event:nested-1:200",
       "executionId": "urn:ujg:execution:nested-1",
       "previousId": "urn:ujg:event:nested-1:100",
-      "stateRef": "urn:ujg:state:payment-card",
+      "eventStateRef": "urn:ujg:state:payment-card",
       "journeyInstanceRef": "urn:ujg:journey-instance:checkout:nested-1:payment"
     },
     {

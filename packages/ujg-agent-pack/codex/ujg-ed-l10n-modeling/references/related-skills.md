@@ -12,12 +12,6 @@ Module scope: modules/l10n
 - ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
 
-## Upstream Spec Modules
-
-- architecture
-- core
-- graph
-
 ## Downstream Spec Modules
 
 - None

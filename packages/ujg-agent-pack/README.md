@@ -23,6 +23,8 @@ sources/tr/2026.06/skills/root/skill.md
 
 The target and skill catalog is `agent-pack.config.json`. Each target owns its own `skills` array so ED and dated TR snapshots can diverge over time. A skill is generated only when its source file exists for that target.
 
+Spec context ownership is defined in [`spec.md`](spec.md): sibling spec `config.json` files are the only source of truth for module dependencies and generated skill context.
+
 The generator checks that every `specs/tr/<version>` directory has a matching `tr/<version>` target in `agent-pack.config.json`, so new published snapshots cannot be silently skipped.
 
 ## Generated Artifacts
@@ -47,7 +49,7 @@ For example, `modules/design-system` depends on `graph` and `modules/surface`, s
 Each Codex skill includes lightweight references:
 
 - `references/skill-tree.json`: machine-readable target, skill, and module dependency graph.
-- `references/related-skills.md`: human-readable sibling-skill and dependency summary.
+- `references/related-skills.md`: human-readable sibling-skill summary.
 
 ## Commands
 
@@ -98,7 +100,6 @@ It writes the current hashes into `reviews/registry.json`:
 
 - the source skill hash from `sources/<target>/skills/<skill-key>/skill.md`,
 - the combined spec hash for the modules that affect that skill,
-- per-module hashes used to explain later drift,
 - the report path for the accepted review.
 
 Accepting a review is an explicit checkpoint. It means someone inspected the generated report, decided whether the skill source needed changes, made those changes if needed, regenerated artifacts, and is now marking the current state as the baseline for future checks.

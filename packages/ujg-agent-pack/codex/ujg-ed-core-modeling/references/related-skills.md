@@ -14,10 +14,6 @@ Module scope: core
 - ujg-ed-l10n-modeling: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
 - ujg-ed-distributed-journey-modeling: Distributed Journey module semantics for cross-authority human-facing journeys, authorities, distributed artifacts, and authority references
 
-## Upstream Spec Modules
-
-- architecture
-
 ## Downstream Spec Modules
 
 - modules/routing

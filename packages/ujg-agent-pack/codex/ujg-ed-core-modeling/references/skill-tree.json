@@ -4,10 +4,6 @@
     "moduleId": "core",
     "name": "ujg-ed-core-modeling",
     "publicUrl": "https://ujg.specs.openuji.org/ed/core",
-    "relevantModuleIds": [
-      "architecture",
-      "core"
-    ],
     "scope": "Core module document containers, imports, top-level nodes, and extensions"
   },
   "moduleGraph": {
@@ -183,7 +179,8 @@
         "modules/actor",
         "modules/surface",
         "modules/action",
-        "modules/artifact"
+        "modules/artifact",
+        "modules/runtime-evidence"
       ],
       "generatedSkill": "ujg-ed-distributed-journey-modeling",
       "title": "Distributed Journey"
@@ -205,7 +202,9 @@
       "title": "Routing"
     },
     "modules/runtime-evidence": {
-      "dependents": [],
+      "dependents": [
+        "modules/distributed-journey"
+      ],
       "deps": [
         "runtime",
         "modules/actor"
@@ -250,6 +249,7 @@
       "dependents": [
         "modules/runtime-evidence",
         "mapping",
+        "modules/distributed-journey",
         "metrics",
         "profiles",
         "conformance"
