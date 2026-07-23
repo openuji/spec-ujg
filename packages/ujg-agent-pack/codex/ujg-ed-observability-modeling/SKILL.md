@@ -90,6 +90,7 @@ requiredInputModalityProfileRefs
 inputModalityRefs
 locatorRefs
 surfaceInstanceResolverRef
+expectedMatchCount
 instanceKeyFeatureRef
 role
 accessibleNameRef
@@ -130,13 +131,15 @@ It must identify one `ObservationEvent` with `observationEventRef`.
 
 It must list one or more locators with `locatorRefs`. Locators inside one binding are conjunctive; model alternatives as separate bindings pointing to the same surface.
 
+It may declare `expectedMatchCount` as an exact non-negative integer for the full conjunctive locator match. Use `expectedMatchCount: 0` when the exact locator contract should find no matching objects. If `expectedMatchCount` is omitted, do not infer exact cardinality.
+
 Input-modality profile references belong to the referenced `ObservationEvent`, not to `ObservationBinding` or Graph `Transition`.
 
 An `ObservationEvent` may list input-modality profiles with `requiredInputModalityProfileRefs`.
 
 An `InputModalityProfile` must list one or more modalities with `inputModalityRefs`. All referenced modalities participate in that independently evaluable profile. Do not infer ordering from array order.
 
-Use producer-defined IRIs for concrete `ObservationEvent` and `InputModality` nodes. Observability defines classes and properties for events, modalities, and profiles; it does not reserve standard event or modality IRIs.
+Use producer-defined IRIs for concrete `ObservationEvent` nodes. Use `observability:keyboard` and `observability:pointer` for standard keyboard and pointer input modalities. Producers may define additional modality IRIs for other input modalities.
 
 ## Accessible locators
 
@@ -195,7 +198,8 @@ For journey transition modality profile references, model the Graph topology wit
 * Does every binding list at least one locator?
 * Are input-modality profile references declared on `ObservationEvent`, not on `ObservationBinding` or Graph nodes?
 * Does every `InputModalityProfile` list at least one `InputModality`?
-* Did I use producer-defined concrete event and modality IRIs rather than reserved Observability IRIs?
+* Did I use producer-defined concrete event IRIs, standard `observability:keyboard` / `observability:pointer` modality IRIs where applicable, and producer-defined modality IRIs only for additional modalities?
+* If a binding asserts absence, did it keep `locatorRefs` and use `expectedMatchCount: 0`?
 * Are alternative locator strategies separate bindings rather than one disjunctive binding?
 * Do accessible names and descriptions point to `MessageBundle` nodes?
 * Are role, feature, and relation names accessibility-model oriented?

@@ -16,7 +16,7 @@ Module scope: core
 
 ## Downstream Spec Modules
 
-- modules/routing
+- modules/entry-binding
 - graph
 - modules/l10n
 - modules/condition

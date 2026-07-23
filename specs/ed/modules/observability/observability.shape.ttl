@@ -46,6 +46,12 @@ ujgobservabilityshape:ObservationBindingShape a sh:NodeShape ;
     sh:class ujgobservability:SurfaceInstanceResolver ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:expectedMatchCount ;
+    sh:datatype xsd:nonNegativeInteger ;
+    sh:maxCount 1 ;
   ] .
 
 ujgobservabilityshape:ObservationEventShape a sh:NodeShape ;

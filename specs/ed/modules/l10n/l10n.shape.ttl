@@ -35,6 +35,11 @@ ujgl10nshape:MessageBundleShape a sh:NodeShape ;
   ] ;
 
   sh:property [
+    sh:path ujgl10n:argumentNames ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
     sh:path ujgl10n:defaultLocale ;
     sh:datatype xsd:string ;
     sh:maxCount 1 ;

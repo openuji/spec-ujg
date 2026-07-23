@@ -15,6 +15,7 @@ Module scope: modules/l10n
 
 ## Downstream Spec Modules
 
+- modules/artifact
 - modules/observability
 
 ## Usage

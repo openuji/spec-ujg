@@ -6,6 +6,7 @@
     "deps": [
         "core",
         "modules/effect",
+        "modules/l10n",
         "surface"
     ],
     "custom": {
@@ -39,6 +40,10 @@
             "UJG Effect": {
                 "title": "UJG Effect",
                 "url": "/ed/modules/effect"
+            },
+            "UJG Localization": {
+                "title": "UJG Localization",
+                "url": "/ed/modules/l10n"
             }
         }
     }

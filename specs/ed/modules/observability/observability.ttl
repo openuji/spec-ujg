@@ -40,6 +40,16 @@ ujgobservability:CustomLocator a owl:Class ;
 ujgobservability:SurfaceInstanceResolver a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
+### Standard individuals
+
+ujgobservability:keyboard a owl:NamedIndividual, ujgobservability:InputModality ;
+  rdfs:label "Keyboard"@en ;
+  rdfs:comment "The standard Observability input modality for keyboard-based interaction."@en .
+
+ujgobservability:pointer a owl:NamedIndividual, ujgobservability:InputModality ;
+  rdfs:label "Pointer"@en ;
+  rdfs:comment "The standard Observability input modality for pointer-based interaction, including mouse, pen, touch, or equivalent pointing input."@en .
+
 ### Properties
 
 ujgobservability:observeSurfaceRef a owl:ObjectProperty ;
@@ -71,6 +81,10 @@ ujgobservability:locatorRefs a owl:ObjectProperty ;
 ujgobservability:surfaceInstanceResolverRef a owl:ObjectProperty ;
   rdfs:domain ujgobservability:ObservationBinding ;
   rdfs:range ujgobservability:SurfaceInstanceResolver .
+
+ujgobservability:expectedMatchCount a owl:DatatypeProperty ;
+  rdfs:domain ujgobservability:ObservationBinding ;
+  rdfs:range xsd:nonNegativeInteger .
 
 ujgobservability:instanceKeyFeatureRef a owl:ObjectProperty ;
   rdfs:domain ujgobservability:SurfaceInstanceResolver ;

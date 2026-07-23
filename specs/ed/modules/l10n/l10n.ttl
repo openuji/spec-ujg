@@ -30,6 +30,10 @@ ujgl10n:messageKey a owl:DatatypeProperty ;
   rdfs:domain ujgl10n:MessageBundle ;
   rdfs:range xsd:string .
 
+ujgl10n:argumentNames a owl:DatatypeProperty ;
+  rdfs:domain ujgl10n:MessageBundle ;
+  rdfs:range xsd:string .
+
 ujgl10n:defaultLocale a owl:DatatypeProperty ;
   rdfs:domain ujgl10n:MessageBundle ;
   rdfs:range xsd:string .

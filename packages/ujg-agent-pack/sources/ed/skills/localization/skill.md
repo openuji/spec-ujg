@@ -12,9 +12,9 @@ Generate only terms defined by the active ED Localization context unless the use
 
 ## Scope
 
-Localization attaches locale and copy metadata to UJG nodes.
+Localization attaches locale, copy, template value, and argument-name metadata to UJG nodes.
 
-It does not define routes, traversal, locale negotiation, runtime translation loading, ICU behavior, imports, or graph identity.
+It does not define routes, traversal, locale negotiation, runtime translation loading, JavaScript evaluation, ICU behavior, imports, or graph identity.
 
 Graph defines topology.
 Localization annotates UJG nodes with copy and locale metadata. It can be used with Phase `Step`
@@ -52,6 +52,7 @@ defaultLocale
 fallbackLocales
 rtl
 locales
+argumentNames
 targetLocale
 l10n:targetLocale
 ```
@@ -67,14 +68,15 @@ selectedLocale
 translationKey
 translations
 messages
+messagePartRefs
+CompositeMessage
+MessagePart
 language
 languageCode
 i18n
 resourceFile
 bundleFormat
 loader
-routeLocale
-localeRoute
 ```
 
 Use private `extensions` only for project-specific runtime hints that are not intended to be interoperable l10n semantics.
@@ -93,9 +95,14 @@ defaultLocale
 fallbackLocales
 rtl
 locales
+argumentNames
 ```
 
 Use `locales` only when embedding locale-specific payloads is useful. Otherwise prefer stable message keys and let implementation load translations externally.
+
+When a locale payload declares a string `value`, that value may be plain text or may contain UJG template placeholders using `${...}`. Placeholder tokens are not JavaScript expressions. A token matching one of the containing bundle's `argumentNames` values is a runtime argument. Other tokens must be IRIs or compact IRIs that resolve to `MessageBundle` nodes. Do not create cyclic `MessageBundle` template references.
+
+`defaultLocale` and `fallbackLocales` apply independently to each `MessageBundle`, including composite bundles and bundles referenced by placeholders.
 
 Example:
 
@@ -105,9 +112,14 @@ Example:
   "@id": "urn:example:l10n:home-hero-title",
   "l10n:namespace": "home.hero",
   "l10n:messageKey": "home.hero.title",
+  "l10n:argumentNames": ["userName"],
   "l10n:defaultLocale": "de",
   "l10n:fallbackLocales": ["en"],
-  "l10n:rtl": false
+  "l10n:rtl": false,
+  "l10n:locales": {
+    "de": { "value": "Hallo ${userName}" },
+    "en": { "value": "Hello ${userName}" }
+  }
 }
 ```
 
@@ -160,12 +172,16 @@ Do not use `targetLocale` without an `OutgoingTransition`.
 
 Do not use `l10n:copyRef` without a referenced `MessageBundle`.
 
+Do not model composite messages with `messagePartRefs`, `CompositeMessage`, or `MessagePart`; use `MessageBundle.locales[locale].value` template placeholders instead.
+
 ## Checks before answering
 
 * Did I include l10n context only when l10n terms are used?
 * Are all l10n terms defined by the active ED?
 * Does every `copyRef` point to a `MessageBundle`?
 * Does every `MessageBundle` have one `messageKey`?
+* If a locale payload uses `${...}`, are argument tokens listed in `argumentNames` and bundle-reference tokens resolvable to `MessageBundle` nodes?
+* Did I avoid cyclic `MessageBundle` template references?
 * Is `targetLocale` used only on `OutgoingTransition`?
 * Does a same-state locale switch use `toCurrentState: true`?
 * Did I avoid duplicate locale states unless topology really differs?

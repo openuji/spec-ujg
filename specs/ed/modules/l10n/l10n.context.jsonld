@@ -14,6 +14,10 @@
     },
     "namespace": "ujgl10n:namespace",
     "messageKey": "ujgl10n:messageKey",
+    "argumentNames": {
+      "@id": "ujgl10n:argumentNames",
+      "@container": "@set"
+    },
     "defaultLocale": "ujgl10n:defaultLocale",
     "fallbackLocales": {
       "@id": "ujgl10n:fallbackLocales",

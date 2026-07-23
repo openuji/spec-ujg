@@ -1,6 +1,7 @@
 @prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
 @prefix ujgartifact: <https://ujg.specs.openuji.org/ed/ns/artifact#> .
 @prefix ujgeffect: <https://ujg.specs.openuji.org/ed/ns/effect#> .
+@prefix ujgl10n: <https://ujg.specs.openuji.org/ed/ns/l10n#> .
 @prefix ujgsurface: <https://ujg.specs.openuji.org/ed/ns/surface#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -16,6 +17,12 @@ ujgartifact:Artifact a owl:Class ;
   rdfs:subClassOf ujg:Node, ujgeffect:EffectResource .
 
 ### Properties
+
+ujgartifact:nameRef a owl:ObjectProperty ;
+  rdfs:domain ujgartifact:Artifact ;
+  rdfs:range ujgl10n:MessageBundle ;
+  rdfs:label "name ref" ;
+  rdfs:comment "References a localized MessageBundle used as the artifact's human-facing name." .
 
 ujgartifact:sourceTouchpointRef a owl:ObjectProperty ;
   rdfs:domain ujgartifact:Artifact ;

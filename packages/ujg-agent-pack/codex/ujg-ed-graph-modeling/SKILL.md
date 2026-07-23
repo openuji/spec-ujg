@@ -57,7 +57,7 @@ Keep runtime observations, selectors, typed values, timestamps, payloads, and an
 
 Prefer the shallowest valid graph.
 
-Use `JourneyEntryIndex` for catalogues, route maps, product-surface indexes, documentation indexes, or collections of known entry states. Do not use it as a traversable journey.
+Use `JourneyEntryIndex` for catalogues, product-surface indexes, documentation indexes, or collections of known `JourneyEntry` contracts. Do not use it as a traversable journey.
 
 Use `Journey` only for local traversable topology. A journey must have an IRI `@id`, exactly one `defaultEntryRef`, at least one `entryRefs` value, and at least one `stateRefs` value. Its local vertices are `stateRefs` union `exitRefs`.
 

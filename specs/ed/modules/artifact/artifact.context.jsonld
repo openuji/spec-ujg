@@ -7,6 +7,10 @@
 
     "Artifact": "ujgartifact:Artifact",
 
+    "nameRef": {
+      "@id": "ujgartifact:nameRef",
+      "@type": "@id"
+    },
     "sourceTouchpointRef": {
       "@id": "ujgartifact:sourceTouchpointRef",
       "@type": "@id"

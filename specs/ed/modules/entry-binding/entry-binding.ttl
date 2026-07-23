@@ -1,0 +1,32 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujgentrybinding: <https://ujg.specs.openuji.org/ed/ns/entry-binding#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/ed/ns/entry-binding#> a owl:Ontology ;
+  rdfs:label "UJG Entry Binding Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Entry Binding ontology declaration" .
+
+### Classes
+
+ujgentrybinding:EntryBinding a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Entry Binding" ;
+  rdfs:comment "An opaque materialization-context value that selects a JourneyEntry." .
+
+### Properties
+
+ujgentrybinding:entryRef a owl:ObjectProperty ;
+  rdfs:domain ujgentrybinding:EntryBinding ;
+  rdfs:range ujggraph:JourneyEntry ;
+  rdfs:label "entry ref" ;
+  rdfs:comment "References the JourneyEntry selected by this EntryBinding." .
+
+ujgentrybinding:value a owl:DatatypeProperty ;
+  rdfs:domain ujgentrybinding:EntryBinding ;
+  rdfs:range xsd:string ;
+  rdfs:label "value" ;
+  rdfs:comment "Opaque materialization-context value for selecting the referenced JourneyEntry." .
