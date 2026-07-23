@@ -96,11 +96,11 @@ ujgobservability:role a owl:DatatypeProperty ;
 
 ujgobservability:accessibleNameRef a owl:ObjectProperty ;
   rdfs:domain ujgobservability:AccessibleLocator ;
-  rdfs:range ujgl10n:MessageBundle .
+  rdfs:range ujgl10n:MessageMeta .
 
 ujgobservability:accessibleDescriptionRef a owl:ObjectProperty ;
   rdfs:domain ujgobservability:AccessibleLocator ;
-  rdfs:range ujgl10n:MessageBundle .
+  rdfs:range ujgl10n:MessageMeta .
 
 ujgobservability:accessibleFeatureRefs a owl:ObjectProperty ;
   rdfs:domain ujgobservability:AccessibleLocator ;

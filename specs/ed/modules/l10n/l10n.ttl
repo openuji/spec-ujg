@@ -5,7 +5,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <https://ujg.specs.openuji.org/ed/ns/l10n#> a owl:Ontology ;
   rdfs:label "UJG Localization Editor's Draft Vocabulary"@en ;
@@ -13,43 +12,53 @@
 
 ### Classes
 
-ujgl10n:MessageBundle a owl:Class ;
+ujgl10n:Locale a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgl10n:MessageMeta a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgl10n:Message a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
 ### Properties
 
 ujgl10n:copyRef a owl:ObjectProperty ;
   rdfs:domain ujg:Node ;
-  rdfs:range ujgl10n:MessageBundle .
+  rdfs:range ujgl10n:MessageMeta .
 
-ujgl10n:namespace a owl:DatatypeProperty ;
-  rdfs:domain ujgl10n:MessageBundle ;
-  rdfs:range xsd:string .
-
-ujgl10n:messageKey a owl:DatatypeProperty ;
-  rdfs:domain ujgl10n:MessageBundle ;
-  rdfs:range xsd:string .
+ujgl10n:localeCode a owl:DatatypeProperty ;
+  rdfs:domain ujgl10n:Locale ;
+  rdfs:range xsd:language .
 
 ujgl10n:argumentNames a owl:DatatypeProperty ;
-  rdfs:domain ujgl10n:MessageBundle ;
+  rdfs:domain ujgl10n:MessageMeta ;
   rdfs:range xsd:string .
 
-ujgl10n:defaultLocale a owl:DatatypeProperty ;
-  rdfs:domain ujgl10n:MessageBundle ;
-  rdfs:range xsd:string .
+ujgl10n:defaultLocaleRef a owl:ObjectProperty ;
+  rdfs:domain ujgl10n:MessageMeta ;
+  rdfs:range ujgl10n:Locale .
 
-ujgl10n:fallbackLocales a owl:DatatypeProperty ;
-  rdfs:domain ujgl10n:MessageBundle ;
-  rdfs:range xsd:string .
+ujgl10n:fallbackLocaleRefs a owl:ObjectProperty ;
+  rdfs:domain ujgl10n:MessageMeta ;
+  rdfs:range ujgl10n:Locale .
 
 ujgl10n:rtl a owl:DatatypeProperty ;
-  rdfs:domain ujgl10n:MessageBundle ;
+  rdfs:domain ujgl10n:MessageMeta ;
   rdfs:range xsd:boolean .
 
-ujgl10n:locales a owl:DatatypeProperty ;
-  rdfs:domain ujgl10n:MessageBundle ;
-  rdfs:range rdf:JSON .
+ujgl10n:messageMetaRef a owl:ObjectProperty ;
+  rdfs:domain ujgl10n:Message ;
+  rdfs:range ujgl10n:MessageMeta .
 
-ujgl10n:targetLocale a owl:DatatypeProperty ;
+ujgl10n:localeRef a owl:ObjectProperty ;
+  rdfs:domain ujgl10n:Message ;
+  rdfs:range ujgl10n:Locale .
+
+ujgl10n:value a owl:DatatypeProperty ;
+  rdfs:domain ujgl10n:Message ;
+  rdfs:range xsd:string .
+
+ujgl10n:targetLocaleRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:OutgoingTransition ;
-  rdfs:range xsd:language .
+  rdfs:range ujgl10n:Locale .

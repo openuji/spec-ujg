@@ -11,7 +11,7 @@ Module scope: core
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
-- ujg-ed-l10n-modeling: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
+- ujg-ed-l10n-modeling: Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata
 - ujg-ed-observability-modeling: Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver
 
 ## Downstream Spec Modules

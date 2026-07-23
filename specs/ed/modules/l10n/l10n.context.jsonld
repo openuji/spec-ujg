@@ -6,35 +6,79 @@
     "l10n": "https://ujg.specs.openuji.org/ed/ns/l10n#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
 
-    "MessageBundle": "ujgl10n:MessageBundle",
+    "Locale": "ujgl10n:Locale",
+    "MessageMeta": "ujgl10n:MessageMeta",
+    "Message": "ujgl10n:Message",
 
     "copyRef": {
       "@id": "ujgl10n:copyRef",
       "@type": "@id"
     },
-    "namespace": "ujgl10n:namespace",
-    "messageKey": "ujgl10n:messageKey",
+    "l10n:copyRef": {
+      "@id": "ujgl10n:copyRef",
+      "@type": "@id"
+    },
+    "localeCode": {
+      "@id": "ujgl10n:localeCode",
+      "@type": "xsd:language"
+    },
+    "l10n:localeCode": {
+      "@id": "ujgl10n:localeCode",
+      "@type": "xsd:language"
+    },
     "argumentNames": {
       "@id": "ujgl10n:argumentNames",
       "@container": "@set"
     },
-    "defaultLocale": "ujgl10n:defaultLocale",
-    "fallbackLocales": {
-      "@id": "ujgl10n:fallbackLocales",
+    "l10n:argumentNames": {
+      "@id": "ujgl10n:argumentNames",
+      "@container": "@set"
+    },
+    "defaultLocaleRef": {
+      "@id": "ujgl10n:defaultLocaleRef",
+      "@type": "@id"
+    },
+    "l10n:defaultLocaleRef": {
+      "@id": "ujgl10n:defaultLocaleRef",
+      "@type": "@id"
+    },
+    "fallbackLocaleRefs": {
+      "@id": "ujgl10n:fallbackLocaleRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "l10n:fallbackLocaleRefs": {
+      "@id": "ujgl10n:fallbackLocaleRefs",
+      "@type": "@id",
       "@container": "@set"
     },
     "rtl": "ujgl10n:rtl",
-    "locales": {
-      "@id": "ujgl10n:locales",
-      "@type": "@json"
+    "l10n:rtl": "ujgl10n:rtl",
+    "messageMetaRef": {
+      "@id": "ujgl10n:messageMetaRef",
+      "@type": "@id"
     },
-    "targetLocale": {
-      "@id": "ujgl10n:targetLocale",
-      "@type": "xsd:language"
+    "l10n:messageMetaRef": {
+      "@id": "ujgl10n:messageMetaRef",
+      "@type": "@id"
     },
-    "l10n:targetLocale": {
-      "@id": "ujgl10n:targetLocale",
-      "@type": "xsd:language"
+    "localeRef": {
+      "@id": "ujgl10n:localeRef",
+      "@type": "@id"
+    },
+    "l10n:localeRef": {
+      "@id": "ujgl10n:localeRef",
+      "@type": "@id"
+    },
+    "value": "ujgl10n:value",
+    "l10n:value": "ujgl10n:value",
+    "targetLocaleRef": {
+      "@id": "ujgl10n:targetLocaleRef",
+      "@type": "@id"
+    },
+    "l10n:targetLocaleRef": {
+      "@id": "ujgl10n:targetLocaleRef",
+      "@type": "@id"
     }
   }
 }

@@ -18,7 +18,7 @@ Related generated skills:
 - ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
-- ujg-ed-l10n-modeling: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
+- ujg-ed-l10n-modeling: Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata
 - ujg-ed-observability-modeling: Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
@@ -50,9 +50,9 @@ Phase: journey-map `Step` and `Phase` grouping over Graph `CompositeState` nodes
 optional `order` values are display metadata only and must not determine Graph traversal, Mapping
 step order, Runtime event order, occurrence, or phase start. Experience Annotation optionally adds
 `PainPoint` annotations over those steps.
-Localization: locale metadata, localized copy references, locale switch affordance metadata, template
-`value` placeholders, and `argumentNames`.
-Observability: accessible-object recognition contracts for surfaces, using localized message bundles
+Localization: locale metadata, localized copy references, locale switch affordance metadata, `Locale`,
+`MessageMeta`, `Message`, `value`, and `argumentNames`.
+Observability: accessible-object recognition contracts for surfaces, using localized message metas
 for accessible names and descriptions, optional exact match counts, and event-level input modality
 requirements.
 Design System: design systems, components, templates, slots, token sources, and surface realizations.
@@ -61,11 +61,11 @@ Effect: declared side effects attached to `Transition` or `OutgoingTransition` e
 Condition: guarded transitions and conditional branch sets.
 Artifact: portable resources referenced by Effect `producedRefs` and `consumedRefs`, including artifact-owned source and target touchpoint metadata and optional localized `nameRef`; also a concrete `EffectResource`.
 
-Core is required for UJG documents. Include Graph when modeling topology. Include Surface when using `Surface`, `SurfaceInstance`, `Touchpoint`, `User`, `graphNodeRef`, `surfaceRef`, `compositeStateRefs`, `touchpointRefs`, `userRef`, or `channel`. Include Phase when using `Step`, `Phase`, `compositeStateRef`, `phaseRef`, or `order`. Include Runtime only for observed behavior or traces. Include Mapping when resolving Runtime state observations through Surface to Graph, or deriving Step occurrence and Phase start, with `JourneyMapping`, `MappedStep`, `mappedEventRef`, `mappedStateRef`, `observedAffordanceEventRef`, or `explainedByTransitionRef`. Include Metrics when emitting `MetricObservation` records, Mapping-derived step counts, movement counts, rates, or aggregate metric values. Include Experience Annotation only when using `PainPoint`, `painpointStepRefs`, `severity`, or `description`. Include Localization only when using l10n terms such as `l10n:targetLocale`, `copyRef`, `defaultLocale`, `fallbackLocales`, `argumentNames`, or `locales`. Include Observability only when modeling `ObservationBinding`, `observeSurfaceRef`, `ObservationEvent`, `requiredInputModalityProfileRefs`, `InputModalityProfile`, `inputModalityRefs`, `InputModality`, `observability:keyboard`, `observability:pointer`, `SurfaceInstanceResolver`, `surfaceInstanceResolverRef`, `expectedMatchCount`, `instanceKeyFeatureRef`, `AccessibleLocator`, `accessibleNameRef`, or `accessibleDescriptionRef`; Observability also requires Localization for name and description bundles.
+Core is required for UJG documents. Include Graph when modeling topology. Include Surface when using `Surface`, `SurfaceInstance`, `Touchpoint`, `User`, `graphNodeRef`, `surfaceRef`, `compositeStateRefs`, `touchpointRefs`, `userRef`, or `channel`. Include Phase when using `Step`, `Phase`, `compositeStateRef`, `phaseRef`, or `order`. Include Runtime only for observed behavior or traces. Include Mapping when resolving Runtime state observations through Surface to Graph, or deriving Step occurrence and Phase start, with `JourneyMapping`, `MappedStep`, `mappedEventRef`, `mappedStateRef`, `observedAffordanceEventRef`, or `explainedByTransitionRef`. Include Metrics when emitting `MetricObservation` records, Mapping-derived step counts, movement counts, rates, or aggregate metric values. Include Experience Annotation only when using `PainPoint`, `painpointStepRefs`, `severity`, or `description`. Include Localization only when using l10n terms such as `Locale`, `MessageMeta`, `Message`, `copyRef`, `localeCode`, `argumentNames`, `defaultLocaleRef`, `fallbackLocaleRefs`, `messageMetaRef`, `localeRef`, `value`, or `targetLocaleRef`. Include Observability only when modeling `ObservationBinding`, `observeSurfaceRef`, `ObservationEvent`, `requiredInputModalityProfileRefs`, `InputModalityProfile`, `inputModalityRefs`, `InputModality`, `observability:keyboard`, `observability:pointer`, `SurfaceInstanceResolver`, `surfaceInstanceResolverRef`, `expectedMatchCount`, `instanceKeyFeatureRef`, `AccessibleLocator`, `accessibleNameRef`, or `accessibleDescriptionRef`; Observability also requires Localization for name and description message metas.
 
 Include Entry Binding only when using `EntryBinding`, `entryRef`, or entry-binding `value`; Entry Binding values must not create hidden traversal, platform-specific syntax, or touchpoint bindings. Include Design System only when using design-system terms such as `DesignSystem`, `TokenSource`, `Component`, `Template`, `Slot`, `SurfaceRealization`, `SlotBinding`, `componentRef`, `templateRef`, `slotRef`, `targetSurfaceRef`, or `targetComponentRef`. Include Effect only when declaring an `Effect` node, `effectRef` on a `Transition` or `OutgoingTransition`, or Effect `producedRefs` / `consumedRefs`; do not use Effect for Runtime payloads or implementation protocol details. Include Condition only when using `Condition`, `ConditionSet`, `conditionRef`, or `conditionTransitionRefs`; a `Condition` guards a Graph transition and must not replace the transition target.
 
-Include Artifact when using `Artifact`, `nameRef`, `sourceTouchpointRef`, `targetTouchpointRefs`, or when an Effect produces or consumes an artifact. Include Localization when `Artifact.nameRef` points to a `MessageBundle`. Include Surface too when artifact touchpoint refs point to `Touchpoint` nodes. Use `nameRef`, `sourceTouchpointRef`, and `targetTouchpointRefs` only on `Artifact`; effects use `producedRefs` and `consumedRefs`.
+Include Artifact when using `Artifact`, `nameRef`, `sourceTouchpointRef`, `targetTouchpointRefs`, or when an Effect produces or consumes an artifact. Include Localization when `Artifact.nameRef` points to a `MessageMeta`. Include Surface too when artifact touchpoint refs point to `Touchpoint` nodes. Use `nameRef`, `sourceTouchpointRef`, and `targetTouchpointRefs` only on `Artifact`; effects use `producedRefs` and `consumedRefs`.
 
 Do not use `EffectResource` as the only `@type` of a resource node; use a concrete resource type such as `Artifact`.
 
@@ -247,7 +247,7 @@ Do not inject outgoing transitions from `JourneyExit`.
 
 Use Localization for localization metadata, not graph topology.
 
-Use `l10n:targetLocale` only with the Localization context. It declares locale metadata for an outgoing affordance; it does not define traversal.
+Use `l10n:targetLocaleRef` only with the Localization context. It declares locale metadata for an outgoing affordance; it does not define traversal.
 
 For a locale switch that preserves the current graph state:
 
@@ -257,11 +257,11 @@ For a locale switch that preserves the current graph state:
   "@id": "urn:example:ot:locale-en",
   "label": "English",
   "toCurrentState": true,
-  "l10n:targetLocale": "en"
+  "l10n:targetLocaleRef": "urn:example:l10n:locale:en"
 }
 ```
 
-For a locale switch that targets a distinct modeled state, use `to` and optionally `l10n:targetLocale`.
+For a locale switch that targets a distinct modeled state, use `to` and optionally `l10n:targetLocaleRef`.
 
 Do not create duplicate locale-specific states unless locale changes graph topology, available states, journeys, or affordances.
 
@@ -320,7 +320,7 @@ When evidence is insufficient, say so instead of inventing structure.
 10. Use exits only for exported child outcomes.
 11. Use `OutgoingTransition` for ordinary navigation.
 12. Use `toCurrentState: true` only when the effective graph state is preserved.
-13. Use `l10n:targetLocale` only as Localization metadata.
+13. Use `l10n:targetLocaleRef` only as Localization metadata.
 14. Use Entry Binding, Effect, Condition, and Artifact only as defined semantic attachments, not as hidden graph edges.
 15. Re-check that no parent lists child states directly.
 16. Re-check that no fake root journey connects observed screens.
@@ -335,7 +335,7 @@ When generating JSON-LD:
 3. Provide a short self-audit.
 4. State uncertainty explicitly.
 
-Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `defaultEntryRef`, `entryRefs`, and `stateRefs`; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `MessageBundle` template placeholders use `${...}` in `locales[locale].value`, arguments are listed in `argumentNames`, referenced bundles are not cyclic, and each bundle applies its own `defaultLocale`/`fallbackLocales`; runtime facts not in Graph; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, and Artifact do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
+Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `defaultEntryRef`, `entryRefs`, and `stateRefs`; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `copyRef`, artifact `nameRef`, and Observability accessible refs point to `MessageMeta`; each `Message` has one `messageMetaRef`, one `localeRef`, and one `value`; `Message.value` is opaque Localization data; runtime facts not in Graph; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, and Artifact do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
 
 ## Anti-overengineering and uncertainty
 

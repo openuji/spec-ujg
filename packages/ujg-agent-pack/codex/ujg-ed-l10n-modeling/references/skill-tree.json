@@ -4,7 +4,7 @@
     "moduleId": "modules/l10n",
     "name": "ujg-ed-l10n-modeling",
     "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
-    "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata"
+    "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata"
   },
   "moduleGraph": {
     "architecture": {
@@ -285,7 +285,7 @@
       "moduleId": "modules/l10n",
       "name": "ujg-ed-l10n-modeling",
       "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
-      "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
+      "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata",
       "source": "sources/ed/skills/localization/skill.md"
     },
     {

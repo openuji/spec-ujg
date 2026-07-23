@@ -112,14 +112,14 @@ ujgobservabilityshape:AccessibleLocatorShape a sh:NodeShape ;
 
   sh:property [
     sh:path ujgobservability:accessibleNameRef ;
-    sh:class ujgl10n:MessageBundle ;
+    sh:class ujgl10n:MessageMeta ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
     sh:path ujgobservability:accessibleDescriptionRef ;
-    sh:class ujgl10n:MessageBundle ;
+    sh:class ujgl10n:MessageMeta ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;

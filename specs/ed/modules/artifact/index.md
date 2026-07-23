@@ -16,7 +16,7 @@ they need more domain-specific semantics.
 
 - <dfn>Artifact</dfn>: An addressable resource that may be produced, consumed, exchanged, or
   referenced during a journey.
-- <dfn>Artifact name</dfn>: A localized [=MessageBundle=] referenced by an artifact as its
+- <dfn>Artifact name</dfn>: A localized [=MessageMeta=] referenced by an artifact as its
   human-facing name.
 - <dfn>Produced artifact</dfn>: An artifact created, emitted, prepared, exported, generated, or made
   available by an [=Effect=].
@@ -35,7 +35,7 @@ rendering, security, or lifecycle semantics.
 <spec-statement>
 1. An [=Artifact=] **MUST** be identified by an IRI.
 2. An [=Artifact=] **MAY** declare at most one `nameRef`.
-3. Every `nameRef` value **MUST** reference a [=MessageBundle=].
+3. Every `nameRef` value **MUST** reference a [=MessageMeta=].
 4. An [=Artifact=] **MAY** declare at most one `sourceTouchpointRef`.
 5. Every `sourceTouchpointRef` value **MUST** reference a [=Touchpoint=].
 6. An [=Artifact=] **MAY** declare one or more `targetTouchpointRefs`.
@@ -47,7 +47,7 @@ rendering, security, or lifecycle semantics.
 ```mermaid
 classDiagram
   class Touchpoint
-  class MessageBundle
+  class MessageMeta
   class EffectResource
   class Artifact {
     id
@@ -56,7 +56,7 @@ classDiagram
     targetTouchpointRefs
   }
   EffectResource <|-- Artifact
-  Artifact --> MessageBundle : nameRef
+  Artifact --> MessageMeta : nameRef
   Artifact --> Touchpoint : sourceTouchpointRef
   Artifact --> "0..*" Touchpoint : targetTouchpointRefs
 ```
@@ -67,7 +67,7 @@ Example JSON node:
 {
   "@id": "urn:artifact:account-archive",
   "@type": "Artifact",
-  "nameRef": "urn:l10n:bundle:account-archive-name",
+  "nameRef": "urn:l10n:message-meta:account-archive-name",
   "sourceTouchpointRef": "urn:touchpoint:old-server",
   "targetTouchpointRefs": ["urn:touchpoint:new-server"]
 }
@@ -75,8 +75,8 @@ Example JSON node:
 
 ## Localized Names
 
-`artifact:nameRef` links an [=Artifact=] to one [=MessageBundle=] that provides the artifact's
-human-facing name. The referenced bundle MAY use Localization template values and `argumentNames`.
+`artifact:nameRef` links an [=Artifact=] to one [=MessageMeta=] that provides the artifact's
+human-facing name. Locale-specific [=Message=] nodes MAY use opaque values and `argumentNames`.
 
 `nameRef` is descriptive metadata on the artifact. It does not determine production, consumption,
 transfer, storage, availability, rendering, or lifecycle state.
@@ -85,7 +85,7 @@ transfer, storage, availability, rendering, or lifecycle state.
 
 The Artifact module introduces artifact-owned references:
 
-- `artifact:nameRef` links an [=Artifact=] to the localized [=MessageBundle=] used as its
+- `artifact:nameRef` links an [=Artifact=] to the localized [=MessageMeta=] used as its
   human-facing name.
 - `artifact:sourceTouchpointRef` links an [=Artifact=] to the [=Touchpoint=] where it is produced,
   exported, or made available.
@@ -158,7 +158,7 @@ the SHACL shape.
 3. **Graph preservation:** Artifact references MUST NOT create hidden graph edges or change Graph
    traversal behavior.
 4. **Localized artifact names:** `nameRef` belongs on [=Artifact=] and references one
-   [=MessageBundle=]. It is descriptive metadata and does not define rendering, transfer, storage, or
+   [=MessageMeta=]. It is descriptive metadata and does not define rendering, transfer, storage, or
    lifecycle semantics.
 5. **Artifact-owned touchpoint metadata:** `sourceTouchpointRef` and `targetTouchpointRefs` belong on
    [=Artifact=], not on `Effect`; effects only produce or consume resources.
@@ -206,30 +206,27 @@ the SHACL shape.
   "@type": "UJGDocument",
   "nodes": [
     {
-      "@type": "l10n:MessageBundle",
-      "@id": "urn:l10n:bundle:artifact-kind-report",
-      "l10n:messageKey": "artifact.kind.report",
-      "l10n:defaultLocale": "en",
-      "l10n:locales": {
-        "en": { "value": "Report" }
-      }
+      "@type": "l10n:Locale",
+      "@id": "urn:l10n:locale:en",
+      "l10n:localeCode": "en"
     },
     {
-      "@type": "l10n:MessageBundle",
-      "@id": "urn:l10n:bundle:artifact-display-name",
-      "l10n:messageKey": "artifact.displayName",
+      "@type": "l10n:MessageMeta",
+      "@id": "urn:l10n:message-meta:artifact-display-name",
       "l10n:argumentNames": ["fileName"],
-      "l10n:defaultLocale": "en",
-      "l10n:locales": {
-        "en": {
-          "value": "${urn:l10n:bundle:artifact-kind-report}: ${fileName}"
-        }
-      }
+      "l10n:defaultLocaleRef": "urn:l10n:locale:en"
+    },
+    {
+      "@type": "l10n:Message",
+      "@id": "urn:l10n:message:artifact-display-name:en",
+      "l10n:messageMetaRef": "urn:l10n:message-meta:artifact-display-name",
+      "l10n:localeRef": "urn:l10n:locale:en",
+      "l10n:value": "Report: ${fileName}"
     },
     {
       "@id": "urn:artifact:account-report",
       "@type": "Artifact",
-      "nameRef": "urn:l10n:bundle:artifact-display-name"
+      "nameRef": "urn:l10n:message-meta:artifact-display-name"
     }
   ]
 }

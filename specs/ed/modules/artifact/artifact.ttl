@@ -20,9 +20,9 @@ ujgartifact:Artifact a owl:Class ;
 
 ujgartifact:nameRef a owl:ObjectProperty ;
   rdfs:domain ujgartifact:Artifact ;
-  rdfs:range ujgl10n:MessageBundle ;
+  rdfs:range ujgl10n:MessageMeta ;
   rdfs:label "name ref" ;
-  rdfs:comment "References a localized MessageBundle used as the artifact's human-facing name." .
+  rdfs:comment "References localized MessageMeta used as the artifact's human-facing name." .
 
 ujgartifact:sourceTouchpointRef a owl:ObjectProperty ;
   rdfs:domain ujgartifact:Artifact ;

@@ -953,16 +953,23 @@ Example JSON nodes for a shared language switcher:
 ```
 
 ```json
-{
-  "@type": "OutgoingTransition",
-  "@id": "urn:ankommenskreis:ot:lang-en",
-  "label": "English",
-  "toCurrentState": true,
-  "l10n:targetLocale": "en"
-}
+[
+  {
+    "@type": "l10n:Locale",
+    "@id": "urn:l10n:locale:en",
+    "l10n:localeCode": "en"
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:ankommenskreis:ot:lang-en",
+    "label": "English",
+    "toCurrentState": true,
+    "l10n:targetLocaleRef": "urn:l10n:locale:en"
+  }
+]
 ```
 
-The `l10n:targetLocale` value in this example is locale metadata from the Localization module. The current-state target behavior is defined only by Graph's `toCurrentState`.
+The `l10n:targetLocaleRef` value in this example is locale metadata from the Localization module. The current-state target behavior is defined only by Graph's `toCurrentState`.
 
 ---
 

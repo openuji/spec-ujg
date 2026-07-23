@@ -208,7 +208,7 @@ references, accessibility features, relations, and optional context locators.
 
 ```mermaid
 classDiagram
-  class MessageBundle
+  class MessageMeta
   class AccessibleFeature
   class AccessibleRelation
   class AccessibleLocator {
@@ -220,8 +220,8 @@ classDiagram
     accessibleRelationRefs
     contextLocatorRefs
   }
-  AccessibleLocator --> MessageBundle : accessibleNameRef
-  AccessibleLocator --> MessageBundle : accessibleDescriptionRef
+  AccessibleLocator --> MessageMeta : accessibleNameRef
+  AccessibleLocator --> MessageMeta : accessibleDescriptionRef
   AccessibleLocator --> "0..*" AccessibleFeature : accessibleFeatureRefs
   AccessibleLocator --> "0..*" AccessibleRelation : accessibleRelationRefs
   AccessibleLocator --> "0..*" AccessibleLocator : contextLocatorRefs
@@ -234,7 +234,7 @@ Example JSON node:
   "@type": "AccessibleLocator",
   "@id": "urn:ujg:locator:checkout-submit",
   "role": "button",
-  "accessibleNameRef": "urn:l10n:bundle:submit-order"
+  "accessibleNameRef": "urn:l10n:message-meta:submit-order"
 }
 ```
 
@@ -388,10 +388,10 @@ Playwright expressions, or raw text content. WAI-ARIA defines an accessibility A
 interfaces that expose object and event information to assistive technologies [[WAI-ARIA-1.2]].
 
 `AccessibleLocator.accessibleNameRef` and `AccessibleLocator.accessibleDescriptionRef` reference
-localized `MessageBundle` nodes for the computed accessible-object name and description. For web DOM
+localized `MessageMeta` nodes for the computed accessible-object name and description. For web DOM
 environments, producers and consumers SHOULD compute accessible-object names and descriptions
-according to [[ACCNAME-1.2]], then match the computed value against the locale-appropriate value of
-the referenced message bundle.
+according to [[ACCNAME-1.2]], then match the computed value against a locale-appropriate `Message`
+for the referenced message meta.
 
 Observability does not define standard raw string fallback properties for accessible names or
 descriptions. Private adapter hints MAY appear in Core `extensions`, but such hints are not
@@ -512,9 +512,9 @@ the SHACL shape.
 11. **Accessible-object semantics:** `AccessibleLocator` identifies an accessible object, not an
    implementation node or selector expression.
 12. **Localized name and description matching:** `accessibleNameRef` and
-   `accessibleDescriptionRef` MUST resolve to `MessageBundle` nodes. In web DOM environments,
+   `accessibleDescriptionRef` MUST resolve to `MessageMeta` nodes. In web DOM environments,
    adapters SHOULD compute accessible names and descriptions according to [[ACCNAME-1.2]], then
-   match the computed values against the locale-appropriate values of those message bundles.
+   match the computed values against locale-appropriate `Message` values for those message metas.
 13. **Accessibility API orientation:** Role, feature, and relation names SHOULD describe
    accessibility API concepts rather than DOM or tool-specific implementation details
    [[WAI-ARIA-1.2]].
@@ -569,40 +569,47 @@ the SHACL shape.
       "accessibleFeatureValue": "*"
     },
     {
-      "@type": "MessageBundle",
-      "@id": "urn:message:files",
-      "messageKey": "files.heading",
-      "defaultLocale": "en",
-      "locales": {
-        "en": {
-          "value": "Files"
-        }
-      }
+      "@type": "Locale",
+      "@id": "urn:locale:en",
+      "localeCode": "en"
     },
     {
-      "@type": "MessageBundle",
-      "@id": "urn:message:shared-with-you",
-      "messageKey": "files.sharedWithYou.tab",
-      "defaultLocale": "en",
-      "locales": {
-        "en": {
-          "value": "Shared with you"
-        }
-      }
+      "@type": "MessageMeta",
+      "@id": "urn:message-meta:files",
+      "defaultLocaleRef": "urn:locale:en"
+    },
+    {
+      "@type": "Message",
+      "@id": "urn:message:files:en",
+      "messageMetaRef": "urn:message-meta:files",
+      "localeRef": "urn:locale:en",
+      "value": "Files"
+    },
+    {
+      "@type": "MessageMeta",
+      "@id": "urn:message-meta:shared-with-you",
+      "defaultLocaleRef": "urn:locale:en"
+    },
+    {
+      "@type": "Message",
+      "@id": "urn:message:shared-with-you:en",
+      "messageMetaRef": "urn:message-meta:shared-with-you",
+      "localeRef": "urn:locale:en",
+      "value": "Shared with you"
     },
     {
       "@type": "AccessibleLocator",
       "@id": "urn:locator:files-heading",
       "label": "Files heading",
       "role": "heading",
-      "accessibleNameRef": "urn:message:files"
+      "accessibleNameRef": "urn:message-meta:files"
     },
     {
       "@type": "AccessibleLocator",
       "@id": "urn:locator:shared-with-you-tab-selected",
       "label": "Selected Shared with you tab",
       "role": "tab",
-      "accessibleNameRef": "urn:message:shared-with-you",
+      "accessibleNameRef": "urn:message-meta:shared-with-you",
       "accessibleFeatureRefs": [
         "urn:feature:selected-true"
       ]
@@ -694,21 +701,27 @@ identifiers.
       ]
     },
     {
-      "@type": "MessageBundle",
-      "@id": "urn:message:submit-checkout",
-      "messageKey": "checkout.submit",
-      "defaultLocale": "en",
-      "locales": {
-        "en": {
-          "value": "Submit checkout"
-        }
-      }
+      "@type": "Locale",
+      "@id": "urn:locale:en",
+      "localeCode": "en"
+    },
+    {
+      "@type": "MessageMeta",
+      "@id": "urn:message-meta:submit-checkout",
+      "defaultLocaleRef": "urn:locale:en"
+    },
+    {
+      "@type": "Message",
+      "@id": "urn:message:submit-checkout:en",
+      "messageMetaRef": "urn:message-meta:submit-checkout",
+      "localeRef": "urn:locale:en",
+      "value": "Submit checkout"
     },
     {
       "@type": "AccessibleLocator",
       "@id": "urn:locator:submit-checkout",
       "role": "button",
-      "accessibleNameRef": "urn:message:submit-checkout"
+      "accessibleNameRef": "urn:message-meta:submit-checkout"
     },
     {
       "@type": "ObservationBinding",
@@ -758,15 +771,21 @@ identifiers.
       "label": "Presence"
     },
     {
-      "@type": "MessageBundle",
-      "@id": "urn:message:files",
-      "messageKey": "files.heading",
-      "defaultLocale": "en",
-      "locales": {
-        "en": {
-          "value": "Files"
-        }
-      }
+      "@type": "Locale",
+      "@id": "urn:locale:en",
+      "localeCode": "en"
+    },
+    {
+      "@type": "MessageMeta",
+      "@id": "urn:message-meta:files",
+      "defaultLocaleRef": "urn:locale:en"
+    },
+    {
+      "@type": "Message",
+      "@id": "urn:message:files:en",
+      "messageMetaRef": "urn:message-meta:files",
+      "localeRef": "urn:locale:en",
+      "value": "Files"
     },
     {
       "@type": "AccessibleFeature",
@@ -778,7 +797,7 @@ identifiers.
       "@type": "AccessibleLocator",
       "@id": "urn:locator:files-heading",
       "role": "heading",
-      "accessibleNameRef": "urn:message:files"
+      "accessibleNameRef": "urn:message-meta:files"
     },
     {
       "@type": "SurfaceInstanceResolver",
