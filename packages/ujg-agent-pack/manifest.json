@@ -68,7 +68,7 @@
           "name": "ujg-ed-modeling",
           "source": "sources/ed/skills/root/skill.md",
           "sourceHash": "sha256:34043e929aad83c753830ade3650feb2c13413b192b31028cea0c28cc172243b",
-          "specHash": "sha256:f0930cf017c9228daf681e8ed3687d71bcbeedfaefb8f12a363ee2e2b03b2dc5"
+          "specHash": "sha256:86824ff89109d827680b05dc158650fe79a924220cc83ff2a3f0ea8fbeb8999e"
         },
         {
           "artifactHash": "sha256:81a89b96946067e7b695c7fc76b4c76b8d08cb7ed8e58dbf5eddbf59a508a272",
@@ -113,7 +113,7 @@
           "name": "ujg-ed-observability-modeling",
           "source": "sources/ed/skills/observability/skill.md",
           "sourceHash": "sha256:62fa3b636e8709842b8b4059425f39c00f474a18f4bc281918e210fb39481bfb",
-          "specHash": "sha256:391267e134cfc3d7671016bcfd9029a6c1307108670f5034c8aeb2c4589b879b"
+          "specHash": "sha256:57e89203eef2a73c6fc9f5c2239bdad1ee5af69ea7bf617c11c46e716b626239"
         }
       ],
       "specRoot": "specs/ed"

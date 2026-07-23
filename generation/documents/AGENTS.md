@@ -33,13 +33,13 @@ Use UJG graph-native nodes such as:
 
 ### 2. Module layer
 Use existing UJG modules where they already fit:
-- Templates
-- Routing
-- L10n
+- Entry Binding
+- Localization
+- Design System templates and surface realizations
 
 Use module references such as:
+- `entryRef`
 - `templateRef`
-- `routeRef`
 - `copyRef`
 
 Do not re-invent these as extensions.
@@ -98,7 +98,7 @@ Good pattern:
 ### Rule 4
 Only rely on these external reference classes:
 - UJG node IDs
-- official module refs such as `templateRef`, `routeRef`, `copyRef`
+- official module refs such as `entryRef`, `templateRef`, `copyRef`
 - external published resources such as token files, schemas, or contract identifiers
 
 ### Rule 5
@@ -131,13 +131,13 @@ Unless explicitly asked otherwise, produce these artifacts:
 
 1. `journey.graph.jsonld`
 2. `journey.templates.jsonld`
-3. `journey.routes.jsonld`
+3. `journey.entry-bindings.jsonld`
 4. `journey.l10n.jsonld`
 5. `journey.materialization.jsonld`
 
 Where:
 - the graph file contains core graph nodes,
-- templates/routes/l10n files contain module resources,
+- templates/entry-bindings/l10n files contain module resources,
 - the materialization file contains graph node overlays with implementation extensions.
 
 For small examples, a single combined `UJGDocument` is acceptable.
@@ -173,7 +173,7 @@ Examples:
 - `urn:state:checkout.shipping`
 - `urn:transition:checkout.shipping.to.payment`
 - `urn:template:checkout.step`
-- `urn:route:checkout.payment`
+- `urn:entry-binding:checkout.payment`
 - `urn:copy:checkout.payment`
 
 ### Node labels

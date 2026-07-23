@@ -95,6 +95,10 @@ This module defines two standard input modality identifiers:
 
 Other concrete modality identifiers are producer-defined.
 
+The standard modality identifiers are declared as [=InputModality=] resources by the normative
+Observability ontology. Producers MAY reference them without serializing duplicate
+[=InputModality=] nodes in a document.
+
 ```mermaid
 classDiagram
   class InputModality {

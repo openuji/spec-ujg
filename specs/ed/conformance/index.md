@@ -6,7 +6,7 @@ This specification defines conformance using the following normative artifacts:
 - **SHACL Shapes** (`*.shapes.ttl`) for validation constraints.
 - **JSON-LD Context** (`*.context.jsonld`) for JSON-LD term mappings and coercions.
 
-Implementations MAY operate on compacted JSON-LD directly, but conformance is defined in terms of the RDF semantics obtained by applying the normative JSON-LD context and validating the resulting data graph against the normative SHACL shapes. JSON-LD defines term mappings, type coercion, containers, and expansion behavior through `@context`; SHACL defines validation over RDF graphs and shape constraints.
+Implementations MAY operate on compacted JSON-LD directly, but conformance is defined in terms of the RDF semantics obtained by applying the normative JSON-LD context, composing the resulting data graph with the applicable ontology/vocabulary graph(s), and validating that graph against the normative SHACL shapes. JSON-LD defines term mappings, type coercion, containers, and expansion behavior through `@context`; SHACL defines validation over RDF graphs and shape constraints.
 
 ---
 
@@ -15,14 +15,14 @@ Implementations MAY operate on compacted JSON-LD directly, but conformance is de
 An implementation conforms to this specification if it satisfies the requirements of one or more of the following conformance classes:
 
 1. **Producer**
-   - Generates JSON-LD documents that conform to the normative JSON-LD context and satisfy the normative SHACL constraints after JSON-LD interpretation.
+   - Generates JSON-LD documents that conform to the normative JSON-LD context and satisfy the normative SHACL constraints after JSON-LD interpretation and applicable ontology/vocabulary composition.
 
 2. **Consumer**
    - Accepts JSON-LD documents and interprets them according to the normative JSON-LD context.
    - Processes documents as if JSON-LD term mappings and coercions from the normative context were applied.
 
 3. **Validator**
-   - Determines conformance of input documents by validating the interpreted RDF data graph against the normative SHACL shapes.
+   - Determines conformance of input documents by validating the interpreted RDF data graph, composed with the applicable ontology/vocabulary graph(s), against the normative SHACL shapes.
    - Validation outcomes MUST be equivalent to SHACL validation results (`sh:conforms`). SHACL validation reports and `sh:conforms` are defined by SHACL.
 
 ---
@@ -34,7 +34,8 @@ For the purposes of conformance, an implementation MUST behave equivalently to t
 1. Interpret the input JSON-LD using the applicable UJG JSON-LD context(s).
 2. Resolve JSON terms to RDF property/class IRIs according to the context.
 3. Apply JSON-LD coercions (for example, IRI-valued terms using `@type: @id`, set semantics using `@container: @set`, and any other context-defined rules).
-4. Validate the resulting RDF data graph against the applicable SHACL shapes graph(s).
+4. Compose the resulting RDF data graph with the applicable module ontology/vocabulary graph(s) used for class and property semantics.
+5. Validate the composed RDF data graph against the applicable SHACL shapes graph(s).
 
 This specification permits alternative internal implementations (for example, direct JSON validation) provided the observable acceptance/rejection behavior is equivalent to the above model. JSON-LD term definition and expansion semantics are specified by JSON-LD; SHACL property constraints are expressed using `sh:path`, `sh:minCount`, `sh:maxCount`, and related vocabulary.
 
@@ -70,6 +71,8 @@ For each module, conformance is determined by:
 - the module SHACL shapes, and
 - the module JSON-LD context (or composed context set).
 
+The module ontology/vocabulary graph supplies the class and property statements used during SHACL validation. Validators MAY materialize an equivalent entailment or closure instead of physically merging graphs, provided validation outcomes are equivalent.
+
 An implementation claiming conformance to a module MUST satisfy that module’s semantic and serialization constraints.
 
 An implementation claiming conformance to a profile (aggregate specification) MUST satisfy the constraints of all required modules in that profile.
@@ -92,7 +95,7 @@ A conformance test suite SHOULD include, for each module:
 4. **Module composition tests**
    - Inputs that combine Core + one or more modules and verify combined conformance behavior.
 
-A validator MAY implement these tests using direct JSON-LD processing, but results MUST be equivalent to validation of the RDF graph against the normative SHACL shapes.
+A validator MAY implement these tests using direct JSON-LD processing, but results MUST be equivalent to validation of the composed RDF graph against the normative SHACL shapes.
 
 ---
 
