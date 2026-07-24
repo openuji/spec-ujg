@@ -4,13 +4,13 @@
     "moduleId": "modules/l10n",
     "name": "ujg-ed-l10n-modeling",
     "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
-    "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata"
+    "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata"
   },
   "moduleGraph": {
     "architecture": {
       "dependents": [
         "core",
-        "modules/routing",
+        "modules/entry-binding",
         "graph",
         "modules/l10n",
         "modules/condition",
@@ -41,7 +41,7 @@
     },
     "core": {
       "dependents": [
-        "modules/routing",
+        "modules/entry-binding",
         "graph",
         "modules/l10n",
         "modules/condition",
@@ -66,7 +66,7 @@
     },
     "graph": {
       "dependents": [
-        "modules/routing",
+        "modules/entry-binding",
         "modules/l10n",
         "modules/condition",
         "modules/effect",
@@ -119,6 +119,7 @@
       "deps": [
         "core",
         "modules/effect",
+        "modules/l10n",
         "surface"
       ],
       "generatedSkill": null,
@@ -151,6 +152,14 @@
       "generatedSkill": null,
       "title": "Effect"
     },
+    "modules/entry-binding": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Entry Binding"
+    },
     "modules/experience-annotation": {
       "dependents": [],
       "deps": [
@@ -161,6 +170,7 @@
     },
     "modules/l10n": {
       "dependents": [
+        "modules/artifact",
         "modules/observability"
       ],
       "deps": [
@@ -191,14 +201,6 @@
       ],
       "generatedSkill": null,
       "title": "Phase"
-    },
-    "modules/routing": {
-      "dependents": [],
-      "deps": [
-        "graph"
-      ],
-      "generatedSkill": null,
-      "title": "Routing"
     },
     "profiles": {
       "dependents": [
@@ -283,7 +285,7 @@
       "moduleId": "modules/l10n",
       "name": "ujg-ed-l10n-modeling",
       "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
-      "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
+      "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata",
       "source": "sources/ed/skills/localization/skill.md"
     },
     {

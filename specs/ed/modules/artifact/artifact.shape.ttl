@@ -1,11 +1,19 @@
 @prefix ujgartifact: <https://ujg.specs.openuji.org/ed/ns/artifact#> .
 @prefix ujgartifactshape: <https://ujg.specs.openuji.org/ed/ns/artifact.shape#> .
+@prefix ujgl10n: <https://ujg.specs.openuji.org/ed/ns/l10n#> .
 @prefix ujgsurface: <https://ujg.specs.openuji.org/ed/ns/surface#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 
 ujgartifactshape:ArtifactShape a sh:NodeShape ;
   sh:targetClass ujgartifact:Artifact ;
   sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgartifact:nameRef ;
+    sh:class ujgl10n:MessageMeta ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
 
   sh:property [
     sh:path ujgartifact:sourceTouchpointRef ;
@@ -23,5 +31,10 @@ ujgartifactshape:ArtifactShape a sh:NodeShape ;
 ujgartifactshape:ArtifactTouchpointUsageShape a sh:NodeShape ;
   sh:targetSubjectsOf ujgartifact:sourceTouchpointRef ;
   sh:targetSubjectsOf ujgartifact:targetTouchpointRefs ;
+  sh:class ujgartifact:Artifact ;
+  sh:nodeKind sh:IRI .
+
+ujgartifactshape:ArtifactNameUsageShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgartifact:nameRef ;
   sh:class ujgartifact:Artifact ;
   sh:nodeKind sh:IRI .

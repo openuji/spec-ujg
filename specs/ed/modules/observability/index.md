@@ -16,14 +16,17 @@ correlate events to bindings by resolving `RuntimeEvent.surfaceInstanceRef` to a
 and matching that instance's `surfaceRef` to `ObservationBinding.observeSurfaceRef`.
 
 Observation events can also reference input-modality profiles. This lets a producer describe
-affordance recognition across independently evaluated, owner-defined input strategies while keeping
-the Graph transition model unchanged.
+affordance recognition across independently evaluated input strategies while keeping the Graph
+transition model unchanged. Observability standardizes keyboard and pointer modality identifiers;
+other modality identifiers remain producer-defined.
 
 ## Terminology
 
 - <dfn>ObservationBinding</dfn>: An addressable recognition contract for one `Surface`.
 - <dfn>ObservationEvent</dfn>: An addressable, owner-defined semantic event contract.
-- <dfn>InputModality</dfn>: An addressable, owner-defined input modality.
+- <dfn>InputModality</dfn>: An addressable input modality. `observability:keyboard` and
+  `observability:pointer` are standard modalities; other concrete modality identifiers are
+  producer-defined.
 - <dfn>InputModalityProfile</dfn>: An addressable interaction strategy defined by one or more input
   modalities.
 - <dfn>AccessibleLocator</dfn>: A locator that describes an accessible object using accessibility
@@ -84,7 +87,17 @@ Example JSON nodes:
 ## InputModality {data-cop-concept="input-modality"}
 
 An [=InputModality=] identifies one input modality that can participate in an interaction strategy.
-Modality identifiers are producer-defined; this module does not reserve standard modality IRIs.
+This module defines two standard input modality identifiers:
+
+- `observability:keyboard`: keyboard-based interaction.
+- `observability:pointer`: pointer-based interaction, including mouse, pen, touch, or equivalent
+  pointing input.
+
+Other concrete modality identifiers are producer-defined.
+
+The standard modality identifiers are declared as [=InputModality=] resources by the normative
+Observability ontology. Producers MAY reference them without serializing duplicate
+[=InputModality=] nodes in a document.
 
 ```mermaid
 classDiagram
@@ -98,14 +111,12 @@ Example JSON nodes:
 ```json
 [
   {
-    "@type": "InputModality",
-    "@id": "urn:input-modality:keyboard",
-    "label": "Keyboard"
+    "@id": "observability:keyboard",
+    "@type": "InputModality"
   },
   {
-    "@type": "InputModality",
-    "@id": "urn:input-modality:pointer",
-    "label": "Pointer"
+    "@id": "observability:pointer",
+    "@type": "InputModality"
   }
 ]
 ```
@@ -133,7 +144,7 @@ Example JSON node:
   "@id": "urn:ujg:input-modality-profile:keyboard",
   "label": "Keyboard",
   "inputModalityRefs": [
-    "urn:input-modality:keyboard"
+    "observability:keyboard"
   ]
 }
 ```
@@ -197,7 +208,7 @@ references, accessibility features, relations, and optional context locators.
 
 ```mermaid
 classDiagram
-  class MessageBundle
+  class MessageMeta
   class AccessibleFeature
   class AccessibleRelation
   class AccessibleLocator {
@@ -209,8 +220,8 @@ classDiagram
     accessibleRelationRefs
     contextLocatorRefs
   }
-  AccessibleLocator --> MessageBundle : accessibleNameRef
-  AccessibleLocator --> MessageBundle : accessibleDescriptionRef
+  AccessibleLocator --> MessageMeta : accessibleNameRef
+  AccessibleLocator --> MessageMeta : accessibleDescriptionRef
   AccessibleLocator --> "0..*" AccessibleFeature : accessibleFeatureRefs
   AccessibleLocator --> "0..*" AccessibleRelation : accessibleRelationRefs
   AccessibleLocator --> "0..*" AccessibleLocator : contextLocatorRefs
@@ -223,7 +234,7 @@ Example JSON node:
   "@type": "AccessibleLocator",
   "@id": "urn:ujg:locator:checkout-submit",
   "role": "button",
-  "accessibleNameRef": "urn:l10n:bundle:submit-order"
+  "accessibleNameRef": "urn:l10n:message-meta:submit-order"
 }
 ```
 
@@ -297,6 +308,7 @@ classDiagram
     observationEventRef
     locatorRefs
     surfaceInstanceResolverRef
+    expectedMatchCount
   }
   ObservationBinding --> Surface : observeSurfaceRef
   ObservationBinding --> ObservationEvent : observationEventRef
@@ -317,6 +329,19 @@ Example JSON node:
 }
 ```
 
+Example absence assertion:
+
+```json
+{
+  "@type": "ObservationBinding",
+  "@id": "urn:ujg:observation-binding:checkout-error-absent",
+  "observeSurfaceRef": "urn:ujg:surface:checkout-error",
+  "observationEventRef": "urn:ujg:observation-event:presence",
+  "locatorRefs": ["urn:ujg:locator:checkout-error"],
+  "expectedMatchCount": 0
+}
+```
+
 ## Binding Model
 
 The module introduces one canonical interoperable attachment:
@@ -329,10 +354,18 @@ An `ObservationBinding` also identifies:
 - `locatorRefs`: one or more locator nodes that define how the surface evidence is recognized.
 - `surfaceInstanceResolverRef`: an optional resolver for deriving a concrete `SurfaceInstance` when
   the same stable surface is repeated.
+- `expectedMatchCount`: an optional exact cardinality for the full conjunctive locator match.
 
 `locatorRefs` inside one binding are conjunctive: all referenced locators must match. Alternative
 recognition strategies SHOULD be modeled as separate `ObservationBinding` nodes that reference the
 same surface.
+
+When `expectedMatchCount` is present, a consumer that evaluates the binding MUST compare the number
+of objects matching the binding's full `locatorRefs` contract in the current recognition scope to
+that exact non-negative integer. `expectedMatchCount: 0` means the locator contract is expected to
+find no matching objects. `expectedMatchCount: 1` means exactly one matching object is expected. If
+`expectedMatchCount` is omitted, the binding preserves the existing positive recognition semantics
+without exact cardinality.
 
 One `ObservationBinding` can describe behavior for many repeated `SurfaceInstance` occurrences of
 the same `Surface`. `SurfaceInstanceResolver` does not reference concrete `SurfaceInstance` nodes and
@@ -355,10 +388,10 @@ Playwright expressions, or raw text content. WAI-ARIA defines an accessibility A
 interfaces that expose object and event information to assistive technologies [[WAI-ARIA-1.2]].
 
 `AccessibleLocator.accessibleNameRef` and `AccessibleLocator.accessibleDescriptionRef` reference
-localized `MessageBundle` nodes for the computed accessible-object name and description. For web DOM
+localized `MessageMeta` nodes for the computed accessible-object name and description. For web DOM
 environments, producers and consumers SHOULD compute accessible-object names and descriptions
-according to [[ACCNAME-1.2]], then match the computed value against the locale-appropriate value of
-the referenced message bundle.
+according to [[ACCNAME-1.2]], then match the computed value against a locale-appropriate `Message`
+for the referenced message meta.
 
 Observability does not define standard raw string fallback properties for accessible names or
 descriptions. Private adapter hints MAY appear in Core `extensions`, but such hints are not
@@ -400,10 +433,15 @@ RuntimeEvent.surfaceInstanceRef -> SurfaceInstance.surfaceRef = ObservationBindi
 An observation adapter that emits Runtime data SHOULD:
 
 1. match the binding's `locatorRefs`;
-2. when `surfaceInstanceResolverRef` is present, read the resolver's `instanceKeyFeatureRef` from the
+2. when `expectedMatchCount` is present, compare the match count to that exact value;
+3. when `surfaceInstanceResolverRef` is present, read the resolver's `instanceKeyFeatureRef` from the
    matched accessible object or contextual accessible object;
-3. resolve or create the matching `SurfaceInstance`;
-4. emit the required Runtime `surfaceInstanceRef`.
+4. resolve or create the matching `SurfaceInstance`;
+5. emit the required Runtime `surfaceInstanceRef`.
+
+For `expectedMatchCount: 0`, a satisfied absence contract does not provide a matched accessible
+object for instance resolution. Observability still does not require Runtime events to reference an
+`ObservationBinding`.
 
 If an instance key is not exposed through the accessibility API, adapters MUST use `CustomLocator` or
 Core `extensions` for private resolver semantics. Runtime events MUST NOT be required to reference
@@ -455,28 +493,34 @@ the SHACL shape.
    `RuntimeEvent.surfaceInstanceRef -> SurfaceInstance.surfaceRef` to
    `ObservationBinding.observeSurfaceRef`.
 5. **Conjunctive locators:** `locatorRefs` inside one `ObservationBinding` are conjunctive.
-6. **Event-level modality profiles:** Input-modality profile references MUST be declared on
+6. **Exact match counts:** When `expectedMatchCount` is present on an `ObservationBinding`,
+   consumers that evaluate the binding MUST compare the number of objects matching the full
+   conjunctive locator contract in the current recognition scope to that exact non-negative integer.
+   `expectedMatchCount: 0` means the locator contract is expected to find no matching objects. When
+   `expectedMatchCount` is omitted, consumers MUST NOT infer exact cardinality from the binding.
+7. **Event-level modality profiles:** Input-modality profile references MUST be declared on
    `ObservationEvent` with `requiredInputModalityProfileRefs`, not on `ObservationBinding` or Graph
    `Transition` nodes.
-7. **Profile modality references:** `InputModalityProfile.inputModalityRefs` values identify
+8. **Profile modality references:** `InputModalityProfile.inputModalityRefs` values identify
    `InputModality` nodes. Consumers MUST NOT infer interaction order from the order of values.
-8. **Owner-defined event and modality IRIs:** Observability defines the classes and properties for
-   events, modalities, and profiles; producers define the concrete event and modality identifiers.
-9. **Instance resolver:** `SurfaceInstanceResolver.instanceKeyFeatureRef` MUST identify one
+9. **Standard and owner-defined modality IRIs:** Event identifiers remain producer-defined.
+   Observability reserves `observability:keyboard` and `observability:pointer` as standard
+   `InputModality` identifiers; producers define other concrete modality identifiers.
+10. **Instance resolver:** `SurfaceInstanceResolver.instanceKeyFeatureRef` MUST identify one
    `AccessibleFeature` that supplies the instance key source. A resolver MUST NOT reference concrete
    `SurfaceInstance` nodes.
-10. **Accessible-object semantics:** `AccessibleLocator` identifies an accessible object, not an
+11. **Accessible-object semantics:** `AccessibleLocator` identifies an accessible object, not an
    implementation node or selector expression.
-11. **Localized name and description matching:** `accessibleNameRef` and
-   `accessibleDescriptionRef` MUST resolve to `MessageBundle` nodes. In web DOM environments,
+12. **Localized name and description matching:** `accessibleNameRef` and
+   `accessibleDescriptionRef` MUST resolve to `MessageMeta` nodes. In web DOM environments,
    adapters SHOULD compute accessible names and descriptions according to [[ACCNAME-1.2]], then
-   match the computed values against the locale-appropriate values of those message bundles.
-12. **Accessibility API orientation:** Role, feature, and relation names SHOULD describe
+   match the computed values against locale-appropriate `Message` values for those message metas.
+13. **Accessibility API orientation:** Role, feature, and relation names SHOULD describe
    accessibility API concepts rather than DOM or tool-specific implementation details
    [[WAI-ARIA-1.2]].
-13. **Opaque custom locators:** `CustomLocator` semantics live in Core `extensions`; consumers that
+14. **Opaque custom locators:** `CustomLocator` semantics live in Core `extensions`; consumers that
    do not understand the extension MAY ignore the locator semantics.
-14. **Graceful degradation:** Consumers that do not implement Observability semantics MAY ignore
+15. **Graceful degradation:** Consumers that do not implement Observability semantics MAY ignore
    Observability data, but SHOULD preserve recognized JSON-LD data during read-transform-write when
    possible.
 
@@ -525,40 +569,47 @@ the SHACL shape.
       "accessibleFeatureValue": "*"
     },
     {
-      "@type": "MessageBundle",
-      "@id": "urn:message:files",
-      "messageKey": "files.heading",
-      "defaultLocale": "en",
-      "locales": {
-        "en": {
-          "value": "Files"
-        }
-      }
+      "@type": "Locale",
+      "@id": "urn:locale:en",
+      "localeCode": "en"
     },
     {
-      "@type": "MessageBundle",
-      "@id": "urn:message:shared-with-you",
-      "messageKey": "files.sharedWithYou.tab",
-      "defaultLocale": "en",
-      "locales": {
-        "en": {
-          "value": "Shared with you"
-        }
-      }
+      "@type": "MessageMeta",
+      "@id": "urn:message-meta:files",
+      "defaultLocaleRef": "urn:locale:en"
+    },
+    {
+      "@type": "Message",
+      "@id": "urn:message:files:en",
+      "messageMetaRef": "urn:message-meta:files",
+      "localeRef": "urn:locale:en",
+      "value": "Files"
+    },
+    {
+      "@type": "MessageMeta",
+      "@id": "urn:message-meta:shared-with-you",
+      "defaultLocaleRef": "urn:locale:en"
+    },
+    {
+      "@type": "Message",
+      "@id": "urn:message:shared-with-you:en",
+      "messageMetaRef": "urn:message-meta:shared-with-you",
+      "localeRef": "urn:locale:en",
+      "value": "Shared with you"
     },
     {
       "@type": "AccessibleLocator",
       "@id": "urn:locator:files-heading",
       "label": "Files heading",
       "role": "heading",
-      "accessibleNameRef": "urn:message:files"
+      "accessibleNameRef": "urn:message-meta:files"
     },
     {
       "@type": "AccessibleLocator",
       "@id": "urn:locator:shared-with-you-tab-selected",
       "label": "Selected Shared with you tab",
       "role": "tab",
-      "accessibleNameRef": "urn:message:shared-with-you",
+      "accessibleNameRef": "urn:message-meta:shared-with-you",
       "accessibleFeatureRefs": [
         "urn:feature:selected-true"
       ]
@@ -588,7 +639,8 @@ the SHACL shape.
 ### Input Modality Requirement Example
 
 This example shows a producer-defined activation event for a transition affordance surface. The event
-references two producer-defined modality profiles.
+references two producer-defined modality profiles that use standard keyboard and pointer modality
+identifiers.
 
 ```json
 {
@@ -624,21 +676,11 @@ references two producer-defined modality profiles.
       "graphNodeRef": "urn:transition:submit-checkout"
     },
     {
-      "@type": "InputModality",
-      "@id": "urn:input-modality:keyboard",
-      "label": "Keyboard"
-    },
-    {
-      "@type": "InputModality",
-      "@id": "urn:input-modality:pointer",
-      "label": "Pointer"
-    },
-    {
       "@type": "InputModalityProfile",
       "@id": "urn:input-modality-profile:keyboard",
       "label": "Keyboard",
       "inputModalityRefs": [
-        "urn:input-modality:keyboard"
+        "observability:keyboard"
       ]
     },
     {
@@ -646,7 +688,7 @@ references two producer-defined modality profiles.
       "@id": "urn:input-modality-profile:pointer",
       "label": "Pointer",
       "inputModalityRefs": [
-        "urn:input-modality:pointer"
+        "observability:pointer"
       ]
     },
     {
@@ -659,21 +701,27 @@ references two producer-defined modality profiles.
       ]
     },
     {
-      "@type": "MessageBundle",
-      "@id": "urn:message:submit-checkout",
-      "messageKey": "checkout.submit",
-      "defaultLocale": "en",
-      "locales": {
-        "en": {
-          "value": "Submit checkout"
-        }
-      }
+      "@type": "Locale",
+      "@id": "urn:locale:en",
+      "localeCode": "en"
+    },
+    {
+      "@type": "MessageMeta",
+      "@id": "urn:message-meta:submit-checkout",
+      "defaultLocaleRef": "urn:locale:en"
+    },
+    {
+      "@type": "Message",
+      "@id": "urn:message:submit-checkout:en",
+      "messageMetaRef": "urn:message-meta:submit-checkout",
+      "localeRef": "urn:locale:en",
+      "value": "Submit checkout"
     },
     {
       "@type": "AccessibleLocator",
       "@id": "urn:locator:submit-checkout",
       "role": "button",
-      "accessibleNameRef": "urn:message:submit-checkout"
+      "accessibleNameRef": "urn:message-meta:submit-checkout"
     },
     {
       "@type": "ObservationBinding",
@@ -723,15 +771,21 @@ references two producer-defined modality profiles.
       "label": "Presence"
     },
     {
-      "@type": "MessageBundle",
-      "@id": "urn:message:files",
-      "messageKey": "files.heading",
-      "defaultLocale": "en",
-      "locales": {
-        "en": {
-          "value": "Files"
-        }
-      }
+      "@type": "Locale",
+      "@id": "urn:locale:en",
+      "localeCode": "en"
+    },
+    {
+      "@type": "MessageMeta",
+      "@id": "urn:message-meta:files",
+      "defaultLocaleRef": "urn:locale:en"
+    },
+    {
+      "@type": "Message",
+      "@id": "urn:message:files:en",
+      "messageMetaRef": "urn:message-meta:files",
+      "localeRef": "urn:locale:en",
+      "value": "Files"
     },
     {
       "@type": "AccessibleFeature",
@@ -743,7 +797,7 @@ references two producer-defined modality profiles.
       "@type": "AccessibleLocator",
       "@id": "urn:locator:files-heading",
       "role": "heading",
-      "accessibleNameRef": "urn:message:files"
+      "accessibleNameRef": "urn:message-meta:files"
     },
     {
       "@type": "SurfaceInstanceResolver",

@@ -12,14 +12,14 @@ Spec URL: https://ujg.specs.openuji.org/ed
 
 ## Review Inputs
 
-- Source hash: sha256:2c429defeee84fb489938873dd71276661b8814947bbc465c8978841eee8fa46
-- Spec hash: sha256:72fa4de7388c2b1174d1d0ed572228adc64f006c5d0c3220ad009726c59945c7
+- Source hash: sha256:e61d3aa84f77860f4ae63ecdfee67cb53d5bd630033d130ffff6d41b91bf5c67
+- Spec hash: sha256:fa0b0e030ad3ba05f2884f62b3d623c6fc3814c05ca05e2d40af8ec506d93286
 
 ## Source Headings Likely Affected
 
 - UJG ED Modeling Skill
 - Modeling bias
-- Page and route modeling
+- Page and entry modeling
 
 ## Checklist
 

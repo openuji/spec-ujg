@@ -1,32 +1,27 @@
 ## Overview
 
 This optional module defines a graph-native vocabulary for attaching localization metadata to UJG
-nodes. It lets a producer bind any addressable node to a reusable `MessageBundle` resource through
-`l10n:copyRef` instead of hiding message keys, locale fallbacks, or locale maps inside opaque Core
-`extensions`.
+nodes. It lets a producer bind any addressable node to a reusable `MessageMeta` resource through
+`l10n:copyRef`, and model concrete locale-specific text as addressable `Message` nodes.
 
 This module is optional. It annotates the shared graph with localization resources, but it does
 **not** change graph topology, traversal rules, or import resolution.
 
 ## Terminology
 
-* <dfn>MessageBundle</dfn>: An addressable localization resource that carries message-key and locale payload metadata.
+* <dfn>Locale</dfn>: An addressable locale resource identified by a language tag.
+* <dfn>MessageMeta</dfn>: An addressable message identity and shared metadata resource.
+* <dfn>Message</dfn>: An addressable locale-specific value for one `MessageMeta` and one `Locale`.
 
-## MessageBundle {data-cop-concept="message-bundle"}
+## Locale {data-cop-concept="locale"}
 
-A [=MessageBundle=] identifies a localized message payload by message key and optional locale
-metadata. UJG nodes reference a bundle with `l10n:copyRef`.
+A [=Locale=] identifies one locale used by localization metadata or locale-specific messages.
 
 ```mermaid
 classDiagram
-  class MessageBundle {
+  class Locale {
     id
-    namespace
-    messageKey
-    defaultLocale
-    fallbackLocales
-    rtl
-    locales
+    localeCode
   }
 ```
 
@@ -34,17 +29,72 @@ Example JSON node:
 
 ```json
 {
-  "@type": "l10n:MessageBundle",
-  "@id": "urn:l10n:bundle:order-confirmation",
-  "l10n:namespace": "checkout.confirmation",
-  "l10n:messageKey": "order.confirmation.title",
-  "l10n:defaultLocale": "en",
-  "l10n:fallbackLocales": ["en", "de"],
-  "l10n:rtl": false,
-  "l10n:locales": {
-    "en": { "title": "Order confirmed" },
-    "de": { "title": "Bestellung bestaetigt" }
+  "@type": "l10n:Locale",
+  "@id": "urn:l10n:locale:en",
+  "l10n:localeCode": "en"
+}
+```
+
+## MessageMeta {data-cop-concept="message-meta"}
+
+A [=MessageMeta=] identifies a reusable copy contract. The `MessageMeta` IRI is the stable message
+identity. UJG nodes reference a message meta node with `l10n:copyRef`.
+
+```mermaid
+classDiagram
+  class Locale
+  class MessageMeta {
+    id
+    argumentNames
+    defaultLocaleRef
+    fallbackLocaleRefs
+    rtl
   }
+  MessageMeta --> Locale : defaultLocaleRef
+  MessageMeta --> "0..*" Locale : fallbackLocaleRefs
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "l10n:MessageMeta",
+  "@id": "urn:l10n:message-meta:order-confirmation-title",
+  "l10n:argumentNames": ["orderNumber"],
+  "l10n:defaultLocaleRef": "urn:l10n:locale:en",
+  "l10n:fallbackLocaleRefs": ["urn:l10n:locale:en", "urn:l10n:locale:de"],
+  "l10n:rtl": false
+}
+```
+
+## Message {data-cop-concept="message"}
+
+A [=Message=] carries one locale-specific string value for one [=MessageMeta=] and one [=Locale=].
+The value is an opaque string from the perspective of Localization conformance.
+
+```mermaid
+classDiagram
+  class MessageMeta
+  class Locale
+  class Message {
+    id
+    messageMetaRef
+    localeRef
+    value
+  }
+  Message --> MessageMeta : messageMetaRef
+  Message --> Locale : localeRef
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "l10n:Message",
+  "@id": "urn:l10n:message:order-confirmation-title:en",
+  "l10n:messageMetaRef": "urn:l10n:message-meta:order-confirmation-title",
+  "l10n:localeRef": "urn:l10n:locale:en",
+  "l10n:value": "Order ${orderNumber} confirmed"
 }
 ```
 
@@ -52,19 +102,25 @@ Example JSON node:
 
 The module introduces real JSON-LD terms and RDF edges for localization attachment:
 
-* `l10n:copyRef` links any UJG node to a `MessageBundle`.
-* `l10n:targetLocale` declares the requested locale associated with an [=OutgoingTransition=].
+* `l10n:copyRef` links any UJG node to a `MessageMeta`.
+* `l10n:messageMetaRef` links a `Message` to the `MessageMeta` it realizes.
+* `l10n:localeRef` links a `Message` to its `Locale`.
+* `l10n:defaultLocaleRef` and `l10n:fallbackLocaleRefs` link `MessageMeta` to fallback locale
+  resources.
+* `l10n:targetLocaleRef` declares the requested `Locale` associated with an [=OutgoingTransition=].
 
 ```mermaid
 classDiagram
   class Node {
     copyRef
   }
-  class MessageBundle
+  class MessageMeta
+  class Locale
   class OutgoingTransition {
-    targetLocale
+    targetLocaleRef
   }
-  Node --> MessageBundle : copyRef
+  Node --> MessageMeta : copyRef
+  OutgoingTransition --> Locale : targetLocaleRef
 ```
 
 Example JSON nodes:
@@ -75,25 +131,33 @@ Example JSON nodes:
     "@type": "State",
     "@id": "urn:ujg:state:order-confirmation",
     "label": "Order confirmation",
-    "l10n:copyRef": "urn:l10n:bundle:order-confirmation"
+    "l10n:copyRef": "urn:l10n:message-meta:order-confirmation-title"
   },
   {
-    "@type": "l10n:MessageBundle",
-    "@id": "urn:l10n:bundle:order-confirmation",
-    "l10n:messageKey": "order.confirmation.title"
+    "@type": "l10n:MessageMeta",
+    "@id": "urn:l10n:message-meta:order-confirmation-title",
+    "l10n:argumentNames": ["orderNumber"],
+    "l10n:defaultLocaleRef": "urn:l10n:locale:en"
+  },
+  {
+    "@type": "l10n:Message",
+    "@id": "urn:l10n:message:order-confirmation-title:en",
+    "l10n:messageMetaRef": "urn:l10n:message-meta:order-confirmation-title",
+    "l10n:localeRef": "urn:l10n:locale:en",
+    "l10n:value": "Order ${orderNumber} confirmed"
   },
   {
     "@type": "OutgoingTransition",
     "@id": "urn:example:ot:language-english",
     "label": "English",
     "toCurrentState": true,
-    "l10n:targetLocale": "en"
+    "l10n:targetLocaleRef": "urn:l10n:locale:en"
   }
 ]
 ```
 
-The module also defines non-reference properties such as `l10n:namespace`, `l10n:messageKey`,
-`l10n:defaultLocale`, `l10n:fallbackLocales`, `l10n:rtl`, and JSON-valued `l10n:locales`.
+The module also defines non-reference properties `l10n:localeCode`, `l10n:argumentNames`,
+`l10n:rtl`, and `l10n:value`.
 
 ## Normative Artifacts
 
@@ -108,7 +172,8 @@ with the Localization context.
 
 **Non-goals:**
 
-* This module does **not** define locale negotiation, runtime translation loading, or ICU formatting behavior.
+* This module does **not** define locale negotiation, runtime translation loading, JavaScript
+  evaluation, ICU formatting behavior, pluralization, or runtime interpolation APIs.
 * This module does **not** introduce new traversal semantics beyond [[UJG Graph]].
 * This module does **not** replace opaque vendor-private hints carried in [[UJG Core]] `extensions`.
 
@@ -116,7 +181,7 @@ with the Localization context.
 
 The normative Localization ontology is defined below and is published at
 `https://ujg.specs.openuji.org/ed/ns/l10n`. It is the authoritative structural definition for
-`MessageBundle` and the properties declared by this module.
+`Locale`, `MessageMeta`, `Message`, and the properties declared by this module.
 
 :::include ./l10n.ttl :::
 
@@ -143,17 +208,22 @@ the SHACL shape.
 
 1. **Attachment only:** Localization properties **MUST NOT** change Graph validity, graph traversal
    behavior, import resolution, or core node identity.
-2. **Bundle semantics:** `l10n:messageKey` identifies the canonical message entry for the attached
-   node, while `l10n:locales` carries optional locale-specific payloads for implementations that
-   choose to embed translated values.
-3. **Locale target metadata:** `l10n:targetLocale` declares the requested locale associated with an
+2. **Message identity:** A `MessageMeta` IRI identifies the reusable message contract. Producers
+   **MUST** use that IRI as the shared message identity.
+3. **Locale identity:** Locale references use `Locale` IRIs. A `Locale.localeCode` value identifies
+   the language tag represented by that locale resource.
+4. **Message uniqueness:** Producers **MUST NOT** create more than one `Message` for the same
+   `messageMetaRef` and `localeRef` pair.
+5. **Opaque value:** `Message.value` is a string value. Consumers **MUST NOT** infer UJG graph edges,
+   message dependencies, JavaScript execution, ICU behavior, or cycle constraints from the string.
+6. **Locale target metadata:** `l10n:targetLocaleRef` declares the requested locale associated with an
    outgoing affordance. It does not itself define graph traversal behavior. If a locale switch should
    keep the user on the same graph state, use Graph's `toCurrentState: true` together with
-   `l10n:targetLocale`.
-4. **Graceful degradation:** A consumer that does not implement this module **MAY** ignore
+   `l10n:targetLocaleRef`.
+7. **Graceful degradation:** A consumer that does not implement this module **MAY** ignore
    Localization semantics, but it **SHOULD** preserve recognized JSON-LD data during
    read-transform-write when possible.
-5. **Private runtime hints:** Platform-specific i18n loader configuration that is not intended for
+8. **Private runtime hints:** Platform-specific i18n loader configuration that is not intended for
    shared queryability or validation **SHOULD** remain in Core `extensions`.
 
 ---
@@ -169,11 +239,22 @@ the SHACL shape.
     "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
     "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld"
   ],
-  "@type": "OutgoingTransition",
-  "@id": "urn:example:ot:language-english",
-  "label": "English",
-  "toCurrentState": true,
-  "l10n:targetLocale": "en"
+  "@type": "UJGDocument",
+  "@id": "https://example.com/ujg/l10n/locale-switch.jsonld",
+  "nodes": [
+    {
+      "@type": "l10n:Locale",
+      "@id": "urn:l10n:locale:en",
+      "l10n:localeCode": "en"
+    },
+    {
+      "@type": "OutgoingTransition",
+      "@id": "urn:example:ot:language-english",
+      "label": "English",
+      "toCurrentState": true,
+      "l10n:targetLocaleRef": "urn:l10n:locale:en"
+    }
+  ]
 }
 ```
 
@@ -189,29 +270,42 @@ the SHACL shape.
   "@type": "UJGDocument",
   "nodes": [
     {
+      "@type": "l10n:Locale",
+      "@id": "urn:l10n:locale:en",
+      "l10n:localeCode": "en"
+    },
+    {
+      "@type": "l10n:Locale",
+      "@id": "urn:l10n:locale:de",
+      "l10n:localeCode": "de"
+    },
+    {
       "@type": "State",
       "@id": "urn:ujg:state:order-confirmation",
       "label": "Order confirmation",
-      "l10n:copyRef": "urn:l10n:bundle:order-confirmation"
+      "l10n:copyRef": "urn:l10n:message-meta:order-confirmation-title"
     },
     {
-      "@type": "l10n:MessageBundle",
-      "@id": "urn:l10n:bundle:order-confirmation",
-      "l10n:namespace": "checkout.confirmation",
-      "l10n:messageKey": "order.confirmation.title",
-      "l10n:defaultLocale": "en",
-      "l10n:fallbackLocales": ["en", "de"],
-      "l10n:rtl": false,
-      "l10n:locales": {
-        "en": {
-          "title": "Order confirmed",
-          "subtitle": "Your receipt is on the way."
-        },
-        "de": {
-          "title": "Bestellung bestaetigt",
-          "subtitle": "Ihre Quittung ist unterwegs."
-        }
-      }
+      "@type": "l10n:MessageMeta",
+      "@id": "urn:l10n:message-meta:order-confirmation-title",
+      "l10n:argumentNames": ["orderNumber"],
+      "l10n:defaultLocaleRef": "urn:l10n:locale:en",
+      "l10n:fallbackLocaleRefs": ["urn:l10n:locale:en", "urn:l10n:locale:de"],
+      "l10n:rtl": false
+    },
+    {
+      "@type": "l10n:Message",
+      "@id": "urn:l10n:message:order-confirmation-title:en",
+      "l10n:messageMetaRef": "urn:l10n:message-meta:order-confirmation-title",
+      "l10n:localeRef": "urn:l10n:locale:en",
+      "l10n:value": "Order ${orderNumber} confirmed"
+    },
+    {
+      "@type": "l10n:Message",
+      "@id": "urn:l10n:message:order-confirmation-title:de",
+      "l10n:messageMetaRef": "urn:l10n:message-meta:order-confirmation-title",
+      "l10n:localeRef": "urn:l10n:locale:de",
+      "l10n:value": "Bestellung ${orderNumber} bestaetigt"
     }
   ]
 }
@@ -221,9 +315,8 @@ the SHACL shape.
 
 ```json
 {
-  "@id": "urn:l10n:bundle:order-confirmation",
-  "@type": "l10n:MessageBundle",
-  "l10n:messageKey": "order.confirmation.title",
+  "@id": "urn:l10n:message-meta:order-confirmation-title",
+  "@type": "l10n:MessageMeta",
   "extensions": {
     "com.acme.i18n-runtime": {
       "resourceFile": "checkout/confirmation.json",

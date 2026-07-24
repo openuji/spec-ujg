@@ -26,13 +26,6 @@ ujggraphshape:OutgoingTargetShape a sh:NodeShape ;
     [ sh:class ujggraph:CompositeState ]
   ) .
 
-ujggraphshape:IndexStateShape a sh:NodeShape ;
-  sh:nodeKind sh:IRI ;
-  sh:or (
-    [ sh:class ujggraph:State ]
-    [ sh:class ujggraph:CompositeState ]
-  ) .
-
 ujggraphshape:JourneyShape a sh:NodeShape ;
   sh:targetClass ujggraph:Journey ;
   sh:nodeKind sh:IRI ;
@@ -117,11 +110,13 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
         FILTER (
           EXISTS {
-            ?otherJourney ujggraph:entryRefs ?entry .
+            ?otherJourney a ujggraph:Journey ;
+                          ujggraph:entryRefs ?entry .
             FILTER ($this != ?otherJourney)
           }
           || NOT EXISTS {
-            ?declaringJourney ujggraph:entryRefs ?entry .
+            ?declaringJourney a ujggraph:Journey ;
+                              ujggraph:entryRefs ?entry .
           }
         )
       }
@@ -484,10 +479,15 @@ ujggraphshape:JourneyEntryShape a sh:NodeShape ;
       SELECT $this
       WHERE {
         FILTER (
-          NOT EXISTS { ?journey ujggraph:entryRefs $this . }
+          NOT EXISTS {
+            ?journey a ujggraph:Journey ;
+                     ujggraph:entryRefs $this .
+          }
           || EXISTS {
-            ?journeyA ujggraph:entryRefs $this .
-            ?journeyB ujggraph:entryRefs $this .
+            ?journeyA a ujggraph:Journey ;
+                      ujggraph:entryRefs $this .
+            ?journeyB a ujggraph:Journey ;
+                      ujggraph:entryRefs $this .
             FILTER (?journeyA != ?journeyB)
           }
         )
@@ -517,9 +517,10 @@ ujggraphshape:JourneyEntryIndexShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujggraph:stateRefs ;
+    sh:path ujggraph:entryRefs ;
     sh:minCount 1 ;
-    sh:node ujggraphshape:IndexStateShape ;
+    sh:class ujggraph:JourneyEntry ;
+    sh:nodeKind sh:IRI ;
   ] ;
 
   sh:property [
@@ -571,9 +572,9 @@ ujggraphshape:JourneyEntryIndexShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:entryRefs ;
+    sh:path ujggraph:stateRefs ;
     sh:maxCount 0 ;
-    sh:message "A JourneyEntryIndex must not declare entryRefs." ;
+    sh:message "A JourneyEntryIndex must not declare stateRefs." ;
   ] ;
 
   sh:property [

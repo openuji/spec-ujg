@@ -4,6 +4,7 @@
 
     "ujgobservability": "https://ujg.specs.openuji.org/ed/ns/observability#",
     "observability": "https://ujg.specs.openuji.org/ed/ns/observability#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
 
     "ObservationBinding": "ujgobservability:ObservationBinding",
     "ObservationEvent": "ujgobservability:ObservationEvent",
@@ -14,6 +15,9 @@
     "AccessibleRelation": "ujgobservability:AccessibleRelation",
     "CustomLocator": "ujgobservability:CustomLocator",
     "SurfaceInstanceResolver": "ujgobservability:SurfaceInstanceResolver",
+
+    "keyboard": "ujgobservability:keyboard",
+    "pointer": "ujgobservability:pointer",
 
     "observeSurfaceRef": {
       "@id": "ujgobservability:observeSurfaceRef",
@@ -41,6 +45,10 @@
     "surfaceInstanceResolverRef": {
       "@id": "ujgobservability:surfaceInstanceResolverRef",
       "@type": "@id"
+    },
+    "expectedMatchCount": {
+      "@id": "ujgobservability:expectedMatchCount",
+      "@type": "xsd:nonNegativeInteger"
     },
     "instanceKeyFeatureRef": {
       "@id": "ujgobservability:instanceKeyFeatureRef",

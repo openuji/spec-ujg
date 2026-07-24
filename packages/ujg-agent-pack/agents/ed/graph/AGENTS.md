@@ -15,7 +15,7 @@ Related generated skills:
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules
 - ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
-- ujg-ed-l10n-modeling: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
+- ujg-ed-l10n-modeling: Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata
 - ujg-ed-observability-modeling: Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
@@ -54,7 +54,7 @@ Keep runtime observations, selectors, typed values, timestamps, payloads, and an
 
 Prefer the shallowest valid graph.
 
-Use `JourneyEntryIndex` for catalogues, route maps, product-surface indexes, documentation indexes, or collections of known entry states. Do not use it as a traversable journey.
+Use `JourneyEntryIndex` for catalogues, product-surface indexes, documentation indexes, or collections of known `JourneyEntry` contracts. Do not use it as a traversable journey.
 
 Use `Journey` only for local traversable topology. A journey must have an IRI `@id`, exactly one `defaultEntryRef`, at least one `entryRefs` value, and at least one `stateRefs` value. Its local vertices are `stateRefs` union `exitRefs`.
 

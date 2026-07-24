@@ -39,7 +39,7 @@
         {
           "key": "localization",
           "title": "Localization Modeling",
-          "scope": "Localization module semantics for MessageBundle copy metadata and locale-switch metadata",
+          "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata",
           "nameSuffix": "l10n-modeling",
           "moduleId": "modules/l10n"
         },

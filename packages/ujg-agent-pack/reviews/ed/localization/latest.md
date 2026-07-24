@@ -1,7 +1,7 @@
 # Skill Review: ujg-ed-l10n-modeling
 
 Target: Editor's Draft
-Skill scope: Localization module semantics for MessageBundle copy metadata and locale-switch metadata
+Skill scope: Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata
 Source: sources/ed/skills/localization/skill.md
 Spec URL: https://ujg.specs.openuji.org/ed/modules/l10n
 
@@ -12,8 +12,8 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/l10n
 
 ## Review Inputs
 
-- Source hash: sha256:815c20a6a662223a5971ee07d28ad86b13e51725ef907d94f6624fcdbc3458b0
-- Spec hash: sha256:2aa12b26bc251c5bd03e3bbf13b0ea117a686a8eef3eafaac4dbace3eb17fe90
+- Source hash: sha256:181b800c4eaa73540184158232cc7ce44a0d59bfdc599076f0bc0d1cde5d38f5
+- Spec hash: sha256:f7b847cc061cb853ba50b6ba180458206dc15aa615d4ecff53513d92e8a4338e
 
 ## Source Headings Likely Affected
 

@@ -14,7 +14,7 @@ Generate only terms defined by the active ED Localization context unless the use
 
 Localization attaches locale and copy metadata to UJG nodes.
 
-It does not define routes, traversal, locale negotiation, runtime translation loading, ICU behavior, imports, or graph identity.
+It does not define routes, traversal, locale negotiation, runtime translation loading, JavaScript evaluation, ICU behavior, imports, or graph identity.
 
 Graph defines topology.
 Localization annotates UJG nodes with copy and locale metadata. It can be used with Phase `Step`
@@ -39,81 +39,96 @@ When using locale switches with `OutgoingTransition`, also include Graph context
 Use only these Localization classes:
 
 ```text
-MessageBundle
+Locale
+MessageMeta
+Message
 ```
 
 Use only these Localization properties:
 
 ```text
 copyRef
-namespace
-messageKey
-defaultLocale
-fallbackLocales
+localeCode
+argumentNames
+defaultLocaleRef
+fallbackLocaleRefs
 rtl
-locales
-targetLocale
-l10n:targetLocale
+messageMetaRef
+localeRef
+value
+targetLocaleRef
+l10n:targetLocaleRef
 ```
 
 Prefer prefixed `l10n:*` terms in mixed-module examples when clarity matters.
 
-Do not invent:
-
-```text
-locale
-currentLocale
-selectedLocale
-translationKey
-translations
-messages
-language
-languageCode
-i18n
-resourceFile
-bundleFormat
-loader
-routeLocale
-localeRoute
-```
+Do not invent retired bundle-oriented shapes, key-oriented identity fields, aggregate locale maps, selector-state fields, translation-resource loaders, composite-message structures, or generic language-code aliases.
 
 Use private `extensions` only for project-specific runtime hints that are not intended to be interoperable l10n semantics.
 
-## MessageBundle
+## Locale
 
-Use `MessageBundle` for reusable copy metadata.
+Use `Locale` for addressable locale resources.
 
-A `MessageBundle` must have exactly one `messageKey`.
-
-It may have:
-
-```text
-namespace
-defaultLocale
-fallbackLocales
-rtl
-locales
-```
-
-Use `locales` only when embedding locale-specific payloads is useful. Otherwise prefer stable message keys and let implementation load translations externally.
+A `Locale` must have exactly one `localeCode`.
 
 Example:
 
 ```json
 {
-  "@type": "l10n:MessageBundle",
-  "@id": "urn:example:l10n:home-hero-title",
-  "l10n:namespace": "home.hero",
-  "l10n:messageKey": "home.hero.title",
-  "l10n:defaultLocale": "de",
-  "l10n:fallbackLocales": ["en"],
-  "l10n:rtl": false
+  "@type": "l10n:Locale",
+  "@id": "urn:example:l10n:locale:de",
+  "l10n:localeCode": "de"
 }
+```
+
+## MessageMeta and Message
+
+Use `MessageMeta` for reusable copy identity and shared message metadata. The `MessageMeta` IRI is the message identity.
+
+A `MessageMeta` may have:
+
+```text
+argumentNames
+defaultLocaleRef
+fallbackLocaleRefs
+rtl
+```
+
+Use `Message` for a locale-specific string value. Each `Message` must have exactly one `messageMetaRef`, exactly one `localeRef`, and exactly one `value`.
+
+Do not create more than one `Message` for the same `messageMetaRef` and `localeRef` pair.
+
+Treat `Message.value` as opaque Localization data. It may contain project placeholders such as `${...}`, but Localization does not validate placeholder references or cycles.
+
+Example:
+
+```json
+[
+  {
+    "@type": "l10n:Locale",
+    "@id": "urn:example:l10n:locale:de",
+    "l10n:localeCode": "de"
+  },
+  {
+    "@type": "l10n:MessageMeta",
+    "@id": "urn:example:l10n:home-hero-title",
+    "l10n:argumentNames": ["userName"],
+    "l10n:defaultLocaleRef": "urn:example:l10n:locale:de"
+  },
+  {
+    "@type": "l10n:Message",
+    "@id": "urn:example:l10n:message:home-hero-title:de",
+    "l10n:messageMetaRef": "urn:example:l10n:home-hero-title",
+    "l10n:localeRef": "urn:example:l10n:locale:de",
+    "l10n:value": "Hallo ${userName}"
+  }
+]
 ```
 
 ## copyRef
 
-Use `l10n:copyRef` to attach any addressable UJG node to one `MessageBundle`.
+Use `l10n:copyRef` to attach any addressable UJG node to one `MessageMeta`.
 
 Example:
 
@@ -140,11 +155,11 @@ If the locale switch keeps the same effective graph state, use:
   "@id": "urn:example:ot:locale-en",
   "label": "English",
   "toCurrentState": true,
-  "l10n:targetLocale": "en"
+  "l10n:targetLocaleRef": "urn:example:l10n:locale:en"
 }
 ```
 
-If the locale switch targets a distinct modeled state, use `to` plus `l10n:targetLocale`.
+If the locale switch targets a distinct modeled state, use `to` plus `l10n:targetLocaleRef`.
 
 Do not create duplicate locale-specific states unless locale changes graph topology, available journeys, states, or affordances.
 
@@ -156,17 +171,21 @@ Do not model clicked language, selected language, URL locale segment, timestamp,
 
 Do not use Localization to fix missing Graph structure.
 
-Do not use `targetLocale` without an `OutgoingTransition`.
+Do not use `targetLocaleRef` without an `OutgoingTransition`.
 
-Do not use `l10n:copyRef` without a referenced `MessageBundle`.
+Do not use `l10n:copyRef` without a referenced `MessageMeta`.
+
+Do not model composite messages with `messagePartRefs`, `CompositeMessage`, or `MessagePart`.
 
 ## Checks before answering
 
 * Did I include l10n context only when l10n terms are used?
 * Are all l10n terms defined by the active ED?
-* Does every `copyRef` point to a `MessageBundle`?
-* Does every `MessageBundle` have one `messageKey`?
-* Is `targetLocale` used only on `OutgoingTransition`?
+* Does every `copyRef` point to a `MessageMeta`?
+* Does every `Locale` have one `localeCode`?
+* Does every `Message` have one `messageMetaRef`, one `localeRef`, and one `value`?
+* Did I avoid duplicate `Message` nodes for the same `messageMetaRef` and `localeRef`?
+* Is `targetLocaleRef` used only on `OutgoingTransition`?
 * Does a same-state locale switch use `toCurrentState: true`?
 * Did I avoid duplicate locale states unless topology really differs?
 * Did I keep runtime locale facts, loaders, URLs, and payloads out of l10n?

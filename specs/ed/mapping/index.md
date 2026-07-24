@@ -10,10 +10,10 @@ observed Graph state-like node. Mapping associates the resolved execution with a
 `Journey`.
 
 Mapping roots are traversable Graph [=Journey|Journeys=]. A [=JourneyEntryIndex=] can help discover known
-entry states before mapping, but it is not a local traversal scope and is not the target of
+[=JourneyEntry=] contracts before mapping, but it is not a local traversal scope and is not the target of
 `mappedJourneyRef`.
 
-Mapping surfaces model drift, tracking gaps, deep links, menu jumps, and other out-of-model
+Mapping surfaces model drift, tracking gaps, direct invocations, menu jumps, and other out-of-model
 movement. It does not assume every jump is an error.
 
 Examples in this page compose the shared baseline context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`
