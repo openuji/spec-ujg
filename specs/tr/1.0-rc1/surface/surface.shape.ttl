@@ -1,0 +1,114 @@
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/1.0/ns/graph#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/1.0/ns/surface#> .
+@prefix ujgsurfaceshape: <https://ujg.specs.openuji.org/tr/1.0/ns/surface.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ujgsurfaceshape:GraphNodeRefTargetShape a sh:NodeShape ;
+  sh:nodeKind sh:IRI ;
+  sh:or (
+    [ sh:class ujggraph:State ]
+    [ sh:class ujggraph:CompositeState ]
+    [ sh:class ujggraph:Transition ]
+    [ sh:class ujggraph:OutgoingTransition ]
+  ) .
+
+ujgsurfaceshape:UserRefHostShape a sh:NodeShape ;
+  sh:targetClass
+    ujggraph:Journey,
+    ujggraph:JourneyEntry,
+    ujggraph:State,
+    ujggraph:CompositeState,
+    ujggraph:Transition,
+    ujggraph:JourneyExit,
+    ujggraph:OutgoingTransition,
+    ujggraph:OutgoingTransitionGroup ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgsurface:userRef ;
+    sh:class ujgsurface:User ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgsurfaceshape:UserRefUsageShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgsurface:userRef ;
+  sh:or (
+    [ sh:class ujggraph:Journey ]
+    [ sh:class ujggraph:JourneyEntry ]
+    [ sh:class ujggraph:State ]
+    [ sh:class ujggraph:CompositeState ]
+    [ sh:class ujggraph:Transition ]
+    [ sh:class ujggraph:JourneyExit ]
+    [ sh:class ujggraph:OutgoingTransition ]
+    [ sh:class ujggraph:OutgoingTransitionGroup ]
+  ) .
+
+ujgsurfaceshape:SurfaceShape a sh:NodeShape ;
+  sh:targetClass ujgsurface:Surface ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgsurface:graphNodeRef ;
+    sh:node ujgsurfaceshape:GraphNodeRefTargetShape ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgsurfaceshape:SurfaceInstanceShape a sh:NodeShape ;
+  sh:targetClass ujgsurface:SurfaceInstance ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgsurface:surfaceRef ;
+    sh:class ujgsurface:Surface ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgsurfaceshape:UserShape a sh:NodeShape ;
+  sh:targetClass ujgsurface:User ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujgsurface:touchpointRefs ;
+    sh:class ujgsurface:Touchpoint ;
+    sh:nodeKind sh:IRI ;
+  ] .
+
+ujgsurfaceshape:TouchpointShape a sh:NodeShape ;
+  sh:targetClass ujgsurface:Touchpoint ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgsurface:channel ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgsurface:compositeStateRefs ;
+    sh:class ujggraph:CompositeState ;
+    sh:nodeKind sh:IRI ;
+  ] .

@@ -1,0 +1,37 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0/ns/core#> .
+@prefix ujgartifact: <https://ujg.specs.openuji.org/tr/1.0/ns/artifact#> .
+@prefix ujgeffect: <https://ujg.specs.openuji.org/tr/1.0/ns/effect#> .
+@prefix ujgl10n: <https://ujg.specs.openuji.org/tr/1.0/ns/l10n#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/1.0/ns/surface#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/tr/1.0/ns/artifact#> a owl:Ontology ;
+  rdfs:label "UJG Artifact 1.0 Vocabulary"@en ;
+  dct:description "UJG Artifact ontology declaration" .
+
+### Classes
+
+ujgartifact:Artifact a owl:Class ;
+  rdfs:subClassOf ujg:Node, ujgeffect:EffectResource .
+
+### Properties
+
+ujgartifact:nameRef a owl:ObjectProperty ;
+  rdfs:domain ujgartifact:Artifact ;
+  rdfs:range ujgl10n:MessageMeta ;
+  rdfs:label "name ref" ;
+  rdfs:comment "References localized MessageMeta used as the artifact's human-facing name." .
+
+ujgartifact:sourceTouchpointRef a owl:ObjectProperty ;
+  rdfs:domain ujgartifact:Artifact ;
+  rdfs:range ujgsurface:Touchpoint ;
+  rdfs:label "source touchpoint ref" ;
+  rdfs:comment "References the Touchpoint where this artifact is produced, exported, or made available." .
+
+ujgartifact:targetTouchpointRefs a owl:ObjectProperty ;
+  rdfs:domain ujgartifact:Artifact ;
+  rdfs:range ujgsurface:Touchpoint ;
+  rdfs:label "target touchpoint refs" ;
+  rdfs:comment "References Touchpoints where this artifact is consumed, imported, redeemed, or otherwise used." .

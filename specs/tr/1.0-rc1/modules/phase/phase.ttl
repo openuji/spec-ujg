@@ -1,0 +1,39 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/1.0/ns/graph#> .
+@prefix ujgphase: <https://ujg.specs.openuji.org/tr/1.0/ns/phase#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/tr/1.0/ns/phase#> a owl:Ontology ;
+  rdfs:label "UJG Phase 1.0 Vocabulary"@en ;
+  dct:description "UJG Phase ontology declaration" .
+
+### Classes
+
+ujgphase:Phase a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgphase:Step a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgphase:compositeStateRef a owl:ObjectProperty ;
+  rdfs:domain ujgphase:Step ;
+  rdfs:range ujggraph:CompositeState .
+
+ujgphase:phaseRef a owl:ObjectProperty ;
+  rdfs:domain ujgphase:Step ;
+  rdfs:range ujgphase:Phase .
+
+ujgphase:order a owl:DatatypeProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujgphase:Step
+      ujgphase:Phase
+    )
+  ] ;
+  rdfs:range xsd:integer .

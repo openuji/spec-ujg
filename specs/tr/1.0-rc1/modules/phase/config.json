@@ -1,0 +1,47 @@
+{
+  "id": "modules/phase",
+  "title": "Phase",
+  "maturityLevel": "draft",
+  "baseUrl": "${SPEC_BASE_URL}/tr/1.0-rc1",
+  "deps": [
+    "graph"
+  ],
+  "custom": {
+    "family": "module",
+    "order": 50,
+    "moduleLevel": 1,
+    "bridgeSpec": "graph"
+  },
+  "respec": {
+    "noConformance": true,
+    "group": {
+      "name": "User Journal Graph Community Group",
+      "url": "https://www.w3.org/community/ujg/"
+    },
+    "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/tr/1.0-rc1/modules/phase/index.md",
+    "editors": [
+      {
+        "name": "Seva Dolgopolov",
+        "w3cid": "169225"
+      }
+    ],
+    "license": "W3C-Software-and-Document",
+    "localBiblio": {
+      "UJG Core": {
+        "title": "UJG Core",
+        "url": "/tr/1.0-rc1/core"
+      },
+      "UJG Graph": {
+        "title": "UJG Graph",
+        "url": "/tr/1.0-rc1/graph"
+      },
+      "UJG Mapping": {
+        "title": "UJG Mapping",
+        "url": "/tr/1.0-rc1/mapping"
+      }
+    },
+    "specStatus": "CG-DRAFT",
+    "publishDate": "2026-07-27",
+    "version": "1.0-rc1"
+  }
+}

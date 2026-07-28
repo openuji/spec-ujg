@@ -1,0 +1,18 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "ujgexperienceannotation": "https://ujg.specs.openuji.org/tr/1.0/ns/experience-annotation#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "PainPoint": "ujgexperienceannotation:PainPoint",
+    "painpointStepRefs": {
+      "@id": "ujgexperienceannotation:painpointStepRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "severity": {
+      "@id": "ujgexperienceannotation:severity",
+      "@type": "xsd:decimal"
+    },
+    "description": "ujgexperienceannotation:description"
+  }
+}

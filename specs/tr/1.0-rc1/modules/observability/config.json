@@ -1,0 +1,59 @@
+{
+  "id": "modules/observability",
+  "title": "Observability",
+  "maturityLevel": "draft",
+  "baseUrl": "${SPEC_BASE_URL}/tr/1.0-rc1",
+  "deps": [
+    "surface",
+    "modules/l10n"
+  ],
+  "custom": {
+    "family": "module",
+    "order": 49,
+    "moduleLevel": 1,
+    "bridgeModules": [
+      "surface",
+      "modules/l10n"
+    ]
+  },
+  "respec": {
+    "noConformance": true,
+    "group": {
+      "name": "User Journal Graph Community Group",
+      "url": "https://www.w3.org/community/ujg/"
+    },
+    "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/tr/1.0-rc1/modules/observability/index.md",
+    "editors": [
+      {
+        "name": "Seva Dolgopolov",
+        "w3cid": "169225"
+      }
+    ],
+    "license": "W3C-Software-and-Document",
+    "localBiblio": {
+      "UJG Core": {
+        "title": "UJG Core",
+        "url": "/tr/1.0-rc1/core"
+      },
+      "UJG Surface": {
+        "title": "UJG Surface",
+        "url": "/tr/1.0-rc1/surface"
+      },
+      "UJG Localization": {
+        "title": "UJG Localization",
+        "url": "/tr/1.0-rc1/modules/l10n"
+      },
+      "ACCNAME-1.2": {
+        "title": "Accessible Name and Description Computation 1.2",
+        "url": "https://www.w3.org/TR/accname-1.2/"
+      },
+      "WAI-ARIA-1.2": {
+        "title": "Accessible Rich Internet Applications (WAI-ARIA) 1.2: Accessibility API",
+        "url": "https://www.w3.org/TR/wai-aria-1.2/#dfn-accessibility-api"
+      }
+    },
+    "specStatus": "CG-DRAFT",
+    "publishDate": "2026-07-27",
+    "version": "1.0-rc1"
+  }
+}

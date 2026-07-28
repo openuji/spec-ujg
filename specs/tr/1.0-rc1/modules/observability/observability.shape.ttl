@@ -1,0 +1,191 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0/ns/core#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/1.0/ns/surface#> .
+@prefix ujgl10n: <https://ujg.specs.openuji.org/tr/1.0/ns/l10n#> .
+@prefix ujgobservability: <https://ujg.specs.openuji.org/tr/1.0/ns/observability#> .
+@prefix ujgobservabilityshape: <https://ujg.specs.openuji.org/tr/1.0/ns/observability.shape#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ujgobservabilityshape:LocatorShape a sh:NodeShape ;
+  sh:nodeKind sh:IRI ;
+  sh:or (
+    [ sh:class ujgobservability:AccessibleLocator ]
+    [ sh:class ujgobservability:CustomLocator ]
+  ) .
+
+ujgobservabilityshape:ObservationBindingShape a sh:NodeShape ;
+  sh:targetClass ujgobservability:ObservationBinding ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgobservability:observeSurfaceRef ;
+    sh:class ujgsurface:Surface ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:observationEventRef ;
+    sh:class ujgobservability:ObservationEvent ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:locatorRefs ;
+    sh:node ujgobservabilityshape:LocatorShape ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:surfaceInstanceResolverRef ;
+    sh:class ujgobservability:SurfaceInstanceResolver ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:expectedMatchCount ;
+    sh:datatype xsd:nonNegativeInteger ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgobservabilityshape:ObservationEventShape a sh:NodeShape ;
+  sh:targetClass ujgobservability:ObservationEvent ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgobservability:requiredInputModalityProfileRefs ;
+    sh:class ujgobservability:InputModalityProfile ;
+    sh:nodeKind sh:IRI ;
+  ] .
+
+ujgobservabilityshape:InputModalityShape a sh:NodeShape ;
+  sh:targetClass ujgobservability:InputModality ;
+  sh:nodeKind sh:IRI .
+
+ujgobservabilityshape:InputModalityProfileShape a sh:NodeShape ;
+  sh:targetClass ujgobservability:InputModalityProfile ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgobservability:inputModalityRefs ;
+    sh:class ujgobservability:InputModality ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+  ] .
+
+ujgobservabilityshape:SurfaceInstanceResolverShape a sh:NodeShape ;
+  sh:targetClass ujgobservability:SurfaceInstanceResolver ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgobservability:instanceKeyFeatureRef ;
+    sh:class ujgobservability:AccessibleFeature ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgobservabilityshape:AccessibleLocatorShape a sh:NodeShape ;
+  sh:targetClass ujgobservability:AccessibleLocator ;
+  sh:nodeKind sh:IRI ;
+
+  sh:or (
+    [ sh:property [ sh:path ujgobservability:role ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:accessibleNameRef ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:accessibleDescriptionRef ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:accessibleFeatureRefs ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:accessibleRelationRefs ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:contextLocatorRefs ; sh:minCount 1 ] ]
+  ) ;
+
+  sh:property [
+    sh:path ujgobservability:role ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:accessibleNameRef ;
+    sh:class ujgl10n:MessageMeta ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:accessibleDescriptionRef ;
+    sh:class ujgl10n:MessageMeta ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:accessibleFeatureRefs ;
+    sh:class ujgobservability:AccessibleFeature ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:accessibleRelationRefs ;
+    sh:class ujgobservability:AccessibleRelation ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:contextLocatorRefs ;
+    sh:class ujgobservability:AccessibleLocator ;
+    sh:nodeKind sh:IRI ;
+  ] .
+
+ujgobservabilityshape:AccessibleFeatureShape a sh:NodeShape ;
+  sh:targetClass ujgobservability:AccessibleFeature ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgobservability:accessibleFeatureName ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:accessibleFeatureValue ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgobservabilityshape:AccessibleRelationShape a sh:NodeShape ;
+  sh:targetClass ujgobservability:AccessibleRelation ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgobservability:accessibleRelationType ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgobservability:targetLocatorRef ;
+    sh:class ujgobservability:AccessibleLocator ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgobservabilityshape:CustomLocatorShape a sh:NodeShape ;
+  sh:targetClass ujgobservability:CustomLocator ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujg:extensions ;
+    sh:datatype rdf:JSON ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .

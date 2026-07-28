@@ -1,0 +1,25 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgphase": "https://ujg.specs.openuji.org/tr/1.0/ns/phase#",
+    "phase": "https://ujg.specs.openuji.org/tr/1.0/ns/phase#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "Phase": "ujgphase:Phase",
+    "Step": "ujgphase:Step",
+
+    "compositeStateRef": {
+      "@id": "ujgphase:compositeStateRef",
+      "@type": "@id"
+    },
+    "phaseRef": {
+      "@id": "ujgphase:phaseRef",
+      "@type": "@id"
+    },
+    "order": {
+      "@id": "ujgphase:order",
+      "@type": "xsd:integer"
+    }
+  }
+}

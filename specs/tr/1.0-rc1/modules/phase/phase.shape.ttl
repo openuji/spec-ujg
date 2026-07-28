@@ -1,0 +1,40 @@
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/1.0/ns/graph#> .
+@prefix ujgphase: <https://ujg.specs.openuji.org/tr/1.0/ns/phase#> .
+@prefix ujgphaseshape: <https://ujg.specs.openuji.org/tr/1.0/ns/phase.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ujgphaseshape:StepShape a sh:NodeShape ;
+  sh:targetClass ujgphase:Step ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgphase:compositeStateRef ;
+    sh:class ujggraph:CompositeState ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgphase:phaseRef ;
+    sh:class ujgphase:Phase ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgphase:order ;
+    sh:datatype xsd:integer ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgphaseshape:PhaseShape a sh:NodeShape ;
+  sh:targetClass ujgphase:Phase ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgphase:order ;
+    sh:datatype xsd:integer ;
+    sh:maxCount 1 ;
+  ] .

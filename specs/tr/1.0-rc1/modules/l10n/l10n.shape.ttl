@@ -1,0 +1,110 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/1.0/ns/graph#> .
+@prefix ujgl10n: <https://ujg.specs.openuji.org/tr/1.0/ns/l10n#> .
+@prefix ujgl10nshape: <https://ujg.specs.openuji.org/tr/1.0/ns/l10n.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ujgl10nshape:NodeCopyShape a sh:NodeShape ;
+  sh:targetClass ujg:Node ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgl10n:copyRef ;
+    sh:class ujgl10n:MessageMeta ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgl10nshape:LocaleShape a sh:NodeShape ;
+  sh:targetClass ujgl10n:Locale ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgl10n:localeCode ;
+    sh:datatype xsd:language ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgl10nshape:MessageMetaShape a sh:NodeShape ;
+  sh:targetClass ujgl10n:MessageMeta ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgl10n:argumentNames ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:defaultLocaleRef ;
+    sh:class ujgl10n:Locale ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:fallbackLocaleRefs ;
+    sh:class ujgl10n:Locale ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:rtl ;
+    sh:datatype xsd:boolean ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgl10nshape:MessageShape a sh:NodeShape ;
+  sh:targetClass ujgl10n:Message ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgl10n:messageMetaRef ;
+    sh:class ujgl10n:MessageMeta ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:localeRef ;
+    sh:class ujgl10n:Locale ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgl10n:value ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "No two Message nodes may share the same messageMetaRef and localeRef pair." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        $this ujgl10n:messageMetaRef ?meta ;
+              ujgl10n:localeRef ?locale .
+        ?other a ujgl10n:Message ;
+               ujgl10n:messageMetaRef ?meta ;
+               ujgl10n:localeRef ?locale .
+        FILTER (?other != $this)
+      }
+    """ ;
+  ] .
+
+ujgl10nshape:OutgoingTransitionLocaleShape a sh:NodeShape ;
+  sh:targetClass ujggraph:OutgoingTransition ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgl10n:targetLocaleRef ;
+    sh:class ujgl10n:Locale ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .

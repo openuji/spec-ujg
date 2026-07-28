@@ -1,0 +1,26 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgeffect": "https://ujg.specs.openuji.org/tr/1.0/ns/effect#",
+    "effect": "https://ujg.specs.openuji.org/tr/1.0/ns/effect#",
+
+    "Effect": "ujgeffect:Effect",
+    "EffectResource": "ujgeffect:EffectResource",
+
+    "effectRef": {
+      "@id": "ujgeffect:effectRef",
+      "@type": "@id"
+    },
+    "producedRefs": {
+      "@id": "ujgeffect:producedRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "consumedRefs": {
+      "@id": "ujgeffect:consumedRefs",
+      "@type": "@id",
+      "@container": "@set"
+    }
+  }
+}

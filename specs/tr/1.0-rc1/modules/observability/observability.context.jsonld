@@ -1,0 +1,89 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgobservability": "https://ujg.specs.openuji.org/tr/1.0/ns/observability#",
+    "observability": "https://ujg.specs.openuji.org/tr/1.0/ns/observability#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "ObservationBinding": "ujgobservability:ObservationBinding",
+    "ObservationEvent": "ujgobservability:ObservationEvent",
+    "InputModality": "ujgobservability:InputModality",
+    "InputModalityProfile": "ujgobservability:InputModalityProfile",
+    "AccessibleLocator": "ujgobservability:AccessibleLocator",
+    "AccessibleFeature": "ujgobservability:AccessibleFeature",
+    "AccessibleRelation": "ujgobservability:AccessibleRelation",
+    "CustomLocator": "ujgobservability:CustomLocator",
+    "SurfaceInstanceResolver": "ujgobservability:SurfaceInstanceResolver",
+
+    "keyboard": "ujgobservability:keyboard",
+    "pointer": "ujgobservability:pointer",
+
+    "observeSurfaceRef": {
+      "@id": "ujgobservability:observeSurfaceRef",
+      "@type": "@id"
+    },
+    "observationEventRef": {
+      "@id": "ujgobservability:observationEventRef",
+      "@type": "@id"
+    },
+    "requiredInputModalityProfileRefs": {
+      "@id": "ujgobservability:requiredInputModalityProfileRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "inputModalityRefs": {
+      "@id": "ujgobservability:inputModalityRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "locatorRefs": {
+      "@id": "ujgobservability:locatorRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "surfaceInstanceResolverRef": {
+      "@id": "ujgobservability:surfaceInstanceResolverRef",
+      "@type": "@id"
+    },
+    "expectedMatchCount": {
+      "@id": "ujgobservability:expectedMatchCount",
+      "@type": "xsd:nonNegativeInteger"
+    },
+    "instanceKeyFeatureRef": {
+      "@id": "ujgobservability:instanceKeyFeatureRef",
+      "@type": "@id"
+    },
+    "role": "ujgobservability:role",
+    "accessibleNameRef": {
+      "@id": "ujgobservability:accessibleNameRef",
+      "@type": "@id"
+    },
+    "accessibleDescriptionRef": {
+      "@id": "ujgobservability:accessibleDescriptionRef",
+      "@type": "@id"
+    },
+    "accessibleFeatureRefs": {
+      "@id": "ujgobservability:accessibleFeatureRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "accessibleRelationRefs": {
+      "@id": "ujgobservability:accessibleRelationRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "contextLocatorRefs": {
+      "@id": "ujgobservability:contextLocatorRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "accessibleFeatureName": "ujgobservability:accessibleFeatureName",
+    "accessibleFeatureValue": "ujgobservability:accessibleFeatureValue",
+    "accessibleRelationType": "ujgobservability:accessibleRelationType",
+    "targetLocatorRef": {
+      "@id": "ujgobservability:targetLocatorRef",
+      "@type": "@id"
+    }
+  }
+}

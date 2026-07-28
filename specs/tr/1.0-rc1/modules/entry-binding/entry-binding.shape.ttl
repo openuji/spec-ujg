@@ -1,0 +1,24 @@
+@prefix ujgentrybinding: <https://ujg.specs.openuji.org/tr/1.0/ns/entry-binding#> .
+@prefix ujgentrybindingshape: <https://ujg.specs.openuji.org/tr/1.0/ns/entry-binding.shape#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/1.0/ns/graph#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ujgentrybindingshape:EntryBindingShape a sh:NodeShape ;
+  sh:targetClass ujgentrybinding:EntryBinding ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgentrybinding:entryRef ;
+    sh:class ujggraph:JourneyEntry ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgentrybinding:value ;
+    sh:datatype xsd:string ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
