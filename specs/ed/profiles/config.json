@@ -1,13 +1,21 @@
 {
     "id": "profiles",
     "title": "Profiles",
-    "maturityLevel": "incubating",
+    "maturityLevel": "draft",
     "deps": [
         "core",
         "runtime",
         "graph",
         "mapping",
-        "metrics"
+        "metrics",
+        "surface",
+        "modules/l10n",
+        "modules/observability",
+        "modules/design-system",
+        "modules/phase",
+        "modules/entry-binding",
+        "modules/effect",
+        "modules/artifact"
     ],
     "custom": {
         "family": "spec",

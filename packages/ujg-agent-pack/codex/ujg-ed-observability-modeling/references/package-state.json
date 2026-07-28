@@ -1,6 +1,6 @@
 {
-  "artifactHash": "sha256:9e0ca3b8bd09524312cb139e8471bc482f2d7f55a69cbb60706c2b636d3a9dc3",
-  "configHash": "sha256:4dcd4edfd4a874c3b0549839dd99fd31f8dd5ba1dbb232cdbc62348848f84133",
+  "artifactHash": "sha256:e451bc4b57065b4f1d2afdcf02d266bd139874ec9d504810a7cd623b01993159",
+  "configHash": "sha256:7c8611d9caeae261fd8d65ff8f9b50a5ce06347dfa6d0f108e77a873d30fbf21",
   "package": {
     "id": "ujg-agent-pack",
     "name": "@openuji/ujg-agent-pack",

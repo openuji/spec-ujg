@@ -1,0 +1,4 @@
+interface:
+  display_name: "UJG TR 1.0 RC1 Design System Modeling"
+  short_description: "Model UJG Design System for TR 1.0 RC1"
+  default_prompt: "Use $ujg-tr-1-0-rc1-design-system-modeling to generate or review UJG JSON-LD for this target and scope."

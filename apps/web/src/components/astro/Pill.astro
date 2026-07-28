@@ -1,10 +1,28 @@
 ---
 interface Props {
-    variant?: "default" | "accent";
+  variant?: 'default' | 'accent';
+  href?: string;
+  ariaLabel?: string;
+  target?: string;
 }
-const { variant = "default" } = Astro.props;
+const { variant = 'default', href, ariaLabel, target } = Astro.props;
+const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
 ---
 
-<span class:list={["pill", variant === "accent" && "accent"]}>
-    <slot />
-</span>
+{
+  href ? (
+    <a
+      class:list={['pill', variant === 'accent' && 'accent']}
+      href={href}
+      aria-label={ariaLabel}
+      target={target}
+      rel={rel}
+    >
+      <slot />
+    </a>
+  ) : (
+    <span class:list={['pill', variant === 'accent' && 'accent']}>
+      <slot />
+    </span>
+  )
+}

@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:d174b9db28dfc8bc728664fb13147527d8866614a36c69aa3ccd5d21e05e4289",
+  "configHash": "sha256:7c8611d9caeae261fd8d65ff8f9b50a5ce06347dfa6d0f108e77a873d30fbf21",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "root",
+    "moduleId": null,
+    "name": "ujg-tr-1-0-rc1-modeling"
+  },
+  "sourceHash": "sha256:413081758fec679af723f9de8f61859256aecd0c2dd3a294e607e17324876cd3",
+  "specHash": "sha256:fedb6ddf4ac159e9152a8b5122aafa43a90b40d0691b7f31f3f9feea00f4b30a",
+  "target": {
+    "id": "tr/1.0-rc1",
+    "label": "Technical Report 1.0 RC1"
+  }
+}

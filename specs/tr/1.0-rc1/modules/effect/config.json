@@ -1,7 +1,7 @@
 {
   "id": "modules/effect",
   "title": "Effect",
-  "maturityLevel": "incubating",
+  "maturityLevel": "draft",
   "baseUrl": "${SPEC_BASE_URL}/tr/1.0-rc1",
   "deps": [
     "graph"

@@ -17,6 +17,8 @@ Module scope: modules/l10n
 
 - modules/artifact
 - modules/observability
+- profiles
+- conformance
 
 ## Usage
 

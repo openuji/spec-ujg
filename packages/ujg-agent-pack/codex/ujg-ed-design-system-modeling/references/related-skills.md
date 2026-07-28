@@ -14,7 +14,8 @@ Module scope: modules/design-system
 
 ## Downstream Spec Modules
 
-- None
+- profiles
+- conformance
 
 ## Usage
 

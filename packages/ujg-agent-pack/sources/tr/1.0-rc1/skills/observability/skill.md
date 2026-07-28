@@ -1,0 +1,183 @@
+# UJG TR 1.0 RC1 Observability Modeling
+
+Use this skill together with `ujg-tr-1-0-rc1-modeling`. Do not use it as a replacement for the parent modeling skill.
+
+## Source of truth
+
+Use the frozen UJG 1.0 RC1 snapshot unless the user explicitly asks for another version:
+
+`https://ujg.specs.openuji.org/tr/1.0-rc1/modules/observability`
+
+Generate only terms defined by the UJG 1.0 RC1 Observability context and required bridge modules unless the user explicitly requests an extension.
+
+## Scope
+
+Observability defines recognition contracts for `Surface` nodes. Use it when a surface needs browser, native, synthetic, or adapter-facing recognition through accessibility objects or custom locators.
+
+Use Observability for:
+
+- `ObservationBinding` nodes that bind recognition evidence to one `Surface`.
+- `ObservationEvent` contracts such as presence or activation.
+- `InputModality` and `InputModalityProfile` requirements declared by `ObservationEvent` nodes.
+- `AccessibleLocator`, `AccessibleFeature`, and `AccessibleRelation` definitions.
+- `SurfaceInstanceResolver` rules that identify repeated surface instances from accessible features.
+- `CustomLocator` escape hatches with Core `extensions`.
+
+Do not use Observability for Graph traversal, Runtime ordering, raw analytics payloads, test scripts, selector-only automation, authorization, server truth, queue state, or protocol state.
+
+## Contexts
+
+When using Observability terms, include Core, Surface, Localization, and Observability contexts:
+
+```json
+[
+  "https://ujg.specs.openuji.org/tr/1.0/ns/context.jsonld",
+  "https://ujg.specs.openuji.org/tr/1.0/ns/surface.context.jsonld",
+  "https://ujg.specs.openuji.org/tr/1.0/ns/l10n.context.jsonld",
+  "https://ujg.specs.openuji.org/tr/1.0/ns/observability.context.jsonld"
+]
+```
+
+Include Runtime context only when serializing actual `RuntimeEvent` or `JourneyExecution` nodes. Runtime correlation is derived through `RuntimeEvent.surfaceInstanceRef -> SurfaceInstance.surfaceRef -> ObservationBinding.observeSurfaceRef`.
+
+## Vocabulary
+
+Use only these Observability classes:
+
+```text
+ObservationBinding
+ObservationEvent
+InputModality
+InputModalityProfile
+AccessibleLocator
+AccessibleFeature
+AccessibleRelation
+CustomLocator
+SurfaceInstanceResolver
+```
+
+Use only these Observability properties:
+
+```text
+observeSurfaceRef
+observationEventRef
+requiredInputModalityProfileRefs
+inputModalityRefs
+locatorRefs
+surfaceInstanceResolverRef
+expectedMatchCount
+instanceKeyFeatureRef
+role
+accessibleNameRef
+accessibleDescriptionRef
+accessibleFeatureRefs
+accessibleRelationRefs
+contextLocatorRefs
+accessibleFeatureName
+accessibleFeatureValue
+accessibleRelationType
+targetLocatorRef
+```
+
+Do not invent:
+
+```text
+selector
+cssSelector
+xpath
+playwrightLocator
+testId
+runtimeEventRef
+surfaceInstanceRef
+observedAt
+collectorRef
+assertion
+apiProbe
+waitFor
+```
+
+Use private `extensions` only on `CustomLocator` nodes or other UJG nodes for adapter-specific details that are not interoperable Observability semantics.
+
+## Binding model
+
+An `ObservationBinding` must identify exactly one `Surface` with `observeSurfaceRef`.
+
+It must identify one `ObservationEvent` with `observationEventRef`.
+
+It must list one or more locators with `locatorRefs`. Locators inside one binding are conjunctive; model alternatives as separate bindings pointing to the same surface.
+
+It may declare `expectedMatchCount` as an exact non-negative integer for the full conjunctive locator match. Use `expectedMatchCount: 0` when the exact locator contract should find no matching objects. If `expectedMatchCount` is omitted, do not infer exact cardinality.
+
+Input-modality profile references belong to the referenced `ObservationEvent`, not to `ObservationBinding` or Graph `Transition`.
+
+An `ObservationEvent` may list input-modality profiles with `requiredInputModalityProfileRefs`.
+
+An `InputModalityProfile` must list one or more modalities with `inputModalityRefs`. All referenced modalities participate in that independently evaluable profile. Do not infer ordering from array order.
+
+Use producer-defined IRIs for concrete `ObservationEvent` nodes. Use `observability:keyboard` and `observability:pointer` for standard keyboard and pointer input modalities. Producers may define additional modality IRIs for other input modalities.
+
+## Accessible locators
+
+Prefer `AccessibleLocator` for human-facing UI. Model accessible-object semantics, not DOM structure, CSS selectors, raw text, or tool-specific query syntax.
+
+An `AccessibleLocator` must provide at least one of:
+
+```text
+role
+accessibleNameRef
+accessibleDescriptionRef
+accessibleFeatureRefs
+accessibleRelationRefs
+contextLocatorRefs
+```
+
+Use `accessibleNameRef` and `accessibleDescriptionRef` to point to Localization `MessageMeta` nodes.
+
+Use `AccessibleFeature` for accessibility-model states and properties such as `selected`, `expanded`, `disabled`, `checked`, `pressed`, `current`, `invalid`, `required`, `busy`, or `hidden`.
+
+Use `AccessibleRelation` for accessibility-model relations such as `controls`, `labelled-by`, `described-by`, `owns`, `active-descendant`, `details`, or `error-message`.
+
+Use `contextLocatorRefs` to scope a locator by surrounding accessible objects. Multiple context locators are conjunctive.
+
+## Surface instance resolution
+
+Use `SurfaceInstanceResolver` when the same stable `Surface` can appear in repeated concrete occurrences and an adapter needs a stable instance key.
+
+`SurfaceInstanceResolver.instanceKeyFeatureRef` must point to one `AccessibleFeature` that supplies the instance key source.
+
+A resolver must not point to concrete `SurfaceInstance` nodes and must not require one binding per repeated occurrence.
+
+## Custom locators
+
+Use `CustomLocator` when interoperable accessible-object recognition is not enough.
+
+Put adapter-specific semantics in Core `extensions`. Keep them namespaced and opaque to consumers that do not understand the extension.
+
+Do not promote project-specific selectors or Playwright expressions into Observability vocabulary.
+
+## Separation rules
+
+Observability does not define `graphNodeRef`, `surfaceRef`, `surfaceInstanceRef`, or touchpoint boundary assignment such as `compositeStateRefs`. Those are Surface and Runtime terms.
+
+Observability has no direct dependency on Runtime. Runtime events do not need to reference `ObservationBinding`.
+
+Do not model automation commands, screenshots, API probes, timestamps, execution order, payloads, or click facts as Observability terms. Use Runtime for observed events and private extensions for adapter details.
+
+For journey transition modality profile references, model the Graph topology with Graph, attach a `Surface` to the `Transition` or `OutgoingTransition`, bind recognition with `ObservationBinding`, and put input-modality profile references on the referenced `ObservationEvent`.
+
+## Checks before answering
+
+* Did I include Observability context only when Observability terms are used?
+* Does every `ObservationBinding` identify one `Surface`?
+* Does every binding identify one `ObservationEvent`?
+* Does every binding list at least one locator?
+* Are input-modality profile references declared on `ObservationEvent`, not on `ObservationBinding` or Graph nodes?
+* Does every `InputModalityProfile` list at least one `InputModality`?
+* Did I use producer-defined concrete event IRIs, standard `observability:keyboard` / `observability:pointer` modality IRIs where applicable, and producer-defined modality IRIs only for additional modalities?
+* If a binding asserts absence, did it keep `locatorRefs` and use `expectedMatchCount: 0`?
+* Are alternative locator strategies separate bindings rather than one disjunctive binding?
+* Do accessible names and descriptions point to `MessageMeta` nodes?
+* Are role, feature, and relation names accessibility-model oriented?
+* Does each `SurfaceInstanceResolver` point to one `AccessibleFeature`, not a `SurfaceInstance`?
+* Did I keep Runtime correlation derived rather than adding an Observability-to-Runtime reference?
+* Did Observability avoid changing Graph traversal or Surface identity?

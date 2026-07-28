@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:ebe9606c49ea5c20d713be9d1882e2b3aba466f2a098934435f1cc6908b79693",
+  "configHash": "sha256:7c8611d9caeae261fd8d65ff8f9b50a5ce06347dfa6d0f108e77a873d30fbf21",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "design-system",
+    "moduleId": "modules/design-system",
+    "name": "ujg-tr-1-0-rc1-design-system-modeling"
+  },
+  "sourceHash": "sha256:7490ab54278af06e98fd8a973f0affd726baa32615e0e7076e91e0c3c47d8138",
+  "specHash": "sha256:436a7252c1cf4fe6962eed10d2ce579e234fd8d1b6a985b09639b9cfaa586866",
+  "target": {
+    "id": "tr/1.0-rc1",
+    "label": "Technical Report 1.0 RC1"
+  }
+}

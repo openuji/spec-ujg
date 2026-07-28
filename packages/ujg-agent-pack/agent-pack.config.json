@@ -76,6 +76,59 @@
           "moduleId": "modules/design-system"
         }
       ]
+    },
+    {
+      "id": "tr/1.0-rc1",
+      "kind": "tr",
+      "version": "1.0-rc1",
+      "label": "Technical Report 1.0 RC1",
+      "shortLabel": "TR 1.0 RC1",
+      "specRoot": "../../specs/tr/1.0-rc1",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc1",
+      "skills": [
+        {
+          "key": "root",
+          "title": "Modeling",
+          "scope": "whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules",
+          "nameSuffix": "modeling",
+          "moduleId": null
+        },
+        {
+          "key": "core",
+          "title": "Core Modeling",
+          "scope": "Core module document containers, imports, top-level nodes, and extensions",
+          "nameSuffix": "core-modeling",
+          "moduleId": "core"
+        },
+        {
+          "key": "graph",
+          "title": "Graph Modeling",
+          "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
+          "nameSuffix": "graph-modeling",
+          "moduleId": "graph"
+        },
+        {
+          "key": "design-system",
+          "title": "Design System Modeling",
+          "scope": "Design System module semantics and its relationship to Graph and Surface",
+          "nameSuffix": "design-system-modeling",
+          "moduleId": "modules/design-system"
+        },
+        {
+          "key": "localization",
+          "title": "Localization Modeling",
+          "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata",
+          "nameSuffix": "l10n-modeling",
+          "moduleId": "modules/l10n"
+        },
+        {
+          "key": "observability",
+          "title": "Observability Modeling",
+          "scope": "Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver",
+          "nameSuffix": "observability-modeling",
+          "moduleId": "modules/observability"
+        }
+      ]
     }
   ]
 }

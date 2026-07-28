@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:a6652c537e792d1ffa3a12de60dc3b6aa6b962efaf8af5916b19200edf9d72a6",
+  "configHash": "sha256:7c8611d9caeae261fd8d65ff8f9b50a5ce06347dfa6d0f108e77a873d30fbf21",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "graph",
+    "moduleId": "graph",
+    "name": "ujg-tr-1-0-rc1-graph-modeling"
+  },
+  "sourceHash": "sha256:9ff95a5729e483c47f3936628b606f1047315eeebc2e10d40ec41b2b96293002",
+  "specHash": "sha256:bdf9b4372426540a3a2caf463cb6ddc7af2413d6fcb5a4e10cee38ce637bff01",
+  "target": {
+    "id": "tr/1.0-rc1",
+    "label": "Technical Report 1.0 RC1"
+  }
+}
