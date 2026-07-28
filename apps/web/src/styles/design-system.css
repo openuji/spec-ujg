@@ -536,6 +536,10 @@
   @apply bg-accent-soft text-accent font-semibold text-sm flex items-center px-3 py-2 rounded-pill;
 }
 
+a.pill {
+  @apply no-underline transition-[background-color,color,box-shadow] duration-200 hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+}
+
 .pill.text-xs {
   @apply text-xs;
 }

@@ -115,7 +115,10 @@
       "title": "Metrics"
     },
     "modules/artifact": {
-      "dependents": [],
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
       "deps": [
         "core",
         "modules/effect",
@@ -134,7 +137,10 @@
       "title": "Conditions"
     },
     "modules/design-system": {
-      "dependents": [],
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
       "deps": [
         "graph",
         "surface"
@@ -144,7 +150,9 @@
     },
     "modules/effect": {
       "dependents": [
-        "modules/artifact"
+        "modules/artifact",
+        "profiles",
+        "conformance"
       ],
       "deps": [
         "graph"
@@ -153,7 +161,10 @@
       "title": "Effect"
     },
     "modules/entry-binding": {
-      "dependents": [],
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
       "deps": [
         "graph"
       ],
@@ -171,7 +182,9 @@
     "modules/l10n": {
       "dependents": [
         "modules/artifact",
-        "modules/observability"
+        "modules/observability",
+        "profiles",
+        "conformance"
       ],
       "deps": [
         "graph"
@@ -180,7 +193,10 @@
       "title": "Localization"
     },
     "modules/observability": {
-      "dependents": [],
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
       "deps": [
         "surface",
         "modules/l10n"
@@ -211,7 +227,15 @@
         "runtime",
         "graph",
         "mapping",
-        "metrics"
+        "metrics",
+        "surface",
+        "modules/l10n",
+        "modules/observability",
+        "modules/design-system",
+        "modules/phase",
+        "modules/entry-binding",
+        "modules/effect",
+        "modules/artifact"
       ],
       "generatedSkill": null,
       "title": "Profiles"

@@ -1,0 +1,136 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/1.0/ns/graph#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+
+<https://ujg.specs.openuji.org/tr/1.0/ns/graph#> a owl:Ontology ;
+  rdfs:label "UJG Graph 1.0 Vocabulary"@en ;
+  dct:description "UJG Graph ontology declaration" .
+
+### Classes
+
+ujggraph:Journey a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujggraph:JourneyEntry a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Journey Entry" ;
+  rdfs:comment "An explicit entry contract for a Journey. A JourneyEntry points to the local State or CompositeState where traversal begins." .
+
+ujggraph:JourneyEntryIndex a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Journey Index" ;
+  rdfs:comment "A catalogue of addressable JourneyEntry contracts. A JourneyEntryIndex does not define traversal, ordering, reachability, or parent-owned progression." .
+
+ujggraph:LocalVertex a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Local Vertex" ;
+  rdfs:comment "An abstract local topology vertex of a Journey. State, CompositeState, and JourneyExit are local vertex kinds." .
+
+ujggraph:State a owl:Class ;
+  rdfs:subClassOf ujggraph:LocalVertex .
+
+ujggraph:CompositeState a owl:Class ;
+  rdfs:subClassOf ujggraph:State .
+
+ujggraph:Transition a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujggraph:JourneyExit a owl:Class ;
+  rdfs:subClassOf ujggraph:LocalVertex ;
+  owl:disjointWith ujggraph:State ;
+  rdfs:label "Journey Exit" ;
+  rdfs:comment "A terminal local graph vertex and exported completion contract of a journey." .
+
+ujggraph:OutgoingTransition a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujggraph:OutgoingTransitionGroup a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujggraph:label a owl:DatatypeProperty ;
+  rdfs:domain ujg:Node ;
+  rdfs:range xsd:string .
+
+ujggraph:tags a owl:DatatypeProperty ;
+  rdfs:domain ujg:Node ;
+  rdfs:range xsd:string .
+
+ujggraph:defaultEntryRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:JourneyEntry ;
+  rdfs:label "default entry ref" ;
+  rdfs:comment "References the JourneyEntry used when traversal starts without a more specific entry selection." .
+
+ujggraph:entryRefs a owl:ObjectProperty ;
+  rdfs:range ujggraph:JourneyEntry ;
+  rdfs:label "entry refs" ;
+  rdfs:comment "References explicit JourneyEntry contracts. On Journey, entryRefs declares entries owned by that journey. On JourneyEntryIndex, entryRefs lists addressable entries without traversal semantics." .
+
+ujggraph:stateRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:JourneyEntry ;
+  rdfs:range ujggraph:State ;
+  rdfs:label "state ref" ;
+  rdfs:comment "References the local State or CompositeState where a JourneyEntry begins traversal." .
+
+ujggraph:stateRefs a owl:ObjectProperty ;
+  rdfs:range ujggraph:State ;
+  rdfs:comment "References graph states. On Journey, stateRefs lists experiential local vertices." .
+
+ujggraph:transitionRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:Transition .
+
+ujggraph:exitRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:JourneyExit ;
+  rdfs:label "exit refs" ;
+  rdfs:comment "References the terminal exported local vertices declared by a journey." .
+
+ujggraph:outgoingTransitionGroupRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Journey ;
+  rdfs:range ujggraph:OutgoingTransitionGroup .
+
+ujggraph:from a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Transition ;
+  rdfs:range ujggraph:State .
+
+ujggraph:to a owl:ObjectProperty ;
+  rdfs:range ujggraph:LocalVertex .
+
+ujggraph:toCurrentState a owl:DatatypeProperty ;
+  rdfs:domain ujggraph:OutgoingTransition ;
+  rdfs:range xsd:boolean .
+
+ujggraph:fromExitRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Transition ;
+  rdfs:range ujggraph:JourneyExit ;
+  rdfs:label "from exit ref" ;
+  rdfs:comment "Identifies the exported JourneyExit completed by the child journey of the CompositeState used as the transition's from value. This property is not a transition endpoint." .
+
+ujggraph:toEntryRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:Transition ;
+  rdfs:range ujggraph:JourneyEntry ;
+  rdfs:label "to entry ref" ;
+  rdfs:comment "Identifies the JourneyEntry selected when entering the child journey of the CompositeState used as the transition's to value. This property is not a transition endpoint." .
+
+ujggraph:subjourneyId a owl:ObjectProperty ;
+  rdfs:domain ujggraph:CompositeState ;
+  rdfs:range ujggraph:Journey .
+
+ujggraph:outgoingTransitionRefs a owl:ObjectProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:State
+      ujggraph:OutgoingTransitionGroup
+    )
+  ] ;
+  rdfs:range ujggraph:OutgoingTransition ;
+  rdfs:label "outgoing transition refs" ;
+  rdfs:comment "References outgoing navigational affordances. When used on an OutgoingTransitionGroup, the references define a reusable group. When used on a non-composite State, the references define outgoing affordances available from that specific state." .

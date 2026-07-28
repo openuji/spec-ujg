@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:6d21b5d8ad611a44fb980bac6b1722e23f4b4467fee92636e353b49ec9543459",
+  "configHash": "sha256:7c8611d9caeae261fd8d65ff8f9b50a5ce06347dfa6d0f108e77a873d30fbf21",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "localization",
+    "moduleId": "modules/l10n",
+    "name": "ujg-tr-1-0-rc1-l10n-modeling"
+  },
+  "sourceHash": "sha256:0e0d00f7f42fc838c234d3f216d75a814aa4e6c385ac4cf08d6daeed7704622b",
+  "specHash": "sha256:fb1a6404e1e6faf6c9b5c04d7b74b2a2ef14f8c52b535991c0aab24a4dbeb9b4",
+  "target": {
+    "id": "tr/1.0-rc1",
+    "label": "Technical Report 1.0 RC1"
+  }
+}

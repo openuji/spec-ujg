@@ -7,9 +7,19 @@ export interface TechnicalReport {
   published: string;
   workspace: SpecWorkspaceKey;
   basePath: string;
+  namespaceSlug?: string;
 }
 
 export const TECHNICAL_REPORTS = [
+  {
+    slug: '1.0-rc1',
+    title: 'UJG 1.0 Release Candidate 1',
+    status: 'Release Candidate',
+    published: '2026-07-27',
+    workspace: 'tr-1-0-rc1',
+    basePath: '/tr/1.0-rc1',
+    namespaceSlug: '1.0',
+  },
   {
     slug: '2026.06',
     title: 'First Editors\u2019 Draft',
@@ -29,4 +39,10 @@ export const BASELINE_CONTEXT_ARTIFACTS = [
 
 export function getTechnicalReport(slug: string): TechnicalReport | undefined {
   return TECHNICAL_REPORTS.find((report) => report.slug === slug);
+}
+
+export function getTechnicalReportByNamespaceSlug(slug: string): TechnicalReport | undefined {
+  return TECHNICAL_REPORTS.find(
+    (report) => report.slug === slug || (report.namespaceSlug ?? report.slug) === slug
+  );
 }

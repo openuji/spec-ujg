@@ -1,0 +1,330 @@
+{
+  "currentSkill": {
+    "key": "graph",
+    "moduleId": "graph",
+    "name": "ujg-tr-1-0-rc1-graph-modeling",
+    "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc1/graph",
+    "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes"
+  },
+  "moduleGraph": {
+    "architecture": {
+      "dependents": [
+        "core",
+        "modules/entry-binding",
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/effect",
+        "surface",
+        "modules/artifact",
+        "modules/observability",
+        "modules/phase",
+        "runtime",
+        "modules/experience-annotation",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [],
+      "generatedSkill": null,
+      "title": "Architecture"
+    },
+    "conformance": {
+      "dependents": [],
+      "deps": [
+        "profiles"
+      ],
+      "generatedSkill": null,
+      "title": "Conformance"
+    },
+    "core": {
+      "dependents": [
+        "modules/entry-binding",
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/effect",
+        "surface",
+        "modules/artifact",
+        "modules/observability",
+        "modules/phase",
+        "runtime",
+        "modules/experience-annotation",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "architecture"
+      ],
+      "generatedSkill": "ujg-tr-1-0-rc1-core-modeling",
+      "title": "Core"
+    },
+    "graph": {
+      "dependents": [
+        "modules/entry-binding",
+        "modules/l10n",
+        "modules/condition",
+        "modules/effect",
+        "surface",
+        "modules/artifact",
+        "modules/observability",
+        "modules/phase",
+        "runtime",
+        "modules/experience-annotation",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "core"
+      ],
+      "generatedSkill": "ujg-tr-1-0-rc1-graph-modeling",
+      "title": "Graph"
+    },
+    "mapping": {
+      "dependents": [
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "runtime",
+        "surface",
+        "graph",
+        "modules/phase"
+      ],
+      "generatedSkill": null,
+      "title": "Mapping"
+    },
+    "metrics": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "mapping"
+      ],
+      "generatedSkill": null,
+      "title": "Metrics"
+    },
+    "modules/artifact": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "core",
+        "modules/effect",
+        "modules/l10n",
+        "surface"
+      ],
+      "generatedSkill": null,
+      "title": "Artifact"
+    },
+    "modules/condition": {
+      "dependents": [],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Conditions"
+    },
+    "modules/design-system": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph",
+        "surface"
+      ],
+      "generatedSkill": "ujg-tr-1-0-rc1-design-system-modeling",
+      "title": "Design System"
+    },
+    "modules/effect": {
+      "dependents": [
+        "modules/artifact",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Effect"
+    },
+    "modules/entry-binding": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Entry Binding"
+    },
+    "modules/experience-annotation": {
+      "dependents": [],
+      "deps": [
+        "modules/phase"
+      ],
+      "generatedSkill": null,
+      "title": "Experience Annotation"
+    },
+    "modules/l10n": {
+      "dependents": [
+        "modules/artifact",
+        "modules/observability",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": "ujg-tr-1-0-rc1-l10n-modeling",
+      "title": "Localization"
+    },
+    "modules/observability": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "surface",
+        "modules/l10n"
+      ],
+      "generatedSkill": "ujg-tr-1-0-rc1-observability-modeling",
+      "title": "Observability"
+    },
+    "modules/phase": {
+      "dependents": [
+        "modules/experience-annotation",
+        "mapping",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Phase"
+    },
+    "profiles": {
+      "dependents": [
+        "conformance"
+      ],
+      "deps": [
+        "core",
+        "runtime",
+        "graph",
+        "mapping",
+        "metrics",
+        "surface",
+        "modules/l10n",
+        "modules/observability",
+        "modules/design-system",
+        "modules/phase",
+        "modules/entry-binding",
+        "modules/effect",
+        "modules/artifact"
+      ],
+      "generatedSkill": null,
+      "title": "Profiles"
+    },
+    "runtime": {
+      "dependents": [
+        "mapping",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "surface"
+      ],
+      "generatedSkill": null,
+      "title": "Runtime"
+    },
+    "surface": {
+      "dependents": [
+        "modules/artifact",
+        "modules/observability",
+        "runtime",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Surface"
+    }
+  },
+  "skills": [
+    {
+      "key": "root",
+      "moduleId": null,
+      "name": "ujg-tr-1-0-rc1-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc1",
+      "scope": "whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules",
+      "source": "sources/tr/1.0-rc1/skills/root/skill.md"
+    },
+    {
+      "key": "core",
+      "moduleId": "core",
+      "name": "ujg-tr-1-0-rc1-core-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc1/core",
+      "scope": "Core module document containers, imports, top-level nodes, and extensions",
+      "source": "sources/tr/1.0-rc1/skills/core/skill.md"
+    },
+    {
+      "key": "graph",
+      "moduleId": "graph",
+      "name": "ujg-tr-1-0-rc1-graph-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc1/graph",
+      "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
+      "source": "sources/tr/1.0-rc1/skills/graph/skill.md"
+    },
+    {
+      "key": "design-system",
+      "moduleId": "modules/design-system",
+      "name": "ujg-tr-1-0-rc1-design-system-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc1/modules/design-system",
+      "scope": "Design System module semantics and its relationship to Graph and Surface",
+      "source": "sources/tr/1.0-rc1/skills/design-system/skill.md"
+    },
+    {
+      "key": "localization",
+      "moduleId": "modules/l10n",
+      "name": "ujg-tr-1-0-rc1-l10n-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc1/modules/l10n",
+      "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata",
+      "source": "sources/tr/1.0-rc1/skills/localization/skill.md"
+    },
+    {
+      "key": "observability",
+      "moduleId": "modules/observability",
+      "name": "ujg-tr-1-0-rc1-observability-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc1/modules/observability",
+      "scope": "Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver",
+      "source": "sources/tr/1.0-rc1/skills/observability/skill.md"
+    }
+  ],
+  "target": {
+    "id": "tr/1.0-rc1",
+    "label": "Technical Report 1.0 RC1",
+    "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc1",
+    "specRoot": "specs/tr/1.0-rc1"
+  }
+}

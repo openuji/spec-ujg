@@ -1,0 +1,41 @@
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/1.0/ns/graph#> .
+@prefix ujgeffect: <https://ujg.specs.openuji.org/tr/1.0/ns/effect#> .
+@prefix ujgeffectshape: <https://ujg.specs.openuji.org/tr/1.0/ns/effect.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgeffectshape:TransitionEffectShape a sh:NodeShape ;
+  sh:targetClass ujggraph:Transition, ujggraph:OutgoingTransition ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgeffect:effectRef ;
+    sh:class ujgeffect:Effect ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgeffectshape:EffectShape a sh:NodeShape ;
+  sh:targetClass ujgeffect:Effect ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgeffect:producedRefs ;
+    sh:class ujgeffect:EffectResource ;
+    sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujgeffect:consumedRefs ;
+    sh:class ujgeffect:EffectResource ;
+    sh:nodeKind sh:IRI ;
+  ] .
+
+ujgeffectshape:EffectResourceShape a sh:NodeShape ;
+  sh:targetClass ujgeffect:EffectResource ;
+  sh:nodeKind sh:IRI .
+
+ujgeffectshape:EffectReferenceHostShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgeffect:producedRefs ;
+  sh:targetSubjectsOf ujgeffect:consumedRefs ;
+  sh:class ujgeffect:Effect ;
+  sh:nodeKind sh:IRI .

@@ -1,0 +1,30 @@
+@prefix ujgexperienceannotation: <https://ujg.specs.openuji.org/tr/1.0/ns/experience-annotation#> .
+@prefix ujgphase: <https://ujg.specs.openuji.org/tr/1.0/ns/phase#> .
+@prefix ujgexperienceannotationshape: <https://ujg.specs.openuji.org/tr/1.0/ns/experience-annotation.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ujgexperienceannotationshape:PainPointShape a sh:NodeShape ;
+  sh:targetClass ujgexperienceannotation:PainPoint ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgexperienceannotation:painpointStepRefs ;
+    sh:class ujgphase:Step ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgexperienceannotation:severity ;
+    sh:datatype xsd:decimal ;
+    sh:minInclusive 0 ;
+    sh:maxInclusive 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgexperienceannotation:description ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] .

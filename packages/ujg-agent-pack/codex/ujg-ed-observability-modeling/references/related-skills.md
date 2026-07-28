@@ -15,7 +15,8 @@ Module scope: modules/observability
 
 ## Downstream Spec Modules
 
-- None
+- profiles
+- conformance
 
 ## Usage
 

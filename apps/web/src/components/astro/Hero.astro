@@ -1,7 +1,7 @@
 ---
-import Pill from "./Pill.astro";
-import Button from "./Button.astro";
-import Stat from "./Stat.astro";
+import Pill from './Pill.astro';
+import Button from './Button.astro';
+import Stat from './Stat.astro';
 
 interface HeroStat {
   value: string | number;
@@ -14,30 +14,43 @@ interface HeroAction {
   primary?: boolean;
 }
 
+type HeroPill =
+  | string
+  | {
+      label: string;
+      href?: string;
+      ariaLabel?: string;
+      target?: string;
+    };
+
 interface Props {
   title: string;
   description?: string;
-  pills?: string[];
+  pills?: HeroPill[];
   actions?: HeroAction[];
   stats?: HeroStat[];
 }
 
-const {
-  title,
-  description,
-  pills = [],
-  actions = [],
-  stats = [],
-} = Astro.props;
+const { title, description, pills = [], actions = [], stats = [] } = Astro.props;
 ---
 
 <header class="hero">
   {
     pills.length > 0 && (
       <div class="meta">
-        {pills.map((pill) => (
-          <Pill>{pill}</Pill>
-        ))}
+        {pills.map((pill) => {
+          const normalized = typeof pill === 'string' ? { label: pill } : pill;
+
+          return (
+            <Pill
+              href={normalized.href}
+              ariaLabel={normalized.ariaLabel}
+              target={normalized.target}
+            >
+              {normalized.label}
+            </Pill>
+          );
+        })}
       </div>
     )
   }
@@ -50,10 +63,7 @@ const {
       actions.length > 0 && (
         <div class="actions">
           {actions.map((action) => (
-            <Button
-              href={action.href}
-              variant={action.primary ? "primary" : "default"}
-            >
+            <Button href={action.href} variant={action.primary ? 'primary' : 'default'}>
               {action.label}
             </Button>
           ))}

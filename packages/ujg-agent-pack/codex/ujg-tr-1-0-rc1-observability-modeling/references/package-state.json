@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:2f27d343f9717ea7014aadac6bbd4b3e0864d3c7d86e5a3edcf0c9d3625479f5",
+  "configHash": "sha256:7c8611d9caeae261fd8d65ff8f9b50a5ce06347dfa6d0f108e77a873d30fbf21",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "observability",
+    "moduleId": "modules/observability",
+    "name": "ujg-tr-1-0-rc1-observability-modeling"
+  },
+  "sourceHash": "sha256:4297deb53c6a07ea1b5f35d289e28f0b47f005be2989ea9c737d5c096d677766",
+  "specHash": "sha256:57addd895296f3336db8d7651899f3acce509853703dda53d1316e6338619beb",
+  "target": {
+    "id": "tr/1.0-rc1",
+    "label": "Technical Report 1.0 RC1"
+  }
+}

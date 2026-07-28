@@ -1,0 +1,16 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgentrybinding": "https://ujg.specs.openuji.org/tr/1.0/ns/entry-binding#",
+    "entrybinding": "https://ujg.specs.openuji.org/tr/1.0/ns/entry-binding#",
+
+    "EntryBinding": "ujgentrybinding:EntryBinding",
+
+    "entryRef": {
+      "@id": "ujgentrybinding:entryRef",
+      "@type": "@id"
+    },
+    "value": "ujgentrybinding:value"
+  }
+}

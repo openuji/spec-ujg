@@ -10,7 +10,13 @@ import CTA from '@/components/astro/CTA.astro';
   <Hero
     title="User Journey Graph (UJG)"
     description="UJG is a <b>W3C community-driven standard</b> for modeling and evaluating human-facing product systems. It applies across tools, platforms, and teams."
-    pills={['UJG • W3C Community Group']}
+    pills={[
+      {
+        label: 'UJG • W3C Community Group',
+        href: 'https://www.w3.org/community/ujg/',
+        ariaLabel: 'UJG W3C Community Group',
+      },
+    ]}
     actions={[
       {
         label: 'Technical Reports',

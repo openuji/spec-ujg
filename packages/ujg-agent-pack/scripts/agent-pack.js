@@ -325,7 +325,7 @@ function generatedDescription(context, skill) {
       return `Generate, review, correct, and reason about User Journey Graph JSON-LD for the ${context.target.label}. Use when modeling UJG documents, checking vocabulary discipline, selecting modules, or correcting Core/Graph/Surface/Runtime/Mapping/Metrics/Experience/Localization/Observability and optional module separation, including Entry Binding, Design System, Effect, Condition, and Artifact.`;
     }
 
-    return `Generate, review, correct, and reason about User Journey Graph JSON-LD for the ${context.target.label}. Use when modeling UJG documents, checking vocabulary discipline, selecting modules, or correcting Graph/Runtime/Experience/Localization/module separation.`;
+    return `Generate, review, correct, and reason about User Journey Graph JSON-LD for the ${context.target.label}. Use when modeling UJG documents, checking vocabulary discipline, selecting modules, or correcting module boundaries for this target.`;
   }
 
   return `Generate, review, correct, and reason about ${skill.title} in User Journey Graph JSON-LD for the ${context.target.label}. Use when the task is scoped to ${skill.scope} or when whole-document modeling crosses this module boundary.`;

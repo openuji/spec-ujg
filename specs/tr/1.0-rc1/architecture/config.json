@@ -1,0 +1,36 @@
+{
+  "id": "architecture",
+  "title": "Architecture",
+  "maturityLevel": "draft",
+  "deps": [],
+  "custom": {
+    "boom": true,
+    "family": "spec",
+    "order": 10
+  },
+  "noConformance": true,
+  "respec": {
+    "group": {
+      "name": "User Journal Graph Community Group",
+      "url": "https://www.w3.org/community/ujg/"
+    },
+    "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/tr/1.0-rc1/architecture/index.md",
+    "editors": [
+      {
+        "name": "Seva Dolgopolov",
+        "w3cid": "169225"
+      }
+    ],
+    "license": "W3C-Software-and-Document",
+    "localBiblio": {
+      "UJG Experience Annotation": {
+        "title": "UJG Experience Annotation",
+        "url": "/tr/1.0-rc1/modules/experience-annotation"
+      }
+    },
+    "specStatus": "CG-DRAFT",
+    "publishDate": "2026-07-27",
+    "version": "1.0-rc1"
+  },
+  "baseUrl": "${SPEC_BASE_URL}/tr/1.0-rc1"
+}

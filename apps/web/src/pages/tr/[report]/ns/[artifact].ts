@@ -12,7 +12,7 @@ import {
 import {
   BASELINE_CONTEXT_ARTIFACTS,
   TECHNICAL_REPORTS,
-  getTechnicalReport,
+  getTechnicalReportByNamespaceSlug,
 } from '@/lib/technical-reports';
 
 const SPEC_BASE_URL = getSpecBaseUrl(import.meta.env.SPEC_BASE_URL);
@@ -83,9 +83,11 @@ function getArtifactContentType(artifact: string): string {
 
 export function getStaticPaths() {
   return TECHNICAL_REPORTS.flatMap((report) =>
-    discoverArtifacts(report.slug).map((artifact) => ({
-      params: { report: report.slug, artifact },
-    }))
+    [report.slug, report.namespaceSlug].filter(Boolean).flatMap((reportSlug) =>
+      discoverArtifacts(report.slug).map((artifact) => ({
+        params: { report: reportSlug, artifact },
+      }))
+    )
   );
 }
 
@@ -93,19 +95,21 @@ export const GET: APIRoute = async ({ params }) => {
   const reportSlug = params.report;
   const artifact = params.artifact;
 
-  if (!reportSlug || !artifact || !getTechnicalReport(reportSlug)) {
+  const report = reportSlug ? getTechnicalReportByNamespaceSlug(reportSlug) : undefined;
+  if (!report || !artifact) {
     return new Response('Not found', { status: 404 });
   }
 
   if (artifact === 'context.jsonld') {
+    const namespaceSlug = report.namespaceSlug ?? report.slug;
     return createJsonResponse({
       '@context': BASELINE_CONTEXT_ARTIFACTS.map(
-        (contextArtifact) => `${SPEC_BASE_URL}/tr/${reportSlug}/ns/${contextArtifact}`
+        (contextArtifact) => `${SPEC_BASE_URL}/tr/${namespaceSlug}/ns/${contextArtifact}`
       ),
     });
   }
 
-  const sourcePath = findArtifactSource(reportSlug, artifact);
+  const sourcePath = findArtifactSource(report.slug, artifact);
   if (!sourcePath) return new Response('Not found', { status: 404 });
 
   const fileContent = await fsPromises.readFile(sourcePath, 'utf-8');
