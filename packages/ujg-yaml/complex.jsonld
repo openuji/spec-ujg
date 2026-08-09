@@ -1,0 +1,699 @@
+{
+  "@id": "urn:ujg:document",
+  "@type": "UJGDocument",
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/action.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/artifact.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/distributed-journey.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld"
+  ],
+  "nodes": [
+    {
+      "@id": "urn:action:alice-confirm-share",
+      "@type": "Action",
+      "label": "Alice confirms the remote share",
+      "producedArtifactRefs": [
+        "urn:artifact:federated-share"
+      ]
+    },
+    {
+      "@id": "urn:action:bob-accept-share",
+      "@type": "Action",
+      "label": "Bob accepts the incoming remote share",
+      "consumedArtifactRefs": [
+        "urn:artifact:federated-share"
+      ]
+    },
+    {
+      "@id": "urn:action:bob-open-accepted-file",
+      "@type": "Action",
+      "label": "Bob opens the accepted file",
+      "consumedArtifactRefs": [
+        "urn:artifact:federated-share"
+      ]
+    },
+    {
+      "@id": "urn:actor:alice",
+      "@type": "Actor",
+      "label": "Alice"
+    },
+    {
+      "@id": "urn:actor:bob",
+      "@type": "Actor",
+      "label": "Bob"
+    },
+    {
+      "@id": "urn:artifact:federated-share",
+      "@type": "DistributedArtifact",
+      "label": "Federated share for the test file",
+      "sourceTouchpointRef": "urn:touchpoint:nextcloud-a",
+      "targetTouchpointRefs": [
+        "urn:touchpoint:nextcloud-b"
+      ]
+    },
+    {
+      "@id": "urn:composite:alice-federated-sharing",
+      "@type": "CompositeState",
+      "label": "Alice federated sharing entry",
+      "subjourneyId": "urn:journey:alice-federated-sharing"
+    },
+    {
+      "@id": "urn:composite:bob-remote-share",
+      "@type": "CompositeState",
+      "label": "Bob remote-share entry",
+      "subjourneyId": "urn:journey:bob-remote-share"
+    },
+    {
+      "@id": "urn:entry:alice-federated-sharing",
+      "@type": "JourneyEntry",
+      "label": "Alice files entry",
+      "stateRef": "urn:state:alice-files-ready"
+    },
+    {
+      "@id": "urn:entry:bob-remote-share",
+      "@type": "JourneyEntry",
+      "label": "Bob incoming share entry",
+      "stateRef": "urn:state:bob-incoming-share-visible"
+    },
+    {
+      "@id": "urn:feature:artifact-instance-key",
+      "@type": "AccessibleFeature",
+      "label": "Artifact instance key",
+      "accessibleFeatureName": "file-id",
+      "accessibleFeatureValue": "*"
+    },
+    {
+      "@id": "urn:feature:remote-recipient-instance-key",
+      "@type": "AccessibleFeature",
+      "label": "Remote recipient instance key",
+      "accessibleFeatureName": "federated-cloud-id",
+      "accessibleFeatureValue": "*"
+    },
+    {
+      "@id": "urn:index:nextcloud-federated-sharing",
+      "@type": "JourneyEntryIndex",
+      "label": "Federated sharing local journey entries",
+      "stateRefs": [
+        "urn:composite:alice-federated-sharing",
+        "urn:composite:bob-remote-share"
+      ]
+    },
+    {
+      "@id": "urn:journey:alice-federated-sharing",
+      "@type": "Journey",
+      "label": "Alice shares a file with a remote recipient",
+      "defaultEntryRef": "urn:entry:alice-federated-sharing",
+      "entryRefs": [
+        "urn:entry:alice-federated-sharing"
+      ],
+      "stateRefs": [
+        "urn:state:alice-files-ready",
+        "urn:state:alice-remote-recipient-entered",
+        "urn:state:alice-share-confirmed",
+        "urn:state:alice-share-panel-open"
+      ],
+      "transitionRefs": [
+        "urn:transition:alice-confirms-share",
+        "urn:transition:alice-enters-remote-bob",
+        "urn:transition:alice-opens-file-menu"
+      ],
+      "exitRefs": [],
+      "outgoingTransitionGroupRefs": [],
+      "subjectActorRef": "urn:actor:alice"
+    },
+    {
+      "@id": "urn:journey:bob-remote-share",
+      "@type": "Journey",
+      "label": "Bob accepts an incoming remote share",
+      "defaultEntryRef": "urn:entry:bob-remote-share",
+      "entryRefs": [
+        "urn:entry:bob-remote-share"
+      ],
+      "stateRefs": [
+        "urn:state:bob-file-visible",
+        "urn:state:bob-incoming-share-visible",
+        "urn:state:bob-share-accepted"
+      ],
+      "transitionRefs": [
+        "urn:transition:bob-accepts-share",
+        "urn:transition:bob-opens-accepted-file"
+      ],
+      "exitRefs": [],
+      "outgoingTransitionGroupRefs": [],
+      "subjectActorRef": "urn:actor:bob"
+    },
+    {
+      "@id": "urn:locator:accepted-share-row",
+      "@type": "AccessibleLocator",
+      "label": "Accepted share row",
+      "role": "row",
+      "accessibleFeatureRefs": [
+        "urn:feature:artifact-instance-key"
+      ]
+    },
+    {
+      "@id": "urn:locator:alice-file-row",
+      "@type": "AccessibleLocator",
+      "label": "Alice target file row",
+      "role": "row",
+      "accessibleFeatureRefs": [
+        "urn:feature:artifact-instance-key"
+      ]
+    },
+    {
+      "@id": "urn:locator:alice-share-row",
+      "@type": "AccessibleLocator",
+      "label": "Confirmed outgoing share row",
+      "role": "row",
+      "accessibleFeatureRefs": [
+        "urn:feature:remote-recipient-instance-key"
+      ],
+      "contextLocatorRefs": [
+        "urn:locator:sharing-panel"
+      ]
+    },
+    {
+      "@id": "urn:locator:bob-accept-share-button",
+      "@type": "AccessibleLocator",
+      "label": "Bob accept share button",
+      "role": "button",
+      "accessibleNameRef": "urn:message:accept-action",
+      "contextLocatorRefs": [
+        "urn:locator:incoming-share-row"
+      ]
+    },
+    {
+      "@id": "urn:locator:bob-file-row",
+      "@type": "AccessibleLocator",
+      "label": "Bob accepted file row",
+      "role": "row",
+      "accessibleFeatureRefs": [
+        "urn:feature:artifact-instance-key"
+      ]
+    },
+    {
+      "@id": "urn:locator:bob-open-file-action",
+      "@type": "AccessibleLocator",
+      "label": "Bob open file action",
+      "role": "button",
+      "accessibleNameRef": "urn:message:open-action",
+      "contextLocatorRefs": [
+        "urn:locator:bob-file-row"
+      ]
+    },
+    {
+      "@id": "urn:locator:confirm-share-button",
+      "@type": "AccessibleLocator",
+      "label": "Confirm share button",
+      "role": "button",
+      "accessibleNameRef": "urn:message:confirm-share-action",
+      "contextLocatorRefs": [
+        "urn:locator:remote-recipient-entry"
+      ]
+    },
+    {
+      "@id": "urn:locator:file-share-action",
+      "@type": "AccessibleLocator",
+      "label": "File share action",
+      "role": "button",
+      "accessibleNameRef": "urn:message:share-action",
+      "contextLocatorRefs": [
+        "urn:locator:alice-file-row"
+      ]
+    },
+    {
+      "@id": "urn:locator:incoming-share-row",
+      "@type": "AccessibleLocator",
+      "label": "Incoming share row",
+      "role": "row",
+      "accessibleFeatureRefs": [
+        "urn:feature:artifact-instance-key"
+      ]
+    },
+    {
+      "@id": "urn:locator:remote-recipient-entry",
+      "@type": "AccessibleLocator",
+      "label": "Remote recipient result",
+      "role": "option",
+      "accessibleFeatureRefs": [
+        "urn:feature:remote-recipient-instance-key"
+      ],
+      "contextLocatorRefs": [
+        "urn:locator:sharing-panel"
+      ]
+    },
+    {
+      "@id": "urn:locator:remote-recipient-input",
+      "@type": "AccessibleLocator",
+      "label": "Remote recipient input",
+      "role": "textbox",
+      "accessibleNameRef": "urn:message:remote-recipient-input",
+      "contextLocatorRefs": [
+        "urn:locator:sharing-panel"
+      ]
+    },
+    {
+      "@id": "urn:locator:sharing-panel",
+      "@type": "AccessibleLocator",
+      "label": "Sharing panel",
+      "role": "complementary",
+      "accessibleNameRef": "urn:message:sharing-panel"
+    },
+    {
+      "@id": "urn:message:accept-action",
+      "@type": "MessageBundle",
+      "label": "Accept action",
+      "namespace": "nextcloud.actions",
+      "messageKey": "actions.accept",
+      "defaultLocale": "en",
+      "locales": {
+        "en": {
+          "value": "Accept"
+        }
+      }
+    },
+    {
+      "@id": "urn:message:confirm-share-action",
+      "@type": "MessageBundle",
+      "label": "Confirm share action",
+      "namespace": "nextcloud.actions",
+      "messageKey": "actions.confirmShare",
+      "defaultLocale": "en",
+      "locales": {
+        "en": {
+          "value": "Share"
+        }
+      }
+    },
+    {
+      "@id": "urn:message:open-action",
+      "@type": "MessageBundle",
+      "label": "Open action",
+      "namespace": "nextcloud.actions",
+      "messageKey": "actions.open",
+      "defaultLocale": "en",
+      "locales": {
+        "en": {
+          "value": "Open"
+        }
+      }
+    },
+    {
+      "@id": "urn:message:remote-recipient-input",
+      "@type": "MessageBundle",
+      "label": "Remote recipient input label",
+      "namespace": "nextcloud.sharing",
+      "messageKey": "sharing.remoteRecipientInput",
+      "defaultLocale": "en",
+      "locales": {
+        "en": {
+          "value": "Name, federated cloud ID or email address"
+        }
+      }
+    },
+    {
+      "@id": "urn:message:share-action",
+      "@type": "MessageBundle",
+      "label": "Share action",
+      "namespace": "nextcloud.actions",
+      "messageKey": "actions.share",
+      "defaultLocale": "en",
+      "locales": {
+        "en": {
+          "value": "Share"
+        }
+      }
+    },
+    {
+      "@id": "urn:message:sharing-panel",
+      "@type": "MessageBundle",
+      "label": "Sharing panel label",
+      "namespace": "nextcloud.sharing",
+      "messageKey": "sharing.panel",
+      "defaultLocale": "en",
+      "locales": {
+        "en": {
+          "value": "Sharing"
+        }
+      }
+    },
+    {
+      "@id": "urn:obs:alice-confirms-share-activation",
+      "@type": "ObservationBinding",
+      "label": "Activate Alice share confirmation",
+      "observeSurfaceRef": "urn:surface:alice-confirms-share",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#activation",
+      "locatorRefs": [
+        "urn:locator:confirm-share-button"
+      ],
+      "surfaceInstanceResolverRef": "urn:resolver:artifact-instance"
+    },
+    {
+      "@id": "urn:obs:alice-enters-remote-bob-activation",
+      "@type": "ObservationBinding",
+      "label": "Activate Alice remote recipient entry",
+      "observeSurfaceRef": "urn:surface:alice-enters-remote-bob",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#activation",
+      "locatorRefs": [
+        "urn:locator:remote-recipient-input"
+      ]
+    },
+    {
+      "@id": "urn:obs:alice-files-ready-presence",
+      "@type": "ObservationBinding",
+      "label": "Observe Alice files ready",
+      "observeSurfaceRef": "urn:surface:alice-files-ready",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#presence",
+      "locatorRefs": [
+        "urn:locator:alice-file-row"
+      ],
+      "surfaceInstanceResolverRef": "urn:resolver:artifact-instance"
+    },
+    {
+      "@id": "urn:obs:alice-opens-file-menu-activation",
+      "@type": "ObservationBinding",
+      "label": "Activate Alice share action",
+      "observeSurfaceRef": "urn:surface:alice-opens-file-menu",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#activation",
+      "locatorRefs": [
+        "urn:locator:file-share-action"
+      ],
+      "surfaceInstanceResolverRef": "urn:resolver:artifact-instance"
+    },
+    {
+      "@id": "urn:obs:alice-remote-recipient-entered-presence",
+      "@type": "ObservationBinding",
+      "label": "Observe Alice remote recipient entered",
+      "observeSurfaceRef": "urn:surface:alice-remote-recipient-entered",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#presence",
+      "locatorRefs": [
+        "urn:locator:remote-recipient-entry"
+      ]
+    },
+    {
+      "@id": "urn:obs:alice-share-confirmed-presence",
+      "@type": "ObservationBinding",
+      "label": "Observe Alice share confirmed",
+      "observeSurfaceRef": "urn:surface:alice-share-confirmed",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#presence",
+      "locatorRefs": [
+        "urn:locator:alice-share-row"
+      ],
+      "surfaceInstanceResolverRef": "urn:resolver:artifact-instance"
+    },
+    {
+      "@id": "urn:obs:alice-share-panel-open-presence",
+      "@type": "ObservationBinding",
+      "label": "Observe Alice share panel open",
+      "observeSurfaceRef": "urn:surface:alice-share-panel-open",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#presence",
+      "locatorRefs": [
+        "urn:locator:sharing-panel"
+      ]
+    },
+    {
+      "@id": "urn:obs:bob-accepts-share-activation",
+      "@type": "ObservationBinding",
+      "label": "Activate Bob share acceptance",
+      "observeSurfaceRef": "urn:surface:bob-accepts-share",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#activation",
+      "locatorRefs": [
+        "urn:locator:bob-accept-share-button"
+      ],
+      "surfaceInstanceResolverRef": "urn:resolver:artifact-instance"
+    },
+    {
+      "@id": "urn:obs:bob-file-visible-presence",
+      "@type": "ObservationBinding",
+      "label": "Observe Bob file visible",
+      "observeSurfaceRef": "urn:surface:bob-file-visible",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#presence",
+      "locatorRefs": [
+        "urn:locator:bob-file-row"
+      ],
+      "surfaceInstanceResolverRef": "urn:resolver:artifact-instance"
+    },
+    {
+      "@id": "urn:obs:bob-incoming-share-visible-presence",
+      "@type": "ObservationBinding",
+      "label": "Observe Bob incoming share",
+      "observeSurfaceRef": "urn:surface:bob-incoming-share-visible",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#presence",
+      "locatorRefs": [
+        "urn:locator:incoming-share-row"
+      ],
+      "surfaceInstanceResolverRef": "urn:resolver:artifact-instance"
+    },
+    {
+      "@id": "urn:obs:bob-opens-accepted-file-activation",
+      "@type": "ObservationBinding",
+      "label": "Activate Bob open accepted file",
+      "observeSurfaceRef": "urn:surface:bob-opens-accepted-file",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#activation",
+      "locatorRefs": [
+        "urn:locator:bob-open-file-action"
+      ],
+      "surfaceInstanceResolverRef": "urn:resolver:artifact-instance"
+    },
+    {
+      "@id": "urn:obs:bob-share-accepted-presence",
+      "@type": "ObservationBinding",
+      "label": "Observe Bob share accepted",
+      "observeSurfaceRef": "urn:surface:bob-share-accepted",
+      "observationEventRef": "https://ujg.specs.openuji.org/ed/ns/observability#presence",
+      "locatorRefs": [
+        "urn:locator:accepted-share-row"
+      ],
+      "surfaceInstanceResolverRef": "urn:resolver:artifact-instance"
+    },
+    {
+      "@id": "urn:phase:federated-access-established",
+      "@type": "Phase",
+      "label": "Federated access established",
+      "order": 2
+    },
+    {
+      "@id": "urn:phase:remote-share-offered",
+      "@type": "Phase",
+      "label": "Remote share offered",
+      "order": 1
+    },
+    {
+      "@id": "urn:resolver:artifact-instance",
+      "@type": "SurfaceInstanceResolver",
+      "label": "Resolve repeated artifact surface instances",
+      "instanceKeyFeatureRef": "urn:feature:artifact-instance-key"
+    },
+    {
+      "@id": "urn:state:alice-files-ready",
+      "@type": "State",
+      "label": "Alice files app is ready"
+    },
+    {
+      "@id": "urn:state:alice-remote-recipient-entered",
+      "@type": "State",
+      "label": "Alice entered Bob as a remote recipient"
+    },
+    {
+      "@id": "urn:state:alice-share-confirmed",
+      "@type": "State",
+      "label": "Alice confirmed the remote share"
+    },
+    {
+      "@id": "urn:state:alice-share-panel-open",
+      "@type": "State",
+      "label": "Alice sharing panel is open"
+    },
+    {
+      "@id": "urn:state:bob-file-visible",
+      "@type": "State",
+      "label": "Bob can see the shared file"
+    },
+    {
+      "@id": "urn:state:bob-incoming-share-visible",
+      "@type": "State",
+      "label": "Bob sees the pending remote share"
+    },
+    {
+      "@id": "urn:state:bob-share-accepted",
+      "@type": "State",
+      "label": "Bob accepted the remote share"
+    },
+    {
+      "@id": "urn:step:alice-share-confirmed",
+      "@type": "ExperienceStep",
+      "label": "Alice outgoing share confirmed",
+      "surfaceRefs": [
+        "urn:surface:alice-share-confirmed"
+      ],
+      "phaseRef": "urn:phase:remote-share-offered",
+      "order": 1
+    },
+    {
+      "@id": "urn:step:bob-file-visible",
+      "@type": "ExperienceStep",
+      "label": "Bob accepted file visible",
+      "surfaceRefs": [
+        "urn:surface:bob-file-visible"
+      ],
+      "phaseRef": "urn:phase:federated-access-established",
+      "order": 2
+    },
+    {
+      "@id": "urn:step:bob-incoming-share-visible",
+      "@type": "ExperienceStep",
+      "label": "Bob incoming share visible",
+      "surfaceRefs": [
+        "urn:surface:bob-incoming-share-visible"
+      ],
+      "phaseRef": "urn:phase:remote-share-offered",
+      "order": 2
+    },
+    {
+      "@id": "urn:step:bob-share-accepted",
+      "@type": "ExperienceStep",
+      "label": "Bob share accepted",
+      "surfaceRefs": [
+        "urn:surface:bob-share-accepted"
+      ],
+      "phaseRef": "urn:phase:federated-access-established",
+      "order": 1
+    },
+    {
+      "@id": "urn:surface:alice-confirms-share",
+      "@type": "Surface",
+      "label": "Alice confirm-share action",
+      "graphNodeRef": "urn:transition:alice-confirms-share",
+      "touchpointRef": "urn:touchpoint:nextcloud-a"
+    },
+    {
+      "@id": "urn:surface:alice-enters-remote-bob",
+      "@type": "Surface",
+      "label": "Alice remote recipient input",
+      "graphNodeRef": "urn:transition:alice-enters-remote-bob",
+      "touchpointRef": "urn:touchpoint:nextcloud-a"
+    },
+    {
+      "@id": "urn:surface:alice-files-ready",
+      "@type": "Surface",
+      "label": "Alice files list with target file",
+      "graphNodeRef": "urn:state:alice-files-ready",
+      "touchpointRef": "urn:touchpoint:nextcloud-a"
+    },
+    {
+      "@id": "urn:surface:alice-opens-file-menu",
+      "@type": "Surface",
+      "label": "Alice file share action",
+      "graphNodeRef": "urn:transition:alice-opens-file-menu",
+      "touchpointRef": "urn:touchpoint:nextcloud-a"
+    },
+    {
+      "@id": "urn:surface:alice-remote-recipient-entered",
+      "@type": "Surface",
+      "label": "Alice remote recipient entry",
+      "graphNodeRef": "urn:state:alice-remote-recipient-entered",
+      "touchpointRef": "urn:touchpoint:nextcloud-a"
+    },
+    {
+      "@id": "urn:surface:alice-share-confirmed",
+      "@type": "Surface",
+      "label": "Alice outgoing remote share is confirmed",
+      "graphNodeRef": "urn:state:alice-share-confirmed",
+      "touchpointRef": "urn:touchpoint:nextcloud-a"
+    },
+    {
+      "@id": "urn:surface:alice-share-panel-open",
+      "@type": "Surface",
+      "label": "Alice share panel for target file",
+      "graphNodeRef": "urn:state:alice-share-panel-open",
+      "touchpointRef": "urn:touchpoint:nextcloud-a"
+    },
+    {
+      "@id": "urn:surface:bob-accepts-share",
+      "@type": "Surface",
+      "label": "Bob accept-share action",
+      "graphNodeRef": "urn:transition:bob-accepts-share",
+      "touchpointRef": "urn:touchpoint:nextcloud-b"
+    },
+    {
+      "@id": "urn:surface:bob-file-visible",
+      "@type": "Surface",
+      "label": "Bob sees accepted file",
+      "graphNodeRef": "urn:state:bob-file-visible",
+      "touchpointRef": "urn:touchpoint:nextcloud-b"
+    },
+    {
+      "@id": "urn:surface:bob-incoming-share-visible",
+      "@type": "Surface",
+      "label": "Bob incoming remote share row",
+      "graphNodeRef": "urn:state:bob-incoming-share-visible",
+      "touchpointRef": "urn:touchpoint:nextcloud-b"
+    },
+    {
+      "@id": "urn:surface:bob-opens-accepted-file",
+      "@type": "Surface",
+      "label": "Bob open-file action",
+      "graphNodeRef": "urn:transition:bob-opens-accepted-file",
+      "touchpointRef": "urn:touchpoint:nextcloud-b"
+    },
+    {
+      "@id": "urn:surface:bob-share-accepted",
+      "@type": "Surface",
+      "label": "Bob accepted remote share",
+      "graphNodeRef": "urn:state:bob-share-accepted",
+      "touchpointRef": "urn:touchpoint:nextcloud-b"
+    },
+    {
+      "@id": "urn:touchpoint:nextcloud-a",
+      "@type": "Touchpoint",
+      "label": "Nextcloud A"
+    },
+    {
+      "@id": "urn:touchpoint:nextcloud-b",
+      "@type": "Touchpoint",
+      "label": "Nextcloud B"
+    },
+    {
+      "@id": "urn:transition:alice-confirms-share",
+      "@type": "Transition",
+      "label": "Alice confirms the share",
+      "from": "urn:state:alice-remote-recipient-entered",
+      "to": "urn:state:alice-share-confirmed",
+      "actionRef": "urn:action:alice-confirm-share"
+    },
+    {
+      "@id": "urn:transition:alice-enters-remote-bob",
+      "@type": "Transition",
+      "label": "Alice enters Bob's federated address",
+      "from": "urn:state:alice-share-panel-open",
+      "to": "urn:state:alice-remote-recipient-entered"
+    },
+    {
+      "@id": "urn:transition:alice-opens-file-menu",
+      "@type": "Transition",
+      "label": "Alice opens the sharing panel",
+      "from": "urn:state:alice-files-ready",
+      "to": "urn:state:alice-share-panel-open"
+    },
+    {
+      "@id": "urn:transition:bob-accepts-share",
+      "@type": "Transition",
+      "label": "Bob accepts the incoming share",
+      "from": "urn:state:bob-incoming-share-visible",
+      "to": "urn:state:bob-share-accepted",
+      "actionRef": "urn:action:bob-accept-share"
+    },
+    {
+      "@id": "urn:transition:bob-opens-accepted-file",
+      "@type": "Transition",
+      "label": "Bob opens the accepted shared file",
+      "from": "urn:state:bob-share-accepted",
+      "to": "urn:state:bob-file-visible",
+      "actionRef": "urn:action:bob-open-accepted-file"
+    }
+  ]
+}
