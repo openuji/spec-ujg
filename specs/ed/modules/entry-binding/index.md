@@ -48,6 +48,10 @@ The module introduces real JSON-LD terms and RDF edges for entry binding:
 `EntryBinding` does not declare a touchpoint, materialization discriminator, fallback target,
 structured invocation fields, or execution rule.
 
+If an `EntryBinding` references a [=JourneyEntry=] whose `stateRef` points to a
+[=CompositeState=], the binding selects only that outer entry. It does not select an entry of the
+composite state's child [=Journey=].
+
 ## Normative Artifacts
 
 This module is published through the following artifacts:

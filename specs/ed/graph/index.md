@@ -144,8 +144,8 @@ Use [=Journey=] when the modeled object owns local traversal, progression, or st
 <spec-statement>
 1. A [=Journey=] **MUST** be identified by an IRI.
 2. A [=Journey=] **MUST** declare at least one `entryRefs` value.
-3. A [=Journey=] **MUST** declare exactly one `defaultEntryRef`.
-4. The `defaultEntryRef` value **MUST** be listed in the same [=Journey=]'s `entryRefs`.
+3. A [=Journey=] **MAY** declare at most one `defaultEntryRef`.
+4. If present, the `defaultEntryRef` value **MUST** be listed in the same [=Journey=]'s `entryRefs`.
 5. A [=Journey=] **MUST** declare at least one `stateRefs` value.
 6. A [=Journey=] **MAY** declare `transitionRefs`.
 7. A [=Journey=] **MAY** declare `exitRefs`.
@@ -258,6 +258,48 @@ A single-state journey can omit `transitionRefs`:
 ]
 ```
 
+A journey can also omit `defaultEntryRef` when no entry is semantically a general fallback. In that
+case, entry selection is unresolved by Graph unless an execution or materialization context selects
+exactly one listed [=JourneyEntry=].
+
+```json
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:workshop-detail",
+    "label": "Workshop detail",
+    "entryRefs": [
+      "urn:ujg:entry:workshop-registration-open",
+      "urn:ujg:entry:workshop-waitlist-open",
+      "urn:ujg:entry:workshop-registration-closed"
+    ],
+    "stateRefs": [
+      "urn:ujg:state:workshop-registration-open",
+      "urn:ujg:state:workshop-waitlist-open",
+      "urn:ujg:state:workshop-registration-closed"
+    ]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:workshop-registration-open",
+    "label": "Registration open",
+    "stateRef": "urn:ujg:state:workshop-registration-open"
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:workshop-waitlist-open",
+    "label": "Waitlist open",
+    "stateRef": "urn:ujg:state:workshop-waitlist-open"
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:workshop-registration-closed",
+    "label": "Registration closed",
+    "stateRef": "urn:ujg:state:workshop-registration-closed"
+  }
+]
+```
+
 ---
 
 ## JourneyEntry {data-cop-concept="journey-entry"}
@@ -276,7 +318,24 @@ A [=JourneyEntry=] is an explicit entry contract for a [=Journey=]. It identifie
 9. A [=JourneyEntry=] **MAY** declare one or more `tags`.
 </spec-statement>
 
-Top-level execution of a [=Journey=] begins at the `stateRef` of the [=Journey=]'s `defaultEntryRef`. Child journey execution can select a more specific entry through a parent transition's `toEntryRef`; otherwise it also begins at the child journey's `defaultEntryRef`.
+Top-level traversal of a [=Journey=] begins at an explicitly selected [=JourneyEntry=]. If no
+entry is explicitly selected and the [=Journey=] declares `defaultEntryRef`, traversal begins at
+the `stateRef` of that default entry. If neither applies, entry selection remains unresolved by
+Graph.
+
+A materialization or execution context **MAY** resolve exactly one of the [=Journey=]'s `entryRefs`
+when Graph leaves entry selection unresolved. Graph does not define the criteria by which such
+contextual entry resolution occurs.
+
+A Consumer **MUST NOT** infer a contextually resolved entry from `entryRefs` ordering. Absence of
+`defaultEntryRef` **MUST NOT** imply that the first `entryRefs` value is the default. Contextual
+entry resolution **MUST NOT** alter Graph topology. Graph **MUST NOT** define predicates,
+application-state expressions, domain-state mappings, or evaluation rules for contextual entry
+resolution.
+
+If no entry has been explicitly selected, no `defaultEntryRef` exists, and the current
+materialization or execution context cannot resolve exactly one entry, traversal into that
+[=Journey=] is unresolved. An unresolved entry selection does not make the Graph invalid.
 
 ```mermaid
 classDiagram
@@ -550,7 +609,17 @@ When a Consumer enters a [=CompositeState=], it **MAY** resolve the composite st
 
 If the parent transition whose `to` value enters the [=CompositeState=] declares `toEntryRef`, child traversal begins at the `stateRef` of that [=JourneyEntry=].
 
-If the parent transition does not declare `toEntryRef`, child traversal begins at the `stateRef` of the child [=Journey=]'s `defaultEntryRef`.
+Otherwise, if the child [=Journey=] declares `defaultEntryRef`, child traversal begins at the
+`stateRef` of that default entry.
+
+Otherwise, the child [=Journey=]'s entry selection remains unresolved by Graph. A materialization or
+execution context **MAY** resolve exactly one of the child [=Journey=]'s `entryRefs`.
+
+If no `toEntryRef` exists, no child `defaultEntryRef` exists, and the current materialization or
+execution context cannot resolve exactly one child entry, traversal into that child [=Journey=] is
+unresolved. An unresolved child entry selection does not make the Graph invalid. A Consumer
+**MUST NOT** infer a child entry from `entryRefs` ordering or treat the first `entryRefs` value as a
+default.
 
 If interpretation of the child journey reaches a [=JourneyExit=] listed in that child journey's `exitRefs`, that [=JourneyExit=] becomes the exported exit of the child journey.
 
@@ -570,7 +639,10 @@ A Consumer **MUST NOT** treat `toEntryRef` or `fromExitRef` as a replacement for
 A Consumer **MUST NOT** treat a parent transition without `fromExitRef` as a fallback for an exported child journey exit.
 </spec-statement>
 
-Use `toEntryRef` when a parent transition must choose a specific child entry other than the child journey's default entry. Use [=JourneyExit=] and `fromExitRef` when a nested journey has multiple explicit child outcomes that the parent journey needs to distinguish. Do not use [=JourneyExit=] for ordinary transitions inside the child journey; use normal child [=Transition=] resources for internal child movement.
+Use `toEntryRef` when a parent transition must choose a specific child entry. Use [=JourneyExit=]
+and `fromExitRef` when a nested journey has multiple explicit child outcomes that the parent
+journey needs to distinguish. Do not use [=JourneyExit=] for ordinary transitions inside the child
+journey; use normal child [=Transition=] resources for internal child movement.
 
 ```mermaid
 classDiagram

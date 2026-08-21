@@ -13,7 +13,7 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/l10n
 ## Review Inputs
 
 - Source hash: sha256:181b800c4eaa73540184158232cc7ce44a0d59bfdc599076f0bc0d1cde5d38f5
-- Spec hash: sha256:f7b847cc061cb853ba50b6ba180458206dc15aa615d4ecff53513d92e8a4338e
+- Spec hash: sha256:6d30f9d315024df08526793594fae6f3ab045c60906a0e8c122206ff31931b5d
 
 ## Source Headings Likely Affected
 
