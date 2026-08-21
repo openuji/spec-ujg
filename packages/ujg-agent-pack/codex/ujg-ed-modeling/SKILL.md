@@ -113,7 +113,7 @@ Classify each modeled item before writing JSON-LD: index entry, page/surface ent
 
 Do not mix roles accidentally.
 
-If a component is modeled as a child journey, keep the full pattern coherent: parent `CompositeState`; exactly one `subjourneyId`; no child states in parent `stateRefs`; child states and transitions stay in child journey; child traversal starts at the child journey's `defaultEntryRef` unless the parent transition into the composite declares `toEntryRef`; exported outcome is a child-local terminal `JourneyExit` listed in child `exitRefs`; parent continuation is a parent-local `Transition` from the `CompositeState` to another parent-local local vertex using `fromExitRef`.
+If a component is modeled as a child journey, keep the full pattern coherent: parent `CompositeState`; exactly one `subjourneyId`; no child states in parent `stateRefs`; child states and transitions stay in child journey; child traversal starts from a parent transition's `toEntryRef`, otherwise from the child journey's `defaultEntryRef` when one exists, otherwise the child entry remains unresolved by Graph and must be resolved externally by materialization or execution context; exported outcome is a child-local terminal `JourneyExit` listed in child `exitRefs`; parent continuation is a parent-local `Transition` from the `CompositeState` to another parent-local local vertex using `fromExitRef`.
 
 Either keep the complete child-journey pattern or fold it back into same-journey states. Do not keep only part of the pattern.
 
@@ -133,9 +133,9 @@ For a page-level index, list page, surface, journey, or component `JourneyEntry`
 
 Use `Journey` for local traversable topology.
 
-A `Journey` must have an IRI `@id`, exactly one `defaultEntryRef`, at least one `entryRefs` value, and at least one `stateRefs` value. It may have `transitionRefs`, `exitRefs`, and `outgoingTransitionGroupRefs`. Its local vertices are `stateRefs` union `exitRefs`.
+A `Journey` must have an IRI `@id`, at least one `entryRefs` value, and at least one `stateRefs` value. It may have at most one `defaultEntryRef`, plus `transitionRefs`, `exitRefs`, and `outgoingTransitionGroupRefs`. Its local vertices are `stateRefs` union `exitRefs`.
 
-Each `entryRefs` value must reference a `JourneyEntry`. The `defaultEntryRef` must reference one of those entries.
+Each `entryRefs` value must reference a `JourneyEntry`. When present, the `defaultEntryRef` must reference one of those entries. Do not infer a default entry from `entryRefs` ordering. Graph does not define predicates, application-state expressions, domain-state mappings, or evaluation rules for contextual entry resolution.
 
 A `JourneyEntry` must have exactly one `stateRef` pointing to a `State` or `CompositeState` listed in the same journey's `stateRefs`. A `JourneyEntry` is not a local vertex and must not be used as `Transition.from` or `Transition.to`.
 
@@ -181,9 +181,9 @@ Do not reference child states from a parent transition. Do not create parent tra
 
 ## JourneyEntry, JourneyExit, and boundary refs
 
-Use `JourneyEntry` to name valid entry points into a journey. Top-level traversal begins at `defaultEntryRef.stateRef`.
+Use `JourneyEntry` to name valid entry points into a journey. Top-level traversal begins at an explicitly selected `JourneyEntry`; otherwise at `defaultEntryRef.stateRef` when a default exists; otherwise entry selection remains unresolved by Graph and must be resolved externally by materialization or execution context.
 
-Use `toEntryRef` only on a parent-local transition whose `to` is the corresponding `CompositeState`. The `toEntryRef` value selects a `JourneyEntry` listed in the child journey referenced by that composite's `subjourneyId`. If `toEntryRef` is absent, child traversal starts at the child journey's `defaultEntryRef`.
+Use `toEntryRef` only on a parent-local transition whose `to` is the corresponding `CompositeState`. The `toEntryRef` value selects a `JourneyEntry` listed in the child journey referenced by that composite's `subjourneyId`. If `toEntryRef` is absent, child traversal starts at the child journey's `defaultEntryRef` when one exists. If neither exists, Graph leaves the child entry unresolved; do not infer a default from `entryRefs` ordering.
 
 Use `JourneyExit` only when a parent journey must react to a completed child outcome, or when a journey needs to expose a terminal completion contract.
 
@@ -335,7 +335,7 @@ When generating JSON-LD:
 3. Provide a short self-audit.
 4. State uncertainty explicitly.
 
-Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `defaultEntryRef`, `entryRefs`, and `stateRefs`; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `copyRef`, artifact `nameRef`, and Observability accessible refs point to `MessageMeta`; each `Message` has one `messageMetaRef`, one `localeRef`, and one `value`; `Message.value` is opaque Localization data; runtime facts not in Graph; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, and Artifact do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
+Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `entryRefs` and `stateRefs`; any `defaultEntryRef` references one of the same journey's `entryRefs`; no default is inferred from `entryRefs` ordering; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `copyRef`, artifact `nameRef`, and Observability accessible refs point to `MessageMeta`; each `Message` has one `messageMetaRef`, one `localeRef`, and one `value`; `Message.value` is opaque Localization data; runtime facts not in Graph; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, and Artifact do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
 
 ## Anti-overengineering and uncertainty
 

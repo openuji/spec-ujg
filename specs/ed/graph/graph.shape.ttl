@@ -32,7 +32,6 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:property [
     sh:path ujggraph:defaultEntryRef ;
-    sh:minCount 1 ;
     sh:maxCount 1 ;
     sh:class ujggraph:JourneyEntry ;
     sh:nodeKind sh:IRI ;

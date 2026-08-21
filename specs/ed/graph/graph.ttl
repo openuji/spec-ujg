@@ -65,7 +65,7 @@ ujggraph:defaultEntryRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
   rdfs:range ujggraph:JourneyEntry ;
   rdfs:label "default entry ref" ;
-  rdfs:comment "References the JourneyEntry used when traversal starts without a more specific entry selection." .
+  rdfs:comment "References the JourneyEntry used, when declared, if traversal starts without a more specific entry selection." .
 
 ujggraph:entryRefs a owl:ObjectProperty ;
   rdfs:range ujggraph:JourneyEntry ;
