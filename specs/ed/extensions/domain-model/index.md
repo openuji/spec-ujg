@@ -99,24 +99,24 @@ classDiagram
   class Entity {
     id
     label
-    description?
+    description
     domainRequirementRefs
     properties
   }
   class ValueObject {
     id
     label
-    description?
+    description
     domainRequirementRefs
     properties
   }
   class Property {
     id
     label
-    description?
+    description
     domainRequirementRefs
     valueType
-    allowedValues?
+    allowedValues
   }
   class Association {
     sourceRef

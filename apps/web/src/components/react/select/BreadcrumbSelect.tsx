@@ -15,6 +15,7 @@ export default function BreadcrumbSelect(props: { valueHref: string; options: Op
   const { valueHref, options } = props;
   const specOptions = options.filter((option) => option.family === 'spec');
   const moduleOptions = options.filter((option) => option.family === 'module');
+  const extensionOptions = options.filter((option) => option.family === 'extension');
 
   return (
     <Select
@@ -63,6 +64,36 @@ export default function BreadcrumbSelect(props: { valueHref: string; options: Op
 
             <SelectGroup className="mx-1 mb-1 rounded-md border border-border/70 bg-accent/10 p-1">
               {moduleOptions.map((o) => (
+                <SelectItem
+                  key={o.href}
+                  value={o.href}
+                  className="
+                    data-[highlighted]:bg-accent/15
+                    data-[state=checked]:bg-accent/20
+                    data-[state=checked]:text-foreground
+                  "
+                >
+                  {o.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </>
+        )}
+
+        {extensionOptions.length > 0 && (
+          <>
+            <div className="px-1 pt-2 pb-1">
+              <div className="flex items-center gap-2 px-2">
+                <div className="h-px flex-1 bg-border" />
+                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Extensions
+                </span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
+            </div>
+
+            <SelectGroup className="mx-1 mb-1 rounded-md border border-border/70 bg-panel/70 p-1">
+              {extensionOptions.map((o) => (
                 <SelectItem
                   key={o.href}
                   value={o.href}
