@@ -29,6 +29,7 @@ Module scope: graph
 - mapping
 - modules/design-system
 - metrics
+- modules/domain-requirements
 - profiles
 - conformance
 

@@ -24,6 +24,7 @@
         "mapping",
         "modules/design-system",
         "metrics",
+        "modules/domain-requirements",
         "profiles",
         "conformance"
       ],
@@ -55,6 +56,7 @@
         "mapping",
         "modules/design-system",
         "metrics",
+        "modules/domain-requirements",
         "profiles",
         "conformance"
       ],
@@ -79,6 +81,7 @@
         "mapping",
         "modules/design-system",
         "metrics",
+        "modules/domain-requirements",
         "profiles",
         "conformance"
       ],
@@ -129,7 +132,9 @@
       "title": "Artifact"
     },
     "modules/condition": {
-      "dependents": [],
+      "dependents": [
+        "modules/domain-requirements"
+      ],
       "deps": [
         "graph"
       ],
@@ -148,9 +153,22 @@
       "generatedSkill": "ujg-ed-design-system-modeling",
       "title": "Design System"
     },
+    "modules/domain-requirements": {
+      "dependents": [],
+      "deps": [
+        "core",
+        "graph",
+        "modules/condition",
+        "modules/effect",
+        "modules/entry-binding"
+      ],
+      "generatedSkill": null,
+      "title": "Domain Requirements"
+    },
     "modules/effect": {
       "dependents": [
         "modules/artifact",
+        "modules/domain-requirements",
         "profiles",
         "conformance"
       ],
@@ -162,6 +180,7 @@
     },
     "modules/entry-binding": {
       "dependents": [
+        "modules/domain-requirements",
         "profiles",
         "conformance"
       ],

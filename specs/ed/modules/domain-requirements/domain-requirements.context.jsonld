@@ -1,0 +1,44 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgdomainrequirements": "https://ujg.specs.openuji.org/ed/ns/domain-requirements#",
+    "domainrequirements": "https://ujg.specs.openuji.org/ed/ns/domain-requirements#",
+
+    "DomainRequirement": "ujgdomainrequirements:DomainRequirement",
+    "StateDomainRequirement": {
+      "@id": "ujgdomainrequirements:StateDomainRequirement",
+      "@context": {
+        "stateRef": {
+          "@id": "ujgdomainrequirements:stateRef",
+          "@type": "@id"
+        }
+      }
+    },
+    "ConditionDomainRequirement": {
+      "@id": "ujgdomainrequirements:ConditionDomainRequirement",
+      "@context": {
+        "conditionRef": {
+          "@id": "ujgdomainrequirements:conditionRef",
+          "@type": "@id"
+        }
+      }
+    },
+    "EffectDomainRequirement": {
+      "@id": "ujgdomainrequirements:EffectDomainRequirement",
+      "@context": {
+        "effectRef": {
+          "@id": "ujgdomainrequirements:effectRef",
+          "@type": "@id"
+        }
+      }
+    },
+    "EntryBindingDomainRequirement": "ujgdomainrequirements:EntryBindingDomainRequirement",
+
+    "requirement": "ujgdomainrequirements:requirement",
+    "entryBindingRef": {
+      "@id": "ujgdomainrequirements:entryBindingRef",
+      "@type": "@id"
+    }
+  }
+}

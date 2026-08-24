@@ -30,6 +30,7 @@ Module scope: core
 - mapping
 - modules/design-system
 - metrics
+- modules/domain-requirements
 - profiles
 - conformance
 

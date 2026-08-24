@@ -38,8 +38,8 @@
     "ed/root": {
       "reportPath": "reviews/ed/root/latest.md",
       "skill": "root",
-      "sourceHash": "sha256:ef39c419228a7e283358387a1fa10979d264be63847c347f28d827718764dccd",
-      "specHash": "sha256:09c8f9f8c21b28af9b7628ed3ce9fd5766fa4a943cc9b5dd2a63deb585b8657f",
+      "sourceHash": "sha256:e83dd086ea4c9c752d0c5c02a832aa50e79f2ce1736c0a4b6e936f2abda6b3ad",
+      "specHash": "sha256:37e4a4d77c4be5c3b196cb92feaad20b5158876818d652b3e80fb80a19e490ea",
       "target": "ed"
     },
     "tr/1.0-rc1/core": {

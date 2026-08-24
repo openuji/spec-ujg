@@ -98,16 +98,16 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed",
       "skills": [
         {
-          "artifactHash": "sha256:4e1b4c1a4ee7d990296c8d8a2b0d88650089c0d987d6bf21b83b3d6c27b57134",
+          "artifactHash": "sha256:ad7356e7443b80f2e2d238467d43d8a65188414c64d7430be97a41b37ae93555",
           "key": "root",
           "moduleId": null,
           "name": "ujg-ed-modeling",
           "source": "sources/ed/skills/root/skill.md",
-          "sourceHash": "sha256:ef39c419228a7e283358387a1fa10979d264be63847c347f28d827718764dccd",
-          "specHash": "sha256:09c8f9f8c21b28af9b7628ed3ce9fd5766fa4a943cc9b5dd2a63deb585b8657f"
+          "sourceHash": "sha256:e83dd086ea4c9c752d0c5c02a832aa50e79f2ce1736c0a4b6e936f2abda6b3ad",
+          "specHash": "sha256:6e0a78a7a2c5730497c7177eef16b27f8dfef987f555551c4b8fb9dd8b97418d"
         },
         {
-          "artifactHash": "sha256:aaac7ae10f9305f062c637200a0fcdd28ddf7a79778955c5937788be74b503fb",
+          "artifactHash": "sha256:027167127b8656a8544033de7f4dc66230ec0fe65c024ed6c18018639ea204e4",
           "key": "core",
           "moduleId": "core",
           "name": "ujg-ed-core-modeling",
@@ -116,7 +116,7 @@
           "specHash": "sha256:b558b0f60049c832173481e504a31f21553ee79144de3a377144f95034b22220"
         },
         {
-          "artifactHash": "sha256:8e087c894831e7ddcf3454496ab17c92c0db1a6399e39b6c5335c675512d87ac",
+          "artifactHash": "sha256:177fcd9542f2623057f73d0d82eec85a46de242089c47f195c8d47c3a86deebe",
           "key": "graph",
           "moduleId": "graph",
           "name": "ujg-ed-graph-modeling",
@@ -125,7 +125,7 @@
           "specHash": "sha256:34743b6f632ba7fdf4d9f089e6c4f1ae0d766c0e781a049034204b3d35c4fc50"
         },
         {
-          "artifactHash": "sha256:8d5c98268ad9809f68f85ff6d0e682b4305cd5e6e441f80c262dc8796f6dd4eb",
+          "artifactHash": "sha256:f839cc00d08294d754df0e4bc332c289e6b66ab212dcbc01d38e4b291ef3607d",
           "key": "design-system",
           "moduleId": "modules/design-system",
           "name": "ujg-ed-design-system-modeling",
@@ -134,7 +134,7 @@
           "specHash": "sha256:f1968e47a6c4b0f3c5ec2caaad084d51d781920636c684672e4e466b01cc4055"
         },
         {
-          "artifactHash": "sha256:392ee80122535598927457a8e26c121229ea5237a1a31d7e2399cda26d6d27cd",
+          "artifactHash": "sha256:5e7cdf97c44575575e11e65c8fa815294a25429ef4dfbb7329b69baf42c95265",
           "key": "localization",
           "moduleId": "modules/l10n",
           "name": "ujg-ed-l10n-modeling",
@@ -143,7 +143,7 @@
           "specHash": "sha256:6d30f9d315024df08526793594fae6f3ab045c60906a0e8c122206ff31931b5d"
         },
         {
-          "artifactHash": "sha256:e451bc4b57065b4f1d2afdcf02d266bd139874ec9d504810a7cd623b01993159",
+          "artifactHash": "sha256:f98f365d469464cb344be891980418decb6797c54c5875bf0a7a7a9c513d7d86",
           "key": "observability",
           "moduleId": "modules/observability",
           "name": "ujg-ed-observability-modeling",
