@@ -16,9 +16,11 @@
     "agent-pack:pack": "pnpm --filter @openuji/ujg-agent-pack run pack:artifact",
     "content-manifests:check": "node scripts/content-manifests.js check",
     "content-manifests:update": "node scripts/content-manifests.js update",
+    "domain-model-fixtures:check": "node scripts/validate-domain-model-fixtures.js",
     "prepare": "husky"
   },
   "devDependencies": {
+    "ajv": "^8.20.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",

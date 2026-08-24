@@ -35,6 +35,9 @@ Effect: declared side effects attached to `Transition` or `OutgoingTransition` e
 Condition: guarded transitions and conditional branch sets.
 Artifact: portable resources referenced by Effect `producedRefs` and `consumedRefs`, including artifact-owned source and target touchpoint metadata and optional localized `nameRef`; also a concrete `EffectResource`.
 Domain Requirements: implementation-domain obligations anchored to one existing State, Condition, Effect, or EntryBinding through concrete `DomainRequirement` subclasses, without defining domain models or changing source semantics.
+Domain Model Document Extension: opaque `UJGDocument.extensions["org.openuji.domain-model"]`
+payloads that derive the smallest stable technology-neutral `DomainModel` from declared Domain
+Requirements. It is governed by JSON Schema, not RDF vocabulary or SHACL.
 
 Core is required for UJG documents. Include Graph when modeling topology. Include Surface when using `Surface`, `SurfaceInstance`, `Touchpoint`, `User`, `graphNodeRef`, `surfaceRef`, `compositeStateRefs`, `touchpointRefs`, `userRef`, or `channel`. Include Phase when using `Step`, `Phase`, `compositeStateRef`, `phaseRef`, or `order`. Include Runtime only for observed behavior or traces. Include Mapping when resolving Runtime state observations through Surface to Graph, or deriving Step occurrence and Phase start, with `JourneyMapping`, `MappedStep`, `mappedEventRef`, `mappedStateRef`, `observedAffordanceEventRef`, or `explainedByTransitionRef`. Include Metrics when emitting `MetricObservation` records, Mapping-derived step counts, movement counts, rates, or aggregate metric values. Include Experience Annotation only when using `PainPoint`, `painpointStepRefs`, `severity`, or `description`. Include Localization only when using l10n terms such as `Locale`, `MessageMeta`, `Message`, `copyRef`, `localeCode`, `argumentNames`, `defaultLocaleRef`, `fallbackLocaleRefs`, `messageMetaRef`, `localeRef`, `value`, or `targetLocaleRef`. Include Observability only when modeling `ObservationBinding`, `observeSurfaceRef`, `ObservationEvent`, `requiredInputModalityProfileRefs`, `InputModalityProfile`, `inputModalityRefs`, `InputModality`, `observability:keyboard`, `observability:pointer`, `SurfaceInstanceResolver`, `surfaceInstanceResolverRef`, `expectedMatchCount`, `instanceKeyFeatureRef`, `AccessibleLocator`, `accessibleNameRef`, or `accessibleDescriptionRef`; Observability also requires Localization for name and description message metas.
 
@@ -44,6 +47,13 @@ Include Artifact when using `Artifact`, `nameRef`, `sourceTouchpointRef`, `targe
 
 Include Domain Requirements only when using `StateDomainRequirement`, `ConditionDomainRequirement`, `EffectDomainRequirement`, `EntryBindingDomainRequirement`, `DomainRequirement`, `requirement`, domain-requirements `stateRef`, domain-requirements `conditionRef`, domain-requirements `effectRef`, or `entryBindingRef`. Each concrete requirement must have exactly one technology-neutral `requirement` string and exactly one explicit source ref. Do not use bare `DomainRequirement` as the only concrete type. Do not invent `kind`, `basisRefs`, `sourceRef`, domain entities, fields, persistence, APIs, services, authentication, evaluators, commands, events, transactions, locks, queues, or derivation metadata.
 
+Use the Domain Model Document Extension only when the user explicitly asks for a domain model, asks
+to derive a model from Domain Requirements, or provides/requests
+`extensions["org.openuji.domain-model"]`. Put the canonical `DomainModel` payload only under that
+document-level extension key. Do not create top-level `domainModel`, `domainModelRef`, RDF terms,
+JSON-LD contexts, SHACL shapes, or domain model nodes. Domain Model traceability must go through
+Domain Requirements, not direct refs to States, Conditions, Effects, or EntryBindings.
+
 Do not use `EffectResource` as the only `@type` of a resource node; use a concrete resource type such as `Artifact`.
 
 Do not include Runtime, Mapping, Metrics, Phase, Experience Annotation, Localization, Entry Binding, Design System, Effect, Condition, Artifact, or Domain Requirements merely because screenshots, links, typed values, journey-map labels, pain points, counts, translated UI, design components, form logic, URLs, files, implementation ideas, or multiple touchpoints are present. Screenshots can inform Graph structure, but Graph describes intended topology, not observed runtime facts.
@@ -52,7 +62,8 @@ Do not include Runtime, Mapping, Metrics, Phase, Experience Annotation, Localiza
 
 A `UJGDocument` is the document container. All addressable objects belong in top-level `nodes`.
 
-Use `extensions` only on nodes, never on `UJGDocument`.
+Use `extensions` on `UJGDocument` for document extensions and on nodes for node-scoped opaque
+extension payloads.
 
 Do not put interoperable graph semantics in `extensions`. If a concept affects traversal, graph meaning, target resolution, or validation, use a defined module term.
 
@@ -299,9 +310,10 @@ When evidence is insufficient, say so instead of inventing structure.
 12. Use `toCurrentState: true` only when the effective graph state is preserved.
 13. Use `l10n:targetLocaleRef` only as Localization metadata.
 14. Use Entry Binding, Effect, Condition, Artifact, and Domain Requirements only as defined semantic attachments, not as hidden graph edges.
-15. Re-check that no parent lists child states directly.
-16. Re-check that no fake root journey connects observed screens.
-17. Re-check that Runtime, Surface experience annotations, Experience Annotation, Localization, and optional modules were not confused with Graph topology.
+15. Use Domain Model only as `UJGDocument.extensions["org.openuji.domain-model"]`.
+16. Re-check that no parent lists child states directly.
+17. Re-check that no fake root journey connects observed screens.
+18. Re-check that Runtime, Surface experience annotations, Experience Annotation, Localization, and optional modules were not confused with Graph topology.
 
 ## Output workflow
 
@@ -312,7 +324,7 @@ When generating JSON-LD:
 3. Provide a short self-audit.
 4. State uncertainty explicitly.
 
-Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `entryRefs` and `stateRefs`; any `defaultEntryRef` references one of the same journey's `entryRefs`; no default is inferred from `entryRefs` ordering; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `copyRef`, artifact `nameRef`, and Observability accessible refs point to `MessageMeta`; each `Message` has one `messageMetaRef`, one `localeRef`, and one `value`; `Message.value` is opaque Localization data; runtime facts not in Graph; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, Artifact, and Domain Requirements do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; each concrete Domain Requirement has one technology-neutral `requirement` and one explicit source ref; bare `DomainRequirement`, `kind`, `basisRefs`, `sourceRef`, and domain-model vocabulary are absent; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
+Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `entryRefs` and `stateRefs`; any `defaultEntryRef` references one of the same journey's `entryRefs`; no default is inferred from `entryRefs` ordering; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `copyRef`, artifact `nameRef`, and Observability accessible refs point to `MessageMeta`; each `Message` has one `messageMetaRef`, one `localeRef`, and one `value`; `Message.value` is opaque Localization data; runtime facts not in Graph; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, Artifact, and Domain Requirements do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; each concrete Domain Requirement has one technology-neutral `requirement` and one explicit source ref; bare `DomainRequirement`, `kind`, `basisRefs`, and generic `sourceRef` are absent; Domain Model payloads appear only under `UJGDocument.extensions["org.openuji.domain-model"]` and do not add RDF vocabulary; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
 
 ## Anti-overengineering and uncertainty
 

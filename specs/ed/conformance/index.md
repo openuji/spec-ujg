@@ -5,6 +5,8 @@ This specification defines conformance using the following normative artifacts:
 - **Ontology/Vocabulary** (`*.ttl`) for class and property semantics.
 - **SHACL Shapes** (`*.shapes.ttl`) for validation constraints.
 - **JSON-LD Context** (`*.context.jsonld`) for JSON-LD term mappings and coercions.
+- **JSON Schema** (`*.schema.json`) for document-extension payloads that are defined as opaque JSON
+  rather than RDF vocabulary.
 
 Implementations MAY operate on compacted JSON-LD directly, but conformance is defined in terms of the RDF semantics obtained by applying the normative JSON-LD context, composing the resulting data graph with the applicable ontology/vocabulary graph(s), and validating that graph against the normative SHACL shapes. JSON-LD defines term mappings, type coercion, containers, and expansion behavior through `@context`; SHACL defines validation over RDF graphs and shape constraints.
 
@@ -76,6 +78,21 @@ The module ontology/vocabulary graph supplies the class and property statements 
 An implementation claiming conformance to a module MUST satisfy that module’s semantic and serialization constraints.
 
 An implementation claiming conformance to a profile (aggregate specification) MUST satisfy the constraints of all required modules in that profile.
+
+## Document extension conformance
+
+Document Extensions are optional JSON payloads attached through Core `extensions` on
+`UJGDocument`. Unless an extension specification says otherwise, the payload is opaque to generic
+UJG JSON-LD processing and does not add RDF terms to the UJG graph.
+
+For each Document Extension, conformance is determined by:
+
+- the extension's attachment key,
+- its JSON Schema or other explicitly identified validation artifact, and
+- the processing rules defined by the extension specification.
+
+Generic consumers that do not implement a Document Extension MAY ignore its semantics while
+preserving the JSON payload during non-lossy read-transform-write.
 
 ---
 

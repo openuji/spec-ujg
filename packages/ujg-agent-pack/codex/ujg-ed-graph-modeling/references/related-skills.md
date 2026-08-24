@@ -13,6 +13,7 @@ Module scope: graph
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
 - ujg-ed-l10n-modeling: Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata
 - ujg-ed-observability-modeling: Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver
+- ujg-ed-domain-model-derivation: Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions
 
 ## Downstream Spec Modules
 
@@ -32,6 +33,7 @@ Module scope: graph
 - modules/domain-requirements
 - profiles
 - conformance
+- extensions/domain-model
 
 ## Usage
 

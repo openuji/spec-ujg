@@ -12,8 +12,8 @@ Spec URL: https://ujg.specs.openuji.org/ed
 
 ## Review Inputs
 
-- Source hash: sha256:e83dd086ea4c9c752d0c5c02a832aa50e79f2ce1736c0a4b6e936f2abda6b3ad
-- Spec hash: sha256:37e4a4d77c4be5c3b196cb92feaad20b5158876818d652b3e80fb80a19e490ea
+- Source hash: sha256:9e639d3d8dd981499eada0eb3627a0ae43afed60a89e467b7c08c02031800abd
+- Spec hash: sha256:98d07268cae3504194d697f528aecd56fb8a9eb4337bcf769ba8edb392c81844
 
 ## Source Headings Likely Affected
 

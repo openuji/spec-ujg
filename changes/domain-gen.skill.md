@@ -2,159 +2,160 @@
 
 ## Purpose
 
-Derive a minimal, stable, technology-neutral domain model from a UJG model and its Domain Requirements.
+Derive the smallest stable `DomainModel` that satisfies a defined set of UJG Domain Requirements.
 
-The result describes **what domain state, rules, identities, relationships, and operations must exist** so the journey can be realized.
+The result MUST conform to the UJG Domain Model Extension specification and its supplied JSON Schema.
 
-It does not decide where those semantics execute or persist.
+This skill derives domain semantics. It does not define the Domain Model format or choose technical realization.
 
 ## Inputs
 
 Required:
 
-* canonical UJG
-* UJG Domain Requirements, when present
+* canonical UJG document;
+* Domain Requirements to be covered;
+* Domain Model JSON Schema.
 
 Optional:
 
-* an existing domain model to evolve rather than replace
+* an existing `DomainModel` to evolve.
 
-Treat UJG identities as authoritative.
+Treat UJG IDs, Domain Requirement IDs, and the supplied schema as authoritative.
 
 ## Derivation
 
-Work from requirements to domain semantics, never from application stereotypes.
+For each Domain Requirement:
 
-For every Domain Requirement:
+1. determine what domain semantics are necessary to satisfy it;
+2. represent those semantics using the Domain Model Extension vocabulary;
+3. reuse existing Domain Model elements when they preserve the required distinctions;
+4. add the Domain Requirement ID to each resulting element's `domainRequirementRefs`.
 
-1. Determine what domain fact, lifecycle, relationship, operation, or continuity is required.
-2. Reuse an existing domain concept when it can satisfy the requirement without losing an important distinction.
-3. Introduce a new concept only when it has an independent identity, lifecycle, or responsibility.
-4. Record which Domain Requirements justify every generated element.
+Use surrounding UJG semantics when needed to understand the requirement.
 
-Use the surrounding UJG to interpret each requirement, including relevant states, transitions, conditions, effects, entries, users, touchpoints, and other referenced semantics.
+Do not mechanically translate UJG nodes into Domain Model elements.
 
-Do not mechanically translate UJG States into domain states.
+Do not derive domain semantics from conventional application stereotypes.
+
+## Modeling
+
+Use the definitions from the Domain Model Extension specification.
+
+In particular:
+
+* use `Entity` when independent domain identity matters;
+* use `ValueObject` when meaning is defined by value rather than independent identity;
+* use `Property` for required information belonging to an Entity or ValueObject;
+* use `Association` for required relationships;
+* use `DomainOperation` for required domain behavior;
+* use `Invariant` for rules that must remain true across valid domain behavior.
+
+Do not introduce a Domain Model element merely because it is common DDD practice.
+
+## Traceability
+
+Set the root `DomainModel.domainRequirementRefs` to the complete set of Domain Requirements this derivation covers.
+
+Every generated Domain Model element MUST contain at least one `domainRequirementRefs` entry.
+
+Every element-level requirement reference MUST also occur in the root `domainRequirementRefs`.
+
+Every root Domain Requirement MUST be covered by at least one Domain Model element.
+
+Do not add direct UJG semantic references when traceability is already provided through Domain Requirements.
 
 ## Minimality
 
-Produce the smallest model that satisfies all requirements.
+Produce the smallest model that satisfies all declared Domain Requirements.
 
-Do not introduce concepts merely because they are conventional for the application category.
+Reuse elements that satisfy several requirements when doing so does not collapse required distinctions.
 
-A generated domain element without requirement justification is a defect.
+Remove redundant or unjustified elements.
+
+A Domain Model element without Domain Requirement justification is a defect.
 
 ## Ambiguity
 
 Do not invent missing semantics.
 
-When several domain models satisfy the same requirements, prefer the simplest model that preserves all required distinctions.
+If satisfying a requirement requires a decision that cannot be derived from the inputs:
 
-When an important choice cannot be derived from the inputs, report it as unresolved rather than silently selecting a conventional interpretation.
-
-## Output
-
-Produce a technology-neutral domain model containing only semantics required by the inputs.
-
-Represent as applicable:
-
-* domain concepts and stable identities;
-* relationships;
-* meaningful lifecycle or state distinctions;
-* domain operations;
-* preconditions and postconditions;
-* invariants;
-* identity and continuity semantics;
-* temporal semantics.
-
-Every generated element MUST reference the Domain Requirement or UJG evidence that justifies it.
-
-Also report:
-
-* unsatisfied requirements;
-* unresolved semantic decisions;
-* generated elements lacking adequate justification.
-
-A model with unsatisfied or unresolved required semantics is not complete.
-
-## Domain Semantics vs. Realization
-
-The domain model specifies **what must remain true**, not how or where it is implemented.
-
-Do not choose between implementations such as:
-
-* browser memory;
-* localStorage or IndexedDB;
-* server-side state;
-* SQL or NoSQL storage;
-* edge or serverless state;
-* local or remote execution.
-
-Those are downstream realization decisions.
-
-If a requirement constrains realization, express the semantic constraint rather than prescribing a technology.
-
-For example, model:
-
-> A shared capacity value must remain authoritative across concurrent participants.
-
-Do not derive:
-
-> Use a server-side relational database.
-
-## Identity
-
-Derive only the identity and continuity semantics required by the journey.
-
-Do not equate UJG `User` with an authenticated account.
-
-Do not introduce accounts, sessions, OAuth, passwords, roles, or other authentication mechanisms unless explicitly required by the modeled journey or external constraints.
+* report the unresolved decision separately;
+* reference the affected Domain Requirement IDs;
+* do not silently encode the assumption into the Domain Model;
+* do not report the model as complete.
 
 ## Stability
 
-Prefer semantic stability over redesign.
+When an existing `DomainModel` is supplied, evolve it rather than rebuilding it unnecessarily.
 
-When evolving an existing model:
+Preserve existing:
 
-* preserve concepts and IDs whose meaning has not changed;
-* add, remove, or alter elements only when changed requirements justify it;
-* avoid unnecessary renaming or restructuring.
+* IDs;
+* names;
+* element boundaries;
+* associations;
+* domain operations;
+* invariants
 
-Use deterministic identifiers derived from stable domain terminology.
+when their semantics remain valid.
 
-## Boundaries
+Change the model only when changed requirements justify a semantic change.
 
-Do NOT generate or prescribe:
+Avoid stylistic renaming or restructuring.
 
+## Realization boundary
+
+Derive domain semantics only.
+
+Do not choose:
+
+* frontend or backend placement;
+* local or remote execution;
 * persistence technology;
-* database schemas;
-* API endpoints or transport;
-* frontend/backend placement;
+* API or transport design;
 * framework architecture;
-* repositories, controllers, or services;
+* repository or service structure;
 * authentication mechanisms;
 * messaging infrastructure;
-* deployment architecture.
+* deployment topology.
 
-These belong to downstream domain realization.
+If the inputs constrain realization, express the required domain semantics rather than selecting a technology.
 
 ## Validation
 
-Before returning the model, verify:
+Before returning the result:
 
-1. every Domain Requirement is satisfied or explicitly unresolved;
-2. every generated domain element has traceable justification;
-3. no required journey distinction was lost by collapsing concepts;
-4. no unnecessary domain concepts were introduced;
-5. no implementation choice is presented as domain semantics;
-6. placement and persistence decisions remain outside the model unless the inputs explicitly constrain them.
+1. validate the `DomainModel` against the supplied Domain Model JSON Schema;
+2. resolve every `domainRequirementRefs` value;
+3. verify every root Domain Requirement is covered;
+4. resolve all internal Domain Model references;
+5. verify every generated element has requirement justification;
+6. remove redundant or unsupported elements;
+7. verify that no realization decision has been introduced as domain semantics.
+
+Do not return an invalid or incomplete model as complete.
+
+## Output
+
+Produce the canonical `DomainModel` payload for:
+
+```text
+UJGDocument.extensions["org.openuji.domain-model"]
+```
+
+Keep unresolved derivation issues outside the canonical Domain Model payload unless a later Domain Model Extension version explicitly defines such a construct.
+
+When modifying an existing UJG document, preserve all unrelated UJG content and all unrelated extension payloads unchanged.
 
 ## Core Rule
 
-UJG describes the journey.
+UJG defines the journey.
 
-Domain Requirements state what that journey demands from the application domain.
+Domain Requirements define what that journey requires from the application domain.
 
-This skill derives the smallest stable domain model that satisfies those demands.
+The Domain Model Extension defines how those domain semantics are represented.
 
-Placement, persistence, transport, and execution architecture are downstream implementation decisions.
+This skill derives the smallest stable conforming `DomainModel`.
+
+Technical realization happens afterwards.

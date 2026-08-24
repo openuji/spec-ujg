@@ -1,0 +1,4 @@
+interface:
+  display_name: "UJG ED Domain Model Derivation"
+  short_description: "Model UJG Domain Model Derivation for ED"
+  default_prompt: "Use $ujg-ed-domain-model-derivation to generate or review UJG JSON-LD for this target and scope."

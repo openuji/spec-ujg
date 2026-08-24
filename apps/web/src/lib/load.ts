@@ -4,7 +4,7 @@ import { type Document } from '@openuji/speculator';
 
 import { buildWorkspaces } from '@openuji/speculator';
 
-export type EditorDraftDocumentFamily = 'spec' | 'module';
+export type EditorDraftDocumentFamily = 'spec' | 'module' | 'extension';
 export type SpecWorkspaceKey = 'ed' | 'tr-1-0-rc1' | 'tr-2026-06';
 
 export const WORKSPACE_CONFIG: Record<
@@ -31,6 +31,7 @@ export const WORKSPACE_CONFIG: Record<
 const FAMILY_ORDER: Record<EditorDraftDocumentFamily, number> = {
   spec: 0,
   module: 1,
+  extension: 2,
 };
 
 function getDocumentCustom(doc: Document): Record<string, unknown> {
@@ -41,11 +42,16 @@ function getDocumentCustom(doc: Document): Record<string, unknown> {
 export function getDocumentFamily(doc: Document): EditorDraftDocumentFamily {
   const family = getDocumentCustom(doc).family;
   if (family === 'module') return 'module';
+  if (family === 'extension') return 'extension';
   return 'spec';
 }
 
 function shouldPublishDocument(doc: Document): boolean {
-  return getDocumentFamily(doc) === 'spec' || getDocumentFamily(doc) === 'module';
+  return (
+    getDocumentFamily(doc) === 'spec' ||
+    getDocumentFamily(doc) === 'module' ||
+    getDocumentFamily(doc) === 'extension'
+  );
 }
 
 export function getDocumentOrder(doc: Document): number {

@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ujg.specs.openuji.org/ed/extensions/domain-model/domain-model.schema.json",
+  "title": "UJG Domain Model Extension",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "formatVersion",
+    "id",
+    "domainRequirementRefs",
+    "entities",
+    "valueObjects",
+    "associations",
+    "domainOperations",
+    "invariants"
+  ],
+  "properties": {
+    "formatVersion": {
+      "const": "0.1"
+    },
+    "id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "domainRequirementRefs": {
+      "$ref": "#/$defs/referenceArray"
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      }
+    },
+    "valueObjects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/valueObject"
+      }
+    },
+    "associations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/association"
+      }
+    },
+    "domainOperations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/domainOperation"
+      }
+    },
+    "invariants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/invariant"
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "referenceArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/identifier"
+      },
+      "uniqueItems": true
+    },
+    "elementRequirementRefs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/identifier"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "property": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "domainRequirementRefs",
+        "valueType"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "domainRequirementRefs": {
+          "$ref": "#/$defs/elementRequirementRefs"
+        },
+        "valueType": {
+          "enum": [
+            "string",
+            "integer",
+            "number",
+            "boolean",
+            "date",
+            "datetime"
+          ]
+        },
+        "allowedValues": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "domainRequirementRefs",
+        "properties"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "domainRequirementRefs": {
+          "$ref": "#/$defs/elementRequirementRefs"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/property"
+          }
+        }
+      }
+    },
+    "valueObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "domainRequirementRefs",
+        "properties"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "domainRequirementRefs": {
+          "$ref": "#/$defs/elementRequirementRefs"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/property"
+          }
+        }
+      }
+    },
+    "association": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "domainRequirementRefs",
+        "sourceRef",
+        "targetRef"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "domainRequirementRefs": {
+          "$ref": "#/$defs/elementRequirementRefs"
+        },
+        "sourceRef": {
+          "$ref": "#/$defs/identifier"
+        },
+        "targetRef": {
+          "$ref": "#/$defs/identifier"
+        }
+      }
+    },
+    "domainOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "domainRequirementRefs",
+        "actsOnRefs",
+        "preconditions",
+        "postconditions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "domainRequirementRefs": {
+          "$ref": "#/$defs/elementRequirementRefs"
+        },
+        "actsOnRefs": {
+          "$ref": "#/$defs/referenceArray"
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "postconditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "invariant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "domainRequirementRefs",
+        "appliesToRefs",
+        "assertion"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "domainRequirementRefs": {
+          "$ref": "#/$defs/elementRequirementRefs"
+        },
+        "appliesToRefs": {
+          "$ref": "#/$defs/referenceArray"
+        },
+        "assertion": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

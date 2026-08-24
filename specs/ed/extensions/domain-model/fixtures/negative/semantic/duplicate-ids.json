@@ -1,0 +1,35 @@
+{
+  "domainRequirementIds": [
+    "urn:ujg:domain-requirement:status"
+  ],
+  "domainModel": {
+    "formatVersion": "0.1",
+    "id": "urn:domain:model:duplicate-ids",
+    "domainRequirementRefs": [
+      "urn:ujg:domain-requirement:status"
+    ],
+    "entities": [
+      {
+        "id": "urn:domain:entity:item",
+        "label": "Item",
+        "domainRequirementRefs": [
+          "urn:ujg:domain-requirement:status"
+        ],
+        "properties": []
+      }
+    ],
+    "valueObjects": [
+      {
+        "id": "urn:domain:entity:item",
+        "label": "Duplicate item",
+        "domainRequirementRefs": [
+          "urn:ujg:domain-requirement:status"
+        ],
+        "properties": []
+      }
+    ],
+    "associations": [],
+    "domainOperations": [],
+    "invariants": []
+  }
+}

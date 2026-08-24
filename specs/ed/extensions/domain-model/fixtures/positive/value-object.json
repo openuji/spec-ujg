@@ -1,0 +1,35 @@
+{
+  "domainRequirementIds": [
+    "urn:ujg:domain-requirement:offer-window"
+  ],
+  "domainModel": {
+    "formatVersion": "0.1",
+    "id": "urn:domain:model:offer-window",
+    "domainRequirementRefs": [
+      "urn:ujg:domain-requirement:offer-window"
+    ],
+    "entities": [],
+    "valueObjects": [
+      {
+        "id": "urn:domain:value-object:offer-window",
+        "label": "Offer Window",
+        "domainRequirementRefs": [
+          "urn:ujg:domain-requirement:offer-window"
+        ],
+        "properties": [
+          {
+            "id": "urn:domain:property:expires-at",
+            "label": "Expires at",
+            "domainRequirementRefs": [
+              "urn:ujg:domain-requirement:offer-window"
+            ],
+            "valueType": "datetime"
+          }
+        ]
+      }
+    ],
+    "associations": [],
+    "domainOperations": [],
+    "invariants": []
+  }
+}

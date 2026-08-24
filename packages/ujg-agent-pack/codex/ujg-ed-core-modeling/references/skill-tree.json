@@ -26,7 +26,8 @@
         "metrics",
         "modules/domain-requirements",
         "profiles",
-        "conformance"
+        "conformance",
+        "extensions/domain-model"
       ],
       "deps": [],
       "generatedSkill": null,
@@ -58,13 +59,23 @@
         "metrics",
         "modules/domain-requirements",
         "profiles",
-        "conformance"
+        "conformance",
+        "extensions/domain-model"
       ],
       "deps": [
         "architecture"
       ],
       "generatedSkill": "ujg-ed-core-modeling",
       "title": "Core"
+    },
+    "extensions/domain-model": {
+      "dependents": [],
+      "deps": [
+        "core",
+        "modules/domain-requirements"
+      ],
+      "generatedSkill": "ujg-ed-domain-model-derivation",
+      "title": "Domain Model"
     },
     "graph": {
       "dependents": [
@@ -83,7 +94,8 @@
         "metrics",
         "modules/domain-requirements",
         "profiles",
-        "conformance"
+        "conformance",
+        "extensions/domain-model"
       ],
       "deps": [
         "core"
@@ -133,7 +145,8 @@
     },
     "modules/condition": {
       "dependents": [
-        "modules/domain-requirements"
+        "modules/domain-requirements",
+        "extensions/domain-model"
       ],
       "deps": [
         "graph"
@@ -154,7 +167,9 @@
       "title": "Design System"
     },
     "modules/domain-requirements": {
-      "dependents": [],
+      "dependents": [
+        "extensions/domain-model"
+      ],
       "deps": [
         "core",
         "graph",
@@ -170,7 +185,8 @@
         "modules/artifact",
         "modules/domain-requirements",
         "profiles",
-        "conformance"
+        "conformance",
+        "extensions/domain-model"
       ],
       "deps": [
         "graph"
@@ -182,7 +198,8 @@
       "dependents": [
         "modules/domain-requirements",
         "profiles",
-        "conformance"
+        "conformance",
+        "extensions/domain-model"
       ],
       "deps": [
         "graph"
@@ -338,6 +355,14 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed/modules/observability",
       "scope": "Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver",
       "source": "sources/ed/skills/observability/skill.md"
+    },
+    {
+      "key": "domain-model",
+      "moduleId": "extensions/domain-model",
+      "name": "ujg-ed-domain-model-derivation",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
+      "scope": "Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions",
+      "source": "sources/ed/skills/domain-model/skill.md"
     }
   ],
   "target": {

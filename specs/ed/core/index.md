@@ -61,8 +61,8 @@ Example JSON node:
 
 ## UJGDocument {data-cop-concept="ujg-document"}
 
-A [=UJGDocument=] is the Core JSON-LD document container. It may import other UJG documents and list
-addressable [=Node=] instances in `nodes`.
+A [=UJGDocument=] is the Core JSON-LD document container. It may import other UJG documents, list
+addressable [=Node=] instances in `nodes`, and carry document-level `extensions`.
 
 ```mermaid
 classDiagram
@@ -71,6 +71,7 @@ classDiagram
     id
     imports
     nodes
+    extensions
   }
   UJGDocument --> "0..*" UJGDocument : imports
   UJGDocument --> "0..*" Node : nodes
@@ -152,9 +153,11 @@ A composed context is expressed as a JSON-LD `@context` array in which the Core 
 
 #### Extensions
 
-<spec-statement>`extensions` **MAY** appear on any [=Node=].</spec-statement>
+<spec-statement>`extensions` **MAY** appear on a [=UJGDocument=] or any [=Node=].</spec-statement>
 
-<spec-statement>`extensions` **MUST NOT** appear on [=UJGDocument=].</spec-statement>
+<spec-statement>[=UJGDocument=]-level `extensions` attach document extensions to the containing
+document. [=Node=]-level `extensions` attach opaque extension payloads to the containing
+node.</spec-statement>
 
 <spec-statement>If present, `extensions` **MUST** be a JSON object.</spec-statement>
 
@@ -164,7 +167,8 @@ A composed context is expressed as a JSON-LD `@context` array in which the Core 
 
 <spec-statement>Consumers **MUST** preserve unknown extension entries during read-transform-write unless operating in an explicitly lossy mode.</spec-statement>
 
-<spec-statement>Consumers **MUST NOT** let unknown extensions affect core identity, import resolution, or reference resolution.</spec-statement>
+<spec-statement>Consumers **MUST NOT** let unknown extensions affect Core identity, import
+resolution, reference resolution, Graph traversal, or Graph semantics.</spec-statement>
 
 <spec-statement>Consumers **MAY** apply namespace-specific processing for recognized extensions.</spec-statement>
 
@@ -200,7 +204,7 @@ The normative Core SHACL shape is defined below and is published at `https://ujg
 
 ## Examples
 
-The examples below are informative. Each example uses `https://ujg.specs.openuji.org/ed/ns/core.context.jsonld` as its JSON-LD context and stays within the Core vocabulary. `extensions` appears only on node objects; document-level `extensions` is invalid in Core. Graph-native optional terms belong in composed module contexts, not inside `extensions`.
+The examples below are informative. Each example uses `https://ujg.specs.openuji.org/ed/ns/core.context.jsonld` as its JSON-LD context and stays within the Core vocabulary. Graph-native optional terms belong in composed module contexts, not inside `extensions`.
 
 ### Minimal Document
 
@@ -209,6 +213,22 @@ The examples below are informative. Each example uses `https://ujg.specs.openuji
   "@context": "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
   "@id": "https://example.com/ujg/core/minimal.jsonld",
   "@type": "UJGDocument"
+}
+```
+
+### Document With Extension Payload
+
+```json
+{
+  "@context": "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+  "@id": "https://example.com/ujg/core/document-extension.jsonld",
+  "@type": "UJGDocument",
+  "extensions": {
+    "com.example.package": {
+      "source": "private-tooling"
+    }
+  },
+  "nodes": []
 }
 ```
 
