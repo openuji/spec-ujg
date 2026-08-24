@@ -18,7 +18,7 @@
       "reportPath": "reviews/ed/domain-model/latest.md",
       "skill": "domain-model",
       "sourceHash": "sha256:6d8bc54f2b2bce26a192ed87ae4235b9fc40a181d4b2e6b81dc25923ac3061fe",
-      "specHash": "sha256:7540cf722a737b00adbb20a53b4a5eac9eb45f6e5a3e3d12617f867e77c6a731",
+      "specHash": "sha256:410e3d81ad2381db759baddad47aa4260b01323c95105581da003a9cf1b5866c",
       "target": "ed"
     },
     "ed/graph": {
@@ -45,8 +45,8 @@
     "ed/root": {
       "reportPath": "reviews/ed/root/latest.md",
       "skill": "root",
-      "sourceHash": "sha256:9e639d3d8dd981499eada0eb3627a0ae43afed60a89e467b7c08c02031800abd",
-      "specHash": "sha256:98d07268cae3504194d697f528aecd56fb8a9eb4337bcf769ba8edb392c81844",
+      "sourceHash": "sha256:27582114a557398956e2ff7ebb57af7538f855c8af982280f58b169f89b5c13b",
+      "specHash": "sha256:83c67456b78027aab3842a367bc37441bcad32185f51aca438c24e73bb13c009",
       "target": "ed"
     },
     "tr/1.0-rc1/core": {
