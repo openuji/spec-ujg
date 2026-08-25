@@ -1108,7 +1108,7 @@ It is a history of software engineering gradually learning to make additional as
 | Relationships can retain interoperable semantic identity | RDF |
 | Models can systematically produce other models | MDA |
 | Available actions can be represented explicitly | hypermedia / REST |
-| [Graph](/ed/graph) semantics can participate naturally in JSON systems | JSON-LD |
+| Graph semantics can participate naturally in JSON systems | JSON-LD |
 | Interaction intent can be an interoperable semantic graph | UJG |
 
 UJG's position in this history is therefore **not**:
