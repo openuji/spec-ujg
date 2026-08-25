@@ -16,7 +16,6 @@
     "agent-pack:pack": "pnpm --filter @openuji/ujg-agent-pack run pack:artifact",
     "content-manifests:check": "node scripts/content-manifests.js check",
     "content-manifests:update": "node scripts/content-manifests.js update",
-    "domain-model-fixtures:check": "node scripts/validate-domain-model-fixtures.js",
     "prepare": "husky"
   },
   "devDependencies": {
