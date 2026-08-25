@@ -110,7 +110,7 @@
           "name": "ujg-ed-modeling",
           "source": "sources/ed/skills/root/skill.md",
           "sourceHash": "sha256:27582114a557398956e2ff7ebb57af7538f855c8af982280f58b169f89b5c13b",
-          "specHash": "sha256:75d1e993f9dbe1566d333551297ea5e5f61f024064694603e7bd2e3cee6f8ac6"
+          "specHash": "sha256:f9f9a0e81e33c204909e769408e5afb29ca9b40c611f4725bd12cfca8e71f291"
         },
         {
           "artifactHash": "sha256:9c0b214f9624e4328ca6c349eab6373e0eb2faa56df65f57b8159a18b0443c40",
@@ -164,7 +164,7 @@
           "name": "ujg-ed-domain-model-derivation",
           "source": "sources/ed/skills/domain-model/skill.md",
           "sourceHash": "sha256:3d1102f281fd3749081090fa0abf3c0841ff5b79d969482eeda801546bf7c46b",
-          "specHash": "sha256:40f1c3fc1d020d9a8b58b217562fbe24be60bf3de5b6cba9e6ecccaa7827f38f"
+          "specHash": "sha256:9a72a4ae8ff1ae454fc271c96da8cfe98004bf304ee4261e78a24f0132b13d55"
         }
       ],
       "specRoot": "specs/ed"

@@ -12,7 +12,7 @@
     "name": "ujg-ed-domain-model-derivation"
   },
   "sourceHash": "sha256:3d1102f281fd3749081090fa0abf3c0841ff5b79d969482eeda801546bf7c46b",
-  "specHash": "sha256:40f1c3fc1d020d9a8b58b217562fbe24be60bf3de5b6cba9e6ecccaa7827f38f",
+  "specHash": "sha256:9a72a4ae8ff1ae454fc271c96da8cfe98004bf304ee4261e78a24f0132b13d55",
   "target": {
     "id": "ed",
     "label": "Editor's Draft"
