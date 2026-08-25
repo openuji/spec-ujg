@@ -1,0 +1,24 @@
+{
+  "domainRequirementIds": [
+    "urn:ujg:domain-requirement:status"
+  ],
+  "domainModel": {
+    "formatVersion": "0.1",
+    "id": "urn:domain:model:empty-element-refs",
+    "domainRequirementRefs": [
+      "urn:ujg:domain-requirement:status"
+    ],
+    "entities": [
+      {
+        "id": "urn:domain:entity:participant",
+        "label": "Participant",
+        "domainRequirementRefs": [],
+        "properties": []
+      }
+    ],
+    "valueObjects": [],
+    "associations": [],
+    "domainOperations": [],
+    "invariants": []
+  }
+}

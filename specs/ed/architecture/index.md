@@ -49,3 +49,9 @@ The specification distinguishes published module vocabularies from opaque deploy
 payloads. Opaque payloads are useful for local metadata and vendor integration, but they are not a
 substitute for terms that need interoperable semantics. Processing rules for opaque payloads and
 published module terms are defined by the modules that own those mechanisms.
+
+## Document Extensions
+
+Document Extensions define optional interoperable JSON structures attached to a `UJGDocument`.
+Unlike graph-native optional modules, their payloads do not participate directly in the UJG RDF
+graph and may use their own validation mechanisms.

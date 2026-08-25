@@ -1,0 +1,20 @@
+{
+  "artifactHash": "sha256:f80366c6a087d7bf7df6dc60ce01d27725b5d560a891f315206b767ac13d075c",
+  "configHash": "sha256:a0d155c4d70456ca5ad3d2f3002e971dbed8b7a7eb98bf546fe27c9c33d2e5e3",
+  "package": {
+    "id": "ujg-agent-pack",
+    "name": "@openuji/ujg-agent-pack",
+    "version": "0.0.1"
+  },
+  "skill": {
+    "key": "domain-model",
+    "moduleId": "extensions/domain-model",
+    "name": "ujg-ed-domain-model-derivation"
+  },
+  "sourceHash": "sha256:6d8bc54f2b2bce26a192ed87ae4235b9fc40a181d4b2e6b81dc25923ac3061fe",
+  "specHash": "sha256:33f356f3b6c9507f69ed4c3f18a8e49aabdb9feda2b4bda7fb451e580dac8766",
+  "target": {
+    "id": "ed",
+    "label": "Editor's Draft"
+  }
+}

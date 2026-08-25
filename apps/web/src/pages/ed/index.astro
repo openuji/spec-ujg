@@ -7,6 +7,7 @@ import MaturityPill from '@/components/astro/speculator/w3c-cg/MaturityPill.astr
 
 const documents = await getDocuments('ed');
 const moduleDocuments = documents.filter((doc) => getDocumentFamily(doc) === 'module');
+const extensionDocuments = documents.filter((doc) => getDocumentFamily(doc) === 'extension');
 
 const familySections: Array<{
   id: string;
@@ -34,6 +35,13 @@ const familySections: Array<{
     description:
       'Optional modules that compose one or more first-level bridges, keeping specialized concerns out of Core and Graph.',
     documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) > 1),
+  },
+  {
+    id: 'document-extensions',
+    title: 'Document Extensions',
+    description:
+      'Optional interoperable JSON structures attached to a UJGDocument. They do not participate directly in the UJG RDF graph and may use their own validation mechanisms.',
+    documents: extensionDocuments,
   },
 ].filter((section) => section.documents.length > 0);
 ---

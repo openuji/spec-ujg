@@ -25,5 +25,8 @@ ujg:documentNodes a owl:ObjectProperty;
 ### Properties
 
 ujg:extensions a owl:DatatypeProperty ;
-  rdfs:domain ujg:Node ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf ( ujg:UJGDocument ujg:Node )
+  ] ;
   rdfs:range rdf:JSON .

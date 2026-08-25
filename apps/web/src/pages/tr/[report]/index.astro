@@ -16,6 +16,7 @@ export function getStaticPaths() {
 const { report } = Astro.props as { report: TechnicalReport };
 const documents = await getDocuments(report.workspace);
 const moduleDocuments = documents.filter((doc) => getDocumentFamily(doc) === 'module');
+const extensionDocuments = documents.filter((doc) => getDocumentFamily(doc) === 'extension');
 
 const familySections: Array<{
   id: string;
@@ -42,6 +43,12 @@ const familySections: Array<{
     title: 'Second-Level Optional Modules',
     description: 'Optional modules captured in this report through another optional module.',
     documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) > 1),
+  },
+  {
+    id: 'document-extensions',
+    title: 'Document Extensions',
+    description: 'Document Extensions captured in this report as UJGDocument-level JSON payloads.',
+    documents: extensionDocuments,
   },
 ].filter((section) => section.documents.length > 0);
 ---

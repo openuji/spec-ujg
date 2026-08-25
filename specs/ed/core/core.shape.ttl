@@ -22,7 +22,8 @@ ujgshape:UJGDocumentShape a sh:NodeShape ;
 
   sh:property [
     sh:path ujg:extensions ;
-    sh:maxCount 0 ;
+    sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
   ] .
 
 ujgshape:NodeShape a sh:NodeShape ;

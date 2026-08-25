@@ -1,0 +1,44 @@
+{
+  "domainRequirementIds": [
+    "urn:ujg:domain-requirement:offer-belongs-to-participant"
+  ],
+  "domainModel": {
+    "formatVersion": "0.1",
+    "id": "urn:domain:model:offer-association",
+    "domainRequirementRefs": [
+      "urn:ujg:domain-requirement:offer-belongs-to-participant"
+    ],
+    "entities": [
+      {
+        "id": "urn:domain:entity:participant",
+        "label": "Participant",
+        "domainRequirementRefs": [
+          "urn:ujg:domain-requirement:offer-belongs-to-participant"
+        ],
+        "properties": []
+      },
+      {
+        "id": "urn:domain:entity:offer",
+        "label": "Offer",
+        "domainRequirementRefs": [
+          "urn:ujg:domain-requirement:offer-belongs-to-participant"
+        ],
+        "properties": []
+      }
+    ],
+    "valueObjects": [],
+    "associations": [
+      {
+        "id": "urn:domain:association:offer-participant",
+        "label": "Offer participant",
+        "domainRequirementRefs": [
+          "urn:ujg:domain-requirement:offer-belongs-to-participant"
+        ],
+        "sourceRef": "urn:domain:entity:offer",
+        "targetRef": "urn:domain:entity:participant"
+      }
+    ],
+    "domainOperations": [],
+    "invariants": []
+  }
+}

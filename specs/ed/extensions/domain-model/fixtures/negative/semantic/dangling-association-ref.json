@@ -1,0 +1,36 @@
+{
+  "domainRequirementIds": [
+    "urn:ujg:domain-requirement:relation"
+  ],
+  "domainModel": {
+    "formatVersion": "0.1",
+    "id": "urn:domain:model:dangling-association",
+    "domainRequirementRefs": [
+      "urn:ujg:domain-requirement:relation"
+    ],
+    "entities": [
+      {
+        "id": "urn:domain:entity:source",
+        "label": "Source",
+        "domainRequirementRefs": [
+          "urn:ujg:domain-requirement:relation"
+        ],
+        "properties": []
+      }
+    ],
+    "valueObjects": [],
+    "associations": [
+      {
+        "id": "urn:domain:association:missing-target",
+        "label": "Missing target",
+        "domainRequirementRefs": [
+          "urn:ujg:domain-requirement:relation"
+        ],
+        "sourceRef": "urn:domain:entity:source",
+        "targetRef": "urn:domain:entity:missing"
+      }
+    ],
+    "domainOperations": [],
+    "invariants": []
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "currentSkill": {
+    "key": "domain-model",
+    "moduleId": "extensions/domain-model",
+    "name": "ujg-ed-domain-model-derivation",
+    "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
+    "scope": "Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions"
+  },
+  "moduleGraph": {
+    "architecture": {
+      "dependents": [
+        "core",
+        "modules/entry-binding",
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/effect",
+        "surface",
+        "modules/artifact",
+        "modules/observability",
+        "modules/phase",
+        "runtime",
+        "modules/experience-annotation",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "modules/domain-requirements",
+        "profiles",
+        "conformance",
+        "extensions/domain-model"
+      ],
+      "deps": [],
+      "generatedSkill": null,
+      "title": "Architecture"
+    },
+    "conformance": {
+      "dependents": [],
+      "deps": [
+        "profiles"
+      ],
+      "generatedSkill": null,
+      "title": "Conformance"
+    },
+    "core": {
+      "dependents": [
+        "modules/entry-binding",
+        "graph",
+        "modules/l10n",
+        "modules/condition",
+        "modules/effect",
+        "surface",
+        "modules/artifact",
+        "modules/observability",
+        "modules/phase",
+        "runtime",
+        "modules/experience-annotation",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "modules/domain-requirements",
+        "profiles",
+        "conformance",
+        "extensions/domain-model"
+      ],
+      "deps": [
+        "architecture"
+      ],
+      "generatedSkill": "ujg-ed-core-modeling",
+      "title": "Core"
+    },
+    "extensions/domain-model": {
+      "dependents": [],
+      "deps": [
+        "core",
+        "modules/domain-requirements"
+      ],
+      "generatedSkill": "ujg-ed-domain-model-derivation",
+      "title": "Domain Model"
+    },
+    "graph": {
+      "dependents": [
+        "modules/entry-binding",
+        "modules/l10n",
+        "modules/condition",
+        "modules/effect",
+        "surface",
+        "modules/artifact",
+        "modules/observability",
+        "modules/phase",
+        "runtime",
+        "modules/experience-annotation",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "modules/domain-requirements",
+        "profiles",
+        "conformance",
+        "extensions/domain-model"
+      ],
+      "deps": [
+        "core"
+      ],
+      "generatedSkill": "ujg-ed-graph-modeling",
+      "title": "Graph"
+    },
+    "mapping": {
+      "dependents": [
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "runtime",
+        "surface",
+        "graph",
+        "modules/phase"
+      ],
+      "generatedSkill": null,
+      "title": "Mapping"
+    },
+    "metrics": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "mapping"
+      ],
+      "generatedSkill": null,
+      "title": "Metrics"
+    },
+    "modules/artifact": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "core",
+        "modules/effect",
+        "modules/l10n",
+        "surface"
+      ],
+      "generatedSkill": null,
+      "title": "Artifact"
+    },
+    "modules/condition": {
+      "dependents": [
+        "modules/domain-requirements",
+        "extensions/domain-model"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Conditions"
+    },
+    "modules/design-system": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph",
+        "surface"
+      ],
+      "generatedSkill": "ujg-ed-design-system-modeling",
+      "title": "Design System"
+    },
+    "modules/domain-requirements": {
+      "dependents": [
+        "extensions/domain-model"
+      ],
+      "deps": [
+        "core",
+        "graph",
+        "modules/condition",
+        "modules/effect",
+        "modules/entry-binding"
+      ],
+      "generatedSkill": null,
+      "title": "Domain Requirements"
+    },
+    "modules/effect": {
+      "dependents": [
+        "modules/artifact",
+        "modules/domain-requirements",
+        "profiles",
+        "conformance",
+        "extensions/domain-model"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Effect"
+    },
+    "modules/entry-binding": {
+      "dependents": [
+        "modules/domain-requirements",
+        "profiles",
+        "conformance",
+        "extensions/domain-model"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Entry Binding"
+    },
+    "modules/experience-annotation": {
+      "dependents": [],
+      "deps": [
+        "modules/phase"
+      ],
+      "generatedSkill": null,
+      "title": "Experience Annotation"
+    },
+    "modules/l10n": {
+      "dependents": [
+        "modules/artifact",
+        "modules/observability",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": "ujg-ed-l10n-modeling",
+      "title": "Localization"
+    },
+    "modules/observability": {
+      "dependents": [
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "surface",
+        "modules/l10n"
+      ],
+      "generatedSkill": "ujg-ed-observability-modeling",
+      "title": "Observability"
+    },
+    "modules/phase": {
+      "dependents": [
+        "modules/experience-annotation",
+        "mapping",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Phase"
+    },
+    "profiles": {
+      "dependents": [
+        "conformance"
+      ],
+      "deps": [
+        "core",
+        "runtime",
+        "graph",
+        "mapping",
+        "metrics",
+        "surface",
+        "modules/l10n",
+        "modules/observability",
+        "modules/design-system",
+        "modules/phase",
+        "modules/entry-binding",
+        "modules/effect",
+        "modules/artifact"
+      ],
+      "generatedSkill": null,
+      "title": "Profiles"
+    },
+    "runtime": {
+      "dependents": [
+        "mapping",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "surface"
+      ],
+      "generatedSkill": null,
+      "title": "Runtime"
+    },
+    "surface": {
+      "dependents": [
+        "modules/artifact",
+        "modules/observability",
+        "runtime",
+        "mapping",
+        "modules/design-system",
+        "metrics",
+        "profiles",
+        "conformance"
+      ],
+      "deps": [
+        "graph"
+      ],
+      "generatedSkill": null,
+      "title": "Surface"
+    }
+  },
+  "skills": [
+    {
+      "key": "root",
+      "moduleId": null,
+      "name": "ujg-ed-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed",
+      "scope": "whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules",
+      "source": "sources/ed/skills/root/skill.md"
+    },
+    {
+      "key": "core",
+      "moduleId": "core",
+      "name": "ujg-ed-core-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/core",
+      "scope": "Core module document containers, imports, top-level nodes, and extensions",
+      "source": "sources/ed/skills/core/skill.md"
+    },
+    {
+      "key": "graph",
+      "moduleId": "graph",
+      "name": "ujg-ed-graph-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/graph",
+      "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
+      "source": "sources/ed/skills/graph/skill.md"
+    },
+    {
+      "key": "design-system",
+      "moduleId": "modules/design-system",
+      "name": "ujg-ed-design-system-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/modules/design-system",
+      "scope": "Design System module semantics and its relationship to Graph and Surface",
+      "source": "sources/ed/skills/design-system/skill.md"
+    },
+    {
+      "key": "localization",
+      "moduleId": "modules/l10n",
+      "name": "ujg-ed-l10n-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/modules/l10n",
+      "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata",
+      "source": "sources/ed/skills/localization/skill.md"
+    },
+    {
+      "key": "observability",
+      "moduleId": "modules/observability",
+      "name": "ujg-ed-observability-modeling",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/modules/observability",
+      "scope": "Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver",
+      "source": "sources/ed/skills/observability/skill.md"
+    },
+    {
+      "key": "domain-model",
+      "moduleId": "extensions/domain-model",
+      "name": "ujg-ed-domain-model-derivation",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
+      "scope": "Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions",
+      "source": "sources/ed/skills/domain-model/skill.md"
+    }
+  ],
+  "target": {
+    "id": "ed",
+    "label": "Editor's Draft",
+    "publicUrl": "https://ujg.specs.openuji.org/ed",
+    "specRoot": "specs/ed"
+  }
+}

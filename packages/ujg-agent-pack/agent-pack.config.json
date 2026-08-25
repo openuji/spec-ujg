@@ -49,6 +49,13 @@
           "scope": "Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver",
           "nameSuffix": "observability-modeling",
           "moduleId": "modules/observability"
+        },
+        {
+          "key": "domain-model",
+          "title": "Domain Model Derivation",
+          "scope": "Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions",
+          "nameSuffix": "domain-model-derivation",
+          "moduleId": "extensions/domain-model"
         }
       ]
     },

@@ -1,0 +1,65 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgcond: <https://ujg.specs.openuji.org/ed/ns/condition#> .
+@prefix ujgeffect: <https://ujg.specs.openuji.org/ed/ns/effect#> .
+@prefix ujgentrybinding: <https://ujg.specs.openuji.org/ed/ns/entry-binding#> .
+@prefix ujgdomainrequirements: <https://ujg.specs.openuji.org/ed/ns/domain-requirements#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/ed/ns/domain-requirements#> a owl:Ontology ;
+  rdfs:label "UJG Domain Requirements Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Domain Requirements ontology declaration" .
+
+### Classes
+
+ujgdomainrequirements:DomainRequirement a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Domain Requirement" ;
+  rdfs:comment "An abstract superclass for implementation-domain obligations anchored to UJG semantic sources." .
+
+ujgdomainrequirements:StateDomainRequirement a owl:Class ;
+  rdfs:subClassOf ujgdomainrequirements:DomainRequirement .
+
+ujgdomainrequirements:ConditionDomainRequirement a owl:Class ;
+  rdfs:subClassOf ujgdomainrequirements:DomainRequirement .
+
+ujgdomainrequirements:EffectDomainRequirement a owl:Class ;
+  rdfs:subClassOf ujgdomainrequirements:DomainRequirement .
+
+ujgdomainrequirements:EntryBindingDomainRequirement a owl:Class ;
+  rdfs:subClassOf ujgdomainrequirements:DomainRequirement .
+
+### Properties
+
+ujgdomainrequirements:requirement a owl:DatatypeProperty ;
+  rdfs:domain ujgdomainrequirements:DomainRequirement ;
+  rdfs:range xsd:string ;
+  rdfs:label "requirement" ;
+  rdfs:comment "A human-readable, technology-neutral obligation that the implementation domain must support." .
+
+ujgdomainrequirements:stateRef a owl:ObjectProperty ;
+  rdfs:domain ujgdomainrequirements:StateDomainRequirement ;
+  rdfs:range ujggraph:State ;
+  rdfs:label "state ref" ;
+  rdfs:comment "References the Graph State whose user-journey semantics justify this domain requirement." .
+
+ujgdomainrequirements:conditionRef a owl:ObjectProperty ;
+  rdfs:domain ujgdomainrequirements:ConditionDomainRequirement ;
+  rdfs:range ujgcond:Condition ;
+  rdfs:label "condition ref" ;
+  rdfs:comment "References the Condition whose determinability justifies this domain requirement." .
+
+ujgdomainrequirements:effectRef a owl:ObjectProperty ;
+  rdfs:domain ujgdomainrequirements:EffectDomainRequirement ;
+  rdfs:range ujgeffect:Effect ;
+  rdfs:label "effect ref" ;
+  rdfs:comment "References the Effect whose realization justifies this domain requirement." .
+
+ujgdomainrequirements:entryBindingRef a owl:ObjectProperty ;
+  rdfs:domain ujgdomainrequirements:EntryBindingDomainRequirement ;
+  rdfs:range ujgentrybinding:EntryBinding ;
+  rdfs:label "entry binding ref" ;
+  rdfs:comment "References the EntryBinding whose resolution semantics justify this domain requirement." .
