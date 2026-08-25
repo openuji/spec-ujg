@@ -438,7 +438,7 @@ Model-based UI environments often accumulated several distinct models:
 | Model | Captured concern |
 | --- | --- |
 | Task Model | User goals, tasks, and task decomposition. |
-| [Domain Model](/ed/extensions/domain-model) | Problem-world concepts and relationships. |
+| Domain Model | Problem-world concepts and relationships. |
 | Dialogue Model | Interaction sequence and dialogue control. |
 | Presentation Model | Visible representation and layout. |
 | User Model | User roles, preferences, or skill assumptions. |
