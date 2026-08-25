@@ -28,4 +28,10 @@ export const TOP_LEVEL_CONTENT_PAGES = [
     title: 'AI Governance',
     toc: true,
   },
+  {
+    slug: 'foundations',
+    fileName: 'foundations.md',
+    title: 'Foundations',
+    toc: true,
+  },
 ] as const satisfies readonly TopLevelContentPage[];

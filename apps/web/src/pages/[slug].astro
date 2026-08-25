@@ -12,8 +12,6 @@ export async function getStaticPaths() {
 
 const { fileName, title, toc: includeToc = false } = Astro.props;
 
-// Use import.meta.glob to load the markdown files from the specs directory
-// We need to use the relative path from this file to the specs directory
 const allSpecs = import.meta.glob<import('astro').MarkdownInstance<Record<string, unknown>>>(
   '../../../../specs/*.md'
 );
@@ -26,16 +24,38 @@ if (!loader) {
 
 const post = await loader();
 const headings = typeof post.getHeadings === 'function' ? post.getHeadings() : [];
-const toc: TocEntry[] = includeToc
-  ? headings
-      .filter((heading) => heading.depth === 2)
-      .map((heading) => ({
+const buildStaticPageToc = (): TocEntry[] => {
+  const entries: TocEntry[] = [];
+  let currentSection: TocEntry | undefined;
+
+  for (const heading of headings) {
+    if (heading.depth === 2) {
+      currentSection = {
         id: heading.slug,
         text: heading.text,
         depth: 1,
         children: [],
-      }))
-  : [];
+      };
+      entries.push(currentSection);
+    } else if (heading.depth === 3) {
+      const child: TocEntry = {
+        id: heading.slug,
+        text: heading.text,
+        depth: 2,
+        children: [],
+      };
+
+      if (currentSection) {
+        currentSection.children?.push(child);
+      } else {
+        entries.push(child);
+      }
+    }
+  }
+
+  return entries;
+};
+const toc: TocEntry[] = includeToc ? buildStaticPageToc() : [];
 const { Content } = post;
 ---
 
@@ -44,3 +64,277 @@ const { Content } = post;
     <Content />
   </article>
 </PageLayout>
+
+<script>
+  import mermaid from 'mermaid';
+
+  const COLOR_SCHEME_QUERY = '(prefers-color-scheme: dark)';
+  const MERMAID_SELECTOR = '.static-page pre.mermaid';
+  const STATIC_TABLE_SELECTOR = '.static-page .spec table:not(.spec-table)';
+  const MERMAID_FONT_FAMILY = 'Inter, system-ui, sans-serif';
+  const MERMAID_FONT_SIZE = '13px';
+  let isRendering = false;
+  let rerenderQueued = false;
+  let renderSequence = 0;
+
+  function isDarkTheme() {
+    const forcedTheme = document.documentElement.getAttribute('data-theme');
+    if (forcedTheme === 'dark') return true;
+    if (forcedTheme === 'light') return false;
+    return window.matchMedia(COLOR_SCHEME_QUERY).matches;
+  }
+
+  function getMermaidTheme(isDark: boolean) {
+    if (isDark) {
+      return {
+        theme: 'base',
+        themeVariables: {
+          darkMode: true,
+          background: 'transparent',
+          textColor: '#f3f4f8',
+          titleColor: '#f3f4f8',
+          lineColor: '#95a2cb',
+          primaryColor: '#1a2340',
+          primaryTextColor: '#f3f4f8',
+          primaryBorderColor: '#8f80ff',
+          secondaryColor: '#162036',
+          secondaryTextColor: '#f3f4f8',
+          tertiaryColor: '#1d2b4a',
+          tertiaryTextColor: '#f3f4f8',
+          mainBkg: '#1a2340',
+          nodeBkg: '#1a2340',
+          noteBkgColor: '#2f2712',
+          noteTextColor: '#f8e7a1',
+          noteBorderColor: '#c99a2e',
+          edgeLabelBackground: '#27272a',
+          clusterBkg: '#10182e',
+          clusterBorder: '#33416b',
+          labelBackground: '#10182e',
+          fontFamily: MERMAID_FONT_FAMILY,
+          fontSize: MERMAID_FONT_SIZE,
+        },
+      };
+    }
+
+    return {
+      theme: 'default',
+      themeVariables: {
+        fontFamily: MERMAID_FONT_FAMILY,
+        fontSize: MERMAID_FONT_SIZE,
+      },
+    };
+  }
+
+  function convertAstroMermaidBlocks() {
+    const blocks = Array.from(document.querySelectorAll<HTMLPreElement>('pre')).filter((block) => {
+      const code = block.querySelector('code');
+
+      return (
+        block.dataset.mermaidConverted !== 'true' &&
+        (block.dataset.language === 'mermaid' || code?.classList.contains('language-mermaid'))
+      );
+    });
+
+    for (const block of blocks) {
+      const code = block.querySelector('code');
+      const source = (code ?? block).textContent?.trim();
+      if (!source) continue;
+
+      block.dataset.mermaidConverted = 'true';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'mermaid-container';
+
+      const mermaidBlock = document.createElement('pre');
+      mermaidBlock.className = 'mermaid';
+      mermaidBlock.setAttribute('data-mermaid-source', source);
+      mermaidBlock.textContent = source;
+
+      wrapper.append(mermaidBlock);
+      block.replaceWith(wrapper);
+    }
+  }
+
+  function enhanceStaticMarkdownTables() {
+    const tables = document.querySelectorAll<HTMLTableElement>(STATIC_TABLE_SELECTOR);
+
+    for (const table of tables) {
+      const columnCount = table.tHead?.rows[0]?.cells.length ?? table.rows[0]?.cells.length ?? 0;
+
+      table.classList.add('spec-table');
+      if (columnCount > 0) {
+        table.classList.add(`cols-${columnCount}`);
+      }
+
+      if (table.parentElement?.classList.contains('spec-table-wrap')) continue;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'spec-table-wrap';
+
+      if (table.id) {
+        wrapper.id = table.id;
+        table.removeAttribute('id');
+      }
+
+      table.replaceWith(wrapper);
+      wrapper.append(table);
+    }
+  }
+
+  function collectMermaidNodes() {
+    const nodes = document.querySelectorAll<HTMLElement>(MERMAID_SELECTOR);
+    const readyNodes: Array<{ node: HTMLElement; source: string }> = [];
+
+    for (const node of nodes) {
+      let source = node.getAttribute('data-mermaid-source');
+
+      if (!source) {
+        if (node.getAttribute('data-processed') === 'true') continue;
+        source = node.textContent ?? '';
+        if (!source.trim()) continue;
+      }
+
+      node.setAttribute('data-mermaid-source', source);
+      readyNodes.push({ node, source });
+    }
+
+    return readyNodes;
+  }
+
+  async function renderMermaidBlocks() {
+    convertAstroMermaidBlocks();
+
+    const nodes = collectMermaidNodes();
+    if (nodes.length === 0) return;
+
+    const theme = getMermaidTheme(isDarkTheme());
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'strict',
+      ...theme,
+    });
+
+    for (const { node, source } of nodes) {
+      try {
+        const { svg, bindFunctions } = await mermaid.render(
+          `static-page-mermaid-${Date.now()}-${++renderSequence}`,
+          source
+        );
+        node.innerHTML = svg;
+        node.setAttribute('data-processed', 'true');
+        bindFunctions?.(node);
+      } catch (error) {
+        node.textContent = source;
+        node.removeAttribute('data-processed');
+        console.warn('Mermaid render failed', error);
+      }
+    }
+  }
+
+  async function renderMermaidQueued() {
+    if (isRendering) {
+      rerenderQueued = true;
+      return;
+    }
+
+    isRendering = true;
+    do {
+      rerenderQueued = false;
+      await renderMermaidBlocks();
+    } while (rerenderQueued);
+    isRendering = false;
+  }
+
+  function queueMermaidRender() {
+    requestAnimationFrame(() => {
+      enhanceStaticMarkdownTables();
+      void renderMermaidQueued();
+    });
+  }
+
+  const g = window as typeof window & { __ujgStaticPageMermaidInit?: boolean };
+  if (!g.__ujgStaticPageMermaidInit) {
+    g.__ujgStaticPageMermaidInit = true;
+    document.addEventListener('astro:page-load', queueMermaidRender);
+    document.addEventListener('astro:after-swap', queueMermaidRender);
+    window.matchMedia(COLOR_SCHEME_QUERY).addEventListener('change', queueMermaidRender);
+    window.addEventListener('ujg:theme-change', queueMermaidRender);
+  }
+
+  queueMermaidRender();
+</script>
+
+<style is:global>
+  .static-page .mermaid-container {
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+
+  .static-page .mermaid-container pre.mermaid {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    display: flex;
+    justify-content: center;
+  }
+
+  .static-page .mermaid-container svg {
+    max-width: 100%;
+    height: auto;
+    font-size: 13px !important;
+  }
+
+  .static-page .mermaid-container svg text,
+  .static-page .mermaid-container svg tspan,
+  .static-page .mermaid-container svg .label,
+  .static-page .mermaid-container svg .nodeLabel,
+  .static-page .mermaid-container svg .edgeLabel,
+  .static-page .mermaid-container svg .cluster-label,
+  .static-page .mermaid-container svg foreignObject,
+  .static-page .mermaid-container svg foreignObject div,
+  .static-page .mermaid-container svg foreignObject span,
+  .static-page .mermaid-container svg foreignObject p {
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+  }
+
+  .static-page .mermaid-container .edgeLabel text,
+  .static-page .mermaid-container .edgeLabel tspan,
+  .static-page .mermaid-container .edgeLabel span p {
+    font-size: 12px !important;
+  }
+
+  .static-page .mermaid-container .cluster-label span p {
+    font-size: 13px !important;
+    padding: 0.2rem 0.4rem !important;
+  }
+
+  :root[data-theme='dark'] .static-page .mermaid-container .note {
+    fill: #2f2712 !important;
+    stroke: #c99a2e !important;
+  }
+
+  :root[data-theme='dark'] .static-page .mermaid-container .noteText,
+  :root[data-theme='dark'] .static-page .mermaid-container .noteText tspan {
+    fill: #f8e7a1 !important;
+    color: #f8e7a1 !important;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .static-page .mermaid-container .note {
+      fill: #2f2712 !important;
+      stroke: #c99a2e !important;
+    }
+
+    :root:not([data-theme='light']) .static-page .mermaid-container .noteText,
+    :root:not([data-theme='light']) .static-page .mermaid-container .noteText tspan {
+      fill: #f8e7a1 !important;
+      color: #f8e7a1 !important;
+    }
+  }
+</style>
