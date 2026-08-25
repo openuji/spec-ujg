@@ -6,10 +6,6 @@
   "domainModel": {
     "formatVersion": "0.1",
     "id": "urn:domain:model:offer-coverage",
-    "domainRequirementRefs": [
-      "urn:ujg:domain-requirement:offer-validity",
-      "urn:ujg:domain-requirement:accept-offer"
-    ],
     "entities": [
       {
         "id": "urn:domain:entity:offer",
@@ -32,7 +28,7 @@
       }
     ],
     "valueObjects": [],
-    "associations": [],
+    "relationships": [],
     "domainOperations": [
       {
         "id": "urn:domain:operation:accept-offer",

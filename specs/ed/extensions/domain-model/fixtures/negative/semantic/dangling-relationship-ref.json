@@ -4,10 +4,7 @@
   ],
   "domainModel": {
     "formatVersion": "0.1",
-    "id": "urn:domain:model:dangling-association",
-    "domainRequirementRefs": [
-      "urn:ujg:domain-requirement:relation"
-    ],
+    "id": "urn:domain:model:dangling-relationship",
     "entities": [
       {
         "id": "urn:domain:entity:source",
@@ -19,9 +16,9 @@
       }
     ],
     "valueObjects": [],
-    "associations": [
+    "relationships": [
       {
-        "id": "urn:domain:association:missing-target",
+        "id": "urn:domain:relationship:missing-target",
         "label": "Missing target",
         "domainRequirementRefs": [
           "urn:ujg:domain-requirement:relation"

@@ -7,10 +7,9 @@
   "required": [
     "formatVersion",
     "id",
-    "domainRequirementRefs",
     "entities",
     "valueObjects",
-    "associations",
+    "relationships",
     "domainOperations",
     "invariants"
   ],
@@ -20,9 +19,6 @@
     },
     "id": {
       "$ref": "#/$defs/identifier"
-    },
-    "domainRequirementRefs": {
-      "$ref": "#/$defs/referenceArray"
     },
     "entities": {
       "type": "array",
@@ -36,10 +32,10 @@
         "$ref": "#/$defs/valueObject"
       }
     },
-    "associations": {
+    "relationships": {
       "type": "array",
       "items": {
-        "$ref": "#/$defs/association"
+        "$ref": "#/$defs/relationship"
       }
     },
     "domainOperations": {
@@ -192,7 +188,7 @@
         }
       }
     },
-    "association": {
+    "relationship": {
       "type": "object",
       "additionalProperties": false,
       "required": [

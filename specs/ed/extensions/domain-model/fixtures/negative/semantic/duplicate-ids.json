@@ -5,9 +5,6 @@
   "domainModel": {
     "formatVersion": "0.1",
     "id": "urn:domain:model:duplicate-ids",
-    "domainRequirementRefs": [
-      "urn:ujg:domain-requirement:status"
-    ],
     "entities": [
       {
         "id": "urn:domain:entity:item",
@@ -28,7 +25,7 @@
         "properties": []
       }
     ],
-    "associations": [],
+    "relationships": [],
     "domainOperations": [],
     "invariants": []
   }

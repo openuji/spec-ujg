@@ -42,31 +42,29 @@ function fixtureRequirementIds(fixture) {
   return new Set(fixture.domainRequirementIds);
 }
 
+function fixtureTargetRequirementIds(fixture) {
+  if (!Array.isArray(fixture.targetDomainRequirementIds)) return null;
+  return new Set(fixture.targetDomainRequirementIds);
+}
+
 function domainElements(model) {
   return [
     ...model.entities,
     ...model.entities.flatMap((entity) => entity.properties),
     ...model.valueObjects,
     ...model.valueObjects.flatMap((valueObject) => valueObject.properties),
-    ...model.associations,
+    ...model.relationships,
     ...model.domainOperations,
     ...model.invariants,
   ];
 }
 
-function validateSemantics(model, availableRequirementIds) {
+function validateSemantics(model, availableRequirementIds, targetRequirementIds) {
   const errors = [];
-  const rootRequirementRefs = new Set(model.domainRequirementRefs);
   const elementRefs = new Map();
   const entityOrValueObjectRefs = new Set();
   const allElements = domainElements(model);
   const coveredRequirementRefs = new Set();
-
-  for (const ref of rootRequirementRefs) {
-    if (!availableRequirementIds.has(ref)) {
-      errors.push(`DomainModel.domainRequirementRefs contains unresolved requirement ${ref}`);
-    }
-  }
 
   for (const entity of model.entities) entityOrValueObjectRefs.add(entity.id);
   for (const valueObject of model.valueObjects) entityOrValueObjectRefs.add(valueObject.id);
@@ -76,25 +74,35 @@ function validateSemantics(model, availableRequirementIds) {
     elementRefs.set(element.id, element);
 
     for (const ref of element.domainRequirementRefs) {
-      if (!rootRequirementRefs.has(ref)) {
-        errors.push(`${element.id} references undeclared requirement ${ref}`);
+      if (!availableRequirementIds.has(ref)) {
+        errors.push(`${element.id} references unresolved requirement ${ref}`);
       }
       coveredRequirementRefs.add(ref);
     }
   }
 
-  for (const ref of rootRequirementRefs) {
-    if (!coveredRequirementRefs.has(ref)) {
-      errors.push(`DomainModel.domainRequirementRefs contains uncovered requirement ${ref}`);
+  if (targetRequirementIds) {
+    for (const ref of targetRequirementIds) {
+      if (!availableRequirementIds.has(ref)) {
+        errors.push(`Target requirement set contains unresolved requirement ${ref}`);
+      } else if (!coveredRequirementRefs.has(ref)) {
+        errors.push(`Target requirement set contains uncovered requirement ${ref}`);
+      }
+    }
+
+    for (const ref of coveredRequirementRefs) {
+      if (!targetRequirementIds.has(ref)) {
+        errors.push(`Coverage includes requirement outside target set ${ref}`);
+      }
     }
   }
 
-  for (const association of model.associations) {
-    if (!entityOrValueObjectRefs.has(association.sourceRef)) {
-      errors.push(`${association.id}.sourceRef does not resolve: ${association.sourceRef}`);
+  for (const relationship of model.relationships) {
+    if (!entityOrValueObjectRefs.has(relationship.sourceRef)) {
+      errors.push(`${relationship.id}.sourceRef does not resolve: ${relationship.sourceRef}`);
     }
-    if (!entityOrValueObjectRefs.has(association.targetRef)) {
-      errors.push(`${association.id}.targetRef does not resolve: ${association.targetRef}`);
+    if (!entityOrValueObjectRefs.has(relationship.targetRef)) {
+      errors.push(`${relationship.id}.targetRef does not resolve: ${relationship.targetRef}`);
     }
   }
 
@@ -140,7 +148,7 @@ function main() {
     const model = fixtureModel(fixture, file);
     const schemaValid = validate(model);
     const semanticErrors = schemaValid
-      ? validateSemantics(model, fixtureRequirementIds(fixture))
+      ? validateSemantics(model, fixtureRequirementIds(fixture), fixtureTargetRequirementIds(fixture))
       : [];
     const semanticValid = semanticErrors.length === 0;
     const relPath = relative(REPO_ROOT, file);

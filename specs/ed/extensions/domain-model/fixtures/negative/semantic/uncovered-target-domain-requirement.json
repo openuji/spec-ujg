@@ -1,26 +1,27 @@
 {
   "domainRequirementIds": [
-    "urn:ujg:domain-requirement:declared",
-    "urn:ujg:domain-requirement:other"
+    "urn:ujg:domain-requirement:covered",
+    "urn:ujg:domain-requirement:uncovered"
+  ],
+  "targetDomainRequirementIds": [
+    "urn:ujg:domain-requirement:covered",
+    "urn:ujg:domain-requirement:uncovered"
   ],
   "domainModel": {
     "formatVersion": "0.1",
-    "id": "urn:domain:model:undeclared-element-ref",
-    "domainRequirementRefs": [
-      "urn:ujg:domain-requirement:declared"
-    ],
+    "id": "urn:domain:model:uncovered-target",
     "entities": [
       {
         "id": "urn:domain:entity:item",
         "label": "Item",
         "domainRequirementRefs": [
-          "urn:ujg:domain-requirement:other"
+          "urn:ujg:domain-requirement:covered"
         ],
         "properties": []
       }
     ],
     "valueObjects": [],
-    "associations": [],
+    "relationships": [],
     "domainOperations": [],
     "invariants": []
   }

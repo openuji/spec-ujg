@@ -1,0 +1,28 @@
+{
+  "domainRequirementIds": [
+    "urn:ujg:domain-requirement:target",
+    "urn:ujg:domain-requirement:outside-target"
+  ],
+  "targetDomainRequirementIds": [
+    "urn:ujg:domain-requirement:target"
+  ],
+  "domainModel": {
+    "formatVersion": "0.1",
+    "id": "urn:domain:model:outside-target",
+    "entities": [
+      {
+        "id": "urn:domain:entity:item",
+        "label": "Item",
+        "domainRequirementRefs": [
+          "urn:ujg:domain-requirement:target",
+          "urn:ujg:domain-requirement:outside-target"
+        ],
+        "properties": []
+      }
+    ],
+    "valueObjects": [],
+    "relationships": [],
+    "domainOperations": [],
+    "invariants": []
+  }
+}

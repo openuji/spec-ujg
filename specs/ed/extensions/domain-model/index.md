@@ -22,10 +22,9 @@ The extension value is attached to `UJGDocument.extensions` using the key
     "org.openuji.domain-model": {
       "formatVersion": "0.1",
       "id": "urn:domain:model:example",
-      "domainRequirementRefs": [],
       "entities": [],
       "valueObjects": [],
-      "associations": [],
+      "relationships": [],
       "domainOperations": [],
       "invariants": []
     }
@@ -80,7 +79,7 @@ Version `0.1` defines exactly these payload object types:
 - `Entity`
 - `ValueObject`
 - `Property`
-- `Association`
+- `Relationship`
 - `DomainOperation`
 - `Invariant`
 
@@ -89,10 +88,9 @@ classDiagram
   class DomainModel {
     formatVersion
     id
-    domainRequirementRefs
     entities
     valueObjects
-    associations
+    relationships
     domainOperations
     invariants
   }
@@ -118,7 +116,7 @@ classDiagram
     valueType
     allowedValues
   }
-  class Association {
+  class Relationship {
     sourceRef
     targetRef
   }
@@ -133,7 +131,7 @@ classDiagram
   }
   DomainModel --> "0..*" Entity : entities
   DomainModel --> "0..*" ValueObject : valueObjects
-  DomainModel --> "0..*" Association : associations
+  DomainModel --> "0..*" Relationship : relationships
   DomainModel --> "0..*" DomainOperation : domainOperations
   DomainModel --> "0..*" Invariant : invariants
   Entity --> "0..*" Property : properties
@@ -152,22 +150,17 @@ A `DomainModel` is the root payload stored in `extensions["org.openuji.domain-mo
 | --- | --- |
 | `formatVersion` | MUST be `"0.1"`. |
 | `id` | MUST be a stable identifier for the Domain Model. |
-| `domainRequirementRefs` | MUST declare the complete set of UJG Domain Requirements this Domain Model claims to satisfy. |
 | `entities` | MUST exist; MAY be empty. |
 | `valueObjects` | MUST exist; MAY be empty. |
-| `associations` | MUST exist; MAY be empty. |
+| `relationships` | MUST exist; MAY be empty. |
 | `domainOperations` | MUST exist; MAY be empty. |
 | `invariants` | MUST exist; MAY be empty. |
 
-<spec-statement>Every requirement listed in `DomainModel.domainRequirementRefs` **MUST** be
-referenced by at least one contained Domain Model element.</spec-statement>
-
-<spec-statement>Every `domainRequirementRefs` value on a contained element **MUST** also occur in
-the root `DomainModel.domainRequirementRefs`.</spec-statement>
+<spec-statement>`DomainModel` **MUST NOT** define `domainRequirementRefs`.</spec-statement>
 
 ### Common Domain Element
 
-Every `Entity`, `ValueObject`, `Property`, `Association`, `DomainOperation`, and `Invariant` shares
+Every `Entity`, `ValueObject`, `Property`, `Relationship`, `DomainOperation`, and `Invariant` shares
 the same basic identification and traceability properties.
 
 | Property | Requirement |
@@ -175,7 +168,7 @@ the same basic identification and traceability properties.
 | `id` | MUST uniquely identify the element within the Domain Model and remain stable while the element's semantics remain stable. |
 | `label` | MUST provide a concise human-readable domain name. |
 | `description` | MAY provide explanatory human-readable text. |
-| `domainRequirementRefs` | MUST contain at least one reference, contain no duplicates, and contain only references declared by the containing `DomainModel`. |
+| `domainRequirementRefs` | MUST contain at least one reference, contain no duplicates, and contain only references resolving to UJG Domain Requirements. |
 
 ### Entity and ValueObject
 
@@ -206,11 +199,11 @@ In addition to the Common Domain Element properties, a `Property` has:
 The specification does not define storage types, programming-language types, columns, nullability,
 or serialization formats.
 
-### Association
+### Relationship
 
-An `Association` represents a required relationship between domain objects.
+A `Relationship` represents a required relationship between domain objects.
 
-In addition to the Common Domain Element properties, an `Association` has:
+In addition to the Common Domain Element properties, a `Relationship` has:
 
 | Property | Requirement |
 | --- | --- |
@@ -257,7 +250,7 @@ performed by a Domain Model-aware UJG validator.
 
 <spec-statement>All Domain Model element IDs **MUST** be unique.</spec-statement>
 
-<spec-statement>`Association.sourceRef`, `Association.targetRef`, `DomainOperation.actsOnRefs`,
+<spec-statement>`Relationship.sourceRef`, `Relationship.targetRef`, `DomainOperation.actsOnRefs`,
 and `Invariant.appliesToRefs` **MUST** resolve within the same Domain Model.</spec-statement>
 
 A structurally valid JSON document containing dangling internal references is semantically invalid.
@@ -272,8 +265,34 @@ A dangling Domain Requirement reference makes the Domain Model invalid.
 
 ### Requirement Coverage {data-cop-concept="domain-model-requirement-coverage"}
 
-<spec-statement>For every Domain Requirement declared by `DomainModel.domainRequirementRefs`, at
-least one contained Domain Model element **MUST** reference that requirement.</spec-statement>
+Domain Model requirement coverage is a derived property.
+
+<spec-statement>The requirement coverage of a `DomainModel` **MUST** be derived from the union of
+`domainRequirementRefs` values on its contained Domain Model elements, including nested
+`Property` elements.</spec-statement>
+
+Conceptually:
+
+```text
+coverage(DomainModel)
+  =
+union(
+  Entity.domainRequirementRefs,
+  Entity.Property.domainRequirementRefs,
+  ValueObject.domainRequirementRefs,
+  ValueObject.Property.domainRequirementRefs,
+  Relationship.domainRequirementRefs,
+  DomainOperation.domainRequirementRefs,
+  Invariant.domainRequirementRefs
+)
+```
+
+<spec-statement>Derived Domain Model requirement coverage **MUST NOT** be serialized redundantly on
+the `DomainModel` root.</spec-statement>
+
+Completeness relative to a selected set of Domain Requirements is a validation-context concern. A
+producer or validator MAY require a particular target set to be covered, but that target set is not
+part of the canonical `DomainModel` payload.
 
 This permits one requirement to justify multiple Domain Model elements, and one Domain Model element
 to satisfy multiple requirements. No one-to-one mapping is implied.
@@ -316,11 +335,6 @@ imports.
     "org.openuji.domain-model": {
       "formatVersion": "0.1",
       "id": "urn:domain:model:workshop-waitlist",
-      "domainRequirementRefs": [
-        "urn:ujg:domain-requirement:waitlisted-participation",
-        "urn:ujg:domain-requirement:offer-validity",
-        "urn:ujg:domain-requirement:accept-offer"
-      ],
       "entities": [
         {
           "id": "urn:domain:entity:participant",
@@ -365,9 +379,9 @@ imports.
         }
       ],
       "valueObjects": [],
-      "associations": [
+      "relationships": [
         {
-          "id": "urn:domain:association:offer-participant",
+          "id": "urn:domain:relationship:offer-participant",
           "label": "Offer participant",
           "domainRequirementRefs": [
             "urn:ujg:domain-requirement:accept-offer"

@@ -4,10 +4,7 @@
   ],
   "domainModel": {
     "formatVersion": "0.1",
-    "id": "urn:domain:model:offer-association",
-    "domainRequirementRefs": [
-      "urn:ujg:domain-requirement:offer-belongs-to-participant"
-    ],
+    "id": "urn:domain:model:offer-relationship",
     "entities": [
       {
         "id": "urn:domain:entity:participant",
@@ -27,9 +24,9 @@
       }
     ],
     "valueObjects": [],
-    "associations": [
+    "relationships": [
       {
-        "id": "urn:domain:association:offer-participant",
+        "id": "urn:domain:relationship:offer-participant",
         "label": "Offer participant",
         "domainRequirementRefs": [
           "urn:ujg:domain-requirement:offer-belongs-to-participant"

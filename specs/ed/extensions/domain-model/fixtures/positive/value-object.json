@@ -5,9 +5,6 @@
   "domainModel": {
     "formatVersion": "0.1",
     "id": "urn:domain:model:offer-window",
-    "domainRequirementRefs": [
-      "urn:ujg:domain-requirement:offer-window"
-    ],
     "entities": [],
     "valueObjects": [
       {
@@ -28,7 +25,7 @@
         ]
       }
     ],
-    "associations": [],
+    "relationships": [],
     "domainOperations": [],
     "invariants": []
   }
