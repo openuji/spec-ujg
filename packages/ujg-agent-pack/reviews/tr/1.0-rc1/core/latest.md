@@ -26,4 +26,3 @@ Spec URL: https://ujg.specs.openuji.org/tr/1.0-rc1/core
 - Update source skill text if the spec changed semantics, terms, constraints, or boundaries.
 - Run `pnpm agent-pack:update` after source edits.
 - Accept the review only after the source and generated artifacts match the current spec.
-e current spec.

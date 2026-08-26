@@ -29,6 +29,7 @@
       ],
       "deps": [],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Architecture"
     },
     "conformance": {
@@ -37,6 +38,7 @@
         "profiles"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Conformance"
     },
     "core": {
@@ -62,6 +64,9 @@
         "architecture"
       ],
       "generatedSkill": "ujg-tr-1-0-rc1-core-modeling",
+      "generatedSkills": [
+        "ujg-tr-1-0-rc1-core-modeling"
+      ],
       "title": "Core"
     },
     "graph": {
@@ -86,6 +91,9 @@
         "core"
       ],
       "generatedSkill": "ujg-tr-1-0-rc1-graph-modeling",
+      "generatedSkills": [
+        "ujg-tr-1-0-rc1-graph-modeling"
+      ],
       "title": "Graph"
     },
     "mapping": {
@@ -101,6 +109,7 @@
         "modules/phase"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Mapping"
     },
     "metrics": {
@@ -112,6 +121,7 @@
         "mapping"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Metrics"
     },
     "modules/artifact": {
@@ -126,6 +136,7 @@
         "surface"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Artifact"
     },
     "modules/condition": {
@@ -134,6 +145,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Conditions"
     },
     "modules/design-system": {
@@ -146,6 +158,9 @@
         "surface"
       ],
       "generatedSkill": "ujg-tr-1-0-rc1-design-system-modeling",
+      "generatedSkills": [
+        "ujg-tr-1-0-rc1-design-system-modeling"
+      ],
       "title": "Design System"
     },
     "modules/effect": {
@@ -158,6 +173,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Effect"
     },
     "modules/entry-binding": {
@@ -169,6 +185,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Entry Binding"
     },
     "modules/experience-annotation": {
@@ -177,6 +194,7 @@
         "modules/phase"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Experience Annotation"
     },
     "modules/l10n": {
@@ -190,6 +208,9 @@
         "graph"
       ],
       "generatedSkill": "ujg-tr-1-0-rc1-l10n-modeling",
+      "generatedSkills": [
+        "ujg-tr-1-0-rc1-l10n-modeling"
+      ],
       "title": "Localization"
     },
     "modules/observability": {
@@ -202,6 +223,9 @@
         "modules/l10n"
       ],
       "generatedSkill": "ujg-tr-1-0-rc1-observability-modeling",
+      "generatedSkills": [
+        "ujg-tr-1-0-rc1-observability-modeling"
+      ],
       "title": "Observability"
     },
     "modules/phase": {
@@ -216,6 +240,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Phase"
     },
     "profiles": {
@@ -238,6 +263,7 @@
         "modules/artifact"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Profiles"
     },
     "runtime": {
@@ -251,6 +277,7 @@
         "surface"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Runtime"
     },
     "surface": {
@@ -268,6 +295,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Surface"
     }
   },

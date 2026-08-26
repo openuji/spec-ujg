@@ -18,6 +18,7 @@ Related generated skills:
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules
 - ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
+- ujg-ed-domain-model-evaluation: Domain Model Document Extension evaluation against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
 
@@ -92,10 +93,15 @@ Use the definitions from the Domain Model Document Extension specification:
 
 A UJG `User` does not by itself justify an `Entity`.
 
+A `Property` must itself be semantically required by the inputs. Do not introduce a `Property` merely as a possible mechanism for satisfying a requirement.
+
+A `DomainOperation` precondition must not assume the semantic result that the operation exists to establish.
+
+Introduce an `Invariant` only when the required rule is not already fully represented by `Property`, `Relationship`, or `DomainOperation` semantics.
+
 Do not introduce a model element merely because it is conventional DDD practice.
 
 Do not introduce `Aggregate`, `AggregateRoot`, `DomainService`, `DomainEvent`, `Repository`, `Command`, or `BoundedContext`.
-
 ## Traceability
 
 Every generated Domain Model element MUST contain at least one `domainRequirementRefs` entry.
