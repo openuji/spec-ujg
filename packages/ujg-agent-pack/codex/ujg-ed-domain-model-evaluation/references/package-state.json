@@ -1,5 +1,5 @@
 {
-  "artifactHash": "sha256:65ea040eae4120f6e1731650a0541dae6e3ed64f5c526d689dfc97d20dd54352",
+  "artifactHash": "sha256:9c1307611e61294a23c249b8ad7610766765f30ceff9f612b2ed106ca8a7654d",
   "configHash": "sha256:e9d0ce70b6e1cb500e26730dc7458ed7446a7b7c7be5276998c49d19ccbff668",
   "package": {
     "id": "ujg-agent-pack",
@@ -7,11 +7,11 @@
     "version": "0.0.1"
   },
   "skill": {
-    "key": "domain-model",
+    "key": "domain-model-evaluation",
     "moduleId": "extensions/domain-model",
-    "name": "ujg-ed-domain-model-derivation"
+    "name": "ujg-ed-domain-model-evaluation"
   },
-  "sourceHash": "sha256:23df1dd0d78166988c8713eb8bc87af85a4bafa94882cc4f9427df83473af578",
+  "sourceHash": "sha256:c3c439ec6be12948245567e5a247c0de3da78a167007c67469628e177c5e3c53",
   "specHash": "sha256:9a72a4ae8ff1ae454fc271c96da8cfe98004bf304ee4261e78a24f0132b13d55",
   "target": {
     "id": "ed",

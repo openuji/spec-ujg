@@ -7,8 +7,8 @@ Spec URL: https://ujg.specs.openuji.org/tr/1.0-rc1/modules/design-system
 
 ## Status
 
-- No previous accepted review state found.
-- Review is required before check can pass.
+- Previous review state found.
+- Source and spec hashes are unchanged.
 
 ## Review Inputs
 

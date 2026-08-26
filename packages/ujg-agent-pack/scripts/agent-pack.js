@@ -128,6 +128,9 @@ function readConfig() {
       'scope',
       'nameSuffix',
       'moduleId',
+      'description',
+      'shortDescription',
+      'defaultPrompt',
     ]);
     for (const skill of target.skills) {
       const unsupportedKeys = Object.keys(skill).filter((key) => !allowedSkillKeys.has(key));
@@ -320,6 +323,8 @@ function outputPathsForSkill(context, skill) {
 }
 
 function generatedDescription(context, skill) {
+  if (skill.description) return skill.description;
+
   if (skill.key === 'root') {
     if (context.target.kind === 'ed') {
       return `Generate, review, correct, and reason about User Journey Graph JSON-LD for the ${context.target.label}. Use when modeling UJG documents, checking vocabulary discipline, selecting modules, or correcting Core/Graph/Surface/Runtime/Mapping/Metrics/Experience/Localization/Observability and optional module separation, including Entry Binding, Design System, Effect, Condition, Artifact, Domain Requirements, and the Domain Model Document Extension.`;
@@ -332,11 +337,13 @@ function generatedDescription(context, skill) {
 }
 
 function shortDescription(context, skill) {
+  if (skill.shortDescription) return skill.shortDescription;
   if (skill.key === 'root') return `Model UJG JSON-LD for ${context.target.shortLabel}`;
   return `Model UJG ${skill.title.replace(' Modeling', '')} for ${context.target.shortLabel}`;
 }
 
 function defaultPrompt(skill) {
+  if (skill.defaultPrompt) return skill.defaultPrompt;
   return `Use $${skill.name} to generate or review UJG JSON-LD for this target and scope.`;
 }
 
@@ -344,19 +351,28 @@ function yamlString(value) {
   return `"${value.replaceAll('\\', '\\\\').replaceAll('"', '\\"')}"`;
 }
 
+function skillsForModule(context, moduleId) {
+  return context.skills.filter((skill) => skill.moduleId === moduleId);
+}
+
 function generatedSkillTree(context, currentSkill) {
   const moduleGraph = Object.fromEntries(
     [...context.modules.values()]
       .sort((left, right) => left.id.localeCompare(right.id))
-      .map((module) => [
-        module.id,
-        {
-          title: module.title,
-          deps: module.deps,
-          dependents: dependentClosure(context.modules, module.id),
-          generatedSkill: context.skills.find((skill) => skill.moduleId === module.id)?.name || null,
-        },
-      ])
+      .map((module) => {
+        const generatedSkills = skillsForModule(context, module.id).map((skill) => skill.name);
+
+        return [
+          module.id,
+          {
+            title: module.title,
+            deps: module.deps,
+            dependents: dependentClosure(context.modules, module.id),
+            generatedSkill: generatedSkills[0] || null,
+            generatedSkills,
+          },
+        ];
+      })
   );
 
   return {
@@ -392,14 +408,16 @@ function relatedSkills(context, currentSkill) {
 
   const relatedNames = new Set(['root']);
   for (const moduleId of skillModuleIds(context, currentSkill)) {
-    const upstreamSkill = context.skills.find((skill) => skill.moduleId === moduleId);
-    if (upstreamSkill) relatedNames.add(upstreamSkill.key);
+    for (const skill of skillsForModule(context, moduleId)) {
+      relatedNames.add(skill.key);
+    }
   }
 
   if (currentSkill.moduleId) {
     for (const moduleId of dependentClosure(context.modules, currentSkill.moduleId)) {
-      const downstreamSkill = context.skills.find((skill) => skill.moduleId === moduleId);
-      if (downstreamSkill) relatedNames.add(downstreamSkill.key);
+      for (const skill of skillsForModule(context, moduleId)) {
+        relatedNames.add(skill.key);
+      }
     }
   }
 

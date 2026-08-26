@@ -56,6 +56,16 @@
           "scope": "Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions",
           "nameSuffix": "domain-model-derivation",
           "moduleId": "extensions/domain-model"
+        },
+        {
+          "key": "domain-model-evaluation",
+          "title": "Domain Model Evaluation",
+          "scope": "Domain Model Document Extension evaluation against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality",
+          "nameSuffix": "domain-model-evaluation",
+          "moduleId": "extensions/domain-model",
+          "description": "Evaluate generated DomainModel outputs for the Editor's Draft against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality.",
+          "shortDescription": "Evaluate UJG Domain Models for ED",
+          "defaultPrompt": "Use $ujg-ed-domain-model-evaluation to evaluate a generated DomainModel against the supplied UJG document, Domain Requirements, and Domain Model JSON Schema."
         }
       ]
     },

@@ -31,6 +31,7 @@
       ],
       "deps": [],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Architecture"
     },
     "conformance": {
@@ -39,6 +40,7 @@
         "profiles"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Conformance"
     },
     "core": {
@@ -66,6 +68,9 @@
         "architecture"
       ],
       "generatedSkill": "ujg-ed-core-modeling",
+      "generatedSkills": [
+        "ujg-ed-core-modeling"
+      ],
       "title": "Core"
     },
     "extensions/domain-model": {
@@ -75,6 +80,10 @@
         "modules/domain-requirements"
       ],
       "generatedSkill": "ujg-ed-domain-model-derivation",
+      "generatedSkills": [
+        "ujg-ed-domain-model-derivation",
+        "ujg-ed-domain-model-evaluation"
+      ],
       "title": "Domain Model"
     },
     "graph": {
@@ -101,6 +110,9 @@
         "core"
       ],
       "generatedSkill": "ujg-ed-graph-modeling",
+      "generatedSkills": [
+        "ujg-ed-graph-modeling"
+      ],
       "title": "Graph"
     },
     "mapping": {
@@ -116,6 +128,7 @@
         "modules/phase"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Mapping"
     },
     "metrics": {
@@ -127,6 +140,7 @@
         "mapping"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Metrics"
     },
     "modules/artifact": {
@@ -141,6 +155,7 @@
         "surface"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Artifact"
     },
     "modules/condition": {
@@ -152,6 +167,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Conditions"
     },
     "modules/design-system": {
@@ -164,6 +180,9 @@
         "surface"
       ],
       "generatedSkill": "ujg-ed-design-system-modeling",
+      "generatedSkills": [
+        "ujg-ed-design-system-modeling"
+      ],
       "title": "Design System"
     },
     "modules/domain-requirements": {
@@ -178,6 +197,7 @@
         "modules/entry-binding"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Domain Requirements"
     },
     "modules/effect": {
@@ -192,6 +212,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Effect"
     },
     "modules/entry-binding": {
@@ -205,6 +226,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Entry Binding"
     },
     "modules/experience-annotation": {
@@ -213,6 +235,7 @@
         "modules/phase"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Experience Annotation"
     },
     "modules/l10n": {
@@ -226,6 +249,9 @@
         "graph"
       ],
       "generatedSkill": "ujg-ed-l10n-modeling",
+      "generatedSkills": [
+        "ujg-ed-l10n-modeling"
+      ],
       "title": "Localization"
     },
     "modules/observability": {
@@ -238,6 +264,9 @@
         "modules/l10n"
       ],
       "generatedSkill": "ujg-ed-observability-modeling",
+      "generatedSkills": [
+        "ujg-ed-observability-modeling"
+      ],
       "title": "Observability"
     },
     "modules/phase": {
@@ -252,6 +281,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Phase"
     },
     "profiles": {
@@ -274,6 +304,7 @@
         "modules/artifact"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Profiles"
     },
     "runtime": {
@@ -287,6 +318,7 @@
         "surface"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Runtime"
     },
     "surface": {
@@ -304,6 +336,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Surface"
     }
   },
@@ -363,6 +396,14 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
       "scope": "Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions",
       "source": "sources/ed/skills/domain-model/skill.md"
+    },
+    {
+      "key": "domain-model-evaluation",
+      "moduleId": "extensions/domain-model",
+      "name": "ujg-ed-domain-model-evaluation",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
+      "scope": "Domain Model Document Extension evaluation against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality",
+      "source": "sources/ed/skills/domain-model-evaluation/skill.md"
     }
   ],
   "target": {

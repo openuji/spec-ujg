@@ -23,6 +23,7 @@
       ],
       "deps": [],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Architecture"
     },
     "conformance": {
@@ -31,6 +32,7 @@
         "metrics"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Conformance"
     },
     "core": {
@@ -50,6 +52,7 @@
         "architecture"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Core"
     },
     "experience": {
@@ -58,6 +61,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Experience"
     },
     "graph": {
@@ -76,6 +80,7 @@
         "core"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Graph"
     },
     "mapping": {
@@ -88,6 +93,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Mapping"
     },
     "metrics": {
@@ -98,6 +104,7 @@
         "mapping"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Metrics"
     },
     "modules/condition": {
@@ -106,6 +113,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Conditions"
     },
     "modules/design-system": {
@@ -115,6 +123,9 @@
         "modules/surface"
       ],
       "generatedSkill": "ujg-tr-2026-06-design-system-modeling",
+      "generatedSkills": [
+        "ujg-tr-2026-06-design-system-modeling"
+      ],
       "title": "Design System"
     },
     "modules/l10n": {
@@ -123,6 +134,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Localization"
     },
     "modules/surface": {
@@ -133,6 +145,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Surface"
     },
     "runtime": {
@@ -145,6 +158,7 @@
         "graph"
       ],
       "generatedSkill": null,
+      "generatedSkills": [],
       "title": "Runtime"
     }
   },

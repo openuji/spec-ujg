@@ -17,7 +17,14 @@
     "ed/domain-model": {
       "reportPath": "reviews/ed/domain-model/latest.md",
       "skill": "domain-model",
-      "sourceHash": "sha256:3d1102f281fd3749081090fa0abf3c0841ff5b79d969482eeda801546bf7c46b",
+      "sourceHash": "sha256:23df1dd0d78166988c8713eb8bc87af85a4bafa94882cc4f9427df83473af578",
+      "specHash": "sha256:9a72a4ae8ff1ae454fc271c96da8cfe98004bf304ee4261e78a24f0132b13d55",
+      "target": "ed"
+    },
+    "ed/domain-model-evaluation": {
+      "reportPath": "reviews/ed/domain-model-evaluation/latest.md",
+      "skill": "domain-model-evaluation",
+      "sourceHash": "sha256:c3c439ec6be12948245567e5a247c0de3da78a167007c67469628e177c5e3c53",
       "specHash": "sha256:9a72a4ae8ff1ae454fc271c96da8cfe98004bf304ee4261e78a24f0132b13d55",
       "target": "ed"
     },
