@@ -70,13 +70,13 @@ resolution, Graph traversal, or Graph semantics.
 The Domain Model Extension describes UJG as a behavioral constraint on domain design, not as a
 source of one-to-one domain objects.
 
-```text
-State      -> must be materializable by the eventual implementation
-Condition  -> must be decidable when its transition is evaluated
-Effect     -> must be realizable when its transition occurs
-Entry      -> must provide sufficient context for its target journey state
-Transition -> connects these behavioral obligations
-```
+| Node | Requirement |
+| --- | --- |
+| State |  MUST be materializable by the eventual implementation |
+| Condition | MUST be decidable when its transition is evaluated |
+| Effect  | MUST be realizable when its transition occurs |
+| Entry   | MUST provide sufficient context for its target journey state |
+| Transition | connects these behavioral obligations |
 
 This relationship does not require each UJG element to have a corresponding Domain Model element.
 
