@@ -41,6 +41,9 @@ Produce the canonical payload for:
 UJGDocument.extensions["org.openuji.domain-model"]
 ```
 
+Do not add a payload-level extension version marker. Select the schema from the containing UJG
+document's specification family and namespace artifact route.
+
 Preserve unrelated UJG content and extensions.
 
 ## Semantic sources

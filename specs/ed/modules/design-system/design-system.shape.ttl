@@ -11,24 +11,6 @@ ujgdsshape:DesignSystemShape a sh:NodeShape ;
     sh:path ujgds:tokenSourceRefs ;
     sh:class ujgds:TokenSource ;
     sh:nodeKind sh:IRI ;
-  ] ;
-
-  sh:property [
-    sh:path ujgds:componentRefs ;
-    sh:class ujgds:Component ;
-    sh:nodeKind sh:IRI ;
-  ] ;
-
-  sh:property [
-    sh:path ujgds:templateRefs ;
-    sh:class ujgds:Template ;
-    sh:nodeKind sh:IRI ;
-  ] ;
-
-  sh:property [
-    sh:path ujgds:surfaceRealizationRefs ;
-    sh:class ujgds:SurfaceRealization ;
-    sh:nodeKind sh:IRI ;
   ] .
 
 ujgdsshape:TokenSourceShape a sh:NodeShape ;

@@ -39,7 +39,7 @@ Correct layer order:
 ```text
 Surface -> graphNodeRef -> supported Graph node
 SurfaceRealization -> surfaceRef + componentRef/templateRef
-DesignSystem -> componentRefs/templateRefs/tokenSourceRefs/surfaceRealizationRefs
+DesignSystem -> tokenSourceRefs
 ```
 
 Graph defines topology.
@@ -76,9 +76,6 @@ Use only these common Design System properties:
 
 ```text
 tokenSourceRefs
-componentRefs
-templateRefs
-surfaceRealizationRefs
 surfaceRef
 componentRef
 templateRef
@@ -188,6 +185,14 @@ Slot bindings are presentation composition only. They do not imply traversal, st
 Use `TokenSource` only to reference a token source, package, manifest, or token set.
 
 Do not encode token values, CSS variables, aliases, themes, or style calculations unless the user explicitly asks for a project extension.
+
+## DesignSystem
+
+Use `DesignSystem` only as a token-source scope through `tokenSourceRefs`.
+
+Do not use `DesignSystem` as a component registry, template registry, or surface-realization registry.
+
+Consumers derive component, template, and realization inventories from `Component`, `Template`, `SurfaceRealization`, and `SlotBinding` nodes directly.
 
 ## Navigation and forms
 

@@ -38,18 +38,6 @@ ujgds:tokenSourceRefs a owl:ObjectProperty ;
   rdfs:domain ujgds:DesignSystem ;
   rdfs:range ujgds:TokenSource .
 
-ujgds:componentRefs a owl:ObjectProperty ;
-  rdfs:domain ujgds:DesignSystem ;
-  rdfs:range ujgds:Component .
-
-ujgds:templateRefs a owl:ObjectProperty ;
-  rdfs:domain ujgds:DesignSystem ;
-  rdfs:range ujgds:Template .
-
-ujgds:surfaceRealizationRefs a owl:ObjectProperty ;
-  rdfs:domain ujgds:DesignSystem ;
-  rdfs:range ujgds:SurfaceRealization .
-
 ujgds:surfaceRef a owl:ObjectProperty ;
   rdfs:domain ujgds:SurfaceRealization ;
   rdfs:range ujgsurface:Surface .

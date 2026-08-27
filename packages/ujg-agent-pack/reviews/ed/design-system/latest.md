@@ -12,8 +12,8 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/design-system
 
 ## Review Inputs
 
-- Source hash: sha256:248600ed1312f8647b994d59da5f0df54b5de1854ee26dd4068ab5026cd16f26
-- Spec hash: sha256:cf50c5a831f35de643ef910113c55e78235ca798b307fdc5db1a205dba6fe6d7
+- Source hash: sha256:32f4beea7ad532deeb88098f2d738ed150a2b547820d00afa1916e96a8de8474
+- Spec hash: sha256:f6b77a460867aa9c3ff73e03026c33db58a03a1f38437054bd34f9aadef2d049
 
 ## Source Headings Likely Affected
 
@@ -25,6 +25,7 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/design-system
 - SurfaceRealization
 - Template, Slot, SlotBinding
 - TokenSource
+- DesignSystem
 - Navigation and forms
 - Checks before answering
 
