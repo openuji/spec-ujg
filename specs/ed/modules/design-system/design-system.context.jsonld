@@ -27,21 +27,6 @@
       "@type": "@id",
       "@container": "@set"
     },
-    "componentRefs": {
-      "@id": "ujgds:componentRefs",
-      "@type": "@id",
-      "@container": "@set"
-    },
-    "templateRefs": {
-      "@id": "ujgds:templateRefs",
-      "@type": "@id",
-      "@container": "@set"
-    },
-    "surfaceRealizationRefs": {
-      "@id": "ujgds:surfaceRealizationRefs",
-      "@type": "@id",
-      "@container": "@set"
-    },
     "componentRef": {
       "@id": "ujgds:componentRef",
       "@type": "@id"

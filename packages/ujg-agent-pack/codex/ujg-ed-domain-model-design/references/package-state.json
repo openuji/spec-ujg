@@ -12,7 +12,7 @@
     "name": "ujg-ed-domain-model-design"
   },
   "sourceHash": "sha256:50eb75c2ad144259b7214e685e1b63606de6494198c27677fd9876373f2de956",
-  "specHash": "sha256:75c85eef3dd0201ad6d4fd2bc3738a00742451d6473337e2f6bde5ee2e81439e",
+  "specHash": "sha256:dff462241bc64427b2692e124d85e8b3050bd16e5c78f3cc8832a27966383be9",
   "target": {
     "id": "ed",
     "label": "Editor's Draft"

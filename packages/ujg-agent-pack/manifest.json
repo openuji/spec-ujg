@@ -116,7 +116,7 @@
           "name": "ujg-ed-modeling",
           "source": "sources/ed/skills/root/skill.md",
           "sourceHash": "sha256:a70767c9f833acd3c26b0999e5934241279d2e28f30c858ca54def64da54b470",
-          "specHash": "sha256:10d99802f110e6cf79bc67a11031bb4884c8717afc74bab621be640c01cd699c"
+          "specHash": "sha256:0a850d13e5dce200b6aec3d452b08dbf6fcae3af6eb98c9719168f1b1a170d7f"
         },
         {
           "artifactHash": "sha256:60ff1ba8a30879af3ecf7e692a91112468f29122e495ae1cf875abeb5e9f1c0b",
@@ -137,13 +137,13 @@
           "specHash": "sha256:13b372c211e423c09a97155a24e8d0aca3f172620cd463f9d0e842d5f9173a45"
         },
         {
-          "artifactHash": "sha256:a88db1d05ebba48b7babbd5636046034dec4764796ab839cb39d2a79a0b086fb",
+          "artifactHash": "sha256:5ac572391140a68205f927f430fe34b5f65268f9778f5ff06b62e70b2610ce85",
           "key": "design-system",
           "moduleId": "modules/design-system",
           "name": "ujg-ed-design-system-modeling",
           "source": "sources/ed/skills/design-system/skill.md",
-          "sourceHash": "sha256:248600ed1312f8647b994d59da5f0df54b5de1854ee26dd4068ab5026cd16f26",
-          "specHash": "sha256:cf50c5a831f35de643ef910113c55e78235ca798b307fdc5db1a205dba6fe6d7"
+          "sourceHash": "sha256:32f4beea7ad532deeb88098f2d738ed150a2b547820d00afa1916e96a8de8474",
+          "specHash": "sha256:f6b77a460867aa9c3ff73e03026c33db58a03a1f38437054bd34f9aadef2d049"
         },
         {
           "artifactHash": "sha256:207f4bfe60791015cd3abfbcf7e86590593547c5a7f4dc3ae2a6c5a92890b4ee",
@@ -170,7 +170,7 @@
           "name": "ujg-ed-domain-model-design",
           "source": "sources/ed/skills/domain-model/skill.md",
           "sourceHash": "sha256:50eb75c2ad144259b7214e685e1b63606de6494198c27677fd9876373f2de956",
-          "specHash": "sha256:75c85eef3dd0201ad6d4fd2bc3738a00742451d6473337e2f6bde5ee2e81439e"
+          "specHash": "sha256:dff462241bc64427b2692e124d85e8b3050bd16e5c78f3cc8832a27966383be9"
         },
         {
           "artifactHash": "sha256:9599f4c30a8949dc2a8548607fbe9d4dc3b34ee6b1a9bce58ab6482893a47222",
@@ -179,7 +179,7 @@
           "name": "ujg-ed-domain-model-evaluation",
           "source": "sources/ed/skills/domain-model-evaluation/skill.md",
           "sourceHash": "sha256:ddbf680434d50519aaff77a1788d7e55c6580e5d852abdd2d924787b8f3ec3b1",
-          "specHash": "sha256:75c85eef3dd0201ad6d4fd2bc3738a00742451d6473337e2f6bde5ee2e81439e"
+          "specHash": "sha256:dff462241bc64427b2692e124d85e8b3050bd16e5c78f3cc8832a27966383be9"
         }
       ],
       "specRoot": "specs/ed"

@@ -18,8 +18,7 @@ resolution, rendering behavior, or runtime semantics.
 
 ## Terminology
 
-- <dfn>DesignSystem</dfn>: A graph-native catalog or scope for design-system artifacts available to
-  realize surfaces.
+- <dfn>DesignSystem</dfn>: A graph-native design-system scope that references token sources.
 - <dfn>TokenSource</dfn>: An addressable token source, package, manifest, or token set. The internal
   token format is external to UJG.
 - <dfn>Component</dfn>: An addressable design-system artifact that can realize a surface or fill a
@@ -186,26 +185,18 @@ Example JSON node:
 
 ## DesignSystem {data-cop-concept="design-system"}
 
-A [=DesignSystem=] is a catalog or scope for token sources, components, templates, and surface
-realizations.
+A [=DesignSystem=] is a design-system scope that references token sources. Components, templates,
+and surface realizations are discovered from their own nodes and are not duplicated on the
+`DesignSystem`.
 
 ```mermaid
 classDiagram
   class TokenSource
-  class Component
-  class Template
-  class SurfaceRealization
   class DesignSystem {
     id
     tokenSourceRefs
-    componentRefs
-    templateRefs
-    surfaceRealizationRefs
   }
   DesignSystem --> "0..*" TokenSource : tokenSourceRefs
-  DesignSystem --> "0..*" Component : componentRefs
-  DesignSystem --> "0..*" Template : templateRefs
-  DesignSystem --> "0..*" SurfaceRealization : surfaceRealizationRefs
 ```
 
 Example JSON node:
@@ -214,10 +205,7 @@ Example JSON node:
 {
   "@type": "DesignSystem",
   "@id": "urn:ujg:design-system:shop",
-  "tokenSourceRefs": ["urn:ujg:tokens:brand"],
-  "componentRefs": ["urn:ujg:component:CheckoutForm"],
-  "templateRefs": ["urn:ujg:template:checkout-layout"],
-  "surfaceRealizationRefs": ["urn:ujg:realization:checkout-form"]
+  "tokenSourceRefs": ["urn:ujg:tokens:brand"]
 }
 ```
 
@@ -230,7 +218,7 @@ and does not make `Surface` depend on design-system artifacts.
 
 Design-system realization is expressed by `SurfaceRealization` nodes:
 
-- A `DesignSystem` MAY reference `SurfaceRealization` nodes through `surfaceRealizationRefs`.
+- A `DesignSystem` MAY reference `TokenSource` nodes through `tokenSourceRefs`.
 - A `SurfaceRealization` MUST reference exactly one `Surface`.
 - A `SurfaceRealization` MUST reference exactly one primary realization, either `componentRef` or
   `templateRef`.
@@ -239,25 +227,25 @@ Design-system realization is expressed by `SurfaceRealization` nodes:
   `slotBindingRefs`.
 - A `SlotBinding` MUST reference exactly one `Slot` and exactly one target.
 
-This shape allows multiple design systems to realize the same surface independently without changing
-the surface or assigning multiple surfaces to the same supported Graph node.
+This shape allows design-system token scopes to vary independently without changing the surface or
+assigning multiple surfaces to the same supported Graph node. Component, template, and realization
+inventories are derived from `Component`, `Template`, and `SurfaceRealization` nodes instead of
+being maintained as duplicate lists on `DesignSystem`.
 
-## DesignSystem Catalog
+## DesignSystem Scope
 
-A `DesignSystem` groups design-system artifacts and realizations available in a design-system
-context. It is not a renderer and does not define component internals, layout rules, or token
-syntax.
+A `DesignSystem` identifies a design-system context by referencing token sources. It is not a
+renderer, artifact inventory, realization registry, and does not define component internals, layout
+rules, or token syntax.
 
-The catalog properties are:
+The scope property is:
 
 - `tokenSourceRefs`: references zero or more `TokenSource` nodes.
-- `componentRefs`: references zero or more `Component` nodes.
-- `templateRefs`: references zero or more `Template` nodes.
-- `surfaceRealizationRefs`: references zero or more `SurfaceRealization` nodes.
 
 `TokenSource` identifies a token source, token package, token manifest, or token set. Individual
 token names, token paths, token groups, token values, aliases, and inheritance rules are outside this
-module.
+module. Consumers that need component, template, or realization inventories derive them from
+addressable design-system nodes and their references.
 
 ## Templates And Slots
 
@@ -427,16 +415,6 @@ This example assigns a state to a surface. It does not declare any design-system
       "graphNodeRef": "urn:state:cart"
     },
     {
-      "@id": "urn:ds:acme",
-      "@type": "DesignSystem",
-      "componentRefs": [
-        "urn:component:CartView"
-      ],
-      "surfaceRealizationRefs": [
-        "urn:realization:cart-web"
-      ]
-    },
-    {
       "@id": "urn:component:CartView",
       "@type": "Component"
     },
@@ -450,8 +428,8 @@ This example assigns a state to a surface. It does not declare any design-system
 }
 ```
 
-The surface remains unchanged. The design system owns the realization node that points to the
-surface.
+The surface remains unchanged. The realization node points to the surface directly, and clients can
+derive the used component by following the realization reference.
 
 ### Example C: Template Realization
 
@@ -486,19 +464,6 @@ surface.
       "@id": "urn:surface:submit-refund",
       "@type": "Surface",
       "graphNodeRef": "urn:transition:submit-refund"
-    },
-    {
-      "@id": "urn:ds:acme",
-      "@type": "DesignSystem",
-      "componentRefs": [
-        "urn:component:RefundForm"
-      ],
-      "templateRefs": [
-        "urn:template:FormShell"
-      ],
-      "surfaceRealizationRefs": [
-        "urn:realization:refund-form"
-      ]
     },
     {
       "@id": "urn:component:RefundForm",
@@ -718,16 +683,6 @@ The template declares slots. The realization binds those slots for this surface.
         "urn:binding:results",
         "urn:binding:preview"
       ]
-    },
-    {
-      "@id": "urn:ds:commerce",
-      "@type": "DesignSystem",
-      "templateRefs": [
-        "urn:template:ProductDiscovery"
-      ],
-      "surfaceRealizationRefs": [
-        "urn:realization:product-discovery"
-      ]
     }
   ]
 }
@@ -737,7 +692,7 @@ The composite state's surface is realized as a shell. Child containment comes fr
 referenced by `subjourneyId`. The child surfaces are placed into slots for presentation only; Graph
 remains the source of containment and traversal semantics.
 
-### Example E: Multiple Design Systems
+### Example E: Multiple Design-System Token Scopes
 
 ```json
 {
@@ -761,67 +716,52 @@ remains the source of containment and traversal semantics.
       "graphNodeRef": "urn:state:checkout"
     },
     {
-      "@id": "urn:component:WebCheckout",
+      "@id": "urn:component:Checkout",
       "@type": "Component"
     },
     {
-      "@id": "urn:component:KioskCheckout",
-      "@type": "Component"
-    },
-    {
-      "@id": "urn:component:CliCheckout",
-      "@type": "Component"
-    },
-    {
-      "@id": "urn:realization:checkout-web",
+      "@id": "urn:realization:checkout",
       "@type": "SurfaceRealization",
       "surfaceRef": "urn:surface:checkout",
-      "componentRef": "urn:component:WebCheckout"
+      "componentRef": "urn:component:Checkout"
     },
     {
-      "@id": "urn:realization:checkout-kiosk",
-      "@type": "SurfaceRealization",
-      "surfaceRef": "urn:surface:checkout",
-      "componentRef": "urn:component:KioskCheckout"
+      "@id": "urn:tokens:web",
+      "@type": "TokenSource"
     },
     {
-      "@id": "urn:realization:checkout-cli",
-      "@type": "SurfaceRealization",
-      "surfaceRef": "urn:surface:checkout",
-      "componentRef": "urn:component:CliCheckout"
+      "@id": "urn:tokens:kiosk",
+      "@type": "TokenSource"
+    },
+    {
+      "@id": "urn:tokens:cli",
+      "@type": "TokenSource"
     },
     {
       "@id": "urn:ds:web",
       "@type": "DesignSystem",
-      "componentRefs": [
-        "urn:component:WebCheckout"
-      ],
-      "surfaceRealizationRefs": [
-        "urn:realization:checkout-web"
+      "tokenSourceRefs": [
+        "urn:tokens:web"
       ]
     },
     {
       "@id": "urn:ds:kiosk",
       "@type": "DesignSystem",
-      "componentRefs": [
-        "urn:component:KioskCheckout"
-      ],
-      "surfaceRealizationRefs": [
-        "urn:realization:checkout-kiosk"
+      "tokenSourceRefs": [
+        "urn:tokens:kiosk"
       ]
     },
     {
       "@id": "urn:ds:cli",
       "@type": "DesignSystem",
-      "componentRefs": [
-        "urn:component:CliCheckout"
-      ],
-      "surfaceRealizationRefs": [
-        "urn:realization:checkout-cli"
+      "tokenSourceRefs": [
+        "urn:tokens:cli"
       ]
     }
   ]
 }
 ```
 
-The same surface can be realized by several design systems. The surface identity remains stable.
+Multiple design-system scopes can provide different token sources for the same surface and
+realization graph. Components, templates, and surface realizations remain discoverable from their own
+nodes rather than from duplicated `DesignSystem` lists.
