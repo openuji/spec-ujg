@@ -2,9 +2,9 @@
   "currentSkill": {
     "key": "domain-model",
     "moduleId": "extensions/domain-model",
-    "name": "ujg-ed-domain-model-derivation",
+    "name": "ujg-ed-domain-model-design",
     "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
-    "scope": "Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions"
+    "scope": "Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge"
   },
   "moduleGraph": {
     "architecture": {
@@ -24,7 +24,6 @@
         "mapping",
         "modules/design-system",
         "metrics",
-        "modules/domain-requirements",
         "profiles",
         "conformance",
         "extensions/domain-model"
@@ -59,7 +58,6 @@
         "mapping",
         "modules/design-system",
         "metrics",
-        "modules/domain-requirements",
         "profiles",
         "conformance",
         "extensions/domain-model"
@@ -77,11 +75,14 @@
       "dependents": [],
       "deps": [
         "core",
-        "modules/domain-requirements"
+        "graph",
+        "modules/condition",
+        "modules/effect",
+        "modules/entry-binding"
       ],
-      "generatedSkill": "ujg-ed-domain-model-derivation",
+      "generatedSkill": "ujg-ed-domain-model-design",
       "generatedSkills": [
-        "ujg-ed-domain-model-derivation",
+        "ujg-ed-domain-model-design",
         "ujg-ed-domain-model-evaluation"
       ],
       "title": "Domain Model"
@@ -101,7 +102,6 @@
         "mapping",
         "modules/design-system",
         "metrics",
-        "modules/domain-requirements",
         "profiles",
         "conformance",
         "extensions/domain-model"
@@ -160,7 +160,6 @@
     },
     "modules/condition": {
       "dependents": [
-        "modules/domain-requirements",
         "extensions/domain-model"
       ],
       "deps": [
@@ -185,25 +184,9 @@
       ],
       "title": "Design System"
     },
-    "modules/domain-requirements": {
-      "dependents": [
-        "extensions/domain-model"
-      ],
-      "deps": [
-        "core",
-        "graph",
-        "modules/condition",
-        "modules/effect",
-        "modules/entry-binding"
-      ],
-      "generatedSkill": null,
-      "generatedSkills": [],
-      "title": "Domain Requirements"
-    },
     "modules/effect": {
       "dependents": [
         "modules/artifact",
-        "modules/domain-requirements",
         "profiles",
         "conformance",
         "extensions/domain-model"
@@ -217,7 +200,6 @@
     },
     "modules/entry-binding": {
       "dependents": [
-        "modules/domain-requirements",
         "profiles",
         "conformance",
         "extensions/domain-model"
@@ -392,9 +374,9 @@
     {
       "key": "domain-model",
       "moduleId": "extensions/domain-model",
-      "name": "ujg-ed-domain-model-derivation",
+      "name": "ujg-ed-domain-model-design",
       "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
-      "scope": "Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions",
+      "scope": "Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge",
       "source": "sources/ed/skills/domain-model/skill.md"
     },
     {
@@ -402,7 +384,7 @@
       "moduleId": "extensions/domain-model",
       "name": "ujg-ed-domain-model-evaluation",
       "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
-      "scope": "Domain Model Document Extension evaluation against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality",
+      "scope": "Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality",
       "source": "sources/ed/skills/domain-model-evaluation/skill.md"
     }
   ],

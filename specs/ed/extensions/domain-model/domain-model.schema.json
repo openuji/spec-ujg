@@ -5,7 +5,6 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "formatVersion",
     "id",
     "entities",
     "valueObjects",
@@ -14,9 +13,6 @@
     "invariants"
   ],
   "properties": {
-    "formatVersion": {
-      "const": "0.1"
-    },
     "id": {
       "$ref": "#/$defs/identifier"
     },
@@ -63,7 +59,7 @@
       },
       "uniqueItems": true
     },
-    "elementRequirementRefs": {
+    "ujgRefs": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/identifier"
@@ -77,7 +73,6 @@
       "required": [
         "id",
         "label",
-        "domainRequirementRefs",
         "valueType"
       ],
       "properties": {
@@ -91,8 +86,8 @@
         "description": {
           "type": "string"
         },
-        "domainRequirementRefs": {
-          "$ref": "#/$defs/elementRequirementRefs"
+        "ujgRefs": {
+          "$ref": "#/$defs/ujgRefs"
         },
         "valueType": {
           "enum": [
@@ -132,7 +127,6 @@
       "required": [
         "id",
         "label",
-        "domainRequirementRefs",
         "properties"
       ],
       "properties": {
@@ -146,8 +140,8 @@
         "description": {
           "type": "string"
         },
-        "domainRequirementRefs": {
-          "$ref": "#/$defs/elementRequirementRefs"
+        "ujgRefs": {
+          "$ref": "#/$defs/ujgRefs"
         },
         "properties": {
           "type": "array",
@@ -163,7 +157,6 @@
       "required": [
         "id",
         "label",
-        "domainRequirementRefs",
         "properties"
       ],
       "properties": {
@@ -177,8 +170,8 @@
         "description": {
           "type": "string"
         },
-        "domainRequirementRefs": {
-          "$ref": "#/$defs/elementRequirementRefs"
+        "ujgRefs": {
+          "$ref": "#/$defs/ujgRefs"
         },
         "properties": {
           "type": "array",
@@ -194,7 +187,6 @@
       "required": [
         "id",
         "label",
-        "domainRequirementRefs",
         "sourceRef",
         "targetRef"
       ],
@@ -209,8 +201,8 @@
         "description": {
           "type": "string"
         },
-        "domainRequirementRefs": {
-          "$ref": "#/$defs/elementRequirementRefs"
+        "ujgRefs": {
+          "$ref": "#/$defs/ujgRefs"
         },
         "sourceRef": {
           "$ref": "#/$defs/identifier"
@@ -226,7 +218,6 @@
       "required": [
         "id",
         "label",
-        "domainRequirementRefs",
         "actsOnRefs",
         "preconditions",
         "postconditions"
@@ -242,8 +233,8 @@
         "description": {
           "type": "string"
         },
-        "domainRequirementRefs": {
-          "$ref": "#/$defs/elementRequirementRefs"
+        "ujgRefs": {
+          "$ref": "#/$defs/ujgRefs"
         },
         "actsOnRefs": {
           "$ref": "#/$defs/referenceArray"
@@ -268,7 +259,6 @@
       "required": [
         "id",
         "label",
-        "domainRequirementRefs",
         "appliesToRefs",
         "assertion"
       ],
@@ -283,8 +273,8 @@
         "description": {
           "type": "string"
         },
-        "domainRequirementRefs": {
-          "$ref": "#/$defs/elementRequirementRefs"
+        "ujgRefs": {
+          "$ref": "#/$defs/ujgRefs"
         },
         "appliesToRefs": {
           "$ref": "#/$defs/referenceArray"

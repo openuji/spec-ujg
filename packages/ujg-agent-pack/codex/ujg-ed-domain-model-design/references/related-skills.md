@@ -3,7 +3,7 @@
 # Related Skills
 
 Target: Editor's Draft
-Current skill: ujg-ed-domain-model-derivation
+Current skill: ujg-ed-domain-model-design
 Module scope: extensions/domain-model
 
 ## Sibling Skills
@@ -11,7 +11,7 @@ Module scope: extensions/domain-model
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules
 - ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
-- ujg-ed-domain-model-evaluation: Domain Model Document Extension evaluation against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality
+- ujg-ed-domain-model-evaluation: Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality
 
 ## Downstream Spec Modules
 

@@ -5,7 +5,10 @@
   "baseUrl": "${SPEC_BASE_URL}/ed",
   "deps": [
     "core",
-    "modules/domain-requirements"
+    "graph",
+    "modules/condition",
+    "modules/effect",
+    "modules/entry-binding"
   ],
   "custom": {
     "family": "extension",
@@ -29,10 +32,6 @@
       "UJG Core": {
         "title": "UJG Core",
         "url": "/ed/core"
-      },
-      "UJG Domain Requirements": {
-        "title": "UJG Domain Requirements",
-        "url": "/ed/modules/domain-requirements"
       }
     }
   }

@@ -1,7 +1,7 @@
-# Skill Review: ujg-ed-domain-model-derivation
+# Skill Review: ujg-ed-domain-model-design
 
 Target: Editor's Draft
-Skill scope: Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions
+Skill scope: Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge
 Source: sources/ed/skills/domain-model/skill.md
 Spec URL: https://ujg.specs.openuji.org/ed/extensions/domain-model
 
@@ -12,12 +12,12 @@ Spec URL: https://ujg.specs.openuji.org/ed/extensions/domain-model
 
 ## Review Inputs
 
-- Source hash: sha256:23df1dd0d78166988c8713eb8bc87af85a4bafa94882cc4f9427df83473af578
-- Spec hash: sha256:9a72a4ae8ff1ae454fc271c96da8cfe98004bf304ee4261e78a24f0132b13d55
+- Source hash: sha256:50eb75c2ad144259b7214e685e1b63606de6494198c27677fd9876373f2de956
+- Spec hash: sha256:75c85eef3dd0201ad6d4fd2bc3738a00742451d6473337e2f6bde5ee2e81439e
 
 ## Source Headings Likely Affected
 
-- UJG ED Domain Model Derivation
+- UJG ED Domain Model Design
 
 ## Checklist
 

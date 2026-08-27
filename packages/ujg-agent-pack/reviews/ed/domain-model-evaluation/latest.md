@@ -1,7 +1,7 @@
 # Skill Review: ujg-ed-domain-model-evaluation
 
 Target: Editor's Draft
-Skill scope: Domain Model Document Extension evaluation against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality
+Skill scope: Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality
 Source: sources/ed/skills/domain-model-evaluation/skill.md
 Spec URL: https://ujg.specs.openuji.org/ed/extensions/domain-model
 
@@ -12,8 +12,8 @@ Spec URL: https://ujg.specs.openuji.org/ed/extensions/domain-model
 
 ## Review Inputs
 
-- Source hash: sha256:c3c439ec6be12948245567e5a247c0de3da78a167007c67469628e177c5e3c53
-- Spec hash: sha256:9a72a4ae8ff1ae454fc271c96da8cfe98004bf304ee4261e78a24f0132b13d55
+- Source hash: sha256:ddbf680434d50519aaff77a1788d7e55c6580e5d852abdd2d924787b8f3ec3b1
+- Spec hash: sha256:75c85eef3dd0201ad6d4fd2bc3738a00742451d6473337e2f6bde5ee2e81439e
 
 ## Source Headings Likely Affected
 

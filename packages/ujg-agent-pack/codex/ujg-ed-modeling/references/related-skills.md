@@ -13,8 +13,8 @@ Module scope: whole target
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
 - ujg-ed-l10n-modeling: Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata
 - ujg-ed-observability-modeling: Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver
-- ujg-ed-domain-model-derivation: Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions
-- ujg-ed-domain-model-evaluation: Domain Model Document Extension evaluation against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality
+- ujg-ed-domain-model-design: Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge
+- ujg-ed-domain-model-evaluation: Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality
 
 ## Downstream Spec Modules
 
