@@ -28,6 +28,13 @@
       "specHash": "sha256:dff462241bc64427b2692e124d85e8b3050bd16e5c78f3cc8832a27966383be9",
       "target": "ed"
     },
+    "ed/domain-model-implementation": {
+      "reportPath": "reviews/ed/domain-model-implementation/latest.md",
+      "skill": "domain-model-implementation",
+      "sourceHash": "sha256:a8d738b3047ff5f497ea860d1bc6751acddc6fd29be1588b48827916dc95b434",
+      "specHash": "sha256:dff462241bc64427b2692e124d85e8b3050bd16e5c78f3cc8832a27966383be9",
+      "target": "ed"
+    },
     "ed/graph": {
       "reportPath": "reviews/ed/graph/latest.md",
       "skill": "graph",

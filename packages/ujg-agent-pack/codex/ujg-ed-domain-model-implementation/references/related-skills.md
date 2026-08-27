@@ -3,7 +3,7 @@
 # Related Skills
 
 Target: Editor's Draft
-Current skill: ujg-ed-domain-model-design
+Current skill: ujg-ed-domain-model-implementation
 Module scope: extensions/domain-model
 
 ## Sibling Skills

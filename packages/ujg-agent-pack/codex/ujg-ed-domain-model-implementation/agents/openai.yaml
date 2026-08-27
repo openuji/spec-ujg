@@ -1,0 +1,4 @@
+interface:
+  display_name: "UJG ED Domain Model Implementation Conformance"
+  short_description: "Review UJG domain implementations for ED"
+  default_prompt: "Use $ujg-ed-domain-model-implementation to review or implement software against a full UJG document with a Domain Model extension, including graph topology, guarded branches, effects, invariants, and journey semantics."

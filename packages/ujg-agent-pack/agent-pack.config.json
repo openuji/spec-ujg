@@ -51,16 +51,6 @@
           "moduleId": "modules/observability"
         },
         {
-          "key": "domain-model",
-          "title": "Domain Model Design",
-          "scope": "Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge",
-          "nameSuffix": "domain-model-design",
-          "moduleId": "extensions/domain-model",
-          "description": "Generate, review, correct, and reason about Domain Model Design in User Journey Graph JSON-LD for the Editor's Draft. Use when the task is scoped to designing the Domain Model Document Extension from UJG topology, explicit domain knowledge, or whole-document modeling across this boundary.",
-          "shortDescription": "Design UJG Domain Models for ED",
-          "defaultPrompt": "Use $ujg-ed-domain-model-design to generate or review a DomainModel from the supplied UJG document, Domain Model JSON Schema, and any explicit domain knowledge."
-        },
-        {
           "key": "domain-model-evaluation",
           "title": "Domain Model Evaluation",
           "scope": "Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality",
@@ -69,6 +59,16 @@
           "description": "Evaluate generated DomainModel outputs for the Editor's Draft against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality.",
           "shortDescription": "Evaluate UJG Domain Models for ED",
           "defaultPrompt": "Use $ujg-ed-domain-model-evaluation to evaluate a generated DomainModel against the supplied UJG document, Domain Model JSON Schema, and any explicit domain knowledge."
+        },
+        {
+          "key": "domain-model-implementation",
+          "title": "Domain Model Implementation Conformance",
+          "scope": "software implementation conformance against a full UJG document with the Domain Model Document Extension, including domain behavior, guarded branches, effects, invariants, and journey semantics",
+          "nameSuffix": "domain-model-implementation",
+          "moduleId": "extensions/domain-model",
+          "description": "Review or implement software against a User Journey Graph document with a Domain Model extension for the Editor's Draft, preserving domain behavior, guarded branches, effects, invariants, and journey semantics. Use when the full UJG document is the behavioral source of truth; do not use to evaluate the DomainModel JSON alone.",
+          "shortDescription": "Review UJG domain implementations for ED",
+          "defaultPrompt": "Use $ujg-ed-domain-model-implementation to review or implement software against a full UJG document with a Domain Model extension, including graph topology, guarded branches, effects, invariants, and journey semantics."
         }
       ]
     },
