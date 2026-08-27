@@ -1,6 +1,6 @@
 {
   "config": {
-    "hash": "sha256:e9d0ce70b6e1cb500e26730dc7458ed7446a7b7c7be5276998c49d19ccbff668",
+    "hash": "sha256:30f42af0249b06e058e91e4a9e1eb285c7bd13a15dd567bebf489387d9454585",
     "path": "agent-pack.config.json"
   },
   "generatedFiles": [
@@ -30,11 +30,11 @@
     "codex/ujg-ed-design-system-modeling/references/package-state.json",
     "codex/ujg-ed-design-system-modeling/references/related-skills.md",
     "codex/ujg-ed-design-system-modeling/references/skill-tree.json",
-    "codex/ujg-ed-domain-model-derivation/SKILL.md",
-    "codex/ujg-ed-domain-model-derivation/agents/openai.yaml",
-    "codex/ujg-ed-domain-model-derivation/references/package-state.json",
-    "codex/ujg-ed-domain-model-derivation/references/related-skills.md",
-    "codex/ujg-ed-domain-model-derivation/references/skill-tree.json",
+    "codex/ujg-ed-domain-model-design/SKILL.md",
+    "codex/ujg-ed-domain-model-design/agents/openai.yaml",
+    "codex/ujg-ed-domain-model-design/references/package-state.json",
+    "codex/ujg-ed-domain-model-design/references/related-skills.md",
+    "codex/ujg-ed-domain-model-design/references/skill-tree.json",
     "codex/ujg-ed-domain-model-evaluation/SKILL.md",
     "codex/ujg-ed-domain-model-evaluation/agents/openai.yaml",
     "codex/ujg-ed-domain-model-evaluation/references/package-state.json",
@@ -110,16 +110,16 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed",
       "skills": [
         {
-          "artifactHash": "sha256:31f5bdcfbc56e2a6258c64e4f67bb658f5627b31222c450947460a9cba9e043f",
+          "artifactHash": "sha256:c83c6735c860eb19ae7da6c7bc7ba2b17a76ac82908f639401de1386537a79ef",
           "key": "root",
           "moduleId": null,
           "name": "ujg-ed-modeling",
           "source": "sources/ed/skills/root/skill.md",
-          "sourceHash": "sha256:27582114a557398956e2ff7ebb57af7538f855c8af982280f58b169f89b5c13b",
-          "specHash": "sha256:f9f9a0e81e33c204909e769408e5afb29ca9b40c611f4725bd12cfca8e71f291"
+          "sourceHash": "sha256:a70767c9f833acd3c26b0999e5934241279d2e28f30c858ca54def64da54b470",
+          "specHash": "sha256:10d99802f110e6cf79bc67a11031bb4884c8717afc74bab621be640c01cd699c"
         },
         {
-          "artifactHash": "sha256:2247c21a61bc57b937c03ca0f83629878b7973c6f211c8baa02ccca77c67b77c",
+          "artifactHash": "sha256:60ff1ba8a30879af3ecf7e692a91112468f29122e495ae1cf875abeb5e9f1c0b",
           "key": "core",
           "moduleId": "core",
           "name": "ujg-ed-core-modeling",
@@ -128,7 +128,7 @@
           "specHash": "sha256:3758e476148a449ea7586aa7ddedeb6d55d619234940bae74514ea79c1b5878d"
         },
         {
-          "artifactHash": "sha256:0c6b588324fc8eba49c955555331a67f79b44c07e40496a0b04bc6446aca0593",
+          "artifactHash": "sha256:91f5ed386ede2351c20f0de60da64c5986ec5d4197115f83723bc4255951faa4",
           "key": "graph",
           "moduleId": "graph",
           "name": "ujg-ed-graph-modeling",
@@ -137,7 +137,7 @@
           "specHash": "sha256:13b372c211e423c09a97155a24e8d0aca3f172620cd463f9d0e842d5f9173a45"
         },
         {
-          "artifactHash": "sha256:60f05b2348fecc31010d346bcffb870390bb16ceb946cf5329a44cb7875d29eb",
+          "artifactHash": "sha256:a88db1d05ebba48b7babbd5636046034dec4764796ab839cb39d2a79a0b086fb",
           "key": "design-system",
           "moduleId": "modules/design-system",
           "name": "ujg-ed-design-system-modeling",
@@ -146,7 +146,7 @@
           "specHash": "sha256:cf50c5a831f35de643ef910113c55e78235ca798b307fdc5db1a205dba6fe6d7"
         },
         {
-          "artifactHash": "sha256:69c66006d33b6c853ee4f966b76bd23b6c8fed70acab4b2bde82c29d146e8a69",
+          "artifactHash": "sha256:207f4bfe60791015cd3abfbcf7e86590593547c5a7f4dc3ae2a6c5a92890b4ee",
           "key": "localization",
           "moduleId": "modules/l10n",
           "name": "ujg-ed-l10n-modeling",
@@ -155,7 +155,7 @@
           "specHash": "sha256:c08b88cadba3afd4d492f8a66ec473f49bbc72989902da6181cc4ea55e7a59ec"
         },
         {
-          "artifactHash": "sha256:d3aef73d10abfe71a702e81ae4eee0bc50532621772a917d481f0240c12e6654",
+          "artifactHash": "sha256:bc210314da23fa60473fc100e2011b64d30ec140858e6cd1b1a4584354fad881",
           "key": "observability",
           "moduleId": "modules/observability",
           "name": "ujg-ed-observability-modeling",
@@ -164,22 +164,22 @@
           "specHash": "sha256:c1276dffe4c35a5e6b43788897f96f969724f06c0a3dc4b93dee7c48c923d217"
         },
         {
-          "artifactHash": "sha256:65ea040eae4120f6e1731650a0541dae6e3ed64f5c526d689dfc97d20dd54352",
+          "artifactHash": "sha256:3b46ffabc498d7b892015a1baee14e908b1feed7fe10392b9cee9cbf4e863225",
           "key": "domain-model",
           "moduleId": "extensions/domain-model",
-          "name": "ujg-ed-domain-model-derivation",
+          "name": "ujg-ed-domain-model-design",
           "source": "sources/ed/skills/domain-model/skill.md",
-          "sourceHash": "sha256:23df1dd0d78166988c8713eb8bc87af85a4bafa94882cc4f9427df83473af578",
-          "specHash": "sha256:9a72a4ae8ff1ae454fc271c96da8cfe98004bf304ee4261e78a24f0132b13d55"
+          "sourceHash": "sha256:50eb75c2ad144259b7214e685e1b63606de6494198c27677fd9876373f2de956",
+          "specHash": "sha256:75c85eef3dd0201ad6d4fd2bc3738a00742451d6473337e2f6bde5ee2e81439e"
         },
         {
-          "artifactHash": "sha256:9c1307611e61294a23c249b8ad7610766765f30ceff9f612b2ed106ca8a7654d",
+          "artifactHash": "sha256:9599f4c30a8949dc2a8548607fbe9d4dc3b34ee6b1a9bce58ab6482893a47222",
           "key": "domain-model-evaluation",
           "moduleId": "extensions/domain-model",
           "name": "ujg-ed-domain-model-evaluation",
           "source": "sources/ed/skills/domain-model-evaluation/skill.md",
-          "sourceHash": "sha256:c3c439ec6be12948245567e5a247c0de3da78a167007c67469628e177c5e3c53",
-          "specHash": "sha256:9a72a4ae8ff1ae454fc271c96da8cfe98004bf304ee4261e78a24f0132b13d55"
+          "sourceHash": "sha256:ddbf680434d50519aaff77a1788d7e55c6580e5d852abdd2d924787b8f3ec3b1",
+          "specHash": "sha256:75c85eef3dd0201ad6d4fd2bc3738a00742451d6473337e2f6bde5ee2e81439e"
         }
       ],
       "specRoot": "specs/ed"

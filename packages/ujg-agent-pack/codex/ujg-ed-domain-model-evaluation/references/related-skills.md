@@ -11,7 +11,7 @@ Module scope: extensions/domain-model
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules
 - ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
-- ujg-ed-domain-model-derivation: Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions
+- ujg-ed-domain-model-design: Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge
 
 ## Downstream Spec Modules
 

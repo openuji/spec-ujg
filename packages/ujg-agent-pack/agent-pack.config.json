@@ -52,20 +52,23 @@
         },
         {
           "key": "domain-model",
-          "title": "Domain Model Derivation",
-          "scope": "Domain Model Document Extension derivation from Domain Requirements into UJGDocument extensions",
-          "nameSuffix": "domain-model-derivation",
-          "moduleId": "extensions/domain-model"
+          "title": "Domain Model Design",
+          "scope": "Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge",
+          "nameSuffix": "domain-model-design",
+          "moduleId": "extensions/domain-model",
+          "description": "Generate, review, correct, and reason about Domain Model Design in User Journey Graph JSON-LD for the Editor's Draft. Use when the task is scoped to designing the Domain Model Document Extension from UJG topology, explicit domain knowledge, or whole-document modeling across this boundary.",
+          "shortDescription": "Design UJG Domain Models for ED",
+          "defaultPrompt": "Use $ujg-ed-domain-model-design to generate or review a DomainModel from the supplied UJG document, Domain Model JSON Schema, and any explicit domain knowledge."
         },
         {
           "key": "domain-model-evaluation",
           "title": "Domain Model Evaluation",
-          "scope": "Domain Model Document Extension evaluation against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality",
+          "scope": "Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality",
           "nameSuffix": "domain-model-evaluation",
           "moduleId": "extensions/domain-model",
-          "description": "Evaluate generated DomainModel outputs for the Editor's Draft against Domain Requirements, UJG semantics, schema validity, traceability, minimality, assumptions, and realization neutrality.",
+          "description": "Evaluate generated DomainModel outputs for the Editor's Draft against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality.",
           "shortDescription": "Evaluate UJG Domain Models for ED",
-          "defaultPrompt": "Use $ujg-ed-domain-model-evaluation to evaluate a generated DomainModel against the supplied UJG document, Domain Requirements, and Domain Model JSON Schema."
+          "defaultPrompt": "Use $ujg-ed-domain-model-evaluation to evaluate a generated DomainModel against the supplied UJG document, Domain Model JSON Schema, and any explicit domain knowledge."
         }
       ]
     },

@@ -4,8 +4,13 @@ The Domain Model Document Extension defines an optional, technology-neutral appl
 model attached to a `UJGDocument`.
 
 The extension is a Document Extension, not an RDF optional module. Its payload is opaque JSON from
-the perspective of generic UJG JSON-LD processing. It is validated by JSON Schema and derives
-traceability from [[UJG Domain Requirements]].
+the perspective of generic UJG JSON-LD processing. It is validated by JSON Schema.
+
+UJG describes journeys and observable behavior. The Domain Model describes the domain semantics
+used to realize that behavior, together with legitimate domain knowledge that may exist
+independently of the journey.
+
+UJG constrains the Domain Model. It does not mechanically derive it or exhaustively define it.
 
 The Domain Model Extension does not prescribe technical realization.
 
@@ -20,7 +25,6 @@ The extension value is attached to `UJGDocument.extensions` using the key
   "@id": "https://example.org/journey.jsonld",
   "extensions": {
     "org.openuji.domain-model": {
-      "formatVersion": "0.1",
       "id": "urn:domain:model:example",
       "entities": [],
       "valueObjects": [],
@@ -49,31 +53,86 @@ while preserving its JSON payload during non-lossy read-transform-write.</spec-s
 <spec-statement>A processor implementing this extension **MUST** validate the payload using the
 Domain Model JSON Schema.</spec-statement>
 
-<spec-statement>A Domain Model-aware validator **MUST** resolve referenced Domain Requirements,
-resolve internal Domain Model references, and apply the semantic rules defined by this
-specification.</spec-statement>
+<spec-statement>The Domain Model payload **MUST NOT** carry an independent version marker.</spec-statement>
+
+Its applicable contract is selected from the specification family of the containing UJG document and
+the resolved namespace artifact route, such as `/ed/ns/domain-model.schema.json` for the Editor's
+Draft.
+
+<spec-statement>A Domain Model-aware validator **MUST** resolve internal Domain Model references,
+resolve present `ujgRefs`, and apply the semantic rules defined by this specification.</spec-statement>
 
 Unknown Domain Model semantics MUST NOT affect Core identity, import resolution, reference
 resolution, Graph traversal, or Graph semantics.
 
-## Relationship to Domain Requirements {data-cop-concept="domain-model-traceability"}
+## Relationship to UJG {data-cop-concept="domain-model-traceability"}
 
-Domain Model traceability flows through Domain Requirements.
+The Domain Model Extension describes UJG as a behavioral constraint on domain design, not as a
+source of one-to-one domain objects.
 
-```mermaid
-flowchart TD
-  element[DomainModel element] -->|domainRequirementRefs| requirement[DomainRequirement]
-  requirement -->|source-specific requirement reference| semantics[UJG semantics]
+```text
+State      -> must be materializable by the eventual implementation
+Condition  -> must be decidable when its transition is evaluated
+Effect     -> must be realizable when its transition occurs
+Entry      -> must provide sufficient context for its target journey state
+Transition -> connects these behavioral obligations
 ```
 
-<spec-statement>The Domain Model Extension **MUST NOT** duplicate direct references to Conditions,
-Effects, States, EntryBindings, or other UJG semantic sources for requirement traceability.</spec-statement>
+This relationship does not require each UJG element to have a corresponding Domain Model element.
 
-Domain Requirements are the boundary between UJG journey semantics and the Domain Model.
+<spec-statement>A Domain Model element **MAY** use `ujgRefs` to identify UJG semantic elements that
+constrain, motivate, or explain the existence or semantics of that Domain Model element.</spec-statement>
+
+<spec-statement>`ujgRefs` **MUST NOT** imply that the Domain Model element was logically or
+mechanically derived from the referenced UJG element.</spec-statement>
+
+A Domain Model element may reference multiple UJG elements. One UJG element may justify multiple
+Domain Model elements. No one-to-one mapping is implied.
+
+## State Materialization Boundary {data-cop-concept="domain-model-state-boundary"}
+
+Every reachable UJG `State` must ultimately be materializable by an implementation.
+
+This does not imply that a UJG `State` is a domain state. A UJG `State` may be directly backed by
+domain state, derived from domain facts, derived from application state, interaction-local,
+presentation-local, or structural.
+
+The Domain Model Extension describes only the domain part of that realization.
+
+<spec-statement>A Domain Model **MUST NOT** absorb interaction state, presentation state, or
+structural topology merely to mirror UJG topology.</spec-statement>
+
+For example, a form-error state may require no Domain Model element, while a
+confirmed-participation state may require durable domain semantics.
+
+## Domain Knowledge Beyond Topology {data-cop-concept="domain-model-independent-knowledge"}
+
+A Domain Model may contain domain knowledge not represented by UJG. Examples include business
+invariants, domain policies, legal or organizational constraints, domain classifications, temporal
+business rules, consistency constraints, and facts supplied from domain expertise.
+
+<spec-statement>A Domain Model element without `ujgRefs` **MAY** be valid when it represents
+explicit domain knowledge or a documented domain-design decision.</spec-statement>
+
+Absence of `ujgRefs` means only that no direct UJG provenance is asserted. It does not make the
+element invalid.
+
+## UJG Alignment {data-cop-concept="domain-model-alignment"}
+
+Additional domain knowledge MUST NOT contradict canonical UJG behavior.
+
+If a Domain Model rule changes observable journey behavior by preventing a UJG transition,
+introducing a new user-visible branch, changing which UJG `State` is reachable, changing the
+observable result of an `Effect`, or introducing a user-visible failure outcome, then the
+corresponding behavior MUST be represented in UJG before the Domain Model can be considered aligned
+with that UJG.
+
+Pure domain constraints that do not alter the represented journey MAY remain exclusively in the
+Domain Model.
 
 ## Domain Model Vocabulary
 
-Version `0.1` defines exactly these payload object types:
+This specification defines exactly these payload object types:
 
 - `DomainModel`
 - `Entity`
@@ -86,7 +145,6 @@ Version `0.1` defines exactly these payload object types:
 ```mermaid
 classDiagram
   class DomainModel {
-    formatVersion
     id
     entities
     valueObjects
@@ -98,34 +156,46 @@ classDiagram
     id
     label
     description
-    domainRequirementRefs
+    ujgRefs
     properties
   }
   class ValueObject {
     id
     label
     description
-    domainRequirementRefs
+    ujgRefs
     properties
   }
   class Property {
     id
     label
     description
-    domainRequirementRefs
+    ujgRefs
     valueType
     allowedValues
   }
   class Relationship {
+    id
+    label
+    description
+    ujgRefs
     sourceRef
     targetRef
   }
   class DomainOperation {
+    id
+    label
+    description
+    ujgRefs
     actsOnRefs
     preconditions
     postconditions
   }
   class Invariant {
+    id
+    label
+    description
+    ujgRefs
     appliesToRefs
     assertion
   }
@@ -138,7 +208,7 @@ classDiagram
   ValueObject --> "0..*" Property : properties
 ```
 
-Version `0.1` does not define aggregate boundaries, domain services, domain events, repositories,
+This specification does not define aggregate boundaries, domain services, domain events, repositories,
 commands, bounded contexts, persistence models, API models, executable rule languages, or technical
 architecture.
 
@@ -148,7 +218,6 @@ A `DomainModel` is the root payload stored in `extensions["org.openuji.domain-mo
 
 | Property | Requirement |
 | --- | --- |
-| `formatVersion` | MUST be `"0.1"`. |
 | `id` | MUST be a stable identifier for the Domain Model. |
 | `entities` | MUST exist; MAY be empty. |
 | `valueObjects` | MUST exist; MAY be empty. |
@@ -156,25 +225,24 @@ A `DomainModel` is the root payload stored in `extensions["org.openuji.domain-mo
 | `domainOperations` | MUST exist; MAY be empty. |
 | `invariants` | MUST exist; MAY be empty. |
 
-<spec-statement>`DomainModel` **MUST NOT** define `domainRequirementRefs`.</spec-statement>
+<spec-statement>`DomainModel` **MUST NOT** define `ujgRefs`.</spec-statement>
 
 ### Common Domain Element
 
 Every `Entity`, `ValueObject`, `Property`, `Relationship`, `DomainOperation`, and `Invariant` shares
-the same basic identification and traceability properties.
+the same basic identification and optional traceability properties.
 
 | Property | Requirement |
 | --- | --- |
 | `id` | MUST uniquely identify the element within the Domain Model and remain stable while the element's semantics remain stable. |
 | `label` | MUST provide a concise human-readable domain name. |
 | `description` | MAY provide explanatory human-readable text. |
-| `domainRequirementRefs` | MUST contain at least one reference, contain no duplicates, and contain only references resolving to UJG Domain Requirements. |
+| `ujgRefs` | MAY contain direct design traceability refs. When present, it MUST contain at least one value, contain no duplicates, and contain stable UJG identifiers resolvable through the containing UJG document and normal UJG import resolution. |
 
 ### Entity and ValueObject
 
-An `Entity` represents a domain object for which independent identity matters. A `ValueObject`
-represents a domain value whose meaning is determined by its value rather than an independent
-identity lifecycle.
+An `Entity` represents a domain concept for which independent identity matters. A `ValueObject`
+represents a domain concept whose meaning is defined by value rather than independent identity.
 
 Both object types use the Common Domain Element properties and add:
 
@@ -201,7 +269,7 @@ or serialization formats.
 
 ### Relationship
 
-A `Relationship` represents a required relationship between domain objects.
+A `Relationship` represents a domain relationship between modeled concepts.
 
 In addition to the Common Domain Element properties, a `Relationship` has:
 
@@ -210,12 +278,12 @@ In addition to the Common Domain Element properties, a `Relationship` has:
 | `sourceRef` | MUST resolve to an `Entity` or `ValueObject` in the same Domain Model. |
 | `targetRef` | MUST resolve to an `Entity` or `ValueObject` in the same Domain Model. |
 
-Version `0.1` does not standardize cardinality and does not define ORM or persistence
+This specification does not standardize cardinality and does not define ORM or persistence
 relationships.
 
 ### DomainOperation
 
-A `DomainOperation` represents behavior required from the domain.
+A `DomainOperation` represents technology-neutral domain behavior.
 
 In addition to the Common Domain Element properties, a `DomainOperation` has:
 
@@ -225,12 +293,12 @@ In addition to the Common Domain Element properties, a `DomainOperation` has:
 | `preconditions` | MUST be an array of technology-neutral semantic statements. |
 | `postconditions` | MUST be an array of technology-neutral semantic statements. |
 
-Version `0.1` deliberately defines no predicate or expression language. A `DomainOperation` does
+This specification deliberately defines no predicate or expression language. A `DomainOperation` does
 not imply an API operation, HTTP endpoint, service method, UI action handler, or execution location.
 
 ### Invariant
 
-An `Invariant` represents a domain rule that must remain true across valid domain behavior.
+An `Invariant` represents a rule that must remain true across valid domain behavior.
 
 In addition to the Common Domain Element properties, an `Invariant` has:
 
@@ -239,7 +307,10 @@ In addition to the Common Domain Element properties, an `Invariant` has:
 | `appliesToRefs` | MUST reference Domain Model elements. |
 | `assertion` | MUST be a technology-neutral semantic statement. |
 
-Version `0.1` defines no executable invariant language.
+An `Invariant` may be constrained by UJG and therefore have `ujgRefs`, or it may represent
+independent business knowledge and therefore have no `ujgRefs`.
+
+This specification defines no executable invariant language.
 
 ## Validation Semantics {data-cop-concept="domain-model-validation"}
 
@@ -255,47 +326,19 @@ and `Invariant.appliesToRefs` **MUST** resolve within the same Domain Model.</sp
 
 A structurally valid JSON document containing dangling internal references is semantically invalid.
 
-### Domain Requirement Resolution {data-cop-concept="domain-model-requirement-resolution"}
+### UJG Reference Resolution {data-cop-concept="domain-model-ujg-reference-resolution"}
 
-<spec-statement>Every value in `domainRequirementRefs` **MUST** resolve to a UJG Domain
-Requirement available through the containing UJG document and its normal import
-resolution.</spec-statement>
+<spec-statement>Every value in `ujgRefs`, when present, **MUST** resolve to a UJG semantic element
+available through the containing UJG document and its normal import resolution.</spec-statement>
 
-A dangling Domain Requirement reference makes the Domain Model invalid.
+A dangling `ujgRefs` value makes the Domain Model semantically invalid.
 
-### Requirement Coverage {data-cop-concept="domain-model-requirement-coverage"}
+Do not define a serialized UJG coverage list. Do not derive or require global UJG coverage from
+`ujgRefs`. Journey-realization completeness belongs to design and evaluation tooling, not JSON
+Schema validity.
 
-Domain Model requirement coverage is a derived property.
-
-<spec-statement>The requirement coverage of a `DomainModel` **MUST** be derived from the union of
-`domainRequirementRefs` values on its contained Domain Model elements, including nested
-`Property` elements.</spec-statement>
-
-Conceptually:
-
-```text
-coverage(DomainModel)
-  =
-union(
-  Entity.domainRequirementRefs,
-  Entity.Property.domainRequirementRefs,
-  ValueObject.domainRequirementRefs,
-  ValueObject.Property.domainRequirementRefs,
-  Relationship.domainRequirementRefs,
-  DomainOperation.domainRequirementRefs,
-  Invariant.domainRequirementRefs
-)
-```
-
-<spec-statement>Derived Domain Model requirement coverage **MUST NOT** be serialized redundantly on
-the `DomainModel` root.</spec-statement>
-
-Completeness relative to a selected set of Domain Requirements is a validation-context concern. A
-producer or validator MAY require a particular target set to be covered, but that target set is not
-part of the canonical `DomainModel` payload.
-
-This permits one requirement to justify multiple Domain Model elements, and one Domain Model element
-to satisfy multiple requirements. No one-to-one mapping is implied.
+<spec-statement>A Domain Model-aware validator **MUST** reject Domain Model rules that directly
+contradict known referenced UJG semantics where such contradiction can be determined.</spec-statement>
 
 ## Realization Boundary
 
@@ -319,37 +362,37 @@ For namespace-style artifact discovery, the same schema is also published at
 
 ### Workshop Waitlist Domain Model
 
-This example attaches a Domain Model payload to a `UJGDocument`. The example assumes the referenced
-Domain Requirement nodes are present in the containing document or resolvable through normal UJG
-imports.
+This example attaches a Domain Model payload to a `UJGDocument`. It demonstrates direct UJG
+traceability and an invariant with no artificial UJG provenance.
 
 ```json
 {
   "@context": [
     "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/domain-requirements.context.jsonld"
+    "https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/effect.context.jsonld"
   ],
   "@id": "https://example.com/ujg/workshop-waitlist.jsonld",
   "@type": "UJGDocument",
   "extensions": {
     "org.openuji.domain-model": {
-      "formatVersion": "0.1",
       "id": "urn:domain:model:workshop-waitlist",
       "entities": [
         {
-          "id": "urn:domain:entity:participant",
-          "label": "Participant",
-          "domainRequirementRefs": [
-            "urn:ujg:domain-requirement:waitlisted-participation",
-            "urn:ujg:domain-requirement:accept-offer"
+          "id": "urn:domain:entity:workshop-participation",
+          "label": "Workshop participation",
+          "ujgRefs": [
+            "urn:ujg:state:waitlisted",
+            "urn:ujg:state:registration-confirmed",
+            "urn:ujg:condition:participant-already-waitlisted"
           ],
           "properties": [
             {
               "id": "urn:domain:property:participation-status",
               "label": "Participation status",
-              "domainRequirementRefs": [
-                "urn:ujg:domain-requirement:waitlisted-participation",
-                "urn:ujg:domain-requirement:accept-offer"
+              "ujgRefs": [
+                "urn:ujg:state:waitlisted",
+                "urn:ujg:state:registration-confirmed"
               ],
               "valueType": "string",
               "allowedValues": [
@@ -358,94 +401,99 @@ imports.
               ]
             }
           ]
-        },
-        {
-          "id": "urn:domain:entity:offer",
-          "label": "Offer",
-          "domainRequirementRefs": [
-            "urn:ujg:domain-requirement:offer-validity",
-            "urn:ujg:domain-requirement:accept-offer"
-          ],
-          "properties": [
-            {
-              "id": "urn:domain:property:offer-expires-at",
-              "label": "Offer expires at",
-              "domainRequirementRefs": [
-                "urn:ujg:domain-requirement:offer-validity"
-              ],
-              "valueType": "datetime"
-            }
-          ]
         }
       ],
       "valueObjects": [],
-      "relationships": [
-        {
-          "id": "urn:domain:relationship:offer-participant",
-          "label": "Offer participant",
-          "domainRequirementRefs": [
-            "urn:ujg:domain-requirement:accept-offer"
-          ],
-          "sourceRef": "urn:domain:entity:offer",
-          "targetRef": "urn:domain:entity:participant"
-        }
-      ],
+      "relationships": [],
       "domainOperations": [
         {
-          "id": "urn:domain:operation:accept-offer",
-          "label": "Accept offer",
-          "domainRequirementRefs": [
-            "urn:ujg:domain-requirement:accept-offer"
+          "id": "urn:domain:operation:join-waitlist",
+          "label": "Join waitlist",
+          "ujgRefs": [
+            "urn:ujg:effect:join-waitlist"
           ],
           "actsOnRefs": [
-            "urn:domain:entity:offer",
-            "urn:domain:entity:participant"
+            "urn:domain:entity:workshop-participation"
           ],
           "preconditions": [
-            "The offer is currently valid."
+            "The participant is eligible to join the waitlist."
           ],
           "postconditions": [
-            "The offer is consumed and the participant is confirmed."
+            "A workshop participation is waitlisted."
           ]
         }
       ],
       "invariants": [
         {
-          "id": "urn:domain:invariant:accepted-offer-consumed",
-          "label": "Accepted offer is consumed",
-          "domainRequirementRefs": [
-            "urn:ujg:domain-requirement:accept-offer"
-          ],
+          "id": "urn:domain:invariant:participation-scope",
+          "label": "Participation scope",
           "appliesToRefs": [
-            "urn:domain:entity:offer",
-            "urn:domain:operation:accept-offer"
+            "urn:domain:entity:workshop-participation"
           ],
-          "assertion": "An accepted offer is no longer outstanding."
+          "assertion": "A workshop participation belongs to one participant and one workshop."
         }
       ]
     }
   },
   "nodes": [
     {
-      "@type": "StateDomainRequirement",
-      "@id": "urn:ujg:domain-requirement:waitlisted-participation",
-      "label": "Waitlisted participation is distinguishable",
-      "stateRef": "urn:ujg:state:waitlisted",
-      "requirement": "The implementation must preserve that the participant is currently waiting for a place in the workshop."
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:workshop-waitlist",
+      "defaultEntryRef": "urn:ujg:entry:workshop-waitlist",
+      "entryRefs": [
+        "urn:ujg:entry:workshop-waitlist"
+      ],
+      "stateRefs": [
+        "urn:ujg:state:registration-open",
+        "urn:ujg:state:waitlisted",
+        "urn:ujg:state:registration-confirmed"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:join-waitlist",
+        "urn:ujg:transition:confirm-registration"
+      ]
     },
     {
-      "@type": "ConditionDomainRequirement",
-      "@id": "urn:ujg:domain-requirement:offer-validity",
-      "label": "Offer validity can be determined",
-      "conditionRef": "urn:ujg:condition:offer-valid",
-      "requirement": "The implementation must be able to determine whether the outstanding workshop offer is currently valid."
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:workshop-waitlist",
+      "stateRef": "urn:ujg:state:registration-open"
     },
     {
-      "@type": "EffectDomainRequirement",
-      "@id": "urn:ujg:domain-requirement:accept-offer",
-      "label": "Accepted offer confirms participation",
-      "effectRef": "urn:ujg:effect:accept-offer",
-      "requirement": "Accepting the outstanding offer must consume that offer and establish confirmed workshop participation."
+      "@type": "State",
+      "@id": "urn:ujg:state:registration-open",
+      "label": "Registration open"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:waitlisted",
+      "label": "Waitlisted"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:registration-confirmed",
+      "label": "Registration confirmed"
+    },
+    {
+      "@type": "Condition",
+      "@id": "urn:ujg:condition:participant-already-waitlisted"
+    },
+    {
+      "@type": "Effect",
+      "@id": "urn:ujg:effect:join-waitlist"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:join-waitlist",
+      "from": "urn:ujg:state:registration-open",
+      "to": "urn:ujg:state:waitlisted",
+      "conditionRef": "urn:ujg:condition:participant-already-waitlisted",
+      "effectRef": "urn:ujg:effect:join-waitlist"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:confirm-registration",
+      "from": "urn:ujg:state:waitlisted",
+      "to": "urn:ujg:state:registration-confirmed"
     }
   ]
 }

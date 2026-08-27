@@ -1,4 +1,4 @@
 interface:
   display_name: "UJG ED Domain Model Evaluation"
   short_description: "Evaluate UJG Domain Models for ED"
-  default_prompt: "Use $ujg-ed-domain-model-evaluation to evaluate a generated DomainModel against the supplied UJG document, Domain Requirements, and Domain Model JSON Schema."
+  default_prompt: "Use $ujg-ed-domain-model-evaluation to evaluate a generated DomainModel against the supplied UJG document, Domain Model JSON Schema, and any explicit domain knowledge."
