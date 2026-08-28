@@ -1,10 +1,10 @@
 {
   "currentSkill": {
-    "key": "domain-model",
+    "key": "domain-model-implementation",
     "moduleId": "extensions/domain-model",
-    "name": "ujg-ed-domain-model-design",
+    "name": "ujg-ed-domain-model-implementation",
     "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
-    "scope": "Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge"
+    "scope": "software implementation conformance against a full UJG document with the Domain Model Document Extension, including domain behavior, guarded branches, effects, invariants, and journey semantics"
   },
   "moduleGraph": {
     "architecture": {
@@ -80,10 +80,10 @@
         "modules/effect",
         "modules/entry-binding"
       ],
-      "generatedSkill": "ujg-ed-domain-model-design",
+      "generatedSkill": "ujg-ed-domain-model-evaluation",
       "generatedSkills": [
-        "ujg-ed-domain-model-design",
-        "ujg-ed-domain-model-evaluation"
+        "ujg-ed-domain-model-evaluation",
+        "ujg-ed-domain-model-implementation"
       ],
       "title": "Domain Model"
     },
@@ -372,20 +372,20 @@
       "source": "sources/ed/skills/observability/skill.md"
     },
     {
-      "key": "domain-model",
-      "moduleId": "extensions/domain-model",
-      "name": "ujg-ed-domain-model-design",
-      "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
-      "scope": "Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge",
-      "source": "sources/ed/skills/domain-model/skill.md"
-    },
-    {
       "key": "domain-model-evaluation",
       "moduleId": "extensions/domain-model",
       "name": "ujg-ed-domain-model-evaluation",
       "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
       "scope": "Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality",
       "source": "sources/ed/skills/domain-model-evaluation/skill.md"
+    },
+    {
+      "key": "domain-model-implementation",
+      "moduleId": "extensions/domain-model",
+      "name": "ujg-ed-domain-model-implementation",
+      "publicUrl": "https://ujg.specs.openuji.org/ed/extensions/domain-model",
+      "scope": "software implementation conformance against a full UJG document with the Domain Model Document Extension, including domain behavior, guarded branches, effects, invariants, and journey semantics",
+      "source": "sources/ed/skills/domain-model-implementation/skill.md"
     }
   ],
   "target": {

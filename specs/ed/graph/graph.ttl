@@ -61,6 +61,12 @@ ujggraph:tags a owl:DatatypeProperty ;
   rdfs:domain ujg:Node ;
   rdfs:range xsd:string .
 
+ujggraph:multiInstance a owl:DatatypeProperty ;
+  rdfs:domain ujggraph:State ;
+  rdfs:range xsd:boolean ;
+  rdfs:label "multi instance" ;
+  rdfs:comment "Declares that multiple concrete occurrences of the same State may coexist within one active occurrence of its enclosing Journey. The number and identities of those occurrences are determined outside Graph topology." .
+
 ujggraph:defaultEntryRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
   rdfs:range ujggraph:JourneyEntry ;

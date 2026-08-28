@@ -15,7 +15,7 @@ Related generated skills:
 - ujg-ed-modeling: whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules
 - ujg-ed-core-modeling: Core module document containers, imports, top-level nodes, and extensions
 - ujg-ed-graph-modeling: Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes
-- ujg-ed-domain-model-design: Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge
+- ujg-ed-domain-model-implementation: software implementation conformance against a full UJG document with the Domain Model Document Extension, including domain behavior, guarded branches, effects, invariants, and journey semantics
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
 

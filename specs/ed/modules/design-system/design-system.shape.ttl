@@ -3,8 +3,8 @@
 @prefix ujgdsshape: <https://ujg.specs.openuji.org/ed/ns/design-system.shape#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 
-ujgdsshape:DesignSystemShape a sh:NodeShape ;
-  sh:targetClass ujgds:DesignSystem ;
+ujgdsshape:ThemeShape a sh:NodeShape ;
+  sh:targetClass ujgds:Theme ;
   sh:nodeKind sh:IRI ;
 
   sh:property [

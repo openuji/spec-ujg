@@ -1,0 +1,159 @@
+# UJG Domain Implementation Conformance
+
+## Purpose
+
+Ensure an implementation realizes the domain behavior expressed by a UJG document without silently omitting, merging, inventing, or weakening modeled semantics.
+
+The complete UJG document is the contract. The embedded Domain Model describes domain concepts and operations, but the graph defines their journey context, eligibility, branching, effects, and continuation.
+
+## Required Inputs
+
+- The full UJG JSON-LD document, including its Domain Model extension.
+- The implementation being created or reviewed.
+- Relevant tests, API contracts, persistence schema, and runtime configuration.
+- The intended realization boundary, such as backend, frontend, workflow engine, or end-to-end system.
+
+Record the UJG source path and immutable version identifier, such as a Git revision or content hash.
+
+## Establish the Realization Boundary
+
+Before mapping behavior, state which layer is being assessed and how UJG semantics appear at that layer.
+
+For every domain-relevant UJG element, assign exactly one realization decision:
+
+- `implemented`: directly represented by code or observable behavior.
+- `reduced`: represented differently at this layer while preserving its semantic outcome.
+- `out_of_scope`: belongs to another layer and has no required behavior in this implementation.
+
+A reduction requires a written justification and evidence that it preserves all relevant guards, outcomes, effects, and continuations. For example, a backend need not persist a UI review screen, but it must not use that reduction to bypass validation or confirmation semantics.
+
+
+## Validate the Source Model
+
+Before relying on the UJG document:
+
+1. Confirm that the UJG document and Domain Model extension are parseable.
+2. Confirm that referenced IDs resolve and that graph topology is internally coherent.
+3. Identify the journeys, entries, states, composite states, exits, transitions, conditional transition sets, conditions, effects, and bindings relevant to the requested behavior.
+4. Distinguish domain semantics from purely presentational details.
+
+Do not infer workflow behavior solely from `domainOperations`, entity types, or a separate Domain Model JSON export.
+
+## Build an Auditable Trace Matrix
+
+Create a trace row for every domain-relevant UJG element. Do not omit elements because they appear inconvenient or do not map directly to an API.
+
+Use at least these columns:
+
+| UJG node ID | Node type | Semantic intent | Realization decision | Implementation evidence | Verification evidence | Status | Justification |
+|---|---|---|---|---|---|---|---|
+
+`Status` must be one of:
+
+- `passed`
+- `failed`
+- `blocked`
+- `not_applicable`
+
+A row marked `reduced`, `out_of_scope`, `blocked`, or `not_applicable` must include a specific justification.
+
+## Preserve Domain Semantics
+
+For each modeled journey, verify:
+
+- Entry eligibility and preconditions.
+- Valid states and allowed transitions.
+- Every distinct condition branch and its semantic outcome.
+- Effects, including persistence changes, emitted events, and external actions.
+- Invariants before and after state-changing operations.
+- Journey exits and cross-journey continuation.
+- Distinctions between modeled outcomes, even when they share an HTTP status or UI treatment.
+- Idempotency where repeated requests can occur.
+- Atomic enforcement of availability, capacity, uniqueness, eligibility, and similar conditions at the point an effect is committed.
+
+An implementation may use different names, data structures, routes, or UI composition than the UJG. It must still expose or preserve stable semantic distinctions through an appropriate observable form, such as a result type, outcome code, resource state, event, or persisted record.
+
+## Prevent Unmodeled Behavior
+
+Treat these as conformance failures unless explicitly authorized and documented:
+
+- Allowing a domain-changing operation from a state or entry where the UJG does not permit it.
+- Combining distinct condition branches into one generic outcome.
+- Skipping a modeled validation, review, confirmation, or approval semantic without a justified reduction.
+- Triggering an effect before its modeled conditions are satisfied.
+- Returning a generic error that hides materially different domain outcomes.
+- Adding a new route, transition, state, or effect that changes domain behavior without corresponding UJG support.
+
+## Entry and Continuation Authority
+
+For every non-default `JourneyEntry`, `JourneyExit`, and cross-journey `toEntryRef`, record its permitted predecessor and authority model.
+
+If an API accepts a UJG entry, exit, transition, or continuation identifier from a caller, treat it as untrusted unless the implementation proves it was derived from a valid prior modeled transition.
+
+For each such continuation, test:
+
+- Direct caller-supplied use without its modeled predecessor is denied and has no effect.
+- Use after the modeled predecessor is accepted.
+- The continuation is bound to the appropriate subject and resource.
+- Reuse, expiry, and cross-subject use are denied where the implementation materializes continuation state.
+
+
+## Verification Requirements
+
+Derive tests from the trace matrix, not only from the implementation's public API.
+
+Test, where applicable:
+
+- Each entry's allowed and denied eligibility cases.
+- Every branch of each relevant `ConditionalTransitionSet`.
+- Each effectful transition and its observable effect.
+- Each non-effectful transition whose state or continuation matters.
+- Invariant preservation and invalid-transition rejection.
+- Repeated request behavior and idempotency.
+- Concurrent or near-concurrent attempts when correctness depends on mutable shared state.
+- Journey exit behavior and continuation into linked journeys.
+- Rejection of unmodeled domain-changing paths.
+
+Run the relevant tests. A blocked test environment is a verification gap, not evidence of conformance. Report the blocker, affected trace rows, and the exact verification that remains unperformed.
+
+## Conformance Gates
+
+Do not claim full conformance unless all are true:
+
+1. Every domain-relevant UJG element has a trace-row disposition.
+2. All `implemented` and `reduced` rows have code and verification evidence.
+3. Every relevant condition branch has a distinct asserted outcome.
+4. Effects and invariants are verified at their state-changing boundary.
+5. No unmodeled domain-changing path is accepted.
+6. No required verification remains `failed` or `blocked`.
+
+Use qualified conclusions when appropriate:
+
+- `conformant`: all gates pass.
+- `partially conformant`: known deviations are documented.
+- `unverified`: required checks could not run.
+- `non-conformant`: one or more required semantics are missing, weakened, or contradicted.
+
+## Review Output
+
+Report findings before summaries. For each finding, include:
+
+- Severity.
+- UJG node IDs and semantic intent.
+- Implementation location.
+- Observed or inferred behavior.
+- Why it diverges from the model.
+- The smallest corrective action.
+- Missing or blocked verification.
+
+Include the completed trace matrix or a concise link to it. Do not describe an implementation as conformant merely because its types compile, its endpoints work, or its implementation-authored tests pass.
+
+## Common Failure Patterns
+
+- Reading only the Domain Model extension and ignoring graph topology.
+- Treating domain operations as unrestricted CRUD actions.
+- Testing only happy paths.
+- Collapsing “already exists,” “unavailable,” “ineligible,” and “invalid transition” into one result.
+- Allowing a direct command to bypass modeled intermediate semantics.
+- Checking mutable conditions before, rather than atomically with, the state-changing effect.
+- Letting missing tests, unresolved references, or an unavailable runtime disappear from the final conclusion.

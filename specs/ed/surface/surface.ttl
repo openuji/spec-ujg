@@ -66,11 +66,11 @@ ujgsurface:touchpointRefs a owl:ObjectProperty ;
   rdfs:domain ujgsurface:User ;
   rdfs:range ujgsurface:Touchpoint .
 
-ujgsurface:compositeStateRefs a owl:ObjectProperty ;
+ujgsurface:journeyRefs a owl:ObjectProperty ;
   rdfs:domain ujgsurface:Touchpoint ;
-  rdfs:range ujggraph:CompositeState ;
-  rdfs:label "composite state refs" ;
-  rdfs:comment "References meaningful CompositeState boundaries presented through this Touchpoint." .
+  rdfs:range ujggraph:Journey ;
+  rdfs:label "journey refs" ;
+  rdfs:comment "References meaningful Journey boundaries presented through this Touchpoint." .
 
 ujgsurface:channel a owl:DatatypeProperty ;
   rdfs:domain ujgsurface:Touchpoint ;

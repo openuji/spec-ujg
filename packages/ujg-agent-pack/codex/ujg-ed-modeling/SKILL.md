@@ -20,8 +20,8 @@ Related generated skills:
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
 - ujg-ed-l10n-modeling: Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata
 - ujg-ed-observability-modeling: Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver
-- ujg-ed-domain-model-design: Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge
 - ujg-ed-domain-model-evaluation: Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality
+- ujg-ed-domain-model-implementation: software implementation conformance against a full UJG document with the Domain Model Document Extension, including domain behavior, guarded branches, effects, invariants, and journey semantics
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
 
@@ -44,7 +44,7 @@ Select only required modules.
 
 Core: document container and top-level nodes.
 Graph: journeys, states, transitions, composition, exits, outgoing navigation, and indexes.
-Surface: materialized surfaces for supported Graph nodes, concrete surface instances, surface attachments, touchpoints, human users, user references, channels, and composite-state touchpoint scopes.
+Surface: materialized surfaces for supported Graph nodes, concrete surface instances, surface attachments, touchpoints, human users, user references, channels, and journey touchpoint scopes.
 Runtime: observed events, values, clicks, URLs, timestamps, payloads.
 Mapping: state-observation steps resolved from Runtime through Surface to Graph, with optional immediately preceding affordance event references.
 Metrics: metric observations, especially Mapping-derived counts and rates over resolved journey mappings.
@@ -67,9 +67,9 @@ payloads that design the smallest coherent technology-neutral `DomainModel` from
 topology plus optional explicit domain knowledge. It is governed by JSON Schema, not RDF vocabulary
 or SHACL.
 
-Core is required for UJG documents. Include Graph when modeling topology. Include Surface when using `Surface`, `SurfaceInstance`, `Touchpoint`, `User`, `graphNodeRef`, `surfaceRef`, `compositeStateRefs`, `touchpointRefs`, `userRef`, or `channel`. Include Phase when using `Step`, `Phase`, `compositeStateRef`, `phaseRef`, or `order`. Include Runtime only for observed behavior or traces. Include Mapping when resolving Runtime state observations through Surface to Graph, or deriving Step occurrence and Phase start, with `JourneyMapping`, `MappedStep`, `mappedEventRef`, `mappedStateRef`, `observedAffordanceEventRef`, or `explainedByTransitionRef`. Include Metrics when emitting `MetricObservation` records, Mapping-derived step counts, movement counts, rates, or aggregate metric values. Include Experience Annotation only when using `PainPoint`, `painpointStepRefs`, `severity`, or `description`. Include Localization only when using l10n terms such as `Locale`, `MessageMeta`, `Message`, `copyRef`, `localeCode`, `argumentNames`, `defaultLocaleRef`, `fallbackLocaleRefs`, `messageMetaRef`, `localeRef`, `value`, or `targetLocaleRef`. Include Observability only when modeling `ObservationBinding`, `observeSurfaceRef`, `ObservationEvent`, `requiredInputModalityProfileRefs`, `InputModalityProfile`, `inputModalityRefs`, `InputModality`, `observability:keyboard`, `observability:pointer`, `SurfaceInstanceResolver`, `surfaceInstanceResolverRef`, `expectedMatchCount`, `instanceKeyFeatureRef`, `AccessibleLocator`, `accessibleNameRef`, or `accessibleDescriptionRef`; Observability also requires Localization for name and description message metas.
+Core is required for UJG documents. Include Graph when modeling topology. Include Surface when using `Surface`, `SurfaceInstance`, `Touchpoint`, `User`, `graphNodeRef`, `surfaceRef`, `journeyRefs`, `touchpointRefs`, `userRef`, or `channel`. Include Phase when using `Step`, `Phase`, `compositeStateRef`, `phaseRef`, or `order`. Include Runtime only for observed behavior or traces. Include Mapping when resolving Runtime state observations through Surface to Graph, or deriving Step occurrence and Phase start, with `JourneyMapping`, `MappedStep`, `mappedEventRef`, `mappedStateRef`, `observedAffordanceEventRef`, or `explainedByTransitionRef`. Include Metrics when emitting `MetricObservation` records, Mapping-derived step counts, movement counts, rates, or aggregate metric values. Include Experience Annotation only when using `PainPoint`, `painpointStepRefs`, `severity`, or `description`. Include Localization only when using l10n terms such as `Locale`, `MessageMeta`, `Message`, `copyRef`, `localeCode`, `argumentNames`, `defaultLocaleRef`, `fallbackLocaleRefs`, `messageMetaRef`, `localeRef`, `value`, or `targetLocaleRef`. Include Observability only when modeling `ObservationBinding`, `observeSurfaceRef`, `ObservationEvent`, `requiredInputModalityProfileRefs`, `InputModalityProfile`, `inputModalityRefs`, `InputModality`, `observability:keyboard`, `observability:pointer`, `SurfaceInstanceResolver`, `surfaceInstanceResolverRef`, `expectedMatchCount`, `instanceKeyFeatureRef`, `AccessibleLocator`, `accessibleNameRef`, or `accessibleDescriptionRef`; Observability also requires Localization for name and description message metas.
 
-Include Entry Binding only when using `EntryBinding`, `entryRef`, or entry-binding `value`; Entry Binding values must not create hidden traversal, platform-specific syntax, or touchpoint bindings. Include Design System only when using design-system terms such as `DesignSystem`, `TokenSource`, `Component`, `Template`, `Slot`, `SurfaceRealization`, `SlotBinding`, `componentRef`, `templateRef`, `slotRef`, `targetSurfaceRef`, or `targetComponentRef`. Include Effect only when declaring an `Effect` node, `effectRef` on a `Transition` or `OutgoingTransition`, or Effect `producedRefs` / `consumedRefs`; do not use Effect for Runtime payloads or implementation protocol details. Include Condition only when using `Condition`, `ConditionSet`, `conditionRef`, or `conditionTransitionRefs`; a `Condition` guards a Graph transition and must not replace the transition target.
+Include Entry Binding only when using `EntryBinding`, `entryRef`, or entry-binding `value`; Entry Binding values must not create hidden traversal, platform-specific syntax, or touchpoint bindings. Include Design System only when using design-system terms such as `Theme`, `TokenSource`, `Component`, `Template`, `Slot`, `SurfaceRealization`, `SlotBinding`, `componentRef`, `templateRef`, `slotRef`, `targetSurfaceRef`, or `targetComponentRef`. Include Effect only when declaring an `Effect` node, `effectRef` on a `Transition` or `OutgoingTransition`, or Effect `producedRefs` / `consumedRefs`; do not use Effect for Runtime payloads or implementation protocol details. Include Condition only when using `Condition`, `ConditionalTransitionSet`, `conditionRef`, or `conditionTransitionRefs`; a `Condition` guards a Graph transition and must not replace the transition target.
 
 Include Artifact when using `Artifact`, `nameRef`, `sourceTouchpointRef`, `targetTouchpointRefs`, or when an Effect produces or consumes an artifact. Include Localization when `Artifact.nameRef` points to a `MessageMeta`. Include Surface too when artifact touchpoint refs point to `Touchpoint` nodes. Use `nameRef`, `sourceTouchpointRef`, and `targetTouchpointRefs` only on `Artifact`; effects use `producedRefs` and `consumedRefs`.
 
@@ -101,7 +101,7 @@ Use only active ED Graph classes and properties.
 
 Common classes: `JourneyEntryIndex`, `Journey`, `JourneyEntry`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
 
-Common properties: `label`, `tags`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `subjourneyId`, `outgoingTransitionRefs`.
+Common properties: `label`, `tags`, `multiInstance`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `subjourneyId`, `outgoingTransitionRefs`.
 
 Do not invent Graph fields such as `startState`, `states`, `transitions`, `toJourney`, `toState`, `trigger`, `outcome`, `eventType`, `selector`, Graph-native `url`, or `RuntimeTrace`.
 
@@ -112,6 +112,11 @@ Default to the shallowest valid graph.
 Start flat. Add nesting only when nesting preserves meaning that a flatter model would lose.
 
 Prefer ordinary `State` and local `Transition` for stable conditions on the same page, route, surface, modal, panel, or screen.
+
+Use `State.multiInstance` only when one canonical state may have multiple concurrently addressable
+concrete occurrences within one active occurrence of its enclosing journey. Do not use it for counts,
+instance keys, data sources, collection iteration, domain entities, queries, expressions, or
+rendering behavior.
 
 Same surface plus stable alternate UI usually means same journey.
 
@@ -169,7 +174,7 @@ Use `State` for a stable observable condition.
 
 Use Surface `userRef` on `Journey` to assign the journey to a human user. Entries, states, transitions, exits, outgoing groups, and child journeys inherit the effective user unless they declare their own `userRef`.
 
-Use Surface `Touchpoint.compositeStateRefs` to attach a touchpoint to meaningful `CompositeState` boundaries. Do not put touchpoint identity on `Surface` or individual Graph states.
+Use Surface `Touchpoint.journeyRefs` to attach a touchpoint to meaningful `Journey` boundaries. Do not put touchpoint identity on `Surface` or individual Graph states.
 
 Same-journey states usually include page sections, form ready, input-present condition, validation error, submission success/failure, empty/populated result, loading complete, confirmation message, inline error panel, and simple same-page modal/dialog.
 

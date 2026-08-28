@@ -182,7 +182,7 @@ Do not promote project-specific selectors or Playwright expressions into Observa
 
 ## Separation rules
 
-Observability does not define `graphNodeRef`, `surfaceRef`, `surfaceInstanceRef`, or touchpoint boundary assignment such as `compositeStateRefs`. Those are Surface and Runtime terms.
+Observability does not define `graphNodeRef`, `surfaceRef`, `surfaceInstanceRef`, or touchpoint boundary assignment such as `journeyRefs`. Those are Surface and Runtime terms.
 
 Observability has no direct dependency on Runtime. Runtime events do not need to reference `ObservationBinding`.
 

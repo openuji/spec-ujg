@@ -17,8 +17,8 @@ ujgcondshape:GuardedTransitionShape a sh:NodeShape ;
     sh:maxCount 1 ;
   ] .
 
-ujgcondshape:ConditionSetShape a sh:NodeShape ;
-  sh:targetClass ujgcond:ConditionSet ;
+ujgcondshape:ConditionalTransitionSetShape a sh:NodeShape ;
+  sh:targetClass ujgcond:ConditionalTransitionSet ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
@@ -30,7 +30,7 @@ ujgcondshape:ConditionSetShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "Every transition referenced by a ConditionSet MUST have a conditionRef." ;
+    sh:message "Every transition referenced by a ConditionalTransitionSet MUST have a conditionRef." ;
     sh:select """
       SELECT $this ?transition
       WHERE {
@@ -44,7 +44,7 @@ ujgcondshape:ConditionSetShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "All transitions referenced by one ConditionSet MUST have the same from state." ;
+    sh:message "All transitions referenced by one ConditionalTransitionSet MUST have the same from state." ;
     sh:select """
       SELECT $this ?transitionA ?transitionB ?fromA ?fromB
       WHERE {

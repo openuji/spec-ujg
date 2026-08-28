@@ -611,6 +611,12 @@ ujggraphshape:StateShape a sh:NodeShape ;
   ] ;
 
   sh:property [
+    sh:path ujggraph:multiInstance ;
+    sh:datatype xsd:boolean ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
     sh:path ujggraph:outgoingTransitionRefs ;
     sh:class ujggraph:OutgoingTransition ;
     sh:nodeKind sh:IRI ;
@@ -630,6 +636,12 @@ ujggraphshape:CompositeStateShape a sh:NodeShape ;
   sh:property [
     sh:path ujggraph:tags ;
     sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:multiInstance ;
+    sh:datatype xsd:boolean ;
+    sh:maxCount 1 ;
   ] ;
 
   sh:property [

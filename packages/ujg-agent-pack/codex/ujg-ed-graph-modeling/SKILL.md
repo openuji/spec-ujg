@@ -20,8 +20,8 @@ Related generated skills:
 - ujg-ed-design-system-modeling: Design System module semantics and its relationship to Graph and Surface
 - ujg-ed-l10n-modeling: Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata
 - ujg-ed-observability-modeling: Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver
-- ujg-ed-domain-model-design: Domain Model Document Extension design from canonical UJG topology and optional explicit domain knowledge
 - ujg-ed-domain-model-evaluation: Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality
+- ujg-ed-domain-model-implementation: software implementation conformance against a full UJG document with the Domain Model Document Extension, including domain behavior, guarded branches, effects, invariants, and journey semantics
 
 When the task crosses module boundaries, read `references/related-skills.md` and `references/skill-tree.json` before continuing.
 
@@ -55,6 +55,13 @@ Focus on intended topology:
 
 Keep runtime observations, selectors, typed values, timestamps, payloads, and analytics outside Graph.
 
+Use `State.multiInstance` only when one canonical `State` may have multiple concurrently
+addressable concrete occurrences within one active occurrence of its enclosing `Journey`.
+`multiInstance` is optional, boolean, and defaults semantically to false when absent.
+
+Do not use `multiInstance` to encode occurrence counts, instance keys, data sources, collection
+iteration, domain entities, queries, expressions, or rendering behavior.
+
 ## Modeling rules
 
 Prefer the shallowest valid graph.
@@ -76,6 +83,10 @@ Use `toEntryRef` only when a parent transition into a `CompositeState` must sele
 Use `JourneyExit` and `fromExitRef` only for exported child outcomes that a parent genuinely reacts to. Model the child outcome as a direct terminal `JourneyExit`, not as a pseudo-state.
 
 Use `Transition` between local vertices. `from` must be in the enclosing journey's `stateRefs`; `to` must be in the enclosing journey's `stateRefs` or `exitRefs`. Never use `JourneyExit` as `from`.
+
+When a transition's `from` references a multi-instance `State`, traverse the one stable transition
+from a concrete occurrence of that state. Do not add transition properties such as `perInstance`,
+`perSourceInstance`, `perTargetInstance`, or `repeatableTransition`.
 
 Use `OutgoingTransition` for ordinary navigation affordances. Use `toCurrentState: true` only when the effective graph state is preserved and only a non-topological dimension changes.
 
