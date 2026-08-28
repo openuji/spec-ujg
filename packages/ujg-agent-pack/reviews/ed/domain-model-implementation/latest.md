@@ -12,8 +12,8 @@ Spec URL: https://ujg.specs.openuji.org/ed/extensions/domain-model
 
 ## Review Inputs
 
-- Source hash: sha256:a8d738b3047ff5f497ea860d1bc6751acddc6fd29be1588b48827916dc95b434
-- Spec hash: sha256:dff462241bc64427b2692e124d85e8b3050bd16e5c78f3cc8832a27966383be9
+- Source hash: sha256:2be40fa8ef7524258a50436ba696d5d220be5e4833f695641da6aa3639711046
+- Spec hash: sha256:fd1756c1588e08e503e62971f4315d6cf42f514a5ab16a784f53bb8ae8d612a5
 
 ## Source Headings Likely Affected
 
@@ -25,10 +25,10 @@ Spec URL: https://ujg.specs.openuji.org/ed/extensions/domain-model
 - Build an Auditable Trace Matrix
 - Preserve Domain Semantics
 - Prevent Unmodeled Behavior
+- Entry and Continuation Authority
 - Verification Requirements
 - Conformance Gates
 - Review Output
-- Common Failure Patterns
 
 ## Checklist
 

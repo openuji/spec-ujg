@@ -6,7 +6,7 @@
     "designSystem": "https://ujg.specs.openuji.org/ed/ns/design-system#",
     "surface": "https://ujg.specs.openuji.org/ed/ns/surface#",
 
-    "DesignSystem": "ujgds:DesignSystem",
+    "Theme": "ujgds:Theme",
     "TokenSource": "ujgds:TokenSource",
     "Component": "ujgds:Component",
     "Template": "ujgds:Template",

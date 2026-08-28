@@ -27,6 +27,7 @@ For every domain-relevant UJG element, assign exactly one realization decision:
 
 A reduction requires a written justification and evidence that it preserves all relevant guards, outcomes, effects, and continuations. For example, a backend need not persist a UI review screen, but it must not use that reduction to bypass validation or confirmation semantics.
 
+
 ## Validate the Source Model
 
 Before relying on the UJG document:
@@ -82,6 +83,20 @@ Treat these as conformance failures unless explicitly authorized and documented:
 - Triggering an effect before its modeled conditions are satisfied.
 - Returning a generic error that hides materially different domain outcomes.
 - Adding a new route, transition, state, or effect that changes domain behavior without corresponding UJG support.
+
+## Entry and Continuation Authority
+
+For every non-default `JourneyEntry`, `JourneyExit`, and cross-journey `toEntryRef`, record its permitted predecessor and authority model.
+
+If an API accepts a UJG entry, exit, transition, or continuation identifier from a caller, treat it as untrusted unless the implementation proves it was derived from a valid prior modeled transition.
+
+For each such continuation, test:
+
+- Direct caller-supplied use without its modeled predecessor is denied and has no effect.
+- Use after the modeled predecessor is accepted.
+- The continuation is bound to the appropriate subject and resource.
+- Reuse, expiry, and cross-subject use are denied where the implementation materializes continuation state.
+
 
 ## Verification Requirements
 

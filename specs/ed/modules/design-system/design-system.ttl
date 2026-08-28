@@ -11,7 +11,7 @@
 
 ### Classes
 
-ujgds:DesignSystem a owl:Class ;
+ujgds:Theme a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
 ujgds:TokenSource a owl:Class ;
@@ -35,7 +35,7 @@ ujgds:SlotBinding a owl:Class ;
 ### Properties
 
 ujgds:tokenSourceRefs a owl:ObjectProperty ;
-  rdfs:domain ujgds:DesignSystem ;
+  rdfs:domain ujgds:Theme ;
   rdfs:range ujgds:TokenSource .
 
 ujgds:surfaceRef a owl:ObjectProperty ;

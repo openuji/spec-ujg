@@ -21,6 +21,10 @@
       "@id": "ujggraph:tags",
       "@container": "@set"
     },
+    "multiInstance": {
+      "@id": "ujggraph:multiInstance",
+      "@type": "xsd:boolean"
+    },
     "defaultEntryRef": {
       "@id": "ujggraph:defaultEntryRef",
       "@type": "@id"

@@ -27,6 +27,13 @@ Focus on intended topology:
 
 Keep runtime observations, selectors, typed values, timestamps, payloads, and analytics outside Graph.
 
+Use `State.multiInstance` only when one canonical `State` may have multiple concurrently
+addressable concrete occurrences within one active occurrence of its enclosing `Journey`.
+`multiInstance` is optional, boolean, and defaults semantically to false when absent.
+
+Do not use `multiInstance` to encode occurrence counts, instance keys, data sources, collection
+iteration, domain entities, queries, expressions, or rendering behavior.
+
 ## Modeling rules
 
 Prefer the shallowest valid graph.
@@ -43,11 +50,26 @@ Use ordinary `State` and local `Transition` for stable conditions on the same pa
 
 Use `CompositeState` only when a parent journey contains or exposes a nested journey with `subjourneyId`.
 
+When traversal leaves a concrete state occurrence, its occurrence context propagates automatically
+through subsequent transitions. Do not mark downstream states as `multiInstance: true` merely to
+preserve inherited context.
+
+A later `multiInstance` state may introduce a new set of concrete occurrences within inherited
+context. Preserve the lineage semantically; do not invent Graph properties to serialize it.
+
 Use `toEntryRef` only when a parent transition into a `CompositeState` must select a specific child `JourneyEntry`. Otherwise the child journey starts at its `defaultEntryRef` when one exists. If neither `toEntryRef` nor child `defaultEntryRef` exists, the child entry remains unresolved by Graph and must be resolved externally by materialization or execution context. Do not infer a child entry from `entryRefs` ordering.
 
 Use `JourneyExit` and `fromExitRef` only for exported child outcomes that a parent genuinely reacts to. Model the child outcome as a direct terminal `JourneyExit`, not as a pseudo-state.
 
+Occurrence context propagates into child journey entry selection, is preserved when child traversal
+reaches a `JourneyExit`, and continues through the matching parent transition selected by
+`fromExitRef`.
+
 Use `Transition` between local vertices. `from` must be in the enclosing journey's `stateRefs`; `to` must be in the enclosing journey's `stateRefs` or `exitRefs`. Never use `JourneyExit` as `from`.
+
+When a transition's `from` references a multi-instance `State`, traverse the one stable transition
+from a concrete occurrence of that state. Do not add transition properties such as `perInstance`,
+`perSourceInstance`, `perTargetInstance`, or `repeatableTransition`.
 
 Use `OutgoingTransition` for ordinary navigation affordances. Use `toCurrentState: true` only when the effective graph state is preserved and only a non-topological dimension changes.
 

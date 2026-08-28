@@ -162,12 +162,21 @@ A [=Surface=] identifies one stable visible boundary and attaches it to one `Sta
 `CompositeState`, `Transition`, or `OutgoingTransition`. Multiple surfaces may expose the same Graph
 node when they are distinct visible occurrences, not renderer variants.
 
+When a [=Surface=] references a Graph node whose traversal has concrete occurrence multiplicity,
+the [=Surface=] may also have multiple concrete visible occurrences corresponding to those Graph
+occurrences. For example, a [=Surface=] attached to a multi-instance [=State=], or to a
+[=Transition=] leaving that [=State=], can be visible once for each concrete source-state
+occurrence. Surface does not define the multiplicity, instance identity, collection source, or
+rendering behavior; those remain outside Surface vocabulary and derive from Graph semantics and
+runtime or application data.
+
 <spec-statement>
 1. A [=Surface=] **MUST** be identified by an IRI.
 2. A [=Surface=] **MUST** declare exactly one `graphNodeRef`.
 3. `graphNodeRef` **MUST** reference a `State`, `CompositeState`, `Transition`, or `OutgoingTransition`.
 4. A [=Surface=] **MUST NOT** declare touchpoint identity directly.
 5. A [=Surface=] **MUST NOT** change Graph traversal or assert that its referenced Graph node occurred.
+6. A [=Surface=] **MUST NOT** declare occurrence multiplicity, instance keys, data sources, collection iteration, or rendering behavior.
 </spec-statement>
 
 ```mermaid
@@ -236,6 +245,7 @@ Example JSON node:
 5. A consumer may ignore Surface semantics while preserving recognized JSON-LD data.
 6. Surface terms do not select components, templates, slots, tokens, or renderers.
 7. `userRef`, `touchpointRefs`, and `compositeStateRefs` describe human journey perspective and presenting boundaries, not Graph traversal.
+8. Concrete Surface occurrence multiplicity derives from Graph traversal semantics and runtime or application data; Surface does not add vocabulary for multiplicity.
 
 ## Normative Artifacts
 

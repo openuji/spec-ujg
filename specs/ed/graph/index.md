@@ -9,6 +9,8 @@ This module defines the vocabulary for **intended** user flow. It extends [[UJG 
 - <dfn>JourneyEntryIndex</dfn>: A catalogue of addressable [=JourneyEntry=] contracts that does not define traversal.
 - <dfn>LocalVertex</dfn>: An abstract local topology vertex of a [=Journey=].
 - <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal).
+- <dfn>State occurrence</dfn>: A concrete experienced occurrence of a [=State=] during traversal.
+- <dfn>Concurrent multiplicity</dfn>: Multiple concrete occurrences of the same [=State=] coexisting within one active occurrence of its enclosing [=Journey=].
 - <dfn>Transition</dfn>: A structural directed edge between local vertices of a [=Journey=].
 - <dfn>CompositeState</dfn>: A state that encapsulates another [=Journey=] (sub-journey).
 - <dfn>JourneyExit</dfn>: A terminal local graph vertex and exported completion contract declared by a [=Journey=].
@@ -57,6 +59,9 @@ Later sections define navigation affordances that can be attached to eligible st
 1. A [=State=] **MUST** be identified by an IRI.
 2. A [=State=] **MUST** declare exactly one `label`.
 3. A [=State=] **MAY** declare one or more `tags`.
+4. A [=State=] **MAY** declare at most one `multiInstance` value.
+5. If present, `multiInstance` **MUST** be a boolean.
+6. Absence of `multiInstance`, or `multiInstance: false`, means that the [=State=] does not introduce [=Concurrent multiplicity|concurrent multiplicity=].
 </spec-statement>
 
 ```mermaid
@@ -65,6 +70,7 @@ classDiagram
     id
     label
     tags
+    multiInstance
   }
 ```
 
@@ -81,6 +87,45 @@ Example JSON node:
 }
 ```
 
+Example multi-instance JSON node:
+
+```json
+{
+  "@type": "State",
+  "@id": "urn:ujg:state:workshop-teaser",
+  "label": "Workshop teaser",
+  "multiInstance": true
+}
+```
+
+### State Occurrence Multiplicity {data-cop-concept="state-occurrence-multiplicity"}
+
+All experienced states may have concrete [=State occurrence|state occurrences=]. `multiInstance` does not mean that
+only such states are instantiated. Instead, `multiInstance: true` declares that multiple concrete
+occurrences of the same [=State=] **MAY** coexist within one active occurrence of its enclosing
+[=Journey=].
+
+The number and identities of those concrete occurrences are determined outside Graph topology. A
+multi-instance state still appears as exactly one canonical [=State=] node in the Graph.
+
+<spec-statement>
+1. `multiInstance: true` **MUST NOT** define the number of concrete occurrences.
+2. `multiInstance: true` **MUST NOT** define an instance key, data source, collection iteration, domain entity, query, expression, or rendering behavior.
+3. A producer **MUST NOT** add or remove Graph nodes merely because runtime or application data adds or removes concrete occurrences of a multi-instance [=State=].
+4. A normal downstream [=State=] **MUST NOT** declare `multiInstance: true` solely to preserve occurrence context inherited through traversal.
+</spec-statement>
+
+For example, application data might make one `Workshop teaser` state concrete as
+`Workshop teaser(ws-17)`, `Workshop teaser(ws-42)`, and `Workshop teaser(ws-91)`. The canonical
+Graph still contains exactly one `Workshop teaser` [=State=].
+
+A later multi-instance [=State=] may introduce a new set of concrete occurrences within an inherited
+occurrence context. For example, after traversal has selected `Workshop detail(ws-42)`, a
+multi-instance `Session teaser` state may have concrete occurrences such as
+`Session teaser(session-a) within ws-42` and `Session teaser(session-b) within ws-42`. The Graph
+does not prescribe how implementations serialize or store such context lineage, but traversal
+semantics must not lose the inherited context.
+
 ---
 
 ## Transition {data-cop-concept="transition"}
@@ -88,6 +133,10 @@ Example JSON node:
 A [=Transition=] is a structural directed edge between local vertices of a [=Journey=]. It models ordinary progression inside the local topology of a [=Journey=].
 
 A [=Transition=] is not owned by either endpoint state. It is owned by a journey through `transitionRefs`.
+
+When a [=Transition=]'s `from` value references a multi-instance [=State=], the transition is
+traversed from one concrete occurrence of that [=State=]. The [=Transition=] itself remains one
+stable Graph node.
 
 <spec-statement>
 1. A [=Transition=] **MUST** be identified by an IRI.
@@ -102,6 +151,9 @@ A [=Transition=] is not owned by either endpoint state. It is owned by a journey
 10. A [=Transition=] **MUST NOT** declare more than one `toEntryRef`.
 11. `toEntryRef` **MUST NOT** weaken, replace, or bypass local transition endpoint validation.
 12. A [=Transition=] **MUST NOT** declare more than one `label`.
+13. Traversal from a concrete [=State=] occurrence establishes an occurrence context.
+14. Occurrence context **MUST** propagate automatically through subsequent traversal.
+15. A [=Transition=] **MUST NOT** declare per-instance, per-source-instance, per-target-instance, repeatable-transition, or equivalent properties to preserve occurrence context.
 </spec-statement>
 
 ```mermaid
@@ -132,6 +184,11 @@ Example JSON node:
   "to": "urn:ujg:state:results"
 }
 ```
+
+For example, a single `open-workshop` transition from a multi-instance `Workshop teaser` state may
+be traversed as `Workshop teaser(ws-17) -> open-workshop`,
+`Workshop teaser(ws-42) -> open-workshop`, or `Workshop teaser(ws-91) -> open-workshop`. The Graph
+still declares one `Workshop teaser` [=State=] and one `open-workshop` [=Transition=].
 
 ---
 
@@ -621,14 +678,23 @@ unresolved. An unresolved child entry selection does not make the Graph invalid.
 **MUST NOT** infer a child entry from `entryRefs` ordering or treat the first `entryRefs` value as a
 default.
 
+Occurrence context **MUST** propagate from the active parent [=State=] or [=CompositeState=] into
+child [=Journey=] traversal. If child traversal begins through `toEntryRef`, the selected child entry
+receives the inherited occurrence context. If child traversal begins through `defaultEntryRef` or
+through materialization or execution context, the selected child entry also receives the inherited
+occurrence context.
+
 If interpretation of the child journey reaches a [=JourneyExit=] listed in that child journey's `exitRefs`, that [=JourneyExit=] becomes the exported exit of the child journey.
+
+Reaching a [=JourneyExit=] **MUST** preserve the occurrence context of the child traversal that
+reached it.
 
 The enclosing journey may then continue only by taking a parent transition whose:
 
 1. `from` value is the active parent-local [=CompositeState=]; and
 2. `fromExitRef` value is the exported [=JourneyExit=].
 
-If exactly one matching parent transition exists, the Consumer **MAY** continue to that transition's parent-local `to` state.
+If exactly one matching parent transition exists, the Consumer **MAY** continue to that transition's parent-local `to` state. That parent continuation **MUST** use the same occurrence context preserved by the exported child [=JourneyExit=].
 
 If no matching parent transition exists, the Consumer **MUST NOT** synthesize an implicit parent transition.
 
@@ -1125,7 +1191,7 @@ Examples in this page use explicit Core and Graph context arrays for module clar
 
 ### Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `toCurrentState`, and `outgoingTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `multiInstance`, `toCurrentState`, and `outgoingTransitionRefs`.
 
 :::include ./graph.ttl :::
 
@@ -1160,9 +1226,196 @@ To ensure graph integrity, the following constraints **MUST** be met:
 7. **Group Resolution:** Every ID in `outgoingTransitionGroupRefs` **MUST** resolve to an [=OutgoingTransitionGroup=].
 8. **Outgoing Resolution:** Every ID in `outgoingTransitionRefs` **MUST** resolve to an [=OutgoingTransition=].
 9. **Outgoing Target Resolution:** Each [=OutgoingTransition=] **MUST** resolve through exactly one effective target mechanism: a fixed `to` target, or `toCurrentState: true` resolved at the current effective source where the outgoing affordance is available.
+10. **Occurrence Context Preservation:** Occurrence context established by traversal from a concrete [=State=] occurrence **MUST** be preserved through subsequent traversal, including child [=Journey=] entry, child [=JourneyExit=] completion, and parent continuation selected through `fromExitRef`.
 </spec-statement>
 
 ## Examples
+
+### Multi-instance Validation Examples
+
+These shape-focused snippets illustrate valid and invalid `multiInstance` values.
+
+Valid state nodes:
+
+```json
+[
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:multi-true",
+    "label": "Multi true",
+    "multiInstance": true
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:multi-false",
+    "label": "Multi false",
+    "multiInstance": false
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:multi-absent",
+    "label": "Multi absent"
+  },
+  {
+    "@type": "CompositeState",
+    "@id": "urn:ujg:state:multi-composite",
+    "label": "Multi composite",
+    "subjourneyId": "urn:ujg:journey:multi-composite",
+    "multiInstance": true
+  }
+]
+```
+
+Invalid state nodes:
+
+```json
+[
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:multi-non-boolean",
+    "label": "Multi non-boolean",
+    "multiInstance": "many"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:multi-multiple-values",
+    "label": "Multi multiple values",
+    "multiInstance": [true, false]
+  }
+]
+```
+
+The first invalid node violates the `xsd:boolean` datatype constraint. The second invalid node
+violates the `multiInstance` maximum cardinality of one.
+
+### Multi-instance Child Journey with Parent Continuation
+
+This example models a workshop overview as a [=CompositeState=]. The child overview journey contains
+one multi-instance `Workshop teaser` state. Selecting a concrete teaser reaches the child
+`workshop-selected` [=JourneyExit=], and the parent journey continues to `Workshop detail` using
+`fromExitRef`.
+
+If runtime or application data selects `ws-42`, traversal preserves that occurrence context through
+`Workshop teaser(ws-42) -> workshop-selected -> Workshop detail(ws-42)`. The Graph still contains
+one `Workshop teaser` [=State=], one `open-workshop` [=Transition=], and no extra instance
+properties on `Workshop detail`.
+
+```json
+{
+  "@context": [
+    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld"
+  ],
+  "@id": "https://example.com/ujg/graph/workshop-multi-instance.jsonld",
+  "@type": "UJGDocument",
+  "nodes": [
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:workshops-page",
+      "label": "Workshops page",
+      "defaultEntryRef": "urn:ujg:entry:workshops-page-default",
+      "entryRefs": [
+        "urn:ujg:entry:workshops-page-default"
+      ],
+      "stateRefs": [
+        "urn:ujg:state:workshops-overview",
+        "urn:ujg:state:workshop-detail"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:overview-to-detail"
+      ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:workshops-page-default",
+      "stateRef": "urn:ujg:state:workshops-overview"
+    },
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:workshops-overview",
+      "label": "Workshops overview",
+      "subjourneyId": "urn:ujg:journey:workshops-overview"
+    },
+    {
+      "@type": "CompositeState",
+      "@id": "urn:ujg:state:workshop-detail",
+      "label": "Workshop detail",
+      "subjourneyId": "urn:ujg:journey:workshop-detail"
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:overview-to-detail",
+      "label": "Show workshop detail",
+      "from": "urn:ujg:state:workshops-overview",
+      "to": "urn:ujg:state:workshop-detail",
+      "fromExitRef": "urn:ujg:exit:workshop-selected"
+    },
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:workshops-overview",
+      "label": "Workshops overview",
+      "defaultEntryRef": "urn:ujg:entry:workshops-overview-default",
+      "entryRefs": [
+        "urn:ujg:entry:workshops-overview-default"
+      ],
+      "stateRefs": [
+        "urn:ujg:state:workshop-teaser"
+      ],
+      "transitionRefs": [
+        "urn:ujg:transition:open-workshop"
+      ],
+      "exitRefs": [
+        "urn:ujg:exit:workshop-selected"
+      ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:workshops-overview-default",
+      "stateRef": "urn:ujg:state:workshop-teaser"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:workshop-teaser",
+      "label": "Workshop teaser",
+      "multiInstance": true
+    },
+    {
+      "@type": "Transition",
+      "@id": "urn:ujg:transition:open-workshop",
+      "label": "Open workshop",
+      "from": "urn:ujg:state:workshop-teaser",
+      "to": "urn:ujg:exit:workshop-selected"
+    },
+    {
+      "@type": "JourneyExit",
+      "@id": "urn:ujg:exit:workshop-selected",
+      "label": "Workshop selected"
+    },
+    {
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:workshop-detail",
+      "label": "Workshop detail",
+      "defaultEntryRef": "urn:ujg:entry:workshop-detail-default",
+      "entryRefs": [
+        "urn:ujg:entry:workshop-detail-default"
+      ],
+      "stateRefs": [
+        "urn:ujg:state:workshop-detail-ready"
+      ]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:workshop-detail-default",
+      "stateRef": "urn:ujg:state:workshop-detail-ready"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:workshop-detail-ready",
+      "label": "Workshop detail ready"
+    }
+  ]
+}
+```
 
 ### JourneyEntryIndex with External Outgoing Target
 

@@ -66,7 +66,7 @@ or SHACL.
 
 Core is required for UJG documents. Include Graph when modeling topology. Include Surface when using `Surface`, `SurfaceInstance`, `Touchpoint`, `User`, `graphNodeRef`, `surfaceRef`, `compositeStateRefs`, `touchpointRefs`, `userRef`, or `channel`. Include Phase when using `Step`, `Phase`, `compositeStateRef`, `phaseRef`, or `order`. Include Runtime only for observed behavior or traces. Include Mapping when resolving Runtime state observations through Surface to Graph, or deriving Step occurrence and Phase start, with `JourneyMapping`, `MappedStep`, `mappedEventRef`, `mappedStateRef`, `observedAffordanceEventRef`, or `explainedByTransitionRef`. Include Metrics when emitting `MetricObservation` records, Mapping-derived step counts, movement counts, rates, or aggregate metric values. Include Experience Annotation only when using `PainPoint`, `painpointStepRefs`, `severity`, or `description`. Include Localization only when using l10n terms such as `Locale`, `MessageMeta`, `Message`, `copyRef`, `localeCode`, `argumentNames`, `defaultLocaleRef`, `fallbackLocaleRefs`, `messageMetaRef`, `localeRef`, `value`, or `targetLocaleRef`. Include Observability only when modeling `ObservationBinding`, `observeSurfaceRef`, `ObservationEvent`, `requiredInputModalityProfileRefs`, `InputModalityProfile`, `inputModalityRefs`, `InputModality`, `observability:keyboard`, `observability:pointer`, `SurfaceInstanceResolver`, `surfaceInstanceResolverRef`, `expectedMatchCount`, `instanceKeyFeatureRef`, `AccessibleLocator`, `accessibleNameRef`, or `accessibleDescriptionRef`; Observability also requires Localization for name and description message metas.
 
-Include Entry Binding only when using `EntryBinding`, `entryRef`, or entry-binding `value`; Entry Binding values must not create hidden traversal, platform-specific syntax, or touchpoint bindings. Include Design System only when using design-system terms such as `DesignSystem`, `TokenSource`, `Component`, `Template`, `Slot`, `SurfaceRealization`, `SlotBinding`, `componentRef`, `templateRef`, `slotRef`, `targetSurfaceRef`, or `targetComponentRef`. Include Effect only when declaring an `Effect` node, `effectRef` on a `Transition` or `OutgoingTransition`, or Effect `producedRefs` / `consumedRefs`; do not use Effect for Runtime payloads or implementation protocol details. Include Condition only when using `Condition`, `ConditionSet`, `conditionRef`, or `conditionTransitionRefs`; a `Condition` guards a Graph transition and must not replace the transition target.
+Include Entry Binding only when using `EntryBinding`, `entryRef`, or entry-binding `value`; Entry Binding values must not create hidden traversal, platform-specific syntax, or touchpoint bindings. Include Design System only when using design-system terms such as `Theme`, `TokenSource`, `Component`, `Template`, `Slot`, `SurfaceRealization`, `SlotBinding`, `componentRef`, `templateRef`, `slotRef`, `targetSurfaceRef`, or `targetComponentRef`. Include Effect only when declaring an `Effect` node, `effectRef` on a `Transition` or `OutgoingTransition`, or Effect `producedRefs` / `consumedRefs`; do not use Effect for Runtime payloads or implementation protocol details. Include Condition only when using `Condition`, `ConditionSet`, `conditionRef`, or `conditionTransitionRefs`; a `Condition` guards a Graph transition and must not replace the transition target.
 
 Include Artifact when using `Artifact`, `nameRef`, `sourceTouchpointRef`, `targetTouchpointRefs`, or when an Effect produces or consumes an artifact. Include Localization when `Artifact.nameRef` points to a `MessageMeta`. Include Surface too when artifact touchpoint refs point to `Touchpoint` nodes. Use `nameRef`, `sourceTouchpointRef`, and `targetTouchpointRefs` only on `Artifact`; effects use `producedRefs` and `consumedRefs`.
 
@@ -98,7 +98,7 @@ Use only active ED Graph classes and properties.
 
 Common classes: `JourneyEntryIndex`, `Journey`, `JourneyEntry`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
 
-Common properties: `label`, `tags`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `subjourneyId`, `outgoingTransitionRefs`.
+Common properties: `label`, `tags`, `multiInstance`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `subjourneyId`, `outgoingTransitionRefs`.
 
 Do not invent Graph fields such as `startState`, `states`, `transitions`, `toJourney`, `toState`, `trigger`, `outcome`, `eventType`, `selector`, Graph-native `url`, or `RuntimeTrace`.
 
@@ -109,6 +109,16 @@ Default to the shallowest valid graph.
 Start flat. Add nesting only when nesting preserves meaning that a flatter model would lose.
 
 Prefer ordinary `State` and local `Transition` for stable conditions on the same page, route, surface, modal, panel, or screen.
+
+Use `State.multiInstance` only when one canonical state may have multiple concurrently addressable
+concrete occurrences within one active occurrence of its enclosing journey. Do not use it for counts,
+instance keys, data sources, collection iteration, domain entities, queries, expressions, or
+rendering behavior.
+
+Occurrence context from a concrete state occurrence propagates automatically through later traversal,
+including child journey entry, child `JourneyExit`, and parent continuation via `fromExitRef`.
+Do not repeat `multiInstance` or instance-like fields on downstream states solely to preserve that
+context.
 
 Same surface plus stable alternate UI usually means same journey.
 

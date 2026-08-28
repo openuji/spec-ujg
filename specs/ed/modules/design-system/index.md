@@ -7,7 +7,7 @@ The module is intentionally second-level. It depends on the Surface layer as the
 Graph topology and user-facing materialization. Graph nodes do not point to design-system artifacts,
 and Surface resources remain design-system-agnostic.
 
-The DesignSystem module introduces `SurfaceRealization` as the design-system-side bridge. A
+The Design System module introduces `SurfaceRealization` as the design-system-side bridge. A
 `SurfaceRealization` references exactly one `Surface` and then identifies either a `Component` or a
 `Template` as the primary realization. When a template is used, the realization may reference
 `SlotBinding` nodes that fill template-declared `Slot` nodes.
@@ -18,7 +18,7 @@ resolution, rendering behavior, or runtime semantics.
 
 ## Terminology
 
-- <dfn>DesignSystem</dfn>: A graph-native design-system scope that references token sources.
+- <dfn>Theme</dfn>: A graph-native design-system scope that references token sources.
 - <dfn>TokenSource</dfn>: An addressable token source, package, manifest, or token set. The internal
   token format is external to UJG.
 - <dfn>Component</dfn>: An addressable design-system artifact that can realize a surface or fill a
@@ -183,28 +183,28 @@ Example JSON node:
 }
 ```
 
-## DesignSystem {data-cop-concept="design-system"}
+## Theme {data-cop-concept="theme"}
 
-A [=DesignSystem=] is a design-system scope that references token sources. Components, templates,
+A [=Theme=] is a design-system scope that references token sources. Components, templates,
 and surface realizations are discovered from their own nodes and are not duplicated on the
-`DesignSystem`.
+`Theme`.
 
 ```mermaid
 classDiagram
   class TokenSource
-  class DesignSystem {
+  class Theme {
     id
     tokenSourceRefs
   }
-  DesignSystem --> "0..*" TokenSource : tokenSourceRefs
+  Theme --> "0..*" TokenSource : tokenSourceRefs
 ```
 
 Example JSON node:
 
 ```json
 {
-  "@type": "DesignSystem",
-  "@id": "urn:ujg:design-system:shop",
+  "@type": "Theme",
+  "@id": "urn:ujg:theme:shop",
   "tokenSourceRefs": ["urn:ujg:tokens:brand"]
 }
 ```
@@ -218,7 +218,7 @@ and does not make `Surface` depend on design-system artifacts.
 
 Design-system realization is expressed by `SurfaceRealization` nodes:
 
-- A `DesignSystem` MAY reference `TokenSource` nodes through `tokenSourceRefs`.
+- A `Theme` MAY reference `TokenSource` nodes through `tokenSourceRefs`.
 - A `SurfaceRealization` MUST reference exactly one `Surface`.
 - A `SurfaceRealization` MUST reference exactly one primary realization, either `componentRef` or
   `templateRef`.
@@ -227,14 +227,14 @@ Design-system realization is expressed by `SurfaceRealization` nodes:
   `slotBindingRefs`.
 - A `SlotBinding` MUST reference exactly one `Slot` and exactly one target.
 
-This shape allows design-system token scopes to vary independently without changing the surface or
+This shape allows theme token scopes to vary independently without changing the surface or
 assigning multiple surfaces to the same supported Graph node. Component, template, and realization
 inventories are derived from `Component`, `Template`, and `SurfaceRealization` nodes instead of
-being maintained as duplicate lists on `DesignSystem`.
+being maintained as duplicate lists on `Theme`.
 
-## DesignSystem Scope
+## Theme Scope
 
-A `DesignSystem` identifies a design-system context by referencing token sources. It is not a
+A `Theme` identifies a design-system context by referencing token sources. It is not a
 renderer, artifact inventory, realization registry, and does not define component internals, layout
 rules, or token syntax.
 
@@ -294,7 +294,7 @@ Non-goals:
 
 ### Ontology {data-cop-concept="ontology"}
 
-The normative DesignSystem ontology is defined below and is published at
+The normative Design System ontology is defined below and is published at
 `https://ujg.specs.openuji.org/ed/ns/design-system`. It is the authoritative structural definition
 for the classes and properties declared by this module.
 
@@ -302,9 +302,9 @@ for the classes and properties declared by this module.
 
 ### JSON-LD Context {data-cop-concept="jsonld-context"}
 
-The normative DesignSystem JSON-LD context is defined below and is published at
+The normative Design System JSON-LD context is defined below and is published at
 `https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld`. It provides compact JSON-LD term
-mappings and coercions for DesignSystem-specific properties and classes.
+mappings and coercions for Design System-specific properties and classes.
 
 Surface uses `graphNodeRef` for graph-node attachment. This module keeps a separate, type-scoped
 `surfaceRef` on `SurfaceRealization`, where it means realization-to-Surface. Surface also defines
@@ -316,16 +316,16 @@ realization and slot-binding references continue to target stable `Surface` node
 
 ### Validation {data-cop-concept="validation"}
 
-The normative DesignSystem SHACL shape is defined below and is published at
+The normative Design System SHACL shape is defined below and is published at
 `https://ujg.specs.openuji.org/ed/ns/design-system.shape`. It is the authoritative validation
-artifact for DesignSystem structural constraints.
+artifact for Design System structural constraints.
 
 :::include ./design-system.shape.ttl :::
 
 The rules below define the remaining module semantics beyond the structural constraints captured by
 the SHACL shape.
 
-1. **Surface purity:** DesignSystem properties MUST NOT change Surface attachment semantics or make a
+1. **Surface purity:** Design System properties MUST NOT change Surface attachment semantics or make a
    Surface depend on design-system artifacts.
 2. **Realization bridge:** A `SurfaceRealization` MUST reference exactly one `Surface`.
 3. **Primary realization:** A `SurfaceRealization` MUST reference exactly one primary realization,
@@ -339,7 +339,7 @@ the SHACL shape.
 7. **Presentation only:** A slot binding to a surface MUST NOT imply graph traversal, state
    activation, transition validity, composite-state containment, execution order, or lifecycle
    semantics.
-8. **Graceful degradation:** A consumer that does not implement this module MAY ignore DesignSystem
+8. **Graceful degradation:** A consumer that does not implement this module MAY ignore Design System
    semantics, but it SHOULD preserve recognized JSON-LD data during read-transform-write when
    possible.
 9. **Private details:** Component internals, token syntax, framework adapters, render plans, and
@@ -738,22 +738,22 @@ remains the source of containment and traversal semantics.
       "@type": "TokenSource"
     },
     {
-      "@id": "urn:ds:web",
-      "@type": "DesignSystem",
+      "@id": "urn:theme:web",
+      "@type": "Theme",
       "tokenSourceRefs": [
         "urn:tokens:web"
       ]
     },
     {
-      "@id": "urn:ds:kiosk",
-      "@type": "DesignSystem",
+      "@id": "urn:theme:kiosk",
+      "@type": "Theme",
       "tokenSourceRefs": [
         "urn:tokens:kiosk"
       ]
     },
     {
-      "@id": "urn:ds:cli",
-      "@type": "DesignSystem",
+      "@id": "urn:theme:cli",
+      "@type": "Theme",
       "tokenSourceRefs": [
         "urn:tokens:cli"
       ]
@@ -762,6 +762,6 @@ remains the source of containment and traversal semantics.
 }
 ```
 
-Multiple design-system scopes can provide different token sources for the same surface and
+Multiple themes can provide different token sources for the same surface and
 realization graph. Components, templates, and surface realizations remain discoverable from their own
-nodes rather than from duplicated `DesignSystem` lists.
+nodes rather than from duplicated `Theme` lists.

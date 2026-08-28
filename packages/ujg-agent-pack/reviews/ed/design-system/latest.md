@@ -12,22 +12,12 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/design-system
 
 ## Review Inputs
 
-- Source hash: sha256:32f4beea7ad532deeb88098f2d738ed150a2b547820d00afa1916e96a8de8474
-- Spec hash: sha256:f6b77a460867aa9c3ff73e03026c33db58a03a1f38437054bd34f9aadef2d049
+- Source hash: sha256:81575341647bc2a7fe1f944e57fc163e0692c61ee110652e756554fb432a1e13
+- Spec hash: sha256:60da737af3f077e8eb4079c749a7831feab3c644eb7ef9b2010b9db5e34ed231
 
 ## Source Headings Likely Affected
 
-- Source of truth
-- Scope
-- Required contexts
-- Vocabulary
-- Binding rule
-- SurfaceRealization
-- Template, Slot, SlotBinding
-- TokenSource
-- DesignSystem
-- Navigation and forms
-- Checks before answering
+- UJG ED Design System Modeling
 
 ## Checklist
 
