@@ -5,7 +5,7 @@
     "ujgcond": "https://ujg.specs.openuji.org/ed/ns/condition#",
 
     "Condition": "ujgcond:Condition",
-    "ConditionSet": "ujgcond:ConditionSet",
+    "ConditionalTransitionSet": "ujgcond:ConditionalTransitionSet",
 
     "conditionRef": {
       "@id": "ujgcond:conditionRef",

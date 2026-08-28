@@ -7,9 +7,9 @@ A condition describes when a transition is eligible to be taken. A condition doe
 graph edge, does not act as a state, and does not point directly to a target state. All movement
 between journey states remains represented by `Transition` nodes from the Graph module.
 
-This module also defines `ConditionSet`, an addressable grouping node for conditional branches. A
-`ConditionSet` groups two or more guarded transitions that share the same source state. In this
-first version, a `ConditionSet` represents a branching point where one path is intended to be taken.
+This module also defines `ConditionalTransitionSet`, an addressable grouping node for conditional branches. A
+`ConditionalTransitionSet` groups two or more guarded transitions that share the same source state. In this
+first version, a `ConditionalTransitionSet` represents a branching point where one path is intended to be taken.
 
 This module is optional. It extends Graph traversal semantics for consumers that understand
 conditions, but it does not replace Graph's topology model.
@@ -29,7 +29,7 @@ conditions, but it does not replace Graph's topology model.
 * <dfn>Condition</dfn>: An addressable predicate-like node that describes when a transition is
   eligible.
 * <dfn>Guarded transition</dfn>: A Graph `Transition` that has a `conditionRef`.
-* <dfn>ConditionSet</dfn>: An addressable grouping of guarded transitions that form one conditional
+* <dfn>ConditionalTransitionSet</dfn>: An addressable grouping of guarded transitions that form one conditional
   branch point.
 * <dfn>Condition branch</dfn>: A group of conditional transitions from the same source state where
   one path is intended to be taken.
@@ -55,27 +55,27 @@ Example JSON node:
 }
 ```
 
-## ConditionSet {data-cop-concept="condition-set"}
+## ConditionalTransitionSet {data-cop-concept="conditional-transition-set"}
 
-A [=ConditionSet=] groups two or more guarded transitions that share one source state and form one
+A [=ConditionalTransitionSet=] groups two or more guarded transitions that share one source state and form one
 conditional branch point.
 
 ```mermaid
 classDiagram
   class Transition
-  class ConditionSet {
+  class ConditionalTransitionSet {
     id
     conditionTransitionRefs
   }
-  ConditionSet --> "2..*" Transition : conditionTransitionRefs
+  ConditionalTransitionSet --> "2..*" Transition : conditionTransitionRefs
 ```
 
 Example JSON node:
 
 ```json
 {
-  "@type": "ConditionSet",
-  "@id": "urn:ujg:condition-set:checkout-eligibility",
+  "@type": "ConditionalTransitionSet",
+  "@id": "urn:ujg:conditional-transition-set:checkout-eligibility",
   "conditionTransitionRefs": [
     "urn:ujg:transition:cart-to-checkout",
     "urn:ujg:transition:cart-to-empty-cart"
@@ -88,20 +88,20 @@ Example JSON node:
 The module introduces real JSON-LD terms and RDF edges for conditional branching:
 
 * `condition:conditionRef` links a Graph `Transition` to a `Condition`.
-* `condition:conditionTransitionRefs` links a `ConditionSet` to the guarded transitions that form
+* `condition:conditionTransitionRefs` links a `ConditionalTransitionSet` to the guarded transitions that form
   one branch point.
 
 A `Condition` **MUST NOT** reference a target state directly.
 
-A `ConditionSet` **MUST NOT** reference a source state directly. Its effective source state is
+A `ConditionalTransitionSet` **MUST NOT** reference a source state directly. Its effective source state is
 derived from the common `from` value of all referenced transitions.
 
-A `ConditionSet` **MUST** reference transitions that all share the same `from` state.
+A `ConditionalTransitionSet` **MUST** reference transitions that all share the same `from` state.
 
-A transition referenced by a `ConditionSet` **MUST** have exactly one `conditionRef`.
+A transition referenced by a `ConditionalTransitionSet` **MUST** have exactly one `conditionRef`.
 
-A consumer that implements this module **MUST** treat transitions in a `ConditionSet` as conditional
-branch alternatives. In this first version of the module, a `ConditionSet` means that one referenced
+A consumer that implements this module **MUST** treat transitions in a `ConditionalTransitionSet` as conditional
+branch alternatives. In this first version of the module, a `ConditionalTransitionSet` means that one referenced
 transition is intended to be taken.
 
 A consumer that does not implement this module **MAY** ignore condition semantics, but it **SHOULD**
@@ -133,7 +133,7 @@ Examples in this page compose the shared baseline context:
 
 The normative Conditions ontology is defined below and is published at
 `https://ujg.specs.openuji.org/ed/ns/condition`. It is the authoritative structural definition for
-`Condition`, `ConditionSet`, and the properties declared by this module.
+`Condition`, `ConditionalTransitionSet`, and the properties declared by this module.
 
 :::include ./condition.ttl :::
 
@@ -162,8 +162,8 @@ the SHACL shape.
    between states **MUST** be represented by a Graph `Transition`.
 2. **Transition guard semantics:** A transition with `conditionRef` is eligible only when the
    referenced condition is satisfied by the implementation's domain/runtime context.
-3. **Branch semantics:** A `ConditionSet` groups guarded transitions that form one branch point. In
-   this version, a `ConditionSet` represents a branch where one referenced transition is intended to
+3. **Branch semantics:** A `ConditionalTransitionSet` groups guarded transitions that form one branch point. In
+   this version, a `ConditionalTransitionSet` represents a branch where one referenced transition is intended to
    be taken.
 4. **No expression language:** The meaning and evaluation of a condition are intentionally outside
    this module unless another optional module defines expression semantics.
@@ -278,8 +278,8 @@ Codex chat branch-check example:
       "label": "Continue coding"
     },
     {
-      "@type": "ConditionSet",
-      "@id": "urn:ujg:condition-set:resolve-branch-context-before-coding",
+      "@type": "ConditionalTransitionSet",
+      "@id": "urn:ujg:conditional-transition-set:resolve-branch-context-before-coding",
       "label": "Resolve branch context before coding",
       "conditionTransitionRefs": [
         "urn:ujg:transition:ask-code-to-start-coding",

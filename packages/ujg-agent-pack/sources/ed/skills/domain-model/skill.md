@@ -96,7 +96,7 @@ For each reachable State or relevant CompositeState, inspect as needed:
 * outgoing transitions;
 * Conditions;
 * Effects;
-* sibling branches in ConditionSets;
+* sibling branches in ConditionalTransitionSets;
 * connected States and JourneyExits;
 * JourneyEntries;
 * enclosing Journey and composite context;
@@ -171,7 +171,7 @@ Determine what must be true after the transition so the target State can be mate
 
 Determine what semantic distinction allows alternative transitions to be selected correctly.
 
-Use ConditionSet context when available.
+Use ConditionalTransitionSet context when available.
 
 ## Entry and continuity
 

@@ -243,9 +243,9 @@ If the local interaction already occurred, the continuation transition normally 
 
 ## Conditional outcomes
 
-A `ConditionSet` represents condition-controlled alternative transitions, not automatically separate user actions.
+A `ConditionalTransitionSet` represents condition-controlled alternative transitions, not automatically separate user actions.
 
-For every transition referenced by a `ConditionSet`:
+For every transition referenced by a `ConditionalTransitionSet`:
 
 ```text
 conditional membership
@@ -505,7 +505,7 @@ State / CompositeState
 Transition
 JourneyEntry
 JourneyExit
-ConditionSet
+ConditionalTransitionSet
 ```
 
 Understand the experienced topology before creating Design System nodes.

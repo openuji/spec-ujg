@@ -56,7 +56,7 @@ Before relying on the UJG document:
 
 1. Confirm that the UJG document and Domain Model extension are parseable.
 2. Confirm that referenced IDs resolve and that graph topology is internally coherent.
-3. Identify the journeys, entries, states, composite states, exits, transitions, condition sets, conditions, effects, and bindings relevant to the requested behavior.
+3. Identify the journeys, entries, states, composite states, exits, transitions, conditional transition sets, conditions, effects, and bindings relevant to the requested behavior.
 4. Distinguish domain semantics from purely presentational details.
 
 Do not infer workflow behavior solely from `domainOperations`, entity types, or a separate Domain Model JSON export.
@@ -127,7 +127,7 @@ Derive tests from the trace matrix, not only from the implementation's public AP
 Test, where applicable:
 
 - Each entry's allowed and denied eligibility cases.
-- Every branch of each relevant `ConditionSet`.
+- Every branch of each relevant `ConditionalTransitionSet`.
 - Each effectful transition and its observable effect.
 - Each non-effectful transition whose state or continuation matters.
 - Invariant preservation and invalid-transition rejection.

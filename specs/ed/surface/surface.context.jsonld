@@ -26,8 +26,8 @@
       "@type": "@id",
       "@container": "@set"
     },
-    "compositeStateRefs": {
-      "@id": "ujgsurface:compositeStateRefs",
+    "journeyRefs": {
+      "@id": "ujgsurface:journeyRefs",
       "@type": "@id",
       "@container": "@set"
     },

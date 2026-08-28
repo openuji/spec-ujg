@@ -377,7 +377,7 @@ uses those event-level profile references without changing its own surface, loca
 resolver contract.
 
 Observability does not define `graphNodeRef`, `surfaceRef`, `surfaceInstanceRef`, or touchpoint
-boundary assignment such as `compositeStateRefs`. Those are Surface and Runtime terms.
+boundary assignment such as `journeyRefs`. Those are Surface and Runtime terms.
 Observability does not define Runtime properties.
 
 ## Locator Model

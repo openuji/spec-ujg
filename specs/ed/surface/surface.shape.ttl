@@ -108,7 +108,7 @@ ujgsurfaceshape:TouchpointShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgsurface:compositeStateRefs ;
-    sh:class ujggraph:CompositeState ;
+    sh:path ujgsurface:journeyRefs ;
+    sh:class ujggraph:Journey ;
     sh:nodeKind sh:IRI ;
   ] .
