@@ -115,11 +115,6 @@ concrete occurrences within one active occurrence of its enclosing journey. Do n
 instance keys, data sources, collection iteration, domain entities, queries, expressions, or
 rendering behavior.
 
-Occurrence context from a concrete state occurrence propagates automatically through later traversal,
-including child journey entry, child `JourneyExit`, and parent continuation via `fromExitRef`.
-Do not repeat `multiInstance` or instance-like fields on downstream states solely to preserve that
-context.
-
 Same surface plus stable alternate UI usually means same journey.
 
 Do not introduce `CompositeState`, `JourneyExit`, or `fromExitRef` merely to make the graph look complete, represent ordinary component outcomes, or connect screenshots.

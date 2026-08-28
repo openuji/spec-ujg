@@ -50,20 +50,9 @@ Use ordinary `State` and local `Transition` for stable conditions on the same pa
 
 Use `CompositeState` only when a parent journey contains or exposes a nested journey with `subjourneyId`.
 
-When traversal leaves a concrete state occurrence, its occurrence context propagates automatically
-through subsequent transitions. Do not mark downstream states as `multiInstance: true` merely to
-preserve inherited context.
-
-A later `multiInstance` state may introduce a new set of concrete occurrences within inherited
-context. Preserve the lineage semantically; do not invent Graph properties to serialize it.
-
 Use `toEntryRef` only when a parent transition into a `CompositeState` must select a specific child `JourneyEntry`. Otherwise the child journey starts at its `defaultEntryRef` when one exists. If neither `toEntryRef` nor child `defaultEntryRef` exists, the child entry remains unresolved by Graph and must be resolved externally by materialization or execution context. Do not infer a child entry from `entryRefs` ordering.
 
 Use `JourneyExit` and `fromExitRef` only for exported child outcomes that a parent genuinely reacts to. Model the child outcome as a direct terminal `JourneyExit`, not as a pseudo-state.
-
-Occurrence context propagates into child journey entry selection, is preserved when child traversal
-reaches a `JourneyExit`, and continues through the matching parent transition selected by
-`fromExitRef`.
 
 Use `Transition` between local vertices. `from` must be in the enclosing journey's `stateRefs`; `to` must be in the enclosing journey's `stateRefs` or `exitRefs`. Never use `JourneyExit` as `from`.
 
