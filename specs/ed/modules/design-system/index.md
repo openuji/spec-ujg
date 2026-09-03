@@ -458,12 +458,18 @@ derive the used component by following the realization reference.
       "@id": "urn:transition:submit-refund",
       "@type": "Transition",
       "from": "urn:state:refund",
-      "to": "urn:state:refund-submitted"
+      "to": "urn:state:refund-submitted",
+      "commandRef": "urn:command:submit-refund"
+    },
+    {
+      "@id": "urn:command:submit-refund",
+      "@type": "Command",
+      "label": "Submit refund"
     },
     {
       "@id": "urn:surface:submit-refund",
       "@type": "Surface",
-      "graphNodeRef": "urn:transition:submit-refund"
+      "graphNodeRef": "urn:command:submit-refund"
     },
     {
       "@id": "urn:component:RefundForm",

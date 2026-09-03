@@ -130,7 +130,7 @@ It must list one or more locators with `locatorRefs`. Locators inside one bindin
 
 It may declare `expectedMatchCount` as an exact non-negative integer for the full conjunctive locator match. Use `expectedMatchCount: 0` when the exact locator contract should find no matching objects. If `expectedMatchCount` is omitted, do not infer exact cardinality.
 
-Input-modality profile references belong to the referenced `ObservationEvent`, not to `ObservationBinding` or Graph `Transition`.
+Input-modality profile references belong to the referenced `ObservationEvent`, not to `ObservationBinding`, Graph `Command`, or Graph `Transition`.
 
 An `ObservationEvent` may list input-modality profiles with `requiredInputModalityProfileRefs`.
 
@@ -185,7 +185,10 @@ Observability has no direct dependency on Runtime. Runtime events do not need to
 
 Do not model automation commands, screenshots, API probes, timestamps, execution order, payloads, or click facts as Observability terms. Use Runtime for observed events and private extensions for adapter details.
 
-For journey transition modality profile references, model the Graph topology with Graph, attach a `Surface` to the `Transition` or `OutgoingTransition`, bind recognition with `ObservationBinding`, and put input-modality profile references on the referenced `ObservationEvent`.
+For invocation modality profile references, model the Graph topology with Graph, attach
+`commandRef` from the relevant `Transition` or `OutgoingTransition` to a `Command`, attach a
+`Surface` to that `Command`, bind recognition with `ObservationBinding`, and put input-modality
+profile references on the referenced `ObservationEvent`.
 
 ## Checks before answering
 
@@ -193,7 +196,7 @@ For journey transition modality profile references, model the Graph topology wit
 * Does every `ObservationBinding` identify one `Surface`?
 * Does every binding identify one `ObservationEvent`?
 * Does every binding list at least one locator?
-* Are input-modality profile references declared on `ObservationEvent`, not on `ObservationBinding` or Graph nodes?
+* Are input-modality profile references declared on `ObservationEvent`, not on `ObservationBinding`, Graph `Command`, or other Graph nodes?
 * Does every `InputModalityProfile` list at least one `InputModality`?
 * Did I use producer-defined concrete event IRIs, standard `observability:keyboard` / `observability:pointer` modality IRIs where applicable, and producer-defined modality IRIs only for additional modalities?
 * If a binding asserts absence, did it keep `locatorRefs` and use `expectedMatchCount: 0`?
@@ -202,4 +205,5 @@ For journey transition modality profile references, model the Graph topology wit
 * Are role, feature, and relation names accessibility-model oriented?
 * Does each `SurfaceInstanceResolver` point to one `AccessibleFeature`, not a `SurfaceInstance`?
 * Did I keep Runtime correlation derived rather than adding an Observability-to-Runtime reference?
+* Do invocation affordance bindings observe Surfaces attached to Commands?
 * Did Observability avoid changing Graph traversal or Surface identity?

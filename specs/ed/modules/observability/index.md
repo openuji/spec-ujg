@@ -638,7 +638,7 @@ the SHACL shape.
 
 ### Input Modality Requirement Example
 
-This example shows a producer-defined activation event for a transition affordance surface. The event
+This example shows a producer-defined activation event for a Surface attached to a Command. The event
 references two producer-defined modality profiles that use standard keyboard and pointer modality
 identifiers.
 
@@ -668,12 +668,18 @@ identifiers.
       "@id": "urn:transition:submit-checkout",
       "label": "Submit checkout",
       "from": "urn:state:checkout-ready",
-      "to": "urn:state:checkout-submitted"
+      "to": "urn:state:checkout-submitted",
+      "commandRef": "urn:command:submit-checkout"
+    },
+    {
+      "@type": "Command",
+      "@id": "urn:command:submit-checkout",
+      "label": "Submit checkout"
     },
     {
       "@type": "Surface",
       "@id": "urn:surface:submit-checkout",
-      "graphNodeRef": "urn:transition:submit-checkout"
+      "graphNodeRef": "urn:command:submit-checkout"
     },
     {
       "@type": "InputModalityProfile",

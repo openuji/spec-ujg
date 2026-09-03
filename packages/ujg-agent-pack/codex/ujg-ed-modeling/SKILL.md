@@ -43,8 +43,8 @@ Treat `/ed` as moving. Do not silently mix dated snapshots with current ED. Gene
 Select only required modules.
 
 Core: document container and top-level nodes.
-Graph: journeys, states, transitions, composition, exits, outgoing navigation, and indexes.
-Surface: materialized surfaces for supported Graph nodes, concrete surface instances, surface attachments, touchpoints, human users, user references, channels, and journey touchpoint scopes.
+Graph: journeys, states, transitions, commands, composition, exits, outgoing navigation, and indexes.
+Surface: materialized surfaces for `State`, `CompositeState`, and `Command`, concrete surface instances, surface attachments, touchpoints, human users, user references, channels, and journey touchpoint scopes.
 Runtime: observed events, values, clicks, URLs, timestamps, payloads.
 Mapping: state-observation steps resolved from Runtime through Surface to Graph, with optional immediately preceding affordance event references.
 Metrics: metric observations, especially Mapping-derived counts and rates over resolved journey mappings.
@@ -67,7 +67,7 @@ payloads that design the smallest coherent technology-neutral `DomainModel` from
 topology plus optional explicit domain knowledge. It is governed by JSON Schema, not RDF vocabulary
 or SHACL.
 
-Core is required for UJG documents. Include Graph when modeling topology. Include Surface when using `Surface`, `SurfaceInstance`, `Touchpoint`, `User`, `graphNodeRef`, `surfaceRef`, `journeyRefs`, `touchpointRefs`, `userRef`, or `channel`. Include Phase when using `Step`, `Phase`, `compositeStateRef`, `phaseRef`, or `order`. Include Runtime only for observed behavior or traces. Include Mapping when resolving Runtime state observations through Surface to Graph, or deriving Step occurrence and Phase start, with `JourneyMapping`, `MappedStep`, `mappedEventRef`, `mappedStateRef`, `observedAffordanceEventRef`, or `explainedByTransitionRef`. Include Metrics when emitting `MetricObservation` records, Mapping-derived step counts, movement counts, rates, or aggregate metric values. Include Experience Annotation only when using `PainPoint`, `painpointStepRefs`, `severity`, or `description`. Include Localization only when using l10n terms such as `Locale`, `MessageMeta`, `Message`, `copyRef`, `localeCode`, `argumentNames`, `defaultLocaleRef`, `fallbackLocaleRefs`, `messageMetaRef`, `localeRef`, `value`, or `targetLocaleRef`. Include Observability only when modeling `ObservationBinding`, `observeSurfaceRef`, `ObservationEvent`, `requiredInputModalityProfileRefs`, `InputModalityProfile`, `inputModalityRefs`, `InputModality`, `observability:keyboard`, `observability:pointer`, `SurfaceInstanceResolver`, `surfaceInstanceResolverRef`, `expectedMatchCount`, `instanceKeyFeatureRef`, `AccessibleLocator`, `accessibleNameRef`, or `accessibleDescriptionRef`; Observability also requires Localization for name and description message metas.
+Core is required for UJG documents. Include Graph when modeling topology, `Command`, or `commandRef`. Include Surface when using `Surface`, `SurfaceInstance`, `Touchpoint`, `User`, `graphNodeRef`, `surfaceRef`, `journeyRefs`, `touchpointRefs`, `userRef`, or `channel`. Include Phase when using `Step`, `Phase`, `compositeStateRef`, `phaseRef`, or `order`. Include Runtime only for observed behavior or traces. Include Mapping when resolving Runtime state observations through Surface to Graph, or deriving Step occurrence and Phase start, with `JourneyMapping`, `MappedStep`, `mappedEventRef`, `mappedStateRef`, `observedAffordanceEventRef`, or `explainedByTransitionRef`. Include Metrics when emitting `MetricObservation` records, Mapping-derived step counts, movement counts, rates, or aggregate metric values. Include Experience Annotation only when using `PainPoint`, `painpointStepRefs`, `severity`, or `description`. Include Localization only when using l10n terms such as `Locale`, `MessageMeta`, `Message`, `copyRef`, `localeCode`, `argumentNames`, `defaultLocaleRef`, `fallbackLocaleRefs`, `messageMetaRef`, `localeRef`, `value`, or `targetLocaleRef`. Include Observability only when modeling `ObservationBinding`, `observeSurfaceRef`, `ObservationEvent`, `requiredInputModalityProfileRefs`, `InputModalityProfile`, `inputModalityRefs`, `InputModality`, `observability:keyboard`, `observability:pointer`, `SurfaceInstanceResolver`, `surfaceInstanceResolverRef`, `expectedMatchCount`, `instanceKeyFeatureRef`, `AccessibleLocator`, `accessibleNameRef`, or `accessibleDescriptionRef`; Observability also requires Localization for name and description message metas.
 
 Include Entry Binding only when using `EntryBinding`, `entryRef`, or entry-binding `value`; Entry Binding values must not create hidden traversal, platform-specific syntax, or touchpoint bindings. Include Design System only when using design-system terms such as `Theme`, `TokenSource`, `Component`, `Template`, `Slot`, `SurfaceRealization`, `SlotBinding`, `componentRef`, `templateRef`, `slotRef`, `targetSurfaceRef`, or `targetComponentRef`. Include Effect only when declaring an `Effect` node, `effectRef` on a `Transition` or `OutgoingTransition`, or Effect `producedRefs` / `consumedRefs`; do not use Effect for Runtime payloads or implementation protocol details. Include Condition only when using `Condition`, `ConditionalTransitionSet`, `conditionRef`, or `conditionTransitionRefs`; a `Condition` guards a Graph transition and must not replace the transition target.
 
@@ -99,9 +99,9 @@ Do not put interoperable graph semantics in `extensions`. If a concept affects t
 
 Use only active ED Graph classes and properties.
 
-Common classes: `JourneyEntryIndex`, `Journey`, `JourneyEntry`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
+Common classes: `JourneyEntryIndex`, `Journey`, `JourneyEntry`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `Command`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
 
-Common properties: `label`, `tags`, `multiInstance`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `subjourneyId`, `outgoingTransitionRefs`.
+Common properties: `label`, `tags`, `multiInstance`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyId`, `outgoingTransitionRefs`.
 
 Do not invent Graph fields such as `startState`, `states`, `transitions`, `toJourney`, `toState`, `trigger`, `outcome`, `eventType`, `selector`, Graph-native `url`, or `RuntimeTrace`.
 
@@ -130,7 +130,7 @@ A flatter model wins when it preserves the same meaning.
 
 ## Model decision stability
 
-Classify each modeled item before writing JSON-LD: index entry, page/surface entry, same-journey state, local transition, child journey, exported child outcome, outgoing affordance, current-state affordance, runtime observation, experience annotation, localization metadata, entry binding, design-system realization, effect side effect, guarded transition, artifact, domain model payload, or distributed touchpoint metadata.
+Classify each modeled item before writing JSON-LD: index entry, page/surface entry, same-journey state, local transition, command, child journey, exported child outcome, outgoing affordance, current-state affordance, runtime observation, experience annotation, localization metadata, entry binding, design-system realization, effect side effect, guarded transition, artifact, domain model payload, or distributed touchpoint metadata.
 
 Do not mix roles accidentally.
 
@@ -194,11 +194,23 @@ Use `Transition` for local intended topology inside one journey.
 
 A `Transition` must have `from` and `to`. `from` must be listed in the same journey's `stateRefs`. `to` must be listed in the same journey's `stateRefs` or `exitRefs`. Never use a `JourneyExit` or `JourneyEntry` as `from`.
 
+A `Transition` may use one `commandRef` when the progression is associated with invoking a stable `Command`. Multiple transitions may share one command identity. That sharing does not define branching, selection, ordering, or resolution semantics.
+
 Use `Transition` for local page order, local state progression, local rendering progression, terminal progression to a `JourneyExit`, parent-owned continuation between parent-local states, parent entry into a child journey using `toEntryRef`, and parent continuation after child exit using `fromExitRef`.
 
 Do not use `Transition` for runtime facts, clicks, URLs, selectors, ordinary link metadata, header navigation, footer navigation, language switchers, result links, or ordinary external navigation.
 
 Do not reference child states from a parent transition. Do not create parent transitions merely to connect observed screens.
+
+## Command
+
+Use `Command` only for stable semantic identity of an intentional invocation in the modeled experience.
+
+A `Command` does not define source state, destination state, branching, condition resolution, effect execution, visual representation, runtime execution, or execution results. Do not add `from` or `to` to `Command`.
+
+Do not create commands mechanically for every transition. Structural, automatic, expiry-driven, or otherwise non-invoked transitions may remain without `commandRef`.
+
+Surface may materialize an intentional invocation by setting `Surface.graphNodeRef` to the `Command`. Do not attach `Surface.graphNodeRef` to `Transition` or `OutgoingTransition`.
 
 ## JourneyEntry, JourneyExit, and boundary refs
 
@@ -258,6 +270,8 @@ Use `OutgoingTransition` when the affordance leaves the local progression contex
 
 An `OutgoingTransition` must declare exactly one target mechanism: either one `to`, or `toCurrentState: true`.
 
+An `OutgoingTransition` may use one `commandRef` when the outgoing affordance has stable intentional invocation identity.
+
 Do not declare both. Do not omit both. Do not use `toCurrentState: false`.
 
 Use state-scoped `outgoingTransitionRefs` only on ordinary `State` nodes. Do not put `outgoingTransitionRefs` on `CompositeState` or `JourneyExit`.
@@ -295,6 +309,8 @@ Graph models intended topology. Runtime models observed behavior.
 Keep runtime facts out of Graph, including typed query, input value, clicked element, submitted value, selected result, timestamp, URL at interaction time, DOM selector, analytics metadata, runtime locale selection, and payload.
 
 For Runtime traces, a `RuntimeEvent` must identify the execution with `executionId` and the observed concrete occurrence with `surfaceInstanceRef`. Resolve Graph meaning through `SurfaceInstance.surfaceRef` and the referenced `Surface.graphNodeRef`. Use `previousId` only to reconstruct observed event order.
+
+Runtime events whose surfaces resolve to `Command` are observed affordance events, not state observations. Mapping may point to the immediate predecessor command event with `observedAffordanceEventRef` and explain movement through a relevant `Transition` or `OutgoingTransition` with the same `commandRef`.
 
 To derive user perspective for an observed state occurrence, resolve `RuntimeEvent.surfaceInstanceRef -> SurfaceInstance.surfaceRef -> Surface.graphNodeRef`, then use the graph node's effective user from `userRef` or inherited journey user assignment. Do not add collector or observer attribution fields to Runtime; keep collector/source metadata in `payload` or `extensions`.
 
@@ -357,7 +373,7 @@ When generating JSON-LD:
 3. Provide a short self-audit.
 4. State uncertainty explicitly.
 
-Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `entryRefs` and `stateRefs`; any `defaultEntryRef` references one of the same journey's `entryRefs`; no default is inferred from `entryRefs` ordering; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `copyRef`, artifact `nameRef`, and Observability accessible refs point to `MessageMeta`; each `Message` has one `messageMetaRef`, one `localeRef`, and one `value`; `Message.value` is opaque Localization data; runtime facts not in Graph; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, Artifact, and Domain Model do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; Domain Model payloads appear only under `UJGDocument.extensions["org.openuji.domain-model"]` and do not add RDF vocabulary; Domain Model element traceability uses optional `ujgRefs`; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
+Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `entryRefs` and `stateRefs`; any `defaultEntryRef` references one of the same journey's `entryRefs`; no default is inferred from `entryRefs` ordering; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; commands identify intentional invocation only; `commandRef` points to `Command` and does not define branching, results, or effects; `Surface.graphNodeRef` targets only `State`, `CompositeState`, or `Command`; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `copyRef`, artifact `nameRef`, and Observability accessible refs point to `MessageMeta`; each `Message` has one `messageMetaRef`, one `localeRef`, and one `value`; `Message.value` is opaque Localization data; runtime facts not in Graph; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, Artifact, and Domain Model do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; Domain Model payloads appear only under `UJGDocument.extensions["org.openuji.domain-model"]` and do not add RDF vocabulary; Domain Model element traceability uses optional `ujgRefs`; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
 
 ## Anti-overengineering and uncertainty
 

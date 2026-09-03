@@ -4,8 +4,8 @@ This core-family specification defines materialized user-facing [=Surface|Surfac
 runtime occurrences, their presenting touchpoints, and human users whose journeys are modeled.
 
 A `Surface` assigns stable visible identity to one supported Graph node: `State`, `CompositeState`,
-`Transition`, or `OutgoingTransition`. A `SurfaceInstance` identifies one concrete runtime-visible
-occurrence. A `Touchpoint` identifies the system, channel, or service boundary that can present
+or `Command`. A `SurfaceInstance` identifies one concrete runtime-visible occurrence. A
+`Touchpoint` identifies the system, channel, or service boundary that can present
 meaningful `Journey` segments. A `User` identifies a human participant, persona, or role whose journey
 perspective a Graph node can belong to.
 
@@ -79,7 +79,7 @@ accountability, systems, organizations, or [=Touchpoint|Touchpoints=].
 4. A [=User=] **MAY** declare one or more `touchpointRefs`.
 5. Every `touchpointRefs` value **MUST** reference a [=Touchpoint=].
 6. `userRef` **MAY** appear on Graph nodes that belong to a user, including [=Journey=],
-   [=JourneyEntry=], [=State=], [=CompositeState=], [=Transition=], [=JourneyExit=],
+   [=JourneyEntry=], [=State=], [=CompositeState=], [=Command=], [=Transition=], [=JourneyExit=],
    [=OutgoingTransition=], and [=OutgoingTransitionGroup=].
 7. A Graph node **MUST NOT** declare more than one `userRef`.
 8. Every `userRef` value **MUST** reference a [=User=].
@@ -115,6 +115,9 @@ classDiagram
   class CompositeState {
     userRef
   }
+  class Command {
+    userRef
+  }
   class Transition {
     userRef
   }
@@ -126,6 +129,7 @@ classDiagram
   Journey --> User : userRef
   State --> User : userRef
   CompositeState --> User : userRef
+  Command --> User : userRef
   Transition --> User : userRef
   OutgoingTransition --> User : userRef
 ```
@@ -159,40 +163,47 @@ Example JSON nodes:
 ## Surface {data-cop-concept="surface"}
 
 A [=Surface=] identifies one stable visible boundary and attaches it to one `State`,
-`CompositeState`, `Transition`, or `OutgoingTransition`. Multiple surfaces may expose the same Graph
-node when they are distinct visible occurrences, not renderer variants.
+`CompositeState`, or `Command`. Multiple surfaces may expose the same Graph node when they are
+distinct visible occurrences, not renderer variants.
 
 When a [=Surface=] references a Graph node whose traversal has concrete occurrence multiplicity,
 the [=Surface=] may also have multiple concrete visible occurrences corresponding to those Graph
-occurrences. For example, a [=Surface=] attached to a multi-instance [=State=], or to a
-[=Transition=] leaving that [=State=], can be visible once for each concrete source-state
-occurrence. Surface does not define the multiplicity, instance identity, collection source, or
-rendering behavior; those remain outside Surface vocabulary and derive from Graph semantics and
-runtime or application data.
+occurrences. For example, a [=Surface=] attached to a multi-instance [=State=], or to a [=Command=]
+whose visible materialization belongs to that [=State=]'s concrete occurrences, can be visible once
+for each concrete source-state occurrence. Surface does not define the multiplicity, instance
+identity, collection source, or rendering behavior; those remain outside Surface vocabulary and
+derive from Graph semantics and runtime or application data.
+
+A [=Surface=] attached to a [=Command=] means stable visible materialization of that intentional
+invocation. It does not prescribe a widget type, and it does not make the referenced [=Command=] a
+button, link, CTA, or other presentation primitive. Related [=Transition=] or
+[=OutgoingTransition=] edges can reference the same invocation with `commandRef`.
+
+Structural, automatic, or otherwise non-invoked progression does not need a [=Command=] or a
+[=Surface=].
 
 <spec-statement>
 1. A [=Surface=] **MUST** be identified by an IRI.
 2. A [=Surface=] **MUST** declare exactly one `graphNodeRef`.
-3. `graphNodeRef` **MUST** reference a `State`, `CompositeState`, `Transition`, or `OutgoingTransition`.
+3. `graphNodeRef` **MUST** reference a `State`, `CompositeState`, or `Command`.
 4. A [=Surface=] **MUST NOT** declare touchpoint identity directly.
 5. A [=Surface=] **MUST NOT** change Graph traversal or assert that its referenced Graph node occurred.
 6. A [=Surface=] **MUST NOT** declare occurrence multiplicity, instance keys, data sources, collection iteration, or rendering behavior.
+7. A [=Surface=] **MUST NOT** reference a [=Transition=] or [=OutgoingTransition=] through `graphNodeRef`.
 </spec-statement>
 
 ```mermaid
 classDiagram
   class State
   class CompositeState
-  class Transition
-  class OutgoingTransition
+  class Command
   class Surface {
     id
     graphNodeRef
   }
   Surface --> State : graphNodeRef
   Surface --> CompositeState : graphNodeRef
-  Surface --> Transition : graphNodeRef
-  Surface --> OutgoingTransition : graphNodeRef
+  Surface --> Command : graphNodeRef
 ```
 
 Example JSON node:
@@ -239,7 +250,8 @@ Example JSON node:
 ## Shared Semantics
 
 1. `graphNodeRef` is the canonical assignment direction from Surface to Graph.
-2. An `OutgoingTransitionGroup` does not have a Surface; its child `OutgoingTransition` nodes may.
+2. An `OutgoingTransitionGroup` does not have a Surface; model stable visible invocation identity
+   for its child [=OutgoingTransition=] nodes with [=Command=] and `commandRef` when needed.
 3. Touchpoint assignment, when modeled, is declared from [=Touchpoint=] to meaningful [=Journey=] boundaries with `journeyRefs`.
 4. A Consumer resolving an individual [=Surface=]'s effective touchpoint follows the surface's `graphNodeRef` to the Graph node, resolves the effective [=Journey=] that owns or makes that Graph node available, and then finds a [=Touchpoint=] whose `journeyRefs` includes that journey.
 5. A consumer may ignore Surface semantics while preserving recognized JSON-LD data.

@@ -49,6 +49,7 @@ Focus on intended topology:
 - `State`
 - `CompositeState`
 - `Transition`
+- `Command`
 - `JourneyExit`
 - `OutgoingTransition`
 - `OutgoingTransitionGroup`
@@ -76,6 +77,11 @@ Use `JourneyEntry` for explicit journey entry contracts. Each entry must have ex
 
 Use ordinary `State` and local `Transition` for stable conditions on the same page, route, surface, modal, panel, or screen.
 
+Use `Command` only for stable semantic identity of an intentional invocation in the modeled
+experience. A `Command` is not a transition endpoint, does not replace `Transition` or
+`OutgoingTransition`, and does not define source state, destination state, branching, condition
+resolution, effect execution, visual representation, runtime execution, or execution results.
+
 Use `CompositeState` only when a parent journey contains or exposes a nested journey with `subjourneyId`.
 
 Use `toEntryRef` only when a parent transition into a `CompositeState` must select a specific child `JourneyEntry`. Otherwise the child journey starts at its `defaultEntryRef` when one exists. If neither `toEntryRef` nor child `defaultEntryRef` exists, the child entry remains unresolved by Graph and must be resolved externally by materialization or execution context. Do not infer a child entry from `entryRefs` ordering.
@@ -83,12 +89,17 @@ Use `toEntryRef` only when a parent transition into a `CompositeState` must sele
 Use `JourneyExit` and `fromExitRef` only for exported child outcomes that a parent genuinely reacts to. Model the child outcome as a direct terminal `JourneyExit`, not as a pseudo-state.
 
 Use `Transition` between local vertices. `from` must be in the enclosing journey's `stateRefs`; `to` must be in the enclosing journey's `stateRefs` or `exitRefs`. Never use `JourneyExit` as `from`.
+Use `commandRef` only when the transition is associated with invoking a stable `Command`. Multiple
+transitions may share one `commandRef`; that shared command identity does not define branching,
+selection, ordering, or resolution semantics.
 
 When a transition's `from` references a multi-instance `State`, traverse the one stable transition
 from a concrete occurrence of that state. Do not add transition properties such as `perInstance`,
 `perSourceInstance`, `perTargetInstance`, or `repeatableTransition`.
 
 Use `OutgoingTransition` for ordinary navigation affordances. Use `toCurrentState: true` only when the effective graph state is preserved and only a non-topological dimension changes.
+Use `commandRef` on an `OutgoingTransition` only when the outgoing affordance has stable intentional
+invocation identity.
 
 ## Cross-skill awareness
 

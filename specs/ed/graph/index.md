@@ -11,6 +11,7 @@ This module defines the vocabulary for **intended** user flow. It extends [[UJG 
 - <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal).
 - <dfn>State occurrence</dfn>: A concrete experienced occurrence of a [=State=] during traversal.
 - <dfn>Transition</dfn>: A structural directed edge between local vertices of a [=Journey=].
+- <dfn>Command</dfn>: A stable semantic identity of an intentional invocation in the modeled experience.
 - <dfn>CompositeState</dfn>: A state that encapsulates another [=Journey=] (sub-journey).
 - <dfn>JourneyExit</dfn>: A terminal local graph vertex and exported completion contract declared by a [=Journey=].
 - <dfn>OutgoingTransition</dfn>: A navigational affordance pointing to a next possible [=State=] or [=CompositeState=].
@@ -124,28 +125,32 @@ one stable Graph node.
 <spec-statement>
 1. A [=Transition=] **MUST** be identified by an IRI, declare exactly one `from`, and declare exactly one `to`.
 2. A [=Transition=] **MAY** declare one `label`.
-3. When listed in a [=Journey=]'s `transitionRefs`, `from` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`.
-4. When listed in a [=Journey=]'s `transitionRefs`, `to` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`, or a [=JourneyExit=] in that journey's `exitRefs`.
-5. [=Transition=] endpoints **MUST** stay local to the enclosing [=Journey=].
-6. `toEntryRef` **MAY** be used only on parent transitions into [=CompositeState=] nodes, as defined by the boundary mapping rules below.
-7. A [=Transition=] from a [=State=] with `multiInstance: true` **MUST** remain one Graph node; per-instance transition properties are outside Graph.
+3. A [=Transition=] **MAY** reference one [=Command=] with `commandRef`.
+4. When listed in a [=Journey=]'s `transitionRefs`, `from` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`.
+5. When listed in a [=Journey=]'s `transitionRefs`, `to` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`, or a [=JourneyExit=] in that journey's `exitRefs`.
+6. [=Transition=] endpoints **MUST** stay local to the enclosing [=Journey=].
+7. `toEntryRef` **MAY** be used only on parent transitions into [=CompositeState=] nodes, as defined by the boundary mapping rules below.
+8. A [=Transition=] from a [=State=] with `multiInstance: true` **MUST** remain one Graph node; per-instance transition properties are outside Graph.
 </spec-statement>
 
 ```mermaid
 classDiagram
   class State
   class JourneyExit
+  class Command
 
   class Transition {
     id
     label
     from
     to
+    commandRef
   }
 
   Transition --> State : from
   Transition --> State : to
   Transition --> JourneyExit : to
+  Transition --> Command : commandRef
 ```
 
 Example JSON node:
@@ -156,7 +161,8 @@ Example JSON node:
   "@id": "urn:ujg:transition:search-form-to-results",
   "label": "Submit search",
   "from": "urn:ujg:state:search-form",
-  "to": "urn:ujg:state:results"
+  "to": "urn:ujg:state:results",
+  "commandRef": "urn:ujg:command:submit-search"
 }
 ```
 
@@ -174,6 +180,71 @@ Example transition from a multi-instance state:
 
 The `open-workshop` transition is declared once; it may be taken from any concrete `Workshop teaser`
 occurrence.
+
+---
+
+## Command {data-cop-concept="command"}
+
+A [=Command=] identifies the stable semantic identity of an intentional invocation in the modeled
+experience.
+
+A [=Command=] can be referenced by [=Transition=] and [=OutgoingTransition=] nodes through
+`commandRef`. Multiple transitions may reference the same [=Command=]. Sharing a `commandRef`
+establishes only common invocation identity. Graph does not assign branching, selection, ordering,
+resolution, execution-result, or effect semantics to that relationship.
+
+A [=Command=] is not a transition endpoint and does not replace [=Transition=] or
+[=OutgoingTransition=]. Structural, automatic, expiry-driven, or otherwise non-invoked transitions
+can remain without `commandRef`.
+
+<spec-statement>
+1. A [=Command=] **MUST** be identified by an IRI.
+2. A [=Command=] **MAY** declare one `label` and one or more `tags`.
+3. A [=Command=] **MUST NOT** declare `from`, `to`, branching, condition resolution, effect execution, visual representation, runtime execution, or execution-result semantics.
+4. `commandRef` **MAY** appear on a [=Transition=] or [=OutgoingTransition=] and **MUST** reference a [=Command=].
+5. A [=Transition=] or [=OutgoingTransition=] **MUST NOT** reference more than one [=Command=].
+6. Absence of `commandRef` makes no claim that the transition represents an intentional invocation.
+</spec-statement>
+
+```mermaid
+classDiagram
+  class Command {
+    id
+    label
+    tags
+  }
+  class Transition {
+    commandRef
+  }
+  class OutgoingTransition {
+    commandRef
+  }
+
+  Transition --> Command : commandRef
+  OutgoingTransition --> Command : commandRef
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "Command",
+  "@id": "urn:ujg:command:continue-registration",
+  "label": "Continue registration"
+}
+```
+
+Example transition associated with a command:
+
+```json
+{
+  "@type": "Transition",
+  "@id": "urn:ujg:transition:start-registration",
+  "from": "urn:ujg:state:registration-open",
+  "to": "urn:ujg:state:registration-form",
+  "commandRef": "urn:ujg:command:start-registration"
+}
+```
 
 ---
 
@@ -639,9 +710,10 @@ An [=OutgoingTransition=] has no explicit `from` property. Its effective source 
 <spec-statement>
 1. An [=OutgoingTransition=] **MUST** be identified by an IRI and **MAY** declare one `label`.
 2. An [=OutgoingTransition=] **MUST** use exactly one target mechanism: one `to` value, or `toCurrentState: true`.
-3. `to` **MAY** reference a resolvable [=State=] or [=CompositeState=], including one outside the journey that contributes the affordance.
-4. `toCurrentState: false` is equivalent to absence and does not satisfy the target requirement.
-5. An [=OutgoingTransition=] is a navigational affordance, not local topology: it **MUST NOT** target a [=JourneyExit=], appear in `transitionRefs`, or model ordinary internal progression.
+3. An [=OutgoingTransition=] **MAY** reference one [=Command=] with `commandRef`.
+4. `to` **MAY** reference a resolvable [=State=] or [=CompositeState=], including one outside the journey that contributes the affordance.
+5. `toCurrentState: false` is equivalent to absence and does not satisfy the target requirement.
+6. An [=OutgoingTransition=] is a navigational affordance, not local topology: it **MUST NOT** target a [=JourneyExit=], appear in `transitionRefs`, or model ordinary internal progression.
 </spec-statement>
 
 If the `to` target belongs to a known page, surface, or flow entry, that entry should normally be listed in a [=JourneyEntryIndex=]. Do not list the target state in the source [=Journey=]'s `stateRefs` unless it also belongs to the source journey's local topology.
@@ -651,14 +723,17 @@ classDiagram
   class OutgoingTransition {
     to
     toCurrentState
+    commandRef
   }
   class State
   class CompositeState
+  class Command
 
   OutgoingTransition --> State : fixed target
   OutgoingTransition --> CompositeState : fixed target
   OutgoingTransition --> State : current-state target
   OutgoingTransition --> CompositeState : current-state target
+  OutgoingTransition --> Command : commandRef
   note for OutgoingTransition "target mechanism is either to or toCurrentState"
 ```
 
@@ -671,7 +746,8 @@ Fixed target navigation:
   "@type": "OutgoingTransition",
   "@id": "urn:ujg:ot:go-home",
   "label": "Home",
-  "to": "urn:ujg:state:home"
+  "to": "urn:ujg:state:home",
+  "commandRef": "urn:ujg:command:go-home"
 }
 ```
 
@@ -828,7 +904,7 @@ context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`, which preserves Gr
 
 ### Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `multiInstance`, `toCurrentState`, and `outgoingTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `Command`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `multiInstance`, `toCurrentState`, and `outgoingTransitionRefs`.
 
 :::include ./graph.ttl :::
 
@@ -860,4 +936,5 @@ To ensure graph integrity, the following constraints **MUST** be met:
 3. Local [=Transition=] endpoints **MUST** stay inside the declaring [=Journey=]'s local vertex set.
 4. `toEntryRef` and `fromExitRef` **MUST** resolve through the child [=Journey=] named by the relevant [=CompositeState=]'s `subjourneyId`.
 5. Each [=OutgoingTransition=] **MUST** resolve to exactly one target mechanism: fixed `to` or `toCurrentState: true`.
+6. Each `commandRef` **MUST** resolve to a [=Command=].
 </spec-statement>

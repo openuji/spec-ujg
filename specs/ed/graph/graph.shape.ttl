@@ -26,6 +26,57 @@ ujggraphshape:OutgoingTargetShape a sh:NodeShape ;
     [ sh:class ujggraph:CompositeState ]
   ) .
 
+ujggraphshape:CommandShape a sh:NodeShape ;
+  sh:targetClass ujggraph:Command ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:from ;
+    sh:maxCount 0 ;
+    sh:message "A Command must not declare from; use commandRef from a Transition or OutgoingTransition." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:to ;
+    sh:maxCount 0 ;
+    sh:message "A Command must not declare to; use commandRef from a Transition or OutgoingTransition." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:toEntryRef ;
+    sh:maxCount 0 ;
+    sh:message "A Command must not declare toEntryRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:fromExitRef ;
+    sh:maxCount 0 ;
+    sh:message "A Command must not declare fromExitRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyId ;
+    sh:maxCount 0 ;
+    sh:message "A Command must not declare subjourneyId." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A Command must not declare outgoingTransitionRefs." ;
+  ] .
+
 ujggraphshape:JourneyShape a sh:NodeShape ;
   sh:targetClass ujggraph:Journey ;
   sh:nodeKind sh:IRI ;
@@ -700,6 +751,13 @@ ujggraphshape:TransitionShape a sh:NodeShape ;
     sh:class ujggraph:JourneyEntry ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:commandRef ;
+    sh:class ujggraph:Command ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
   ] .
 
 ujggraphshape:JourneyExitShape a sh:NodeShape ;
@@ -782,6 +840,13 @@ ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
   sh:property [
     sh:path ujggraph:label ;
     sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:commandRef ;
+    sh:class ujggraph:Command ;
+    sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 

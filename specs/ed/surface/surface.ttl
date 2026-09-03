@@ -35,8 +35,7 @@ ujgsurface:graphNodeRef a owl:ObjectProperty ;
     owl:unionOf (
       ujggraph:State
       ujggraph:CompositeState
-      ujggraph:Transition
-      ujggraph:OutgoingTransition
+      ujggraph:Command
     )
   ] .
 
@@ -52,6 +51,7 @@ ujgsurface:userRef a owl:ObjectProperty ;
       ujggraph:JourneyEntry
       ujggraph:State
       ujggraph:CompositeState
+      ujggraph:Command
       ujggraph:Transition
       ujggraph:JourneyExit
       ujggraph:OutgoingTransition

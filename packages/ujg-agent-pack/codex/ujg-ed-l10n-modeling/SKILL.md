@@ -186,6 +186,10 @@ If the locale switch keeps the same effective graph state, use:
 
 If the locale switch targets a distinct modeled state, use `to` plus `l10n:targetLocaleRef`.
 
+Add Graph `commandRef` to a locale-switch `OutgoingTransition` only when the locale switch has stable
+intentional invocation identity that needs a Surface attached to a Command or shared command
+identity. Do not create a `Command` merely because `targetLocaleRef` exists.
+
 Do not create duplicate locale-specific states unless locale changes graph topology, available journeys, states, or affordances.
 
 ## Separation rules

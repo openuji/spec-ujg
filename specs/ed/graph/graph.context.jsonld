@@ -12,6 +12,7 @@
     "State": "ujggraph:State",
     "CompositeState": "ujggraph:CompositeState",
     "Transition": "ujggraph:Transition",
+    "Command": "ujggraph:Command",
     "JourneyExit": "ujggraph:JourneyExit",
     "OutgoingTransition": "ujggraph:OutgoingTransition",
     "OutgoingTransitionGroup": "ujggraph:OutgoingTransitionGroup",
@@ -76,6 +77,10 @@
     },
     "toEntryRef": {
       "@id": "ujggraph:toEntryRef",
+      "@type": "@id"
+    },
+    "commandRef": {
+      "@id": "ujggraph:commandRef",
       "@type": "@id"
     },
     "subjourneyId": {
