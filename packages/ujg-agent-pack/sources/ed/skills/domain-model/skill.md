@@ -90,6 +90,14 @@ Analyze canonical UJG directly.
 
 Do not first translate UJG into prose requirements.
 
+For each `CompositeState` with `subjourneyRefs`, analyze every referenced child `Journey` as its own
+semantic evidence scope before correlating across siblings. A child journey's evidence includes its
+`JourneyEntry` contracts, reachable `State` and `CompositeState` nodes, local `Transition` nodes,
+`JourneyExit` contracts, and applicable optional-module nodes referenced by those topology elements.
+Conditions and Effects attached to transitions are evidence in the behavioral concern of each
+transition's owning journey; a shared Condition or Effect may contribute evidence in each owning
+journey scope without changing Graph ownership.
+
 For each reachable State or relevant CompositeState, inspect as needed:
 
 * incoming transitions;
@@ -103,6 +111,9 @@ For each reachable State or relevant CompositeState, inspect as needed:
 * User and Touchpoint when relevant to identity or continuity.
 
 Do not serialize this topology into the Domain Model.
+
+Do not flatten sibling child journeys in a multi-journey `CompositeState` into one implied sequence
+or one combined state space.
 
 ## State realization
 
@@ -191,6 +202,14 @@ Prefer concepts that explain several related States, Conditions, and Effects.
 
 Do not model each State independently.
 
+Do not infer any of the following solely from multi-journey `CompositeState` topology: one child
+journey maps to exactly one `Entity`, `ValueObject`, `Relationship`, `DomainOperation`, or
+`Invariant`; sibling child journeys imply a domain relationship; a child journey is a bounded context,
+aggregate, service, component, persistence boundary, or technical module; sibling journeys
+synchronize, depend on each other, cause each other, or share a lifecycle; sibling child states form
+Cartesian-product domain states; a child `JourneyExit` is collective composite or aggregate
+completion.
+
 Use only the Domain Model vocabulary defined by the specification:
 
 * `Entity`;
@@ -277,6 +296,11 @@ Do not fabricate `ujgRefs` for independent domain knowledge.
 
 Do not add irrelevant transitive references.
 
+A child `Journey` referenced by `subjourneyRefs` may appear in `ujgRefs` only when that journey
+directly constrains, motivates, or explains the Domain Model element. One Domain Model element may
+reference multiple child journeys, and multiple elements may reference the same child journey; neither
+case is a mechanical derivation rule.
+
 ## Minimality
 
 Produce the smallest coherent domain design that supports the required journey behavior and supplied domain knowledge.
@@ -335,13 +359,17 @@ Before returning the result:
 6. inspect relevant Conditions for decidability;
 7. inspect domain-relevant Effects for realizability;
 8. verify alternative branches have sufficient semantic distinctions;
-9. verify DomainOperation postconditions are represented by the model;
-10. verify every Domain Model element is justified by UJG, supplied domain knowledge, or a documented design choice;
-11. verify every Invariant has a clear origin;
-12. keep unsupported candidate invariants outside the canonical payload;
-13. report domain rules that conflict with or extend observable UJG behavior;
-14. remove presentation-only and unnecessary concepts;
-15. verify no technical realization decision was introduced.
+9. verify multi-journey composite children were analyzed independently before cross-child
+   correlation;
+10. verify no unsupported sibling relationship, synchronization, bounded-context, aggregate,
+    technical-module, or Cartesian-product domain-state inference was introduced;
+11. verify DomainOperation postconditions are represented by the model;
+12. verify every Domain Model element is justified by UJG, supplied domain knowledge, or a documented design choice;
+13. verify every Invariant has a clear origin;
+14. keep unsupported candidate invariants outside the canonical payload;
+15. report domain rules that conflict with or extend observable UJG behavior;
+16. remove presentation-only and unnecessary concepts;
+17. verify no technical realization decision was introduced.
 
 ## Output
 

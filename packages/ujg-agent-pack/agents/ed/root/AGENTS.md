@@ -98,7 +98,7 @@ Use only active ED Graph classes and properties.
 
 Common classes: `JourneyEntryIndex`, `Journey`, `JourneyEntry`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `Command`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`.
 
-Common properties: `label`, `tags`, `multiInstance`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyId`, `outgoingTransitionRefs`.
+Common properties: `label`, `tags`, `multiInstance`, `defaultEntryRef`, `entryRefs`, `stateRef`, `stateRefs`, `transitionRefs`, `exitRefs`, `outgoingTransitionGroupRefs`, `from`, `to`, `toCurrentState`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, `outgoingTransitionRefs`.
 
 Do not invent Graph fields such as `startState`, `states`, `transitions`, `toJourney`, `toState`, `trigger`, `outcome`, `eventType`, `selector`, Graph-native `url`, or `RuntimeTrace`.
 
@@ -131,7 +131,16 @@ Classify each modeled item before writing JSON-LD: index entry, page/surface ent
 
 Do not mix roles accidentally.
 
-If a component is modeled as a child journey, keep the full pattern coherent: parent `CompositeState`; exactly one `subjourneyId`; no child states in parent `stateRefs`; child states and transitions stay in child journey; child traversal starts from a parent transition's `toEntryRef`, otherwise from the child journey's `defaultEntryRef` when one exists, otherwise the child entry remains unresolved by Graph and must be resolved externally by materialization or execution context; exported outcome is a child-local terminal `JourneyExit` listed in child `exitRefs`; parent continuation is a parent-local `Transition` from the `CompositeState` to another parent-local local vertex using `fromExitRef`.
+If a component is modeled as a child journey, keep the full pattern coherent: parent
+`CompositeState`; one or more child journeys referenced with `subjourneyRefs`; no child states in
+parent `stateRefs`; child states and transitions stay in their owning child journey; child traversal
+starts from a parent transition's singular `toEntryRef` when it selects an entry owned by exactly one
+referenced child journey, otherwise from the relevant child journey's `defaultEntryRef` when one
+exists, otherwise the child entry remains unresolved by Graph and must be resolved externally by
+materialization or execution context; exported outcome is a child-local terminal `JourneyExit` listed
+in that child journey's `exitRefs`; parent continuation is a parent-local `Transition` from the
+`CompositeState` to another parent-local local vertex using singular `fromExitRef` owned by exactly
+one referenced child journey.
 
 Either keep the complete child-journey pattern or fold it back into same-journey states. Do not keep only part of the pattern.
 
@@ -177,7 +186,10 @@ Same-journey states usually include page sections, form ready, input-present con
 
 Use `CompositeState` only when a parent journey contains or exposes a nested journey.
 
-A `CompositeState` must reference exactly one child journey with `subjourneyId`. Place it where the nested journey becomes reachable.
+A `CompositeState` must reference one or more child journeys with `subjourneyRefs`. Place it where
+those nested journeys become reachable. Multiple child journeys coexist in the same composite scope;
+their serialization order does not imply traversal order, scheduling, priority, causality,
+synchronization, fork/join behavior, all-child completion, or hidden graph edges.
 
 A parent journey must not list child journey states directly.
 
@@ -213,15 +225,26 @@ Surface may materialize an intentional invocation by setting `Surface.graphNodeR
 
 Use `JourneyEntry` to name valid entry points into a journey. Top-level traversal begins at an explicitly selected `JourneyEntry`; otherwise at `defaultEntryRef.stateRef` when a default exists; otherwise entry selection remains unresolved by Graph and must be resolved externally by materialization or execution context.
 
-Use `toEntryRef` only on a parent-local transition whose `to` is the corresponding `CompositeState`. The `toEntryRef` value selects a `JourneyEntry` listed in the child journey referenced by that composite's `subjourneyId`. If `toEntryRef` is absent, child traversal starts at the child journey's `defaultEntryRef` when one exists. If neither exists, Graph leaves the child entry unresolved; do not infer a default from `entryRefs` ordering.
+Use `toEntryRef` only on a parent-local transition whose `to` is the corresponding
+`CompositeState`. The `toEntryRef` value selects one `JourneyEntry` listed in exactly one child
+journey referenced by that composite's `subjourneyRefs`. If `toEntryRef` is absent, child traversal
+starts at the relevant child journey's `defaultEntryRef` when one exists. If neither exists, Graph
+leaves the child entry unresolved; do not infer a default from `entryRefs` ordering or
+`subjourneyRefs` ordering.
 
 Use `JourneyExit` only when a parent journey must react to a completed child outcome, or when a journey needs to expose a terminal completion contract.
 
 A `JourneyExit` is a terminal local vertex, not a `State`. It is listed in exactly one journey's `exitRefs`.
 
-A child exports an outcome by transitioning directly to a child-local `JourneyExit` listed in the child journey's `exitRefs`.
+A child exports an outcome by transitioning directly to a child-local `JourneyExit` listed in the
+child journey's `exitRefs`. Reaching a child `JourneyExit` leaves the containing `CompositeState`
+occurrence; it does not complete sibling child journeys, synchronize siblings, or imply collective
+completion of the composite.
 
 Use `fromExitRef` only on a parent-local transition from the corresponding `CompositeState` to another parent-local local vertex.
+The `fromExitRef` value must identify one `JourneyExit` listed in exactly one child journey
+referenced by the source composite's `subjourneyRefs`; it is not a conjunction, disjunction, set, or
+synchronization point.
 
 Do not use exits for clicks, links, menu choices, selected values, header/footer navigation, language switches, ordinary navigation, runtime observations, simple same-page result states, convenient page-to-page connection, or screenshot order.
 
@@ -311,10 +334,19 @@ Runtime events whose surfaces resolve to `Command` are observed affordance event
 
 To derive user perspective for an observed state occurrence, resolve `RuntimeEvent.surfaceInstanceRef -> SurfaceInstance.surfaceRef -> Surface.graphNodeRef`, then use the graph node's effective user from `userRef` or inherited journey user assignment. Do not add collector or observer attribution fields to Runtime; keep collector/source metadata in `payload` or `extensions`.
 
-Use Phase `Step` and `Phase` only for journey-map grouping over Graph `CompositeState`
-nodes. Treat their optional `order` values as display metadata, not traversal, Mapping step order, or
-Runtime occurrence. Use Experience Annotation `PainPoint` only for qualitative friction annotations.
-These annotations must not change Graph traversal or repair missing Graph topology.
+Use Mapping to interpret Runtime observations against the local journey scope of each mapped state.
+For child journeys inside a multi-journey `CompositeState`, derive predecessors within the same child
+journey and the same containing composite occurrence. Sibling child observations may interleave
+without becoming predecessors for each other or causing false jumps. A child `JourneyExit` ends that
+containing composite occurrence for Mapping.
+
+Use Phase `Step` and `Phase` only for journey-map grouping over Graph `CompositeState` nodes. A
+`Step.compositeStateRef` stays singular even when the referenced composite has multiple
+`subjourneyRefs`. Treat `Step.order`, `Phase.order`, and `subjourneyRefs` order as display or
+serialization metadata, not child traversal order, Mapping step order, Runtime occurrence,
+synchronization, or completion order. Use Experience Annotation `PainPoint` only for qualitative
+friction annotations. These annotations must not change Graph traversal or repair missing Graph
+topology.
 
 ## Page and entry modeling
 
@@ -350,7 +382,7 @@ When evidence is insufficient, say so instead of inventing structure.
 6. Decide whether each surface needs `Journey` or plain `State`.
 7. Keep same-surface conditions in one journey unless nesting preserves meaning.
 8. Use child journeys only for real nested flows.
-9. If using a child journey, preserve the full child-journey invariant.
+9. If using one or more child journeys, preserve the full child-journey invariant.
 10. Use exits only for exported child outcomes.
 11. Use `OutgoingTransition` for ordinary navigation.
 12. Use `toCurrentState: true` only when the effective graph state is preserved.
@@ -370,7 +402,7 @@ When generating JSON-LD:
 3. Provide a short self-audit.
 4. State uncertainty explicitly.
 
-Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `entryRefs` and `stateRefs`; any `defaultEntryRef` references one of the same journey's `entryRefs`; no default is inferred from `entryRefs` ordering; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; commands identify intentional invocation only; `commandRef` points to `Command` and does not define branching, results, or effects; `Surface.graphNodeRef` targets only `State`, `CompositeState`, or `Command`; each `CompositeState` has one `subjourneyId`; forms not child journeys by default; `toEntryRef` targets a child journey entry; child exits complete when used; `fromExitRef` parent-local; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `copyRef`, artifact `nameRef`, and Observability accessible refs point to `MessageMeta`; each `Message` has one `messageMetaRef`, one `localeRef`, and one `value`; `Message.value` is opaque Localization data; runtime facts not in Graph; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, Artifact, and Domain Model do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; Domain Model payloads appear only under `UJGDocument.extensions["org.openuji.domain-model"]` and do not add RDF vocabulary; Domain Model element traceability uses optional `ujgRefs`; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
+Before returning JSON-LD, check: only necessary contexts; all nodes top-level; defined terms only; `JourneyEntryIndex` not traversable; `JourneyEntryIndex.entryRefs` reference `JourneyEntry` contracts; `Journey` only local topology; each `Journey` has `entryRefs` and `stateRefs`; any `defaultEntryRef` references one of the same journey's `entryRefs`; no default is inferred from `entryRefs` ordering; each `JourneyEntry.stateRef` is in the same journey's `stateRefs`; transition endpoints local; `Transition.from` in `stateRefs`; `Transition.to` in `stateRefs` or `exitRefs`; no child states in parent transitions; commands identify intentional invocation only; `commandRef` points to `Command` and does not define branching, results, or effects; `Surface.graphNodeRef` targets only `State`, `CompositeState`, or `Command`; each `CompositeState` has one or more `subjourneyRefs` values and no legacy singular child-journey field; `subjourneyRefs` order is not traversal order; forms not child journeys by default; `toEntryRef` targets one child journey entry owned by exactly one referenced child journey; child exits leave the containing composite occurrence only; `fromExitRef` is parent-local and targets one child exit owned by exactly one referenced child journey; no sibling synchronization or all-child completion is inferred; no fake root/parent exits; outgoing navigation uses `OutgoingTransition`; shared navigation uses `OutgoingTransitionGroup`; each outgoing transition has exactly one of `to` or `toCurrentState: true`; state-scoped `outgoingTransitionRefs` only on ordinary `State`; l10n terms only with Localization context; `copyRef`, artifact `nameRef`, and Observability accessible refs point to `MessageMeta`; each `Message` has one `messageMetaRef`, one `localeRef`, and one `value`; `Message.value` is opaque Localization data; runtime facts not in Graph; Mapping derives local child-journey predecessors per containing composite occurrence; Observability absence uses `expectedMatchCount: 0` on `ObservationBinding` with locators; standard keyboard/pointer modalities use `observability:keyboard` and `observability:pointer`; Entry Binding, Effect, Condition, Artifact, and Domain Model do not create hidden graph edges; entry-binding `value` is opaque and not platform-typed; artifact `nameRef` and touchpoint refs stay on `Artifact`; Domain Model payloads appear only under `UJGDocument.extensions["org.openuji.domain-model"]` and do not add RDF vocabulary; Domain Model element traceability uses optional `ujgRefs`; Surface experience and Experience Annotation annotations do not affect traversal; graph is shallowest valid model.
 
 ## Anti-overengineering and uncertainty
 

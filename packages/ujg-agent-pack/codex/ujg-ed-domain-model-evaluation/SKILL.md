@@ -92,6 +92,13 @@ Report failures, but continue semantic evaluation where possible.
 
 Analyze the canonical UJG directly.
 
+For each `CompositeState` with `subjourneyRefs`, evaluate each referenced child journey as an
+independent semantic evidence scope before accepting any cross-child correlation. A child journey's
+evidence includes its entries, states, composite states, transitions, exits, and applicable optional
+module nodes referenced by those topology elements. Conditions and Effects attached to transitions
+belong to the behavioral concern of the transition's owning journey; shared Condition or Effect
+resources may contribute evidence in each owning journey scope without changing Graph ownership.
+
 For each reachable `State`, classify its realization need:
 
 * domain-backed;
@@ -120,6 +127,14 @@ Evaluate whether:
 * entries and entry bindings have enough stable domain identity or continuity where UJG requires it.
 
 Do not require a Domain Model element for every UJG element.
+
+Do not accept any of the following as valid domain evidence when it is inferred solely from a
+multi-journey `CompositeState`: one child journey maps to exactly one `Entity`, `ValueObject`,
+`Relationship`, `DomainOperation`, or `Invariant`; sibling child journeys imply a domain
+relationship; a child journey is a bounded context, aggregate, service, component, persistence
+boundary, or technical module; sibling journeys synchronize, depend on each other, cause each other,
+or share a lifecycle; sibling child states form Cartesian-product domain states; a child `JourneyExit`
+is collective composite or aggregate completion.
 
 ## Explicit domain knowledge
 
@@ -162,6 +177,8 @@ For each element ask:
 2. Would removing it lose or materially weaken domain realization?
 3. Does it introduce meaning not supported by UJG, supplied knowledge, or documented design choice?
 4. Is any `ujgRefs` value direct and necessary rather than merely related?
+5. If it cites or depends on a child journey, is the element supported by that journey's own evidence
+   scope or explicit cross-child semantic evidence?
 
 Classify each element:
 
@@ -175,6 +192,11 @@ Classify each element:
 Do not infer persistence fields, counters, timestamps, authentication, sessions, APIs, repositories,
 controllers, services, commands, events, locks, queues, or technical identifiers unless supplied
 domain knowledge genuinely requires the semantic distinction.
+
+Treat child-journey containment as topology, not a domain decomposition. Unsupported sibling
+relationships, bounded-context or aggregate claims, synchronization claims, and Cartesian-product
+domain states are `UNSUPPORTED` unless explicit domain knowledge or concrete UJG semantic evidence
+justifies them.
 
 ## Operation audit
 
@@ -276,6 +298,8 @@ A model cannot be `REFERENCE_QUALITY` if:
 * references do not resolve;
 * domain-relevant UJG behavior is unsupported;
 * any element is `UNSUPPORTED` or `PRESENTATION_ONLY`;
+* multi-journey composite topology is flattened into unsupported sibling relationships,
+  synchronization, aggregate/bounded-context claims, or Cartesian-product domain states;
 * any required operation is `CIRCULAR`;
 * a material semantic contradiction exists;
 * a domain rule changes observable behavior without UJG alignment;

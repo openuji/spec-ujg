@@ -89,6 +89,37 @@ mechanically derived from the referenced UJG element.</spec-statement>
 A Domain Model element may reference multiple UJG elements. One UJG element may justify multiple
 Domain Model elements. No one-to-one mapping is implied.
 
+### Multi-Journey Composite Evidence Scope {data-cop-concept="domain-model-composite-evidence-scope"}
+
+When a [=CompositeState=] contains more than one child [=Journey=] through `subjourneyRefs`, each
+child journey is a separate semantic evidence scope for Domain Model interpretation. A producer
+SHOULD analyze each child journey independently before correlating domain concepts across sibling
+child journeys.
+
+The evidence scope for a child journey includes that child [=Journey=]'s entries, states,
+composite states, transitions, exits, and applicable optional-module nodes referenced by those
+topology elements. Conditions and Effects attached to transitions are interpreted as evidence in the
+behavioral concern of each transition's owning journey. When the same Condition or Effect resource is
+referenced by transitions in more than one journey, it may contribute evidence in each owning journey
+scope; sharing the resource does not change Graph ownership.
+
+<spec-statement>A Domain Model producer or evaluator **MUST NOT** flatten sibling child journeys into
+one implied sequence or combined state space merely because they are referenced by the same
+[=CompositeState=].</spec-statement>
+
+<spec-statement>A child [=Journey=] referenced by `subjourneyRefs` **MAY** appear in a Domain Model
+element's `ujgRefs` when it directly constrains, motivates, or explains that element. More specific
+UJG refs, such as state, transition, condition, or effect refs, MAY also be used.</spec-statement>
+
+<spec-statement>A Domain Model producer or evaluator **MUST NOT** infer any of the following solely
+from multi-journey [=CompositeState=] topology: one child journey maps to exactly one `Entity`,
+`ValueObject`, `Relationship`, `DomainOperation`, or `Invariant`; sibling child journeys imply a
+domain relationship; a child journey is a bounded context, aggregate, service, component, persistence
+boundary, or technical module; sibling journeys synchronize, depend on each other, cause each other,
+or share a lifecycle; sibling child states form Cartesian-product domain states; a child
+[=JourneyExit=] is collective completion of the composite or aggregate completion; or presentation,
+structural, and interaction-local states belong in the Domain Model.</spec-statement>
+
 ## State Materialization Boundary {data-cop-concept="domain-model-state-boundary"}
 
 Every reachable UJG `State` must ultimately be materializable by an implementation.
@@ -339,6 +370,12 @@ Schema validity.
 
 <spec-statement>A Domain Model-aware validator **MUST** reject Domain Model rules that directly
 contradict known referenced UJG semantics where such contradiction can be determined.</spec-statement>
+
+For multi-journey [=CompositeState=] topology, Domain Model-aware validation and evaluation SHOULD
+consider each referenced child [=Journey=] as an independent evidence scope before accepting any
+cross-child correlation. A correlation across sibling child journeys is valid only when supported by
+semantic evidence such as shared referenced domain-relevant states, conditions, effects, entries,
+exits, explicit domain knowledge, or a documented domain-design decision.
 
 ## Realization Boundary
 

@@ -83,9 +83,10 @@
       "@id": "ujggraph:commandRef",
       "@type": "@id"
     },
-    "subjourneyId": {
-      "@id": "ujggraph:subjourneyId",
-      "@type": "@id"
+    "subjourneyRefs": {
+      "@id": "ujggraph:subjourneyRefs",
+      "@type": "@id",
+      "@container": "@set"
     },
     "outgoingTransitionRefs": {
       "@id": "ujggraph:outgoingTransitionRefs",

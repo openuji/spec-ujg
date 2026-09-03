@@ -61,6 +61,9 @@ Before relying on the UJG document:
 2. Confirm that referenced IDs resolve and that graph topology is internally coherent.
 3. Identify the journeys, entries, states, composite states, exits, transitions, conditional transition sets, conditions, effects, and bindings relevant to the requested behavior.
 4. Distinguish domain semantics from purely presentational details.
+5. For every `CompositeState` with `subjourneyRefs`, resolve each referenced child `Journey` and treat
+   each child as an independent local evidence and behavior scope unless explicit modeled semantics or
+   supplied domain knowledge supports cross-child correlation.
 
 Do not infer workflow behavior solely from `domainOperations`, entity types, or a separate Domain Model JSON export.
 
@@ -92,6 +95,8 @@ For each modeled journey, verify:
 - Effects, including persistence changes, emitted events, and external actions.
 - Invariants before and after state-changing operations.
 - Journey exits and cross-journey continuation.
+- Multi-journey `CompositeState` behavior without implied sibling synchronization, dependency,
+  traversal order, all-child completion, or Cartesian-product domain states.
 - Distinctions between modeled outcomes, even when they share an HTTP status or UI treatment.
 - Idempotency where repeated requests can occur.
 - Atomic enforcement of availability, capacity, uniqueness, eligibility, and similar conditions at the point an effect is committed.
@@ -112,6 +117,16 @@ Treat these as conformance failures unless explicitly authorized and documented:
 ## Entry and Continuation Authority
 
 For every non-default `JourneyEntry`, `JourneyExit`, and cross-journey `toEntryRef`, record its permitted predecessor and authority model.
+
+For a parent transition using `toEntryRef`, verify that the selected `JourneyEntry` belongs to exactly
+one child journey in the target composite's `subjourneyRefs`. For a parent transition using
+`fromExitRef`, verify that the selected `JourneyExit` belongs to exactly one child journey in the
+source composite's `subjourneyRefs`. These refs are singular boundary refinements, not endpoint sets
+or synchronization contracts.
+
+When a child `JourneyExit` is reached, treat it as leaving that containing `CompositeState`
+occurrence. Do not treat it as completing sibling child journeys or as collective composite
+completion unless the UJG explicitly models such behavior elsewhere.
 
 If an API accepts a UJG entry, exit, transition, or continuation identifier from a caller, treat it as untrusted unless the implementation proves it was derived from a valid prior modeled transition.
 
@@ -136,6 +151,9 @@ Test, where applicable:
 - Invariant preservation and invalid-transition rejection.
 - Repeated request behavior and idempotency.
 - Concurrent or near-concurrent attempts when correctness depends on mutable shared state.
+- Interleaved observations or operations from sibling child journeys in a multi-journey
+  `CompositeState`, verifying that local predecessor and continuation rules are preserved per child
+  journey and containing composite occurrence.
 - Journey exit behavior and continuation into linked journeys.
 - Rejection of unmodeled domain-changing paths.
 
@@ -181,4 +199,7 @@ Include the completed trace matrix or a concise link to it. Do not describe an i
 - Collapsing “already exists,” “unavailable,” “ineligible,” and “invalid transition” into one result.
 - Allowing a direct command to bypass modeled intermediate semantics.
 - Checking mutable conditions before, rather than atomically with, the state-changing effect.
+- Treating one child journey as one domain element, inferring sibling domain relationships from
+  containment alone, or deriving bounded contexts, aggregates, synchronization, lifecycle coupling, or
+  Cartesian-product domain states from multi-journey composite topology alone.
 - Letting missing tests, unresolved references, or an unavailable runtime disappear from the final conclusion.

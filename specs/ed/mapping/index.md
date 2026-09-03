@@ -156,7 +156,7 @@ event appears immediately before a state-observation event, the following `Mappe
 it with `observedAffordanceEventRef`.
 
 Mapping does not serialize a separate step scope. For each `MappedStep`, the local Graph `Journey`
-scope is derived from the mapped journey.
+scope is derived from the mapped state's containment path rooted at `mappedJourneyRef`.
 
 The Runtime event order remains defined by Runtime's causal chain: a root event followed by the
 unique successor sequence obtained through `previousId`. `mappedStepRef` is a set of step records;
@@ -176,44 +176,68 @@ the SHACL shape.
    [=Surface=].
 4. **State resolution:** Each `MappedStep.mappedStateRef` MUST be the Graph `State` or
    `CompositeState` resolved from the `mappedEventRef` event surface's `graphNodeRef` in the mapped
-   journey scope or imported documents. Runtime events whose surfaces resolve to `Command` MUST NOT
-   be serialized as `MappedStep` records.
+   journey's containment path or imported documents. Runtime events whose surfaces resolve to
+   `Command` MUST NOT be serialized as `MappedStep` records.
 5. **Journey ownership:** `mappedJourneyRef` identifies the root Graph `Journey` for the mapped
    execution. `mappedJourneyRef` MUST NOT reference a [=JourneyEntryIndex=].
 6. **Step order:** Mapping does not define a separate step order. Consumers MUST order mapped steps
    by applying Runtime chain reconstruction to each step's `mappedEventRef`.
-7. **Origin derivation:** The root event step is derived from the absence of
+7. **Local journey scope:** For each [=MappedStep=], a Consumer MUST derive the local [=Journey=]
+   scope from the mapped state and the containment path rooted at `mappedJourneyRef`. If the mapped
+   state is listed in the mapped root journey's `stateRefs`, the local scope is the mapped root
+   journey. If the mapped state is listed in a child journey reached through a containing
+   [=CompositeState=]'s `subjourneyRefs`, the local scope is that child journey for that containing
+   composite occurrence. A mapped [=CompositeState=] belongs to the parent journey scope that lists it
+   in `stateRefs`.
+8. **Composite occurrence scope:** When the same [=CompositeState=] occurs more than once in the
+   Runtime chain, Consumers MUST treat each occurrence as a separate containing scope for child
+   journey predecessor lookup. Mapping does not serialize occurrence identifiers.
+9. **Origin derivation:** The root event step is derived from the absence of
    `RuntimeEvent.previousId`. It records the starting resolved state and is not an observed movement.
-8. **Affordance event correlation:** If the immediate `RuntimeEvent.previousId` predecessor of a
+   The first ordered mapped observation in each local child journey scope for a containing composite
+   occurrence is a local origin even when it is not the root event step.
+10. **Local origin evidence:** A local origin in a child journey MUST NOT use a mapped step from a
+   sibling child journey as its predecessor. The origin is consistent with a parent transition's
+   `toEntryRef`, the child journey's `defaultEntryRef`, or materialization or execution context
+   selecting a child entry. A local origin needs no `explainedByTransitionRef`.
+11. **Affordance event correlation:** If the immediate `RuntimeEvent.previousId` predecessor of a
    `MappedStep.mappedEventRef` event resolves through Surface to a `Command`, the `MappedStep` MAY
    reference that predecessor with `observedAffordanceEventRef`. `observedAffordanceEventRef` MUST
    NOT reference any event other than that immediate predecessor.
-9. **Transition lookup:** A non-root mapped step is explained when `explainedByTransitionRef` points
-   to one relevant effective transition in the mapped journey scope. A relevant effective transition
-   is either:
-   - a Graph `Transition` whose `from` is the previous resolved state and whose `to` is the current
-     resolved state; or
+12. **Transition lookup:** A non-root mapped step is explained when `explainedByTransitionRef` points
+   to one relevant effective transition in the current local journey scope. The previous resolved
+   state for this lookup is the latest earlier [=MappedStep=] in Runtime causal order that resolves to
+   a `State` or `CompositeState` in the same local journey scope and the same containing composite
+   occurrence. Observations from sibling child journeys may appear between that local predecessor and
+   the current mapped step without creating a jump. A relevant effective transition is either:
+   - a Graph `Transition` whose `from` is the local predecessor's resolved state and whose `to` is the
+     current resolved state; or
    - an effective `OutgoingTransition` contributed by an `OutgoingTransitionGroup` referenced by the
-     local scope, where the previous resolved state is in the local scope and the outgoing
+     local scope, where the local predecessor's resolved state is in the local scope and the outgoing
      transition's `to` is the current resolved state.
-10. **Observed affordance evidence:** When `observedAffordanceEventRef` is present and resolves to a
+13. **Child exit occurrence:** A child [=JourneyExit=] reached in a local child journey scope ends that
+   containing [=CompositeState=] occurrence for Mapping. Later observations from any child Journey in
+   the ended composite scope require a later occurrence of the containing composite or are out-of-scope
+   movement under existing Mapping rules. A child exit does not imply simultaneous, joint, or all-child
+   completion for sibling child journeys.
+14. **Observed affordance evidence:** When `observedAffordanceEventRef` is present and resolves to a
    `Command`, `explainedByTransitionRef` SHOULD identify a relevant `Transition` or
    `OutgoingTransition` whose `commandRef` references that same `Command`, if one exists for the
-   movement from the previous mapped state to the current mapped state.
-11. **Outgoing group availability:** An `OutgoingTransition` whose `commandRef` matches an observed
-   affordance event can explain a movement when it is available directly from the previous mapped
-   state or when it is a child of an `OutgoingTransitionGroup` referenced by the mapped journey. Consumers use
-   `OutgoingTransitionGroup.outgoingTransitionRefs` only to determine child outgoing-transition
-   availability; an `OutgoingTransitionGroup` itself is not surfaced.
-12. **Boundary ambiguity:** If a movement crosses a journey boundary and the available surface data
+   movement from the local predecessor to the current mapped state.
+15. **Outgoing group availability:** An `OutgoingTransition` whose `commandRef` matches an observed
+   affordance event can explain a movement when it is available directly from the local predecessor
+   state or when it is a child of an `OutgoingTransitionGroup` referenced by the local journey scope.
+   Consumers use `OutgoingTransitionGroup.outgoingTransitionRefs` only to determine child
+   outgoing-transition availability; an `OutgoingTransitionGroup` itself is not surfaced.
+16. **Boundary ambiguity:** If a movement crosses a journey boundary and the available surface data
    are insufficient to identify a relevant effective transition, the movement is a
    jump.
-13. **Condition eligibility:** If a consumer implements [[UJG Conditions]], a guarded transition only
+17. **Condition eligibility:** If a consumer implements [[UJG Conditions]], a guarded transition only
    explains a mapped step when the transition is eligible under Condition semantics.
-14. **Jump derivation:** A non-root mapped step is a jump when no relevant effective transition
+18. **Jump derivation:** A non-root mapped step is a jump when no relevant effective transition
    explains the observed movement. A jump is a derived processing result, not serialized Mapping
    vocabulary.
-15. **No intent assumption:** A derived jump reports that the observed movement is not explained by
+19. **No intent assumption:** A derived jump reports that the observed movement is not explained by
    the mapped graph. It does not by itself decide whether the movement is legitimate or erroneous.
 
 ## Step Occurrence and Phase Start {data-cop-concept="step-occurrence"}
@@ -263,7 +287,7 @@ The repeated mapped step for the same composite state at event `:200` does not r
       "@type": "CompositeState",
       "@id": "urn:state:shipping-segment",
       "label": "Shipping segment",
-      "subjourneyId": "urn:journey:shipping-segment"
+      "subjourneyRefs": ["urn:journey:shipping-segment"]
     },
     {
       "@type": "Journey",
