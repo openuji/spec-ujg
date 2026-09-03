@@ -57,8 +57,8 @@ Example JSON node:
 ## Step {data-cop-concept="step"}
 
 A [=Step=] identifies one experienced [=CompositeState=]. The referenced composite state represents
-a distinct nested segment of the intended journey topology; its `subjourneyId` identifies the local
-child journey contained by that segment.
+a distinct nested segment of the intended journey topology; its `subjourneyRefs` identify the child
+journeys contained by that segment.
 
 <spec-statement>
 1. A [=Step=] **MUST** be identified by an IRI.
@@ -66,11 +66,13 @@ child journey contained by that segment.
 3. `compositeStateRef` **MUST** reference a [=CompositeState=] defined in the Graph model.
 4. A [=Step=] **MAY** declare at most one `phaseRef` referencing a [=Phase=].
 5. A [=Step=] **MAY** declare at most one integer `order`.
-6. `order` **MUST NOT** be interpreted as Graph traversal, Mapping step order, Runtime event order,
-   occurrence, or phase start.
+6. `order` **MUST NOT** be interpreted as Graph traversal, child journey traversal order, Mapping
+   step order, Runtime event order, occurrence, or phase start.
 7. `compositeStateRef` **MUST NOT** create traversal, alter transition semantics, select child
    journey entries, or imply Runtime execution order.
 8. A [=Step=] **MUST NOT** use Surface resources as its semantic subject.
+9. A [=Step=]'s `compositeStateRef` remains singular even when the referenced [=CompositeState=]
+   contains more than one child [=Journey=].
 </spec-statement>
 
 ```mermaid
@@ -104,8 +106,12 @@ Example JSON node:
 1. `compositeStateRef` is the canonical assignment from a [=Step=] to Graph topology.
 2. A [=Phase=]'s associated topology is derived from the `compositeStateRef` values of the
    [=Step|Steps=] that reference it with `phaseRef`.
-3. [=Step=] and [=Phase=] terms do not repair missing Graph topology.
-4. Consumers that do not implement this module MAY ignore Phase semantics while preserving
+3. The `subjourneyRefs` values of the referenced [=CompositeState=] identify contained child
+   journeys; their serialization order does not imply child traversal order, priority,
+   synchronization, or completion order.
+4. `Step.order`, `Phase.order`, and `subjourneyRefs` order do not imply child traversal order.
+5. [=Step=] and [=Phase=] terms do not repair missing Graph topology.
+6. Consumers that do not implement this module MAY ignore Phase semantics while preserving
    recognized JSON-LD data during read-transform-write.
 
 ## Normative Artifacts
@@ -157,7 +163,7 @@ The Phase SHACL shape is published at `https://ujg.specs.openuji.org/ed/ns/phase
       "@type": "CompositeState",
       "@id": "urn:ujg:state:shipping-segment",
       "label": "Shipping segment",
-      "subjourneyId": "urn:ujg:journey:shipping-segment"
+      "subjourneyRefs": ["urn:ujg:journey:shipping-segment"]
     },
     {
       "@type": "Journey",

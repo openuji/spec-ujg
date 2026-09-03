@@ -79,13 +79,33 @@ experience. A `Command` is not a transition endpoint, does not replace `Transiti
 `OutgoingTransition`, and does not define source state, destination state, branching, condition
 resolution, effect execution, visual representation, runtime execution, or execution results.
 
-Use `CompositeState` only when a parent journey contains or exposes a nested journey with `subjourneyId`.
+Use `CompositeState` only when a parent journey contains or exposes one or more nested child
+journeys with `subjourneyRefs`. `subjourneyRefs` is a set of child `Journey` IRIs and must contain at
+least one value. Do not use the legacy singular child-journey field in ED JSON-LD.
 
-Use `toEntryRef` only when a parent transition into a `CompositeState` must select a specific child `JourneyEntry`. Otherwise the child journey starts at its `defaultEntryRef` when one exists. If neither `toEntryRef` nor child `defaultEntryRef` exists, the child entry remains unresolved by Graph and must be resolved externally by materialization or execution context. Do not infer a child entry from `entryRefs` ordering.
+Multiple child journeys inside one `CompositeState` coexist in the same composite scope. Their
+`subjourneyRefs` serialization order does not define traversal order, priority, causality,
+scheduling, synchronization, fork/join, all-children-complete behavior, or hidden graph edges.
+Observations from sibling child journeys may overlap or interleave without changing Graph topology.
 
-Use `JourneyExit` and `fromExitRef` only for exported child outcomes that a parent genuinely reacts to. Model the child outcome as a direct terminal `JourneyExit`, not as a pseudo-state.
+Use `toEntryRef` only when a parent transition into a `CompositeState` must select a specific child
+`JourneyEntry`. The entry must belong to exactly one child journey referenced by that composite's
+`subjourneyRefs`; `toEntryRef` remains a singular boundary refinement, not an endpoint or a set of
+entries. Otherwise child entry selection uses the relevant child journey's `defaultEntryRef` when one
+exists, or remains unresolved by Graph and must be resolved externally by materialization or execution
+context. Do not infer a child entry from `entryRefs` ordering or `subjourneyRefs` ordering.
+
+Use `JourneyExit` and `fromExitRef` only for exported child outcomes that a parent genuinely reacts
+to. Model the child outcome as a direct terminal `JourneyExit`, not as a pseudo-state. A child
+`JourneyExit` leaves the containing `CompositeState` occurrence; it does not complete sibling child
+journeys, synchronize them, or imply collective composite completion. The `fromExitRef` value must
+belong to exactly one child journey referenced by the source composite's `subjourneyRefs` and remains
+singular.
 
 Use `Transition` between local vertices. `from` must be in the enclosing journey's `stateRefs`; `to` must be in the enclosing journey's `stateRefs` or `exitRefs`. Never use `JourneyExit` as `from`.
+Do not create transitions between child journeys unless both endpoints are local vertices of the same
+owning journey. Parent transitions may enter a `CompositeState` or continue after a matching child
+exit, but they must not target child states directly.
 Use `commandRef` only when the transition is associated with invoking a stable `Command`. Multiple
 transitions may share one `commandRef`; that shared command identity does not define branching,
 selection, ordering, or resolution semantics.

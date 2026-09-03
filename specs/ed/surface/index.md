@@ -92,10 +92,10 @@ A [=Journey=] can be assigned to a user with `userRef`. Graph nodes that belong 
 inherit the journey's user unless they declare their own `userRef`. This includes entries, local
 states, transitions, exits, and outgoing transition groups listed by the journey.
 
-When a [=CompositeState=] references a child [=Journey=] with `subjourneyId`, the child journey
-inherits the composite state's effective user unless the child journey declares its own `userRef`.
-Nodes that belong to the child journey then inherit from the child journey unless they declare their
-own user.
+When a [=CompositeState=] references child [=Journey|Journeys=] with `subjourneyRefs`, each child
+journey inherits the composite state's effective user unless that child journey declares its own
+`userRef`. Nodes that belong to a child journey then inherit from that child journey unless they
+declare their own user.
 
 ```mermaid
 classDiagram
@@ -296,7 +296,7 @@ The Surface SHACL shape is published at `https://ujg.specs.openuji.org/ed/ns/sur
       "@type": "CompositeState",
       "@id": "urn:ujg:composite:checkout-web",
       "label": "Checkout web segment",
-      "subjourneyId": "urn:ujg:journey:checkout-web"
+      "subjourneyRefs": ["urn:ujg:journey:checkout-web"]
     },
     {
       "@type": "Journey",

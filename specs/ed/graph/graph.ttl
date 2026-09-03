@@ -122,22 +122,24 @@ ujggraph:fromExitRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:Transition ;
   rdfs:range ujggraph:JourneyExit ;
   rdfs:label "from exit ref" ;
-  rdfs:comment "Identifies the exported JourneyExit completed by the child journey of the CompositeState used as the transition's from value. This property is not a transition endpoint." .
+  rdfs:comment "Identifies the exported JourneyExit completed by one child journey of the CompositeState used as the transition's from value. This property is not a transition endpoint." .
 
 ujggraph:toEntryRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:Transition ;
   rdfs:range ujggraph:JourneyEntry ;
   rdfs:label "to entry ref" ;
-  rdfs:comment "Identifies the JourneyEntry selected when entering the child journey of the CompositeState used as the transition's to value. This property is not a transition endpoint." .
+  rdfs:comment "Identifies the JourneyEntry selected when entering one child journey of the CompositeState used as the transition's to value. This property is not a transition endpoint." .
 
 ujggraph:commandRef a owl:ObjectProperty ;
   rdfs:range ujggraph:Command ;
   rdfs:label "command ref" ;
   rdfs:comment "Associates a Transition or OutgoingTransition with the stable semantic identity of an intentional invocation." .
 
-ujggraph:subjourneyId a owl:ObjectProperty ;
+ujggraph:subjourneyRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:CompositeState ;
-  rdfs:range ujggraph:Journey .
+  rdfs:range ujggraph:Journey ;
+  rdfs:label "subjourney refs" ;
+  rdfs:comment "References one or more child Journeys contained by a CompositeState." .
 
 ujggraph:outgoingTransitionRefs a owl:ObjectProperty ;
   rdfs:domain [

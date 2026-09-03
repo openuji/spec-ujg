@@ -536,7 +536,7 @@ The template declares slots. The realization binds those slots for this surface.
       "@id": "urn:state:product-discovery",
       "@type": "CompositeState",
       "label": "Product discovery",
-      "subjourneyId": "urn:journey:product-discovery"
+      "subjourneyRefs": ["urn:journey:product-discovery"]
     },
     {
       "@id": "urn:journey:product-discovery",
@@ -694,9 +694,9 @@ The template declares slots. The realization binds those slots for this surface.
 }
 ```
 
-The composite state's surface is realized as a shell. Child containment comes from the subjourney
-referenced by `subjourneyId`. The child surfaces are placed into slots for presentation only; Graph
-remains the source of containment and traversal semantics.
+The composite state's surface is realized as a shell. Child containment comes from the child journeys
+referenced by `subjourneyRefs`. The child surfaces are placed into slots for presentation only;
+Graph remains the source of containment and traversal semantics.
 
 ### Example E: Multiple Design-System Token Scopes
 

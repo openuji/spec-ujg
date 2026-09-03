@@ -66,9 +66,9 @@ ujggraphshape:CommandShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:subjourneyId ;
+    sh:path ujggraph:subjourneyRefs ;
     sh:maxCount 0 ;
-    sh:message "A Command must not declare subjourneyId." ;
+    sh:message "A Command must not declare subjourneyRefs." ;
   ] ;
 
   sh:property [
@@ -117,6 +117,12 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
     sh:path ujggraph:outgoingTransitionGroupRefs ;
     sh:class ujggraph:OutgoingTransitionGroup ;
     sh:nodeKind sh:IRI ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "A Journey must not declare subjourneyRefs; only CompositeState declares child Journey references." ;
   ] ;
 
   sh:sparql [
@@ -310,38 +316,17 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "The CompositeState used as to by a transition with toEntryRef must declare exactly one subjourneyId." ;
+    sh:message "The toEntryRef of a parent transition must be listed in the entryRefs of exactly one Journey referenced by the target CompositeState's subjourneyRefs." ;
     sh:select """
-      SELECT $this ?transition ?to
+      SELECT $this ?transition ?to ?entry
       WHERE {
         $this ujggraph:transitionRefs ?transition .
         ?transition ujggraph:toEntryRef ?entry ;
                     ujggraph:to ?to .
-
-        FILTER (
-          NOT EXISTS { ?to ujggraph:subjourneyId ?subjourney . }
-          || EXISTS {
-            ?to ujggraph:subjourneyId ?subjourneyA, ?subjourneyB .
-            FILTER (?subjourneyA != ?subjourneyB)
-          }
-        )
-      }
-    """ ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "The subjourneyId of the CompositeState used by a transition with toEntryRef must resolve to a Journey." ;
-    sh:select """
-      SELECT $this ?transition ?to ?subjourney
-      WHERE {
-        $this ujggraph:transitionRefs ?transition .
-        ?transition ujggraph:toEntryRef ?entry ;
-                    ujggraph:to ?to .
-        ?to ujggraph:subjourneyId ?subjourney .
 
         FILTER (NOT EXISTS {
-          ?subjourney a ujggraph:Journey .
+          ?to ujggraph:subjourneyRefs ?childJourney .
+          ?childJourney ujggraph:entryRefs ?entry .
         })
       }
     """ ;
@@ -349,18 +334,18 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "The toEntryRef of a parent transition must be listed in the entryRefs of the child journey referenced by the to CompositeState." ;
+    sh:message "The toEntryRef of a parent transition must not be listed in more than one Journey referenced by the target CompositeState's subjourneyRefs." ;
     sh:select """
-      SELECT $this ?transition ?to ?subjourney ?entry
+      SELECT $this ?transition ?to ?entry
       WHERE {
         $this ujggraph:transitionRefs ?transition .
         ?transition ujggraph:toEntryRef ?entry ;
                     ujggraph:to ?to .
-        ?to ujggraph:subjourneyId ?subjourney .
+        ?to ujggraph:subjourneyRefs ?childJourneyA, ?childJourneyB .
+        ?childJourneyA ujggraph:entryRefs ?entry .
+        ?childJourneyB ujggraph:entryRefs ?entry .
 
-        FILTER (NOT EXISTS {
-          ?subjourney ujggraph:entryRefs ?entry .
-        })
+        FILTER (?childJourneyA != ?childJourneyB)
       }
     """ ;
   ] ;
@@ -384,38 +369,17 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "The CompositeState used as from by a transition with fromExitRef must declare exactly one subjourneyId." ;
+    sh:message "The fromExitRef of a parent transition must be listed in the exitRefs of exactly one Journey referenced by the source CompositeState's subjourneyRefs." ;
     sh:select """
-      SELECT $this ?transition ?from
+      SELECT $this ?transition ?from ?exit
       WHERE {
         $this ujggraph:transitionRefs ?transition .
         ?transition ujggraph:fromExitRef ?exit ;
                     ujggraph:from ?from .
-
-        FILTER (
-          NOT EXISTS { ?from ujggraph:subjourneyId ?subjourney . }
-          || EXISTS {
-            ?from ujggraph:subjourneyId ?subjourneyA, ?subjourneyB .
-            FILTER (?subjourneyA != ?subjourneyB)
-          }
-        )
-      }
-    """ ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "The subjourneyId of the CompositeState used by a transition with fromExitRef must resolve to a Journey." ;
-    sh:select """
-      SELECT $this ?transition ?from ?subjourney
-      WHERE {
-        $this ujggraph:transitionRefs ?transition .
-        ?transition ujggraph:fromExitRef ?exit ;
-                    ujggraph:from ?from .
-        ?from ujggraph:subjourneyId ?subjourney .
 
         FILTER (NOT EXISTS {
-          ?subjourney a ujggraph:Journey .
+          ?from ujggraph:subjourneyRefs ?childJourney .
+          ?childJourney ujggraph:exitRefs ?exit .
         })
       }
     """ ;
@@ -423,18 +387,18 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "The fromExitRef of a parent transition must be listed in the exitRefs of the child journey referenced by the from CompositeState." ;
+    sh:message "The fromExitRef of a parent transition must not be listed in more than one Journey referenced by the source CompositeState's subjourneyRefs." ;
     sh:select """
-      SELECT $this ?transition ?from ?subjourney ?exit
+      SELECT $this ?transition ?from ?exit
       WHERE {
         $this ujggraph:transitionRefs ?transition .
         ?transition ujggraph:fromExitRef ?exit ;
                     ujggraph:from ?from .
-        ?from ujggraph:subjourneyId ?subjourney .
+        ?from ujggraph:subjourneyRefs ?childJourneyA, ?childJourneyB .
+        ?childJourneyA ujggraph:exitRefs ?exit .
+        ?childJourneyB ujggraph:exitRefs ?exit .
 
-        FILTER (NOT EXISTS {
-          ?subjourney ujggraph:exitRefs ?exit .
-        })
+        FILTER (?childJourneyA != ?childJourneyB)
       }
     """ ;
   ] ;
@@ -520,6 +484,12 @@ ujggraphshape:JourneyEntryShape a sh:NodeShape ;
   sh:property [
     sh:path ujggraph:tags ;
     sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyEntry must not declare subjourneyRefs." ;
   ] ;
 
   sh:sparql [
@@ -634,9 +604,9 @@ ujggraphshape:JourneyEntryIndexShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:subjourneyId ;
+    sh:path ujggraph:subjourneyRefs ;
     sh:maxCount 0 ;
-    sh:message "A JourneyEntryIndex must not declare subjourneyId." ;
+    sh:message "A JourneyEntryIndex must not declare subjourneyRefs." ;
   ] ;
 
   sh:property [
@@ -698,21 +668,20 @@ ujggraphshape:CompositeStateShape a sh:NodeShape ;
   sh:property [
     sh:path ujggraph:stateRefs ;
     sh:maxCount 0 ;
-    sh:message "A CompositeState must not use stateRefs; use subjourneyId to reference a Journey." ;
+    sh:message "A CompositeState must not use stateRefs; use subjourneyRefs to reference one or more child Journeys." ;
   ] ;
 
   sh:property [
     sh:path ujggraph:outgoingTransitionRefs ;
     sh:maxCount 0 ;
-    sh:message "A CompositeState must not declare outgoingTransitionRefs. Use an OutgoingTransitionGroup on the enclosing Journey, or attach outgoingTransitionRefs to concrete states inside the referenced subjourney." ;
+    sh:message "A CompositeState must not declare outgoingTransitionRefs. Use an OutgoingTransitionGroup on the enclosing Journey, or attach outgoingTransitionRefs to concrete States inside a child Journey." ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:subjourneyId ;
+    sh:path ujggraph:subjourneyRefs ;
     sh:class ujggraph:Journey ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
-    sh:maxCount 1 ;
   ] .
 
 ujggraphshape:TransitionShape a sh:NodeShape ;
@@ -758,6 +727,12 @@ ujggraphshape:TransitionShape a sh:NodeShape ;
     sh:class ujggraph:Command ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "A Transition must not declare subjourneyRefs." ;
   ] .
 
 ujggraphshape:JourneyExitShape a sh:NodeShape ;
@@ -779,6 +754,12 @@ ujggraphshape:JourneyExitShape a sh:NodeShape ;
     sh:path ujggraph:outgoingTransitionRefs ;
     sh:maxCount 0 ;
     sh:message "A JourneyExit must not declare outgoingTransitionRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyExit must not declare subjourneyRefs." ;
   ] ;
 
   sh:sparql [
@@ -850,6 +831,12 @@ ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
     sh:maxCount 1 ;
   ] ;
 
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "An OutgoingTransition must not declare subjourneyRefs." ;
+  ] ;
+
   sh:sparql [
     a sh:SPARQLConstraint ;
     sh:message "An OutgoingTransition must declare exactly one effective target mechanism: either exactly one to value or toCurrentState true." ;
@@ -885,4 +872,10 @@ ujggraphshape:OutgoingTransitionGroupShape a sh:NodeShape ;
     sh:class ujggraph:OutgoingTransition ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "An OutgoingTransitionGroup must not declare subjourneyRefs." ;
   ] .

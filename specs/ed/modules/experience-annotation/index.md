@@ -81,7 +81,7 @@ Example JSON node:
       "@type": "CompositeState",
       "@id": "urn:ujg:state:shipping-segment",
       "label": "Shipping segment",
-      "subjourneyId": "urn:ujg:journey:shipping-segment"
+      "subjourneyRefs": ["urn:ujg:journey:shipping-segment"]
     },
     {
       "@type": "Journey",
