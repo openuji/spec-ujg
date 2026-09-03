@@ -39,6 +39,11 @@ ujggraph:CompositeState a owl:Class ;
 ujggraph:Transition a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
+ujggraph:Command a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Command" ;
+  rdfs:comment "A stable semantic identity of an intentional invocation in the modeled experience." .
+
 ujggraph:JourneyExit a owl:Class ;
   rdfs:subClassOf ujggraph:LocalVertex ;
   owl:disjointWith ujggraph:State ;
@@ -124,6 +129,11 @@ ujggraph:toEntryRef a owl:ObjectProperty ;
   rdfs:range ujggraph:JourneyEntry ;
   rdfs:label "to entry ref" ;
   rdfs:comment "Identifies the JourneyEntry selected when entering the child journey of the CompositeState used as the transition's to value. This property is not a transition endpoint." .
+
+ujggraph:commandRef a owl:ObjectProperty ;
+  rdfs:range ujggraph:Command ;
+  rdfs:label "command ref" ;
+  rdfs:comment "Associates a Transition or OutgoingTransition with the stable semantic identity of an intentional invocation." .
 
 ujggraph:subjourneyId a owl:ObjectProperty ;
   rdfs:domain ujggraph:CompositeState ;

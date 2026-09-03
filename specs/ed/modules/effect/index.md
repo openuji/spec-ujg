@@ -15,6 +15,8 @@ those resource-specific semantics.
 
 The module does not define transport protocols, API request formats, queues, form libraries,
 analytics payloads, backend workers, framework event handlers, or resource lifecycle semantics.
+Graph [=Command=] nodes can identify intentional invocation, but Effect attachment remains on the
+transition edge whose progression has the associated side effect.
 
 ## Terminology
 
@@ -87,6 +89,10 @@ The module introduces one transition attachment and two resource references:
 A transition without `effectRef` remains fully valid and traversable. Consumers MAY ignore this
 module and still process the graph.
 
+A [=Command=] **MUST NOT** declare `effectRef`. A command identifies what was intentionally invoked;
+the transition identifies what progression occurred; the effect identifies the mutation associated
+with that progression.
+
 Resource-specific metadata belongs to the referenced resource, not the effect. For example,
 `sourceTouchpointRef` and `targetTouchpointRefs` belong on an `Artifact`; an effect only declares
 that it produces or consumes the artifact.
@@ -140,12 +146,13 @@ the SHACL shape.
    semantics of the host `Transition` or `OutgoingTransition`.
 3. **Resource boundary:** `producedRefs` and `consumedRefs` MUST point to concrete resources that
    are subclasses of [=EffectResource=]. They MUST NOT be used to create hidden Graph traversal.
-4. **Resource-owned metadata:** Metadata about a produced or consumed resource belongs on the
+4. **Command separation:** `effectRef` MUST NOT appear on `Command`.
+5. **Resource-owned metadata:** Metadata about a produced or consumed resource belongs on the
    referenced resource node. For example, artifact touchpoint metadata belongs on `Artifact`, not
    on `Effect`.
-5. **Graceful degradation:** Consumers that do not implement this module MAY ignore Effect
+6. **Graceful degradation:** Consumers that do not implement this module MAY ignore Effect
    semantics, but SHOULD preserve recognized JSON-LD data during read-transform-write when possible.
-6. **Private contracts:** Transport, command, mutation, retry, idempotency, and result-handling
+7. **Private contracts:** Transport, command, mutation, retry, idempotency, and result-handling
    details SHOULD remain in Core `extensions` unless a future optional module defines them as
    interoperable vocabulary.
 

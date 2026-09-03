@@ -1,5 +1,5 @@
 {
-  "artifactHash": "sha256:e765d9ea2692c53ca36b1291b133ed592e256f981f7d7a125d38e355c70789ae",
+  "artifactHash": "sha256:5eef56a6904e1aac9447622d8c0a156b9d7fa10e84b3938b936ea7df36aabb29",
   "configHash": "sha256:096f3d2f0586cd286a7b2b82a1df40d0536a2eabfe4d9482447c8b892da390b7",
   "package": {
     "id": "ujg-agent-pack",
@@ -11,8 +11,8 @@
     "moduleId": null,
     "name": "ujg-ed-modeling"
   },
-  "sourceHash": "sha256:25dee6ca2b3b2502eb506ef3ca2d63ccfe3f4b7a1f9ad65a80bd611ef4f4ea6c",
-  "specHash": "sha256:bad46c89119dfd9ef9d39ca139bdb63131c5cd832c5c973951cb40369f477380",
+  "sourceHash": "sha256:29655533e2f182ad5617ca285cc386c2bd6cfcad7791a367808394cde787ef3b",
+  "specHash": "sha256:dbcd5edae31006c7eb06be7007f9609d3f7636903b15845cd1e99cab6416ccd7",
   "target": {
     "id": "ed",
     "label": "Editor's Draft"

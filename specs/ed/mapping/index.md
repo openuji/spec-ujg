@@ -31,7 +31,7 @@ with the Mapping context.
 - <dfn>Mapped state</dfn>: A Graph `State` or `CompositeState` resolved from a
   `RuntimeEvent.surfaceInstanceRef` through `SurfaceInstance.surfaceRef` and
   `Surface.graphNodeRef`.
-- <dfn>Observed affordance</dfn>: A `Transition` or `OutgoingTransition` resolved from a runtime
+- <dfn>Observed affordance</dfn>: A `Command` resolved from a runtime
   event's surface.
 - <dfn>Relevant effective transition</dfn>: A Graph transition that can explain an observed movement
   between two resolved runtime states.
@@ -145,15 +145,15 @@ Each `MappedStep` links:
 
 - `mapping:mappedEventRef` to the state-observation Runtime `RuntimeEvent` being interpreted.
 - `mapping:observedAffordanceEventRef`, when present, to the immediately preceding Runtime
-  `RuntimeEvent` whose surface resolves to an observed affordance.
+  `RuntimeEvent` whose surface resolves to an observed affordance [=Command=].
 - `mapping:mappedStateRef` to the resolved Graph `State` or `CompositeState`.
 - `mapping:explainedByTransitionRef`, when present, to the effective `Transition` or
   `OutgoingTransition` that explains the movement.
 
-Runtime events whose surfaces resolve to `Transition` or `OutgoingTransition` are affordance events.
-They remain in the Runtime causal chain but are not serialized as separate `MappedStep` records. When
-an affordance event appears immediately before a state-observation event, the following `MappedStep`
-can reference it with `observedAffordanceEventRef`.
+Runtime events whose surfaces resolve to [=Command=] are affordance events. They remain in the
+Runtime causal chain but are not serialized as separate `MappedStep` records. When an affordance
+event appears immediately before a state-observation event, the following `MappedStep` can reference
+it with `observedAffordanceEventRef`.
 
 Mapping does not serialize a separate step scope. For each `MappedStep`, the local Graph `Journey`
 scope is derived from the mapped journey.
@@ -176,8 +176,8 @@ the SHACL shape.
    [=Surface=].
 4. **State resolution:** Each `MappedStep.mappedStateRef` MUST be the Graph `State` or
    `CompositeState` resolved from the `mappedEventRef` event surface's `graphNodeRef` in the mapped
-   journey scope or imported documents. Runtime events whose surfaces resolve to `Transition` or
-   `OutgoingTransition` MUST NOT be serialized as `MappedStep` records.
+   journey scope or imported documents. Runtime events whose surfaces resolve to `Command` MUST NOT
+   be serialized as `MappedStep` records.
 5. **Journey ownership:** `mappedJourneyRef` identifies the root Graph `Journey` for the mapped
    execution. `mappedJourneyRef` MUST NOT reference a [=JourneyEntryIndex=].
 6. **Step order:** Mapping does not define a separate step order. Consumers MUST order mapped steps
@@ -185,10 +185,9 @@ the SHACL shape.
 7. **Origin derivation:** The root event step is derived from the absence of
    `RuntimeEvent.previousId`. It records the starting resolved state and is not an observed movement.
 8. **Affordance event correlation:** If the immediate `RuntimeEvent.previousId` predecessor of a
-   `MappedStep.mappedEventRef` event resolves through Surface to a `Transition` or
-   `OutgoingTransition`, the `MappedStep` MAY reference that predecessor with
-   `observedAffordanceEventRef`. `observedAffordanceEventRef` MUST NOT reference any event other than
-   that immediate predecessor.
+   `MappedStep.mappedEventRef` event resolves through Surface to a `Command`, the `MappedStep` MAY
+   reference that predecessor with `observedAffordanceEventRef`. `observedAffordanceEventRef` MUST
+   NOT reference any event other than that immediate predecessor.
 9. **Transition lookup:** A non-root mapped step is explained when `explainedByTransitionRef` points
    to one relevant effective transition in the mapped journey scope. A relevant effective transition
    is either:
@@ -198,12 +197,12 @@ the SHACL shape.
      local scope, where the previous resolved state is in the local scope and the outgoing
      transition's `to` is the current resolved state.
 10. **Observed affordance evidence:** When `observedAffordanceEventRef` is present and resolves to a
-   `Transition` or `OutgoingTransition` surface, `explainedByTransitionRef` SHOULD identify that same
-   `Transition` or `OutgoingTransition` if it is a relevant effective transition for the movement
-   from the previous mapped state to the current mapped state.
-11. **Outgoing group availability:** An `OutgoingTransition` surfaced by an observed affordance event
-   can explain a movement when it is available directly from the previous mapped state or when it is a
-   child of an `OutgoingTransitionGroup` referenced by the mapped journey. Consumers use
+   `Command`, `explainedByTransitionRef` SHOULD identify a relevant `Transition` or
+   `OutgoingTransition` whose `commandRef` references that same `Command`, if one exists for the
+   movement from the previous mapped state to the current mapped state.
+11. **Outgoing group availability:** An `OutgoingTransition` whose `commandRef` matches an observed
+   affordance event can explain a movement when it is available directly from the previous mapped
+   state or when it is a child of an `OutgoingTransitionGroup` referenced by the mapped journey. Consumers use
    `OutgoingTransitionGroup.outgoingTransitionRefs` only to determine child outgoing-transition
    availability; an `OutgoingTransitionGroup` itself is not surfaced.
 12. **Boundary ambiguity:** If a movement crosses a journey boundary and the available surface data
@@ -233,8 +232,8 @@ vocabulary, and they do not change Runtime records, Graph traversal, or the `Jou
 4. Repeated matching RuntimeEvents **MUST NOT** restart an already occurred Step or Phase.
 5. A Step without `phaseRef` may occur but **MUST NOT** start a Phase.
 6. A Phase with no occurring Step **MUST NOT** be considered started.
-7. RuntimeEvents whose surfaces resolve to `Transition` or `OutgoingTransition` **MUST NOT** trigger
-   a Step directly; only ordered [=MappedStep=] state observations are considered.
+7. RuntimeEvents whose surfaces resolve to `Command` **MUST NOT** trigger a Step directly; only
+   ordered [=MappedStep=] state observations are considered.
 8. Serialized node order, `mappedStepRef` order, `Step.order`, and `Phase.order` **MUST NOT** determine occurrence or start time.
 </spec-statement>
 
@@ -445,12 +444,24 @@ model and does not need a serialized status value.
       "@type": "Transition",
       "@id": "urn:transition:cart-to-payment",
       "from": "urn:state:cart",
-      "to": "urn:state:payment"
+      "to": "urn:state:payment",
+      "commandRef": "urn:command:checkout-action"
     },
     {
       "@type": "OutgoingTransition",
       "@id": "urn:outgoing:help",
-      "to": "urn:state:help"
+      "to": "urn:state:help",
+      "commandRef": "urn:command:help-action"
+    },
+    {
+      "@type": "Command",
+      "@id": "urn:command:checkout-action",
+      "label": "Continue to payment"
+    },
+    {
+      "@type": "Command",
+      "@id": "urn:command:help-action",
+      "label": "Open help"
     },
     {
       "@type": "OutgoingTransitionGroup",
@@ -465,7 +476,7 @@ model and does not need a serialized status value.
     {
       "@type": "Surface",
       "@id": "urn:surface:checkout-action",
-      "graphNodeRef": "urn:transition:cart-to-payment"
+      "graphNodeRef": "urn:command:checkout-action"
     },
     {
       "@type": "Surface",
@@ -475,7 +486,7 @@ model and does not need a serialized status value.
     {
       "@type": "Surface",
       "@id": "urn:surface:help-action",
-      "graphNodeRef": "urn:outgoing:help"
+      "graphNodeRef": "urn:command:help-action"
     },
     {
       "@type": "Surface",
@@ -583,6 +594,6 @@ model and does not need a serialized status value.
 ```
 
 `urn:event:checkout-1:150` and `urn:event:checkout-1:250` remain Runtime events, but they are not
-separate `MappedStep` records because their surfaces resolve to affordances rather than states. The
-second and third mapped steps point back to those immediate predecessor events. The help affordance
-is available through `urn:outgoing-group:global-nav`, but the group itself has no surface.
+separate `MappedStep` records because their surfaces resolve to commands. The second and third
+mapped steps point back to those immediate predecessor events. The help outgoing transition is
+available through `urn:outgoing-group:global-nav`, but the group itself has no surface.

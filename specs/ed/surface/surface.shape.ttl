@@ -9,8 +9,7 @@ ujgsurfaceshape:GraphNodeRefTargetShape a sh:NodeShape ;
   sh:or (
     [ sh:class ujggraph:State ]
     [ sh:class ujggraph:CompositeState ]
-    [ sh:class ujggraph:Transition ]
-    [ sh:class ujggraph:OutgoingTransition ]
+    [ sh:class ujggraph:Command ]
   ) .
 
 ujgsurfaceshape:UserRefHostShape a sh:NodeShape ;
@@ -19,6 +18,7 @@ ujgsurfaceshape:UserRefHostShape a sh:NodeShape ;
     ujggraph:JourneyEntry,
     ujggraph:State,
     ujggraph:CompositeState,
+    ujggraph:Command,
     ujggraph:Transition,
     ujggraph:JourneyExit,
     ujggraph:OutgoingTransition,
@@ -39,6 +39,7 @@ ujgsurfaceshape:UserRefUsageShape a sh:NodeShape ;
     [ sh:class ujggraph:JourneyEntry ]
     [ sh:class ujggraph:State ]
     [ sh:class ujggraph:CompositeState ]
+    [ sh:class ujggraph:Command ]
     [ sh:class ujggraph:Transition ]
     [ sh:class ujggraph:JourneyExit ]
     [ sh:class ujggraph:OutgoingTransition ]

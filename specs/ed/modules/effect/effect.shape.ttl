@@ -39,3 +39,11 @@ ujgeffectshape:EffectReferenceHostShape a sh:NodeShape ;
   sh:targetSubjectsOf ujgeffect:consumedRefs ;
   sh:class ujgeffect:Effect ;
   sh:nodeKind sh:IRI .
+
+ujgeffectshape:CommandNoEffectShape a sh:NodeShape ;
+  sh:targetClass ujggraph:Command ;
+  sh:property [
+    sh:path ujgeffect:effectRef ;
+    sh:maxCount 0 ;
+    sh:message "A Command must not declare effectRef; attach effects to Transition or OutgoingTransition." ;
+  ] .
