@@ -27,6 +27,10 @@
       "@type": "@id",
       "@container": "@set"
     },
+    "source": {
+      "@id": "ujgds:source",
+      "@type": "@id"
+    },
     "componentRef": {
       "@id": "ujgds:componentRef",
       "@type": "@id"
@@ -51,10 +55,6 @@
     },
     "targetSurfaceRef": {
       "@id": "ujgds:targetSurfaceRef",
-      "@type": "@id"
-    },
-    "targetComponentRef": {
-      "@id": "ujgds:targetComponentRef",
       "@type": "@id"
     }
   }

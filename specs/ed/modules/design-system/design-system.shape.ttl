@@ -15,7 +15,14 @@ ujgdsshape:ThemeShape a sh:NodeShape ;
 
 ujgdsshape:TokenSourceShape a sh:NodeShape ;
   sh:targetClass ujgds:TokenSource ;
-  sh:nodeKind sh:IRI .
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgds:source ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
 
 ujgdsshape:ComponentShape a sh:NodeShape ;
   sh:targetClass ujgds:Component ;
@@ -108,30 +115,6 @@ ujgdsshape:SlotBindingShape a sh:NodeShape ;
     sh:path ujgds:targetSurfaceRef ;
     sh:class ujgsurface:Surface ;
     sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
     sh:maxCount 1 ;
-  ] ;
-
-  sh:property [
-    sh:path ujgds:targetComponentRef ;
-    sh:class ujgds:Component ;
-    sh:nodeKind sh:IRI ;
-    sh:maxCount 1 ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "A SlotBinding must reference exactly one target." ;
-    sh:select """
-      SELECT $this
-      WHERE {
-        BIND (EXISTS { $this ujgds:targetSurfaceRef ?surface . } AS ?hasSurface)
-        BIND (EXISTS { $this ujgds:targetComponentRef ?component . } AS ?hasComponent)
-        BIND (
-          IF(?hasSurface, 1, 0) +
-          IF(?hasComponent, 1, 0)
-          AS ?targetCount
-        )
-        FILTER (?targetCount != 1)
-      }
-    """ ;
   ] .

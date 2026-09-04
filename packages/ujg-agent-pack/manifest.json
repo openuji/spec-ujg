@@ -110,13 +110,13 @@
       "publicUrl": "https://ujg.specs.openuji.org/ed",
       "skills": [
         {
-          "artifactHash": "sha256:234d202c1003d5c4aa99bbbd4dfa662ab6bb0c8252e8d7d08c829a3e6d5c6819",
+          "artifactHash": "sha256:01ef4fda53de24051b48ca6d46b924462498f06382739ca1740464a35d0270b2",
           "key": "root",
           "moduleId": null,
           "name": "ujg-ed-modeling",
           "source": "sources/ed/skills/root/skill.md",
-          "sourceHash": "sha256:542cf9e5e9e01cecdc33e01d29b6b56982443624a583baf8725520991e150287",
-          "specHash": "sha256:b955040a0030077e300589e9a38c43d7c63646ce67dfff03e9ccdd7aeb0c5f5b"
+          "sourceHash": "sha256:73cd0890f3fe3360ea016f12884a70647784208a8c53ed9e1d511c0b261def6e",
+          "specHash": "sha256:3b819461568e56e0689413cd9732f5fc72060720c3838e6fca25c2e96d979a80"
         },
         {
           "artifactHash": "sha256:f87d3d171ea82de32f6e7ee480869255dcb8b7f247d869c38fb9ded5a0ab10c8",
@@ -137,13 +137,13 @@
           "specHash": "sha256:6f1437ece0e79d05721b5d716bba80a9825b86ba5d6141d75e2eeb274b22c448"
         },
         {
-          "artifactHash": "sha256:6e1e81c1b50ed50000e8b4b103f39e99986f6068bb7cef666b8961542f4ab58f",
+          "artifactHash": "sha256:852da219faae3a10ca7b057665b234b1c32d5ca1ad708e258e17815a892da730",
           "key": "design-system",
           "moduleId": "modules/design-system",
           "name": "ujg-ed-design-system-modeling",
           "source": "sources/ed/skills/design-system/skill.md",
-          "sourceHash": "sha256:289a704727ba493731a42fb7a04870b2b24d484daa0d0c0cd57c8e012529cec8",
-          "specHash": "sha256:2e7efa58d49394490f8cc36aa5cc71705996a590a1a4bb79ba028248b4d72da7"
+          "sourceHash": "sha256:3bec97fea3c3ee784fed5474b061cf0c474c34b1ab894bfac35118f602617dcb",
+          "specHash": "sha256:bca643384d7f42fc96d4e709240bec455fa0e20dbf56344ebf07af7ae67aa78c"
         },
         {
           "artifactHash": "sha256:f52eedb868bc8743e90a125643f6c5eeccaa0bb22bbd38fd98d42b69fb476cd7",
