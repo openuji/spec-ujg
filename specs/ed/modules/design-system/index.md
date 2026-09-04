@@ -10,7 +10,7 @@ and Surface resources remain design-system-agnostic.
 The Design System module introduces `SurfaceRealization` as the design-system-side bridge. A
 `SurfaceRealization` references exactly one `Surface` and then identifies either a `Component` or a
 `Template` as the primary realization. When a template is used, the realization may reference
-`SlotBinding` nodes that fill template-declared `Slot` nodes.
+`SlotBinding` nodes that fill template-declared `Slot` nodes with surfaces.
 
 This module is optional. It annotates the shared graph with interoperable design-system realization
 resources, but it does not change graph topology, traversal rules, Surface attachment rules, import
@@ -19,136 +19,31 @@ resolution, rendering behavior, or runtime semantics.
 ## Terminology
 
 - <dfn>Theme</dfn>: A graph-native design-system scope that references token sources.
-- <dfn>TokenSource</dfn>: An addressable token source, package, manifest, or token set. The internal
-  token format is external to UJG.
-- <dfn>Component</dfn>: An addressable design-system artifact that can realize a surface or fill a
-  slot.
+- <dfn>TokenSource</dfn>: An addressable token source, package, manifest, or token set with a
+  resolvable `source`. The internal token format is external to UJG.
+- <dfn>Component</dfn>: An addressable design-system artifact that can realize a surface.
 - <dfn>Template</dfn>: A reusable design-system artifact that declares slots.
 - <dfn>Slot</dfn>: An addressable slot declaration owned by or referenced from a template.
 - <dfn>SurfaceRealization</dfn>: A design-system-side node that references one surface and describes
   its primary component or template realization.
-- <dfn>SlotBinding</dfn>: A realization-local binding from a template slot to one presentation
-  target.
+- <dfn>SlotBinding</dfn>: A realization-local binding from a template slot to one surface target.
 
-## TokenSource {data-cop-concept="token-source"}
+## Surface Realization
 
-A [=TokenSource=] identifies a token source, token package, token manifest, or token set. The
-internal token format is external to UJG.
+A `Surface` is a design-system-agnostic materialized boundary for exactly one supported Graph node.
+Surface defines the relation from `Surface` to that supported Graph node. Graph nodes do not point
+to design-system artifacts or depend on Surface. This module does not add properties to `Surface`
+and does not make `Surface` depend on design-system artifacts.
 
-```mermaid
-classDiagram
-  class TokenSource {
-    id
-  }
-```
+Design-system realization is expressed with `SurfaceRealization`, `Component`, `Template`, `Slot`,
+and `SlotBinding` nodes. A realization links a stable `Surface` to one primary design-system
+artifact. Template-backed realizations can keep required composition explicit by binding declared
+slots to child surfaces.
 
-Example JSON node:
+Component, template, and realization inventories are derived from `Component`, `Template`, and
+`SurfaceRealization` nodes instead of being maintained as duplicate lists on `Theme`.
 
-```json
-{
-  "@type": "TokenSource",
-  "@id": "urn:ujg:tokens:brand"
-}
-```
-
-## Component {data-cop-concept="component"}
-
-A [=Component=] is an addressable design-system artifact that can directly realize a [=Surface=] or
-fill a template slot.
-
-```mermaid
-classDiagram
-  class Component {
-    id
-  }
-```
-
-Example JSON node:
-
-```json
-{
-  "@type": "Component",
-  "@id": "urn:ujg:component:CheckoutForm"
-}
-```
-
-## Slot {data-cop-concept="slot"}
-
-A [=Slot=] is an addressable slot declaration used by a [=Template=].
-
-```mermaid
-classDiagram
-  class Slot {
-    id
-  }
-```
-
-Example JSON node:
-
-```json
-{
-  "@type": "Slot",
-  "@id": "urn:ujg:slot:checkout-main"
-}
-```
-
-## Template {data-cop-concept="template"}
-
-A [=Template=] is a reusable design-system artifact that declares zero or more [=Slot|Slots=].
-
-```mermaid
-classDiagram
-  class Slot
-  class Template {
-    id
-    slotRefs
-  }
-  Template --> "0..*" Slot : slotRefs
-```
-
-Example JSON node:
-
-```json
-{
-  "@type": "Template",
-  "@id": "urn:ujg:template:checkout-layout",
-  "slotRefs": ["urn:ujg:slot:checkout-main"]
-}
-```
-
-## SlotBinding {data-cop-concept="slot-binding"}
-
-A [=SlotBinding=] fills one declared [=Slot=] with exactly one target: either a [=Surface=] or a
-[=Component=].
-
-```mermaid
-classDiagram
-  class Slot
-  class Surface
-  class Component
-  class SlotBinding {
-    id
-    slotRef
-    targetSurfaceRef
-    targetComponentRef
-  }
-  SlotBinding --> Slot : slotRef
-  SlotBinding --> Surface : targetSurfaceRef
-  SlotBinding --> Component : targetComponentRef
-```
-
-Example JSON node:
-
-```json
-{
-  "@type": "SlotBinding",
-  "@id": "urn:ujg:slot-binding:checkout-main",
-  "slotRef": "urn:ujg:slot:checkout-main",
-  "targetSurfaceRef": "urn:ujg:surface:checkout-form"
-}
-```
-
-## SurfaceRealization {data-cop-concept="surface-realization"}
+### SurfaceRealization {data-cop-concept="surface-realization"}
 
 A [=SurfaceRealization=] links one [=Surface=] to its primary design-system realization, either a
 [=Component=] or a [=Template=]. Template-backed realizations may also reference [=SlotBinding|SlotBindings=].
@@ -178,12 +73,202 @@ Example JSON node:
 {
   "@type": "SurfaceRealization",
   "@id": "urn:ujg:realization:checkout-form",
+  "label": "Checkout form realization",
   "surfaceRef": "urn:ujg:surface:checkout-form",
   "componentRef": "urn:ujg:component:CheckoutForm"
 }
 ```
 
-## Theme {data-cop-concept="theme"}
+A `SurfaceRealization` MUST reference exactly one `Surface` through `surfaceRef` and exactly one
+primary realization through either `componentRef` or `templateRef`. It MUST NOT use both
+`componentRef` and `templateRef`.
+
+Use `componentRef` when one addressable artifact directly realizes the surface and no required child
+composition needs to remain explicit. Use `templateRef` when reusable slots or required child
+surfaces/controls must remain derivable. `slotBindingRefs` MUST be used only on a template-backed
+realization.
+
+### Component {data-cop-concept="component"}
+
+A [=Component=] is an addressable design-system artifact that can directly realize a [=Surface=].
+
+```mermaid
+classDiagram
+  class Component {
+    id
+  }
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "Component",
+  "@id": "urn:ujg:component:CheckoutForm",
+  "label": "Checkout form component"
+}
+```
+
+### Template {data-cop-concept="template"}
+
+The mental model for a `Template`, its `Slot` nodes, and the `SlotBinding` nodes that fill those
+slots is:
+
+```text
+Template
+   |
+   +-- Slot "main"       <-- empty hole
+   |
+   +-- Slot "submit"     <-- empty hole
+
+
+SurfaceRealization says:
+
+    use Template FormShell
+
+    AND
+
+    bind "main"   -> Refund form surface
+    bind "submit" -> Submit Refund surface
+```
+
+A `Template` declares reusable holes. A `SurfaceRealization` chooses that template for one surface,
+and its `SlotBinding` nodes fill those holes with surfaces for that realization. A component appears
+inside a slot only indirectly, by realizing a surface that a `SlotBinding` targets.
+
+A [=Template=] is a reusable design-system artifact that declares zero or more [=Slot|Slots=].
+A template declares reusable slots with `slotRefs`. A template MUST NOT hard-code concrete surfaces,
+components, transitions, or outgoing transitions into those slots.
+
+```mermaid
+classDiagram
+  class Slot
+  class Template {
+    id
+    slotRefs
+  }
+  Template --> "0..*" Slot : slotRefs
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "Template",
+  "@id": "urn:ujg:template:checkout-layout",
+  "label": "Checkout layout template",
+  "slotRefs": ["urn:ujg:slot:checkout-main"]
+}
+```
+
+### Slot {data-cop-concept="slot"}
+
+A [=Slot=] is an addressable slot declaration used by a [=Template=].
+Slots represent reusable presentation positions. Slots MUST NOT encode Graph nodes, traversal,
+Command resolution, runtime instances, localization loading, data binding, collection iteration,
+condition evaluation, or business logic.
+
+```mermaid
+classDiagram
+  class Slot {
+    id
+  }
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "Slot",
+  "@id": "urn:ujg:slot:checkout-main",
+  "label": "Checkout main slot"
+}
+```
+
+### SlotBinding {data-cop-concept="slot-binding"}
+
+A [=SlotBinding=] fills one declared [=Slot=] with exactly one [=Surface=].
+Concrete assembly belongs to a `SurfaceRealization` through `SlotBinding` nodes.
+
+```mermaid
+classDiagram
+  class Slot
+  class Surface
+  class SlotBinding {
+    id
+    slotRef
+    targetSurfaceRef
+  }
+  SlotBinding --> Slot : slotRef
+  SlotBinding --> Surface : targetSurfaceRef
+```
+
+Example JSON nodes:
+
+```json
+[
+  {
+    "@type": "SlotBinding",
+    "@id": "urn:ujg:slot-binding:checkout-main",
+    "label": "Checkout main slot binding",
+    "slotRef": "urn:ujg:slot:checkout-main",
+    "targetSurfaceRef": "urn:ujg:surface:checkout-form"
+  },
+  {
+    "@type": "Component",
+    "@id": "urn:ujg:component:CheckoutForm",
+    "label": "Checkout form component"
+  },
+  {
+    "@type": "SurfaceRealization",
+    "@id": "urn:ujg:realization:checkout-form",
+    "label": "Checkout form realization",
+    "surfaceRef": "urn:ujg:surface:checkout-form",
+    "componentRef": "urn:ujg:component:CheckoutForm"
+  },
+  {
+    "@type": "SurfaceRealization",
+    "@id": "urn:ujg:realization:checkout-page",
+    "label": "Checkout page realization",
+    "surfaceRef": "urn:ujg:surface:checkout-page",
+    "templateRef": "urn:ujg:template:checkout-layout",
+    "slotBindingRefs": ["urn:ujg:slot-binding:checkout-main"]
+  }
+]
+```
+
+A `SlotBinding` MUST reference exactly one declared slot with `slotRef` and exactly one surface with
+`targetSurfaceRef`.
+
+When a `SlotBinding` targets a `Surface`, the target surface is composed into the slot for
+presentation purposes only. The binding MUST NOT imply graph traversal, state activation, transition
+validity, composite-state containment, execution order, or lifecycle semantics. A renderer, MCP
+server, skill, or design-system resolver MAY resolve the graph-level subject associated with a target
+surface through the Surface layer.
+
+If a transition, outgoing transition, or outgoing-transition group affordance belongs in a slot,
+model the stable invocation as a [=Command=], reference it from the applicable Graph edge with
+`commandRef`, model a `Surface` for that command through the Surface layer, and target that surface
+with `targetSurfaceRef`.
+
+## Token Scope
+
+Theme and token-source resources describe token scope. They do not define which components,
+templates, or surface realizations exist, and they are independent of the surface realization chain.
+
+A `Theme` identifies a design-system context by referencing token sources through `tokenSourceRefs`.
+A `TokenSource` identifies the location of a token source, package, manifest, or token set through
+`source`.
+
+`source` values MUST be IRI references. A `source` value MAY be absolute or relative. Relative
+`source` values MUST be resolved against the location of the containing [=UJGDocument=], following
+the same base-resolution model used by Core imports.
+
+Individual token names, token paths, token groups, token values, aliases, and inheritance rules are
+outside this module. Consumers that need component, template, or realization inventories derive them
+from addressable design-system nodes and their references.
+
+### Theme {data-cop-concept="theme"}
 
 A [=Theme=] is a design-system scope that references token sources. Components, templates,
 and surface realizations are discovered from their own nodes and are not duplicated on the
@@ -205,70 +290,36 @@ Example JSON node:
 {
   "@type": "Theme",
   "@id": "urn:ujg:theme:shop",
-  "tokenSourceRefs": ["urn:ujg:tokens:brand"]
+  "label": "Shop theme",
+  "tokenSourceRefs": ["urn:ujg:token-source:brand"]
 }
 ```
 
-## Realization Model
+### TokenSource {data-cop-concept="token-source"}
 
-A `Surface` is a design-system-agnostic materialized boundary for exactly one supported Graph node.
-Surface defines the relation from `Surface` to that supported Graph node. Graph nodes do not point
-to design-system artifacts or depend on Surface. This module does not add properties to `Surface`
-and does not make `Surface` depend on design-system artifacts.
+A [=TokenSource=] identifies a token source, token package, token manifest, or token set. A
+`TokenSource` MUST declare exactly one `source`.
 
-Design-system realization is expressed by `SurfaceRealization` nodes:
+The internal token format is external to UJG.
 
-- A `Theme` MAY reference `TokenSource` nodes through `tokenSourceRefs`.
-- A `SurfaceRealization` MUST reference exactly one `Surface`.
-- A `SurfaceRealization` MUST reference exactly one primary realization, either `componentRef` or
-  `templateRef`.
-- A `Template` MAY declare `Slot` nodes through `slotRefs`.
-- A template-backed `SurfaceRealization` MAY reference `SlotBinding` nodes through
-  `slotBindingRefs`.
-- A `SlotBinding` MUST reference exactly one `Slot` and exactly one target.
+```mermaid
+classDiagram
+  class TokenSource {
+    id
+    source
+  }
+```
 
-This shape allows theme token scopes to vary independently without changing the surface or
-assigning multiple surfaces to the same supported Graph node. Component, template, and realization
-inventories are derived from `Component`, `Template`, and `SurfaceRealization` nodes instead of
-being maintained as duplicate lists on `Theme`.
+Example JSON node:
 
-## Theme Scope
-
-A `Theme` identifies a design-system context by referencing token sources. It is not a
-renderer, artifact inventory, realization registry, and does not define component internals, layout
-rules, or token syntax.
-
-The scope property is:
-
-- `tokenSourceRefs`: references zero or more `TokenSource` nodes.
-
-`TokenSource` identifies a token source, token package, token manifest, or token set. Individual
-token names, token paths, token groups, token values, aliases, and inheritance rules are outside this
-module. Consumers that need component, template, or realization inventories derive them from
-addressable design-system nodes and their references.
-
-## Templates And Slots
-
-A `Template` declares reusable slots with `slotRefs`. A template MUST NOT hard-code concrete
-surfaces, components, transitions, or outgoing transitions into those slots.
-
-A `SurfaceRealization` that uses a `Template` references `SlotBinding` nodes. Each `SlotBinding`
-references one declared slot and one target.
-
-Allowed slot binding targets are:
-
-- `targetSurfaceRef`
-- `targetComponentRef`
-
-When a `SlotBinding` targets a `Surface`, the target surface is composed into the slot for
-presentation purposes only. The binding MUST NOT imply graph traversal, state activation, transition
-validity, composite-state containment, execution order, or lifecycle semantics. A renderer, MCP
-server, skill, or design-system resolver MAY resolve the graph-level subject associated with a target
-surface through the Surface layer.
-
-If a transition, outgoing transition, or outgoing-transition group affordance belongs in a slot,
-model a `Surface` that references that Graph node through the Surface layer and target that
-surface with `targetSurfaceRef`.
+```json
+{
+  "@type": "TokenSource",
+  "@id": "urn:ujg:token-source:workshop-foundation",
+  "label": "Workshop foundation tokens",
+  "source": "design/tokens/workshop-foundation.tokens.json"
+}
+```
 
 ## Normative Artifacts
 
@@ -277,20 +328,6 @@ This module is published through the following artifacts:
 - `design-system.ttl`: ontology, published at `https://ujg.specs.openuji.org/ed/ns/design-system`
 - `design-system.context.jsonld`: JSON-LD term mappings, published at `https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld`
 - `design-system.shape.ttl`: SHACL validation rules, published at `https://ujg.specs.openuji.org/ed/ns/design-system.shape`
-
-Examples in this page compose the Core, Graph, Surface, and Design System contexts explicitly.
-
-Non-goals:
-
-- This module does not define component implementation APIs, component props, component variants, or
-  component lifecycle.
-- This module does not define layout algorithms, rendering engines, framework adapters, responsive
-  behavior, hydration behavior, or platform-specific UI behavior.
-- This module does not define design-token syntax, token inheritance, token value resolution, or
-  token path semantics.
-- This module does not define accessibility implementation rules.
-- This module does not introduce graph traversal, state activation, transition validity,
-  composite-state containment, execution order, or lifecycle semantics.
 
 ### Ontology {data-cop-concept="ontology"}
 
@@ -322,29 +359,26 @@ artifact for Design System structural constraints.
 
 :::include ./design-system.shape.ttl :::
 
-The rules below define the remaining module semantics beyond the structural constraints captured by
-the SHACL shape.
+The remaining module semantics beyond the structural SHACL constraints are:
 
-1. **Surface purity:** Design System properties MUST NOT change Surface attachment semantics or make a
-   Surface depend on design-system artifacts.
-2. **Realization bridge:** A `SurfaceRealization` MUST reference exactly one `Surface`.
-3. **Primary realization:** A `SurfaceRealization` MUST reference exactly one primary realization,
-   either a `Component` or a `Template`.
-4. **Template-only bindings:** `slotBindingRefs` MUST be used only by a `SurfaceRealization` that
-   references a `Template`.
-5. **Slot declaration vs binding:** `Template` slot references are declarations. `SurfaceRealization`
-   slot bindings are concrete assembly for that realization.
-6. **Single binding target:** A `SlotBinding` MUST reference exactly one target, either a `Surface`
-   or a `Component`.
-7. **Presentation only:** A slot binding to a surface MUST NOT imply graph traversal, state
-   activation, transition validity, composite-state containment, execution order, or lifecycle
-   semantics.
-8. **Graceful degradation:** A consumer that does not implement this module MAY ignore Design System
+1. **Surface boundary:** Design System properties MUST NOT change Surface attachment semantics, make
+   `Surface` depend on design-system artifacts, or introduce graph traversal, state activation,
+   transition validity, composite-state containment, execution order, or lifecycle semantics.
+2. **Surface realization:** A `SurfaceRealization` MUST reference exactly one `Surface` and exactly
+   one primary realization, either `componentRef` or `templateRef`. `slotBindingRefs` MUST be used
+   only when `templateRef` is present.
+3. **Slot composition:** `Template` slot references are declarations. `SurfaceRealization` slot
+   bindings are concrete assembly. A `SlotBinding` MUST reference exactly one `Surface` target
+   through `targetSurfaceRef`, and surface targets compose presentation only.
+4. **Token scope:** A `TokenSource` MUST declare exactly one `source` IRI reference. Relative
+   `source` values MUST resolve against the containing `UJGDocument` location.
+5. **Out of scope:** Component implementation APIs, props, variants, lifecycle, layout algorithms,
+   rendering engines, framework adapters, responsive behavior, hydration behavior, token syntax,
+   token value resolution, token inheritance, and accessibility implementation rules remain outside
+   this module unless a future module defines them.
+6. **Graceful degradation:** A consumer that does not implement this module MAY ignore Design System
    semantics, but it SHOULD preserve recognized JSON-LD data during read-transform-write when
    possible.
-9. **Private details:** Component internals, token syntax, framework adapters, render plans, and
-   platform-specific behavior SHOULD remain outside this module unless a future module defines them
-   as interoperable vocabulary.
 
 ## MCP And Tooling Resolution
 
@@ -362,6 +396,10 @@ template, slot, slot-binding, surface-realization, and token-source relationship
 interoperability SHOULD use this module instead of opaque extension payloads.
 
 ## Examples
+
+Examples in this page compose the Core, Graph, Surface, and Design System contexts explicitly.
+Examples include `label` values on Design System nodes for human readability. Those labels use the
+shared Graph `label` term and are informative unless the referenced class requires labels elsewhere.
 
 ### Example A: Surface Without Realization
 
@@ -416,11 +454,13 @@ This example assigns a state to a surface. It does not declare any design-system
     },
     {
       "@id": "urn:component:CartView",
-      "@type": "Component"
+      "@type": "Component",
+      "label": "Cart view component"
     },
     {
       "@id": "urn:realization:cart-web",
       "@type": "SurfaceRealization",
+      "label": "Cart web realization",
       "surfaceRef": "urn:surface:cart",
       "componentRef": "urn:component:CartView"
     }
@@ -455,6 +495,11 @@ derive the used component by following the realization reference.
       "graphNodeRef": "urn:state:refund"
     },
     {
+      "@id": "urn:surface:refund-form",
+      "@type": "Surface",
+      "graphNodeRef": "urn:state:refund"
+    },
+    {
       "@id": "urn:transition:submit-refund",
       "@type": "Transition",
       "from": "urn:state:refund",
@@ -473,11 +518,20 @@ derive the used component by following the realization reference.
     },
     {
       "@id": "urn:component:RefundForm",
-      "@type": "Component"
+      "@type": "Component",
+      "label": "Refund form component"
+    },
+    {
+      "@id": "urn:realization:refund-form-fields",
+      "@type": "SurfaceRealization",
+      "label": "Refund form fields realization",
+      "surfaceRef": "urn:surface:refund-form",
+      "componentRef": "urn:component:RefundForm"
     },
     {
       "@id": "urn:template:FormShell",
       "@type": "Template",
+      "label": "Form shell template",
       "slotRefs": [
         "urn:slot:main",
         "urn:slot:submit"
@@ -485,27 +539,32 @@ derive the used component by following the realization reference.
     },
     {
       "@id": "urn:slot:main",
-      "@type": "Slot"
+      "@type": "Slot",
+      "label": "Main content slot"
     },
     {
       "@id": "urn:slot:submit",
-      "@type": "Slot"
+      "@type": "Slot",
+      "label": "Submit action slot"
     },
     {
       "@id": "urn:binding:refund-main",
       "@type": "SlotBinding",
+      "label": "Refund main slot binding",
       "slotRef": "urn:slot:main",
-      "targetComponentRef": "urn:component:RefundForm"
+      "targetSurfaceRef": "urn:surface:refund-form"
     },
     {
       "@id": "urn:binding:refund-submit",
       "@type": "SlotBinding",
+      "label": "Refund submit slot binding",
       "slotRef": "urn:slot:submit",
       "targetSurfaceRef": "urn:surface:submit-refund"
     },
     {
       "@id": "urn:realization:refund-form",
       "@type": "SurfaceRealization",
+      "label": "Refund form realization",
       "surfaceRef": "urn:surface:refund",
       "templateRef": "urn:template:FormShell",
       "slotBindingRefs": [
@@ -631,6 +690,7 @@ The template declares slots. The realization binds those slots for this surface.
     {
       "@id": "urn:template:ProductDiscovery",
       "@type": "Template",
+      "label": "Product discovery template",
       "slotRefs": [
         "urn:slot:search",
         "urn:slot:filters",
@@ -640,47 +700,56 @@ The template declares slots. The realization binds those slots for this surface.
     },
     {
       "@id": "urn:slot:search",
-      "@type": "Slot"
+      "@type": "Slot",
+      "label": "Search slot"
     },
     {
       "@id": "urn:slot:filters",
-      "@type": "Slot"
+      "@type": "Slot",
+      "label": "Filters slot"
     },
     {
       "@id": "urn:slot:results",
-      "@type": "Slot"
+      "@type": "Slot",
+      "label": "Results slot"
     },
     {
       "@id": "urn:slot:preview",
-      "@type": "Slot"
+      "@type": "Slot",
+      "label": "Preview slot"
     },
     {
       "@id": "urn:binding:search",
       "@type": "SlotBinding",
+      "label": "Search slot binding",
       "slotRef": "urn:slot:search",
       "targetSurfaceRef": "urn:surface:search-query"
     },
     {
       "@id": "urn:binding:filters",
       "@type": "SlotBinding",
+      "label": "Filters slot binding",
       "slotRef": "urn:slot:filters",
       "targetSurfaceRef": "urn:surface:filters"
     },
     {
       "@id": "urn:binding:results",
       "@type": "SlotBinding",
+      "label": "Results slot binding",
       "slotRef": "urn:slot:results",
       "targetSurfaceRef": "urn:surface:results"
     },
     {
       "@id": "urn:binding:preview",
       "@type": "SlotBinding",
+      "label": "Preview slot binding",
       "slotRef": "urn:slot:preview",
       "targetSurfaceRef": "urn:surface:product-preview"
     },
     {
       "@id": "urn:realization:product-discovery",
       "@type": "SurfaceRealization",
+      "label": "Product discovery realization",
       "surfaceRef": "urn:surface:product-discovery",
       "templateRef": "urn:template:ProductDiscovery",
       "slotBindingRefs": [
@@ -723,45 +792,56 @@ Graph remains the source of containment and traversal semantics.
     },
     {
       "@id": "urn:component:Checkout",
-      "@type": "Component"
+      "@type": "Component",
+      "label": "Checkout component"
     },
     {
       "@id": "urn:realization:checkout",
       "@type": "SurfaceRealization",
+      "label": "Checkout realization",
       "surfaceRef": "urn:surface:checkout",
       "componentRef": "urn:component:Checkout"
     },
     {
-      "@id": "urn:tokens:web",
-      "@type": "TokenSource"
+      "@id": "urn:ujg:token-source:web",
+      "@type": "TokenSource",
+      "label": "Web token source",
+      "source": "design/tokens/web.tokens.json"
     },
     {
-      "@id": "urn:tokens:kiosk",
-      "@type": "TokenSource"
+      "@id": "urn:ujg:token-source:kiosk",
+      "@type": "TokenSource",
+      "label": "Kiosk token source",
+      "source": "design/tokens/kiosk.tokens.json"
     },
     {
-      "@id": "urn:tokens:cli",
-      "@type": "TokenSource"
+      "@id": "urn:ujg:token-source:cli",
+      "@type": "TokenSource",
+      "label": "CLI token source",
+      "source": "design/tokens/cli.tokens.json"
     },
     {
       "@id": "urn:theme:web",
       "@type": "Theme",
+      "label": "Web theme",
       "tokenSourceRefs": [
-        "urn:tokens:web"
+        "urn:ujg:token-source:web"
       ]
     },
     {
       "@id": "urn:theme:kiosk",
       "@type": "Theme",
+      "label": "Kiosk theme",
       "tokenSourceRefs": [
-        "urn:tokens:kiosk"
+        "urn:ujg:token-source:kiosk"
       ]
     },
     {
       "@id": "urn:theme:cli",
       "@type": "Theme",
+      "label": "CLI theme",
       "tokenSourceRefs": [
-        "urn:tokens:cli"
+        "urn:ujg:token-source:cli"
       ]
     }
   ]

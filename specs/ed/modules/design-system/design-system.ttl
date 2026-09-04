@@ -38,6 +38,12 @@ ujgds:tokenSourceRefs a owl:ObjectProperty ;
   rdfs:domain ujgds:Theme ;
   rdfs:range ujgds:TokenSource .
 
+ujgds:source a owl:ObjectProperty ;
+  rdfs:domain ujgds:TokenSource ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "source" ;
+  rdfs:comment "References the token source, package, manifest, or token set location." .
+
 ujgds:surfaceRef a owl:ObjectProperty ;
   rdfs:domain ujgds:SurfaceRealization ;
   rdfs:range ujgsurface:Surface .
@@ -65,7 +71,3 @@ ujgds:slotRef a owl:ObjectProperty ;
 ujgds:targetSurfaceRef a owl:ObjectProperty ;
   rdfs:domain ujgds:SlotBinding ;
   rdfs:range ujgsurface:Surface .
-
-ujgds:targetComponentRef a owl:ObjectProperty ;
-  rdfs:domain ujgds:SlotBinding ;
-  rdfs:range ujgds:Component .

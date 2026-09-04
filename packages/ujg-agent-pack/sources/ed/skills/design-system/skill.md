@@ -67,6 +67,7 @@ Properties:
 
 ```text
 tokenSourceRefs
+source
 surfaceRef
 componentRef
 templateRef
@@ -74,7 +75,6 @@ slotBindingRefs
 slotRefs
 slotRef
 targetSurfaceRef
-targetComponentRef
 ```
 Do not invent or restore stale Design System terms such as `componentRefs`, `templateRefs`, `surfaceRealizationRefs`, `themeRef`, `variant`, `props`, `route`, `url`, `intent`, repeat/collection terms, or instance-key terms.
 `Command` / `commandRef` belong to Graph. `l10n:copyRef` / `l10n:MessageBundle` belong to Localization.
@@ -174,7 +174,7 @@ A Command label alone is not evidence of a control.
 Do not create one Surface per Transition when several Transitions are outcomes of the same Command.
 Do not suppress a Command-backed Surface merely because several conditional Transitions reference that Command.
 Multiple Surfaces MAY point to the same Command when requirements establish distinct stable visible materializations or contexts. Different wording alone is not sufficient if Localization already accounts for that difference.
-If a required visible control has no independently justified Surface identity, it MAY remain presentation-only and be composed as a Component.
+If a required visible control has no independently justified Surface identity, keep it inside the realizing Component or implementation-specific template internals rather than composing it with SlotBinding.
 
 ### Transition candidates
 Transitions represent progression outcomes, not affordance identity when Command is available.
@@ -263,7 +263,6 @@ A direct Component realization is appropriate only when its internal composition
 Do not collapse a Template-backed realization into one opaque Component when doing so would hide:
 - an independently modeled child Surface;
 - a visible Command affordance whose presence is required;
-- a presentation-only control whose presence is required;
 - a reusable presentation region intentionally exposed by the model.
 Before replacing a Template realization with a direct Component, ask:
 
@@ -271,7 +270,8 @@ Before replacing a Template realization with a direct Component, ask:
 If yes, keep the composition explicit.
 Do not infer hidden controls from names such as `form`, `panel`, `card`, `review`, or `dialog`.
 When a required visible affordance has a justified Command-backed Surface, compose it using `targetSurfaceRef`.
-Use `targetComponentRef` only for presentation-only elements without independent Surface identity.
+When slotted content must be explicit, model a Surface for that content first and target that Surface.
+Purely internal component controls remain outside interoperable SlotBinding composition.
 Conditional multiplicity MUST NOT push a justified Command Surface back into a naked Component.
 
 ## Presentation identity after copy is factored out
@@ -312,7 +312,7 @@ When that affordance has stable visible identity:
 Normal and error form Surfaces SHOULD reuse field Components, action Surface, and Template when only validation/runtime content differs.
 An error State does not itself prove that a separate validation-feedback Component or feedback Slot exists. Default to the same structural form composition unless requirements establish a separately composed visible feedback region. Do not introduce a feedback Slot or ValidationFeedback/ValidationSummary-like Component merely because an error State exists. If validation can render inline within the shared fields Component, keep it as runtime presentation state there.
 If validation copy is already localized, do not mint error-specific presentation artifacts merely to carry it.
-If the submit control is required but intentionally has no independent Surface identity, compose a presentation-only Component explicitly instead.
+If the submit control is required but intentionally has no independent Surface identity, keep it inside the realizing Component rather than composing it with SlotBinding.
 
 ## SurfaceRealization
 Every `SurfaceRealization` MUST:
@@ -343,22 +343,21 @@ opaque direct Component realization
 A `Template` declares Slots through `slotRefs`.
 Slots represent reusable presentation positions.
 Templates and Slots MUST NOT encode Graph nodes, traversal, Command resolution, runtime instances, localization loading, data binding, collection iteration, condition evaluation, or business logic.
-Templates should not hard-code concrete Surface or Component targets.
+Templates should not hard-code concrete Surface targets.
 Concrete assembly belongs to a `SurfaceRealization` through SlotBindings.
-A `SlotBinding` connects one declared `slotRef` to exactly one of:
+A `SlotBinding` connects one declared `slotRef` to exactly one Surface target:
 
 ```text
 targetSurfaceRef
-targetComponentRef
 ```
-Never both.
 Use `targetSurfaceRef` for elements with meaningful stable Surface identity, including visible Command-backed affordances.
-Use `targetComponentRef` for presentation-only elements without independent Surface identity.
 The `slotRef` MUST be declared by the Template used by that SurfaceRealization.
 SlotBindings compose presentation only. They MUST NOT imply Graph traversal, Command invocation, Transition selection, condition evaluation, form submission, execution order, runtime lifecycle, localization resolution, or data iteration.
 
 ## Theme and TokenSource
 Use `TokenSource` for an addressable token source, package, manifest, or token set.
+Every `TokenSource` MUST declare exactly one `source`.
+Use `source` for the token source, package, manifest, or token set IRI reference. Relative `source` values resolve against the containing UJG document location, matching Core import resolution.
 `Theme` identifies a Design System context through `tokenSourceRefs`.
 Do not encode individual token values, aliases, CSS calculations, or inheritance here unless another active module defines them.
 Do not use Theme as a Component, Template, SurfaceRealization, Command, Surface, or Localization registry.
@@ -382,13 +381,13 @@ Require stable visible meaning. Point affordance Surfaces to Command, not outcom
 Compose each nested Surface within the nearest visible State/CompositeState occurrence that owns it. Preserve multi-instance occurrence boundaries without per-instance vocabulary.
 
 ### 6. Identify required visible composition
-List required child Surfaces and presentation-only controls. Preserve justified Command-backed affordances through `targetSurfaceRef`; do not hide them in opaque Components.
+List required child Surfaces. Preserve justified Command-backed affordances through `targetSurfaceRef`; do not hide them in opaque Components.
 
 ### 7. Derive reusable presentation artifacts
 After factoring out localized/runtime/state-specific content, reuse Components/Templates where structure is the same. Do not merge artifacts whose reusable structures actually differ. Do not derive action Components from styling/emphasis roles or validation-feedback structure from error-state existence alone.
 
 ### 8. Realize and compose
-Give each retained Surface exactly one Component-backed or Template-backed realization. Use `targetSurfaceRef` for stable child Surfaces and `targetComponentRef` for presentation-only elements.
+Give each retained Surface exactly one Component-backed or Template-backed realization. Use `targetSurfaceRef` for stable child Surfaces. Keep component-only internals out of SlotBinding.
 
 ### 9. Add Theme/TokenSource when needed
 Do not use Theme as a registry.
@@ -430,11 +429,12 @@ Report Graph, Command, Surface, Localization, Design System, expressivity, and m
 - Required Command-backed affordances use `targetSurfaceRef`.
 - Every retained Surface has exactly one realization using exactly one of `componentRef` or `templateRef`.
 - `slotBindingRefs` occur only on Template-backed realizations.
-- Every bound Slot is declared by that Template and every SlotBinding has exactly one target.
+- Every bound Slot is declared by that Template and every SlotBinding has exactly one Surface target.
 - SlotBindings compose presentation only; they do not invoke Commands, resolve Localization, or select Transitions.
 
 ### Modeling discipline
 - Only active ED Design System terms are used.
+- Every `TokenSource` has exactly one `source`.
 - Graph nodes do not reference Design System artifacts.
 - Command remains Graph invocation identity, not a Design System action type.
 - Localization remains Localization, not Component identity.
