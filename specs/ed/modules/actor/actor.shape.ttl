@@ -1,0 +1,35 @@
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgactor: <https://ujg.specs.openuji.org/ed/ns/actor#> .
+@prefix ujgactorshape: <https://ujg.specs.openuji.org/ed/ns/actor.shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+ujgactorshape:ActorShape a sh:NodeShape ;
+  sh:targetClass ujgactor:Actor ;
+  sh:nodeKind sh:IRI .
+
+ujgactorshape:ResponsibleActorHostShape a sh:NodeShape ;
+  sh:targetClass
+    ujggraph:Journey,
+    ujggraph:State,
+    ujggraph:CompositeState,
+    ujggraph:Transition,
+    ujggraph:OutgoingTransition,
+    ujggraph:OutgoingTransitionGroup ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgactor:responsibleActorRef ;
+    sh:class ujgactor:Actor ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgactorshape:EligibleActorHostShape a sh:NodeShape ;
+  sh:targetClass ujggraph:Transition, ujggraph:OutgoingTransition ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgactor:eligibleActorRefs ;
+    sh:class ujgactor:Actor ;
+    sh:nodeKind sh:IRI ;
+  ] .

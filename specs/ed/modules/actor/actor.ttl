@@ -1,0 +1,41 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgactor: <https://ujg.specs.openuji.org/ed/ns/actor#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/ed/ns/actor#> a owl:Ontology ;
+  rdfs:label "UJG Actor Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Actor ontology declaration" .
+
+### Classes
+
+ujgactor:Actor a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgactor:responsibleActorRef a owl:ObjectProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:Journey
+      ujggraph:State
+      ujggraph:CompositeState
+      ujggraph:Transition
+      ujggraph:OutgoingTransition
+      ujggraph:OutgoingTransitionGroup
+    )
+  ] ;
+  rdfs:range ujgactor:Actor .
+
+ujgactor:eligibleActorRefs a owl:ObjectProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:Transition
+      ujggraph:OutgoingTransition
+    )
+  ] ;
+  rdfs:range ujgactor:Actor .
