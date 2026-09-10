@@ -1,0 +1,30 @@
+{
+  "name": "@openuji/ujg-yaml",
+  "version": "0.0.1",
+  "type": "module",
+  "bin": {
+    "ujg-yaml": "./src/cli.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "README.md",
+    "fixtures",
+    "scripts",
+    "src",
+    "targets",
+    "scope.md",
+    "SKILL.md"
+  ],
+  "scripts": {
+    "vocab:update": "node scripts/build-target-vocabulary.js ed-2026-07-13",
+    "vocab:check": "node scripts/build-target-vocabulary.js --check ed-2026-07-13",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check src/*.js scripts/*.js && pnpm run vocab:check"
+  },
+  "dependencies": {
+    "n3": "^2.1.1",
+    "yaml": "^2.8.1"
+  }
+}
