@@ -1439,51 +1439,43 @@ a.pill {
   }
 
   /*
-   * Wide tables have many similarly-sized data columns plus one identifying
-   * "Run"-style label column. table-layout:fixed makes every unspecified
-   * column share the remaining width equally instead of table-layout:auto's
-   * unbalanced content-driven guess; the first column gets a fixed width
-   * sized for that longer running text (a literal px value, not max-content:
-   * table-layout:fixed only reads the first row's cell widths, which is the
-   * short header label like "Run", not the long body text underneath it —
-   * max-content there would size the column to the header, not the data).
-   *
-   * Gated by a container query on the wrap's own rendered width rather than
-   * a viewport breakpoint, since the actual room available also depends on
-   * the TOC sidebar (present or collapsed) and the bleed amount above —
-   * a viewport-only breakpoint can fire before there's really enough space,
-   * squeezing every column down (same one-letter-per-line failure mode as
-   * on mobile). Below this width, table-layout:auto + the shared
-   * overflow-x:auto scroll takes over instead.
+   * The first column holds a long running label ("Claude Sonnet 5 ·
+   * explicit-gated") that table-layout:auto's proportional guess otherwise
+   * squeezes too narrow (it can even orphan a single "·" on its own line).
    */
-  @container (min-width: 900px) {
-    .spec .spec-table-wrap--wide table {
-      table-layout: fixed;
-    }
-    .spec .spec-table-wrap--wide th:first-child,
-    .spec .spec-table-wrap--wide td:first-child {
-      width: 230px;
-    }
-    /*
-     * Wide tables can have 6-9 data columns splitting whatever's left after
-     * the first column; the default px-6 (24px each side) cell padding eats
-     * a large share of that per-column space. Tightening it here reclaims
-     * room for the header/value text itself.
-     */
-    .spec .spec-table-wrap--wide th,
-    .spec .spec-table-wrap--wide td {
-      @apply px-3;
-    }
-    /*
-     * Column headers here are single long compound words with no space or
-     * hyphen (Component, Duplicated, Responsive, theme...), so when a
-     * narrow fixed column forces a break, overflow-wrap:break-word's only
-     * option is an arbitrary mid-word cut (e.g. "Compone/nt"). Proper
-     * hyphenation gives it a real syllable break instead (e.g. "Compo-nent").
-     */
-    .spec .spec-table-wrap--wide thead th {
-      hyphens: auto;
-    }
+  .spec .spec-table-wrap--wide th:first-child,
+  .spec .spec-table-wrap--wide td:first-child {
+    width: 230px;
+  }
+
+  /*
+   * Wide tables can have 6-9 data columns splitting whatever's left after
+   * the first column; the default px-6 (24px each side) cell padding eats
+   * a large share of that per-column space.
+   */
+  .spec .spec-table-wrap--wide th,
+  .spec .spec-table-wrap--wide td {
+    @apply px-3;
+  }
+
+  /*
+   * Column headers here are sometimes single long compound words with no
+   * space or hyphen (Component, Duplicated, Responsive...). table-layout:
+   * auto's content-proportional columns comfortably fit these in practice
+   * (verified from mobile through very wide desktop), but hyphenation is a
+   * harmless safety net for a future header/column combination that
+   * doesn't: it gives a real syllable break (e.g. "Compo-nent") instead of
+   * overflow-wrap:break-word's arbitrary mid-word cut when one is needed,
+   * and does nothing when one isn't.
+   *
+   * table-layout:fixed's equal-division columns were tried here and
+   * reverted: at every width where a wide table's wrap is actually
+   * reachable (given the bleed cap above), fixed columns ended up
+   * narrower than auto's content-driven ones, reintroducing the same
+   * mid-word-break failure this rule exists to avoid.
+   */
+  .spec .spec-table-wrap--wide thead th {
+    hyphens: auto;
   }
 
   .spec table {
