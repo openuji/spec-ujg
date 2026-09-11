@@ -153,9 +153,10 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
           rows[0].children.every((cell) => cell.header);
         const headerCells = hasHeaderRow ? rows[0].children : [];
         const bodyRows = hasHeaderRow ? rows.slice(1) : rows;
+        const isWide = columnCount > 6;
 
         return (
-          <div class="spec-table-wrap" id={node.id}>
+          <div class={`spec-table-wrap${isWide ? ' spec-table-wrap--wide' : ''}`} id={node.id}>
             <table class={`spec-table cols-${columnCount}`}>
               {hasHeaderRow && (
                 <thead>

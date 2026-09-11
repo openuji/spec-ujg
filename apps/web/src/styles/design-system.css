@@ -1410,6 +1410,22 @@ a.pill {
     background: color-mix(in oklab, var(--card) 84%, var(--background));
   }
 
+  /*
+   * Wide table variant (BlockRenderer adds this for tables with >4 columns):
+   * on wide viewports, let the table bleed up to 100px past the text column
+   * on each side without touching the sidebar/viewport edge. 1400px reserves
+   * sidebar (300px) + container padding (64px) + a generous text-column
+   * estimate (~800px) with headroom to spare, so the calc below only ever
+   * grows the bleed once that's genuinely true; it resolves to 0 (i.e. the
+   * same width as a regular .spec-table-wrap) well above mobile/tablet
+   * widths, where the shared overflow-x:auto above still applies.
+   */
+  .spec .spec-table-wrap--wide {
+    --table-bleed: max(0px, min(200px, calc((100vw - 1200px) / 2)));
+    width: calc(100% + var(--table-bleed) * 2);
+    margin-inline: calc(var(--table-bleed) * -1);
+  }
+
   .spec table {
     @apply w-full border-separate border-spacing-0 text-sm;
     table-layout: auto;
@@ -1449,20 +1465,6 @@ a.pill {
 
   .spec table :is(td, th) > :last-child {
     @apply mb-0;
-  }
-
-  @variant md {
-    .spec .spec-table-wrap {
-      overflow-x: hidden;
-    }
-
-    .spec table {
-      /* table-layout: fixed; */
-    }
-
-    .spec .spec-table-wrap > table {
-      min-width: 100%;
-    }
   }
 
   /* Custom code block */
