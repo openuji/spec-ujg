@@ -14,14 +14,12 @@ tags:
 >
 > This page is not part of the normative UJG specification. It documents a controlled generative-software experiment and is updated as evaluation evidence is completed.
 
-| Field | Value |
+|  |  |
 | ----- | ----- |
-| Status | Evaluation in progress |
-| Case | Workshop registration |
-| Guidance protocols | Implicit-gated and explicit-gated |
-| Generation phases | Structure, tokens, styling, application |
 | Implementation models | GPT-5.5 Codex, Claude Sonnet 5 |
 | Experiment repository | [openuji/ujg-generative-se-case-study](https://github.com/openuji/ujg-generative-se-case-study) |
+| UJG version | [UJG 1.0 Release Candidate 2](https://ujg.specs.openuji.org/tr/1.0-rc2) |
+| Author | [Seva Dolgopolov](https://www.linkedin.com/in/seva-dolgopolov/) |
 
 ## Research question {#1-research-question}
 
@@ -29,9 +27,9 @@ User Journey Graph is intended to describe user-facing journey semantics indepen
 
 This case study asks two related questions:
 
-> **Can one explicit UJG constrain multiple generative models toward the same intended journey without prescribing one implementation?**
+**RQ-1:** *Can one explicit UJG constrain multiple generative models toward the same intended journey without prescribing one implementation?*
 
-> **Does stronger generation guidance improve the quality and faithfulness of the realization?**
+**RQ-2:** *Does stronger generation guidance improve the quality and faithfulness of the realization?*
 
 The study therefore compares not only models, but also **guidance protocols**. The same clean-room inputs are realized using an implicit guided process and an explicit phase-gated process.
 
@@ -213,6 +211,11 @@ flowchart TB
       IA --> IG4["validate + verify"]
       IG4 --> IE4["evaluate application<br/>complete validation"]
     end
+
+    top(( )):::anchor
+    top ~~~ EC
+    top ~~~ IC
+    classDef anchor width:0px,height:0px,fill:none,stroke:none
 ```
 
 Both protocols use the same realization profile. The difference is therefore not “Claude used one stack and Codex another”; it is the degree to which generation phases and their gates are made explicit to the model.
@@ -311,7 +314,7 @@ Realizations per reusable identity = 2.57
 All four runs realize the complete Component and Template inventory.
 
 | Run                        | Components | Templates | Implementation primitives | Missing stories | Composition violations | Data-contract violations | Interaction-story coverage |
-| -------------------------- | ---------: | --------: | ------------------------: | --------------: | ---------------------: | -----------------------: | -------------------------: |
+| -------------------------- | ---------- | --------- | -------------------------- | ---------------- | ----------------------- | ------------------------- | --------------------------- |
 | Claude Sonnet 5 · explicit |    12 / 12 |     9 / 9 |                         3 |               0 |                      0 |                        0 |                       100% |
 | Claude Sonnet 5 · implicit |    12 / 12 |     9 / 9 |                         4 |               0 |                      0 |                        0 |                        50% |
 | GPT-5.5 Codex · explicit   |    12 / 12 |     9 / 9 |                         0 |               0 |                      0 |                        0 |                       100% |
@@ -328,7 +331,7 @@ The common modeled vocabulary is therefore preserved while the concrete implemen
 The token phase materializes the visual system as DTCG token artifacts. Foundation and semantic tokens are counted from the generated DTCG files; Theme and TokenSource realization remains connected to the run-local UJG.
 
 | Run                        | DTCG tokens | Foundation / semantic | Themes | Unresolved aliases | Raw-value leaks | Parallel catalog / theme registry | Provenance classified | Source-of-truth integrity |
-| -------------------------- | ----------: | --------------------: | -----: | -----------------: | --------------: | --------------------------------: | --------------------: | ------------------------: |
+| -------------------------- | ----------- | ---------------------- | ------ | ------------------- | ---------------- | ---------------------------------- | ---------------------- | -------------------------- |
 | Claude Sonnet 5 · explicit |         168 |              100 / 68 |      2 |                  0 |               0 |                             0 / 0 |                  100% |                   4.9 / 5 |
 | Claude Sonnet 5 · implicit |         110 |               66 / 44 |      2 |                  0 |             116 |                             0 / 1 |                 40.0% |                   4.0 / 5 |
 | GPT-5.5 Codex · explicit   |         106 |               50 / 56 |      2 |                  0 |               0 |                             0 / 0 |                 52.8% |                   5.0 / 5 |
@@ -344,8 +347,8 @@ The more important variation is source-of-truth discipline. Both explicit runs k
 
 Styling is evaluated after the structural inventory has already been established.
 
-| Run                        | Raw visual-value leaks | Component inventory changed | Template inventory changed | Duplicated style patterns | Misplaced style rules | Responsive artifacts | Responsive documentation | Token/theme adherence |
-| -------------------------- | ---------------------: | :-------------------------: | :------------------------: | ------------------------: | --------------------: | -------------------: | -----------------------: | --------------------: |
+| Run                        | Raw visual-value leaks | Component inventory changed | Template inventory changed | Duplicated style patterns | Misplaced style rules | Responsive artifacts | Responsive documentation | Token / theme adherence |
+| -------------------------- | ----------------------- | ---------------------------- | ----------------------------- | ---------------------------- | ------------------------ | --------------------- | --------------------------- | ---------------------- |
 | Claude Sonnet 5 · explicit |                      0 |              No             |             No             |                         0 |                     0 |                    9 |                      38% |               4.8 / 5 |
 | Claude Sonnet 5 · implicit |                    116 |              No             |             No             |                         6 |                     2 |                   10 |                      22% |               3.0 / 5 |
 | GPT-5.5 Codex · explicit   |                      0 |              No             |             No             |                         1 |                     0 |                    2 |                       0% |               4.5 / 5 |
@@ -371,7 +374,7 @@ established Template and Component inventory.
 The application phase tests whether the common journey semantics survive realization into the manifest-selected interfaces, domain runtime, persistence, and integration boundaries.
 
 | Run                        | Interfaces realized | Verified branches | Verification coverage | DS integration violations | Prohibited projections | Effect / invariant violations | UJG behavioral fidelity |
-| -------------------------- | ------------------: | ----------------: | --------------------: | ------------------------: | ---------------------: | ----------------------------: | ----------------------: |
+| -------------------------- | -------------------- | ------------------ | ---------------------- | -------------------------- | ------------------------- | ------------------------------ | ------------------------ |
 | Claude Sonnet 5 · explicit |               2 / 2 |           30 / 35 |                 86.0% |                         0 |                      1 |                             0 |                 4.6 / 5 |
 | Claude Sonnet 5 · implicit |               2 / 2 |           12 / 21 |                 57.1% |                         0 |                      2 |                             1 |                 3.7 / 5 |
 | GPT-5.5 Codex · explicit   |               2 / 2 |           11 / 13 |                 84.6% |                         0 |                      0 |                             0 |                4.25 / 5 |

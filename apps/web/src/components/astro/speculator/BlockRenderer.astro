@@ -152,13 +152,17 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
           rows[0].children.length > 0 &&
           rows[0].children.every((cell) => cell.header);
         const headerCells = hasHeaderRow ? rows[0].children : [];
+        // A header row with every cell left blank (e.g. `|  |  |`) is the
+        // common way to author a table with no visible column headers at
+        // all; render no <thead> for it rather than a row of "–" fallbacks.
+        const headerHasContent = headerCells.some((cell) => cell.children.length > 0);
         const bodyRows = hasHeaderRow ? rows.slice(1) : rows;
         const isWide = columnCount > 6;
 
         return (
           <div class={`spec-table-wrap${isWide ? ' spec-table-wrap--wide' : ''}`} id={node.id}>
             <table class={`spec-table cols-${columnCount}`}>
-              {hasHeaderRow && (
+              {hasHeaderRow && headerHasContent && (
                 <thead>
                   <tr>
                     {headerCells.map((cell) => {
@@ -177,7 +181,11 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
                 {bodyRows.map((row) => (
                   <tr>
                     {row.children.map((cell) => {
-                      const style = { textAlign: cell.align || 'left' };
+                      // Wide tables use a CSS default (first column left, rest
+                      // centered) instead of honoring each cell's markdown
+                      // alignment mark, so column alignment stays consistent
+                      // and centrally adjustable rather than baked in per cell.
+                      const style = isWide ? undefined : { textAlign: cell.align || 'left' };
                       const content =
                         cell.children.length > 0 ? (
                           <InlineRenderer nodes={cell.children} {...inlineProps} />
