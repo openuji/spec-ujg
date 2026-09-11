@@ -648,6 +648,9 @@ a.pill {
 
   .stat {
     @apply min-w-[120px] bg-card p-[14px_var(--spacing-md)] rounded-md border border-border;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .stat__value {
     @apply block text-2xl font-bold;
@@ -657,7 +660,7 @@ a.pill {
   }
 
   .stat-grid {
-    @apply mt-0 mb-spec-l flex flex-col gap-lg;
+    @apply mt-0 mb-spec-l flex flex-col gap-sm;
   }
   .stat-grid__header {
     @apply flex flex-col gap-1;
@@ -717,6 +720,12 @@ a.pill {
   }
   .bar-list__fill {
     @apply block h-full rounded-pill opacity-50;
+  }
+
+  /* Images inside a spec table cell (e.g. side-by-side evidence comparisons) should never overflow their column. */
+  .spec table img {
+    @apply block w-full rounded-md border border-border;
+    height: auto;
   }
 
   .panel {

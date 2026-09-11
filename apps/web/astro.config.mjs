@@ -1,5 +1,5 @@
 // @ts-check
-import { existsSync } from 'node:fs';
+import { createReadStream, existsSync } from 'node:fs';
 import { extname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -82,6 +82,45 @@ function watchSpecContentPlugin() {
   };
 }
 
+const EVIDENCE_MIME_TYPES = {
+  '.gif': 'image/gif',
+  '.jpeg': 'image/jpeg',
+  '.jpg': 'image/jpeg',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.webp': 'image/webp',
+};
+
+// Dev-only: serves specs/case-studies/<slug>/evidence/<file> at
+// /case-studies/<slug>/evidence/<file>, mirroring the static copy step that
+// `prebuild` performs (scripts/copy-case-study-evidence.js) for production.
+function serveCaseStudyEvidencePlugin() {
+  return {
+    name: 'ujg-case-study-evidence-serve',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const match = req.method === 'GET' && req.url?.match(
+          /^\/case-studies\/([^/?#]+)\/evidence\/([^/?#]+)(?:\?.*)?$/
+        );
+        if (!match) return next();
+
+        const [, slug, file] = match;
+        const evidenceRoot = resolve(REPO_ROOT, 'specs/case-studies', slug, 'evidence');
+        const filePath = resolve(evidenceRoot, decodeURIComponent(file));
+
+        if (filePath !== evidenceRoot && !filePath.startsWith(`${evidenceRoot}${sep}`)) {
+          return next();
+        }
+        if (!existsSync(filePath)) return next();
+
+        const mime = EVIDENCE_MIME_TYPES[extname(filePath).toLowerCase()];
+        if (mime) res.setHeader('Content-Type', mime);
+        createReadStream(filePath).pipe(res);
+      });
+    },
+  };
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://ujg.specs.openuji.org',
@@ -91,7 +130,7 @@ export default defineConfig({
     optimizeDeps: {
       include: ['@radix-ui/react-select', 'lucide-react', 'mermaid'],
     },
-    plugins: [tailwindcss(), watchSpecContentPlugin()],
+    plugins: [tailwindcss(), watchSpecContentPlugin(), serveCaseStudyEvidencePlugin()],
     server: {
       watch: {
         // Watch the speculator package dist so HMR works during development
