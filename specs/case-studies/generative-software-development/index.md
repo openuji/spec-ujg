@@ -529,7 +529,6 @@ Structure → Tokens → Styling → Application process, while the
 implicit-gated realization introduces a broader and less constrained
 application shell.
 
-### Fazit
 
 The strongest effect is therefore not additional structural coverage. Explicit guidance improves **continuity between phases**:
 

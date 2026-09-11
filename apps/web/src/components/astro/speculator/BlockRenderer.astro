@@ -162,11 +162,13 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
                 <thead>
                   <tr>
                     {headerCells.map((cell) => {
-                      return (
-                        <th>
+                      const content =
+                        cell.children.length > 0 ? (
                           <InlineRenderer nodes={cell.children} {...inlineProps} />
-                        </th>
-                      );
+                        ) : (
+                          '–'
+                        );
+                      return <th>{content}</th>;
                     })}
                   </tr>
                 </thead>
@@ -176,7 +178,12 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
                   <tr>
                     {row.children.map((cell) => {
                       const style = { textAlign: cell.align || 'left' };
-                      const content = <InlineRenderer nodes={cell.children} {...inlineProps} />;
+                      const content =
+                        cell.children.length > 0 ? (
+                          <InlineRenderer nodes={cell.children} {...inlineProps} />
+                        ) : (
+                          '–'
+                        );
 
                       if (cell.header) {
                         return <th style={style}>{content}</th>;

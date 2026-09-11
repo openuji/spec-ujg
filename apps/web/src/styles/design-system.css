@@ -1411,19 +1411,34 @@ a.pill {
   }
 
   /*
-   * Wide table variant (BlockRenderer adds this for tables with >4 columns):
-   * on wide viewports, let the table bleed up to 100px past the text column
-   * on each side without touching the sidebar/viewport edge. 1400px reserves
-   * sidebar (300px) + container padding (64px) + a generous text-column
-   * estimate (~800px) with headroom to spare, so the calc below only ever
-   * grows the bleed once that's genuinely true; it resolves to 0 (i.e. the
-   * same width as a regular .spec-table-wrap) well above mobile/tablet
-   * widths, where the shared overflow-x:auto above still applies.
+   * Wide table variant (BlockRenderer adds this for tables with >6 columns):
+   * on wide viewports, let the table bleed past the text column on each side
+   * without touching the sidebar/viewport edge. 1200px reserves sidebar
+   * (300px) + container padding (64px) + a generous text-column estimate
+   * with headroom to spare, so the calc below only ever grows the bleed
+   * once that's genuinely true; it resolves to 0 (i.e. the same width as a
+   * regular .spec-table-wrap) well above mobile/tablet widths, where the
+   * shared overflow-x:auto above still applies.
    */
   .spec .spec-table-wrap--wide {
     --table-bleed: max(0px, min(200px, calc((100vw - 1200px) / 2)));
     width: calc(100% + var(--table-bleed) * 2);
     margin-inline: calc(var(--table-bleed) * -1);
+  }
+
+  /*
+   * Wide tables have many similarly-sized data columns plus one identifying
+   * "Run"-style label column. table-layout:fixed makes every unspecified
+   * column share the remaining width equally instead of table-layout:auto's
+   * unbalanced content-driven guess; the first column keeps its own natural
+   * width (up to a cap) since it holds the longest running text.
+   */
+  .spec .spec-table-wrap--wide table {
+    table-layout: fixed;
+  }
+  .spec .spec-table-wrap--wide th:first-child,
+  .spec .spec-table-wrap--wide td:first-child {
+    width: min(300px, max-content);
   }
 
   .spec table {
@@ -1775,6 +1790,10 @@ a.pill {
   /* Static Markdown pages use the spec typography without being ED spec documents. */
   .static-page .spec h2 {
     margin-top: 3.75rem;
+    margin-bottom: 1rem;
+  }
+  .static-page .spec h3 {
+    margin-top: 2.75rem;
     margin-bottom: 1rem;
   }
 
