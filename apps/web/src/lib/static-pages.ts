@@ -34,4 +34,10 @@ export const TOP_LEVEL_CONTENT_PAGES = [
     title: 'Foundations',
     toc: true,
   },
+  {
+    slug: 'evaluation-vocabulary',
+    fileName: 'evaluation-vocabulary.md',
+    title: 'Evaluation Vocabulary',
+    toc: true,
+  },
 ] as const satisfies readonly TopLevelContentPage[];

@@ -8,6 +8,17 @@ const caseStudies = await getCaseStudies();
 function formatDate(value: string): string {
   return new Date(value).toISOString().slice(0, 10);
 }
+
+// Deterministic per-card seed (stable across renders/rebuilds) so cards
+// without a cover image get a decorative pattern with some visual variety
+// between studies, instead of every card looking identical.
+function patternSeed(value: string): number {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash * 31 + value.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash) % 360;
+}
 ---
 
 <BaseLayout title="Case Studies" bodyClass="case-studies-page">
@@ -32,7 +43,10 @@ function formatDate(value: string): string {
 
             return (
               <a class="case-study-card" href={`/case-studies/${study.slug}`}>
-                <span class:list={['case-study-card__visual', visual && 'has-image']}>
+                <span
+                  class:list={['case-study-card__visual', visual && 'has-image']}
+                  style={`--pattern-hue: ${patternSeed(study.slug)}deg`}
+                >
                   {visual && <img src={visual} alt="" loading="lazy" />}
                 </span>
                 <span class="case-study-card__body">
