@@ -8,6 +8,11 @@ tags:
   - Journey Semantics
   - AI Guidance
   - Non-normative
+vocabulary:
+  Structure: "The Structure phase checks whether the generated design system preserves the UJG-defined design-system structure."
+  Tokens: "The Tokens phase checks how the generated visual system is represented using DTCG design tokens and UJG Theme / TokenSource relationships."
+  Styling: "The Styling phase checks whether visual styling uses the generated token system while preserving the design-system structure created earlier."
+  Application: "The Application phase checks whether the generated runtime preserves the modeled journey behavior and the implementation boundaries selected in the manifest."
 ---
 
 > **Exploratory case study — non-normative**
@@ -498,7 +503,7 @@ The structural uplift is relatively small for both models because all four runs 
 
 Scores are the two-evaluator mean, 0–100.
 
-| Run                        | Structure | Tokens | Styling | Application |      Mean |
+| Run                        | [Structure]^i | [Tokens]^i | [Styling]^i | [Application]^i |      Mean |
 | -------------------------- | --------: | -----: | ------: | ----------: | --------: |
 | Claude Sonnet 5 · explicit |     98.50 |  94.17 |   89.84 |       93.17 | **93.92** |
 | Claude Sonnet 5 · implicit |     95.83 |  87.67 |   82.17 |       85.34 | **87.75** |

@@ -5,19 +5,107 @@ import RecursiveInlineRenderer from './InlineRenderer.astro';
 interface Props {
   nodes: Inline[];
   basePath?: string;
+  glossary?: Record<string, string>;
 }
 
-const { nodes, basePath } = Astro.props;
+const { nodes, basePath, glossary } = Astro.props;
 
 // Shared props to pass to all recursive calls - update here when adding new props
-const sharedProps = { basePath };
+const sharedProps = { basePath, glossary };
+
+// `word^i` or `[multi word term]^i` anywhere in text marks a term for a
+// glossary tooltip, sourced from the document's frontmatter `vocabulary`
+// map (see BlockRenderer.astro/case-studies.ts). Deliberately explicit/
+// opt-in rather than auto-matching every occurrence of a known term.
+const TERM_MARKER_PATTERN = /\[([^\]]+)\]\^i|(\S+)\^i/g;
+
+interface TermPart {
+  term: string;
+  definitionHtml: string;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Deliberately narrow: only the inline formatting evaluation-vocabulary.md
+// actually uses (code spans, occasional bold/italic) — not a general
+// markdown renderer, and not the full @openuji/speculator parser (which
+// doesn't publicly export an inline-markdown-to-HTML utility).
+function renderInlineMarkdown(value: string): string {
+  let html = escapeHtml(value);
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  return html;
+}
+
+function splitTermMarkers(
+  value: string,
+  glossaryMap?: Record<string, string>
+): Array<string | TermPart> {
+  if (!glossaryMap || !value.includes('^i')) return [value];
+
+  const parts: Array<string | TermPart> = [];
+  let lastIndex = 0;
+  TERM_MARKER_PATTERN.lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = TERM_MARKER_PATTERN.exec(value))) {
+    const term = match[1] ?? match[2];
+    if (match.index > lastIndex) {
+      parts.push(value.slice(lastIndex, match.index));
+    }
+    const definition = glossaryMap[term];
+    parts.push(definition ? { term, definitionHtml: renderInlineMarkdown(definition) } : term);
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < value.length) {
+    parts.push(value.slice(lastIndex));
+  }
+
+  return parts;
+}
 ---
 
 {
   nodes.map((node) => {
     switch (node.type) {
-      case 'text':
-        return <>{node.value}</>;
+      case 'text': {
+        const parts = splitTermMarkers(node.value, glossary);
+        return (
+          <>
+            {parts.map((part) =>
+              typeof part === 'string' ? (
+                part
+              ) : (
+                <span class="term-info-group">
+                  {part.term}
+                  <span class="term-info">
+                    <button
+                      type="button"
+                      class="term-info__trigger"
+                      aria-label={`Definition: ${part.term}`}
+                    >
+                      ⓘ
+                    </button>
+                    <span
+                      class="term-info__tooltip"
+                      role="tooltip"
+                      set:html={part.definitionHtml}
+                    />
+                  </span>
+                </span>
+              )
+            )}
+          </>
+        );
+      }
 
       case 'emphasis':
         return (
@@ -49,7 +137,7 @@ const sharedProps = { basePath };
       case 'image':
         return <img src={node.url} alt={node.alt || ''} title={node.title || ''} />;
 
-      case 'definition':
+      case 'definition': {
         // Render <dfn> with ReSpec attributes
         const def = node;
         const dfnId = def.explicitId || def.id;
@@ -65,6 +153,7 @@ const sharedProps = { basePath };
             <RecursiveInlineRenderer nodes={node.children} {...sharedProps} />
           </dfn>
         );
+      }
 
       case 'workspaceDfnReference': {
         const ref = node;
@@ -171,7 +260,7 @@ const sharedProps = { basePath };
         );
       }
 
-      case 'cite':
+      case 'cite': {
         // Render citation
         const cite = node;
         const citeClass = cite.forcedNormative
@@ -197,6 +286,7 @@ const sharedProps = { basePath };
             {citeContent}
           </cite>
         );
+      }
 
       case 'requirement':
         return (

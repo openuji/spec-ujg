@@ -1331,6 +1331,81 @@ a.pill {
            scroll-mt-[calc(var(--spacing-header)+(--spacing(4)))];
   }
 
+  /*
+   * Glossary tooltip for `word^i` / `[phrase]^i` markers (see
+   * InlineRenderer.astro). CSS-only show/hide (:hover/:focus-within); the
+   * tooltip's own content is real HTML (set:html), not a CSS attr() string,
+   * since definitions can carry inline markdown (code/bold/italic).
+   *
+   * Opens downward, not upward: table headers are the main use case, and
+   * they sit at the top of `.spec-table-wrap`, which clips (overflow-y:
+   * hidden) anything positioned above its own box.
+   */
+  .spec .term-info-group {
+    white-space: nowrap;
+  }
+
+  .spec .term-info {
+    position: relative;
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: baseline;
+    white-space: normal;
+  }
+
+  .spec .term-info__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--muted-foreground);
+    font-size: 0.7rem;
+    line-height: 1;
+    cursor: help;
+  }
+
+  .spec .term-info__trigger:hover,
+  .spec .term-info__trigger:focus-visible {
+    color: var(--accent);
+    outline: none;
+  }
+
+  .spec .term-info__tooltip {
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 6px);
+    transform: translateX(-50%);
+    z-index: 20;
+    width: max-content;
+    max-width: 260px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--foreground);
+    font-size: 0.8rem;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.4;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .spec .term-info:hover .term-info__tooltip,
+  .spec .term-info:focus-within .term-info__tooltip {
+    display: block;
+  }
+
+  .spec .term-info__tooltip code {
+    font-size: 0.78em;
+  }
+
   /* Headings: Gemini spacing */
   .spec h1,
   .spec h2,
