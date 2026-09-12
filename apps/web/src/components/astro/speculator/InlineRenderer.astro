@@ -316,3 +316,89 @@ function splitTermMarkers(
     }
   })
 }
+
+<script>
+  // Glossary tooltips (.term-info__trigger, see the `text` case above) render
+  // through a single shared `position:fixed` portal appended to <body>,
+  // positioned from the trigger's real bounding rect on hover/focus. This is
+  // required, not cosmetic: the trigger can sit inside `.spec-table-wrap`,
+  // which needs both overflow-x:auto (horizontal scroll) and overflow-y:
+  // hidden (rounded corners) — that combination clips any descendant that
+  // visually extends past the wrap's box, tooltip included, regardless of
+  // z-index. Moving the visible tooltip out of that ancestor entirely is the
+  // only fix; a CSS-only (:hover/:focus-within, in-place) tooltip can't
+  // escape an ancestor's overflow clipping.
+  const PORTAL_ID = 'ujg-term-tooltip-portal';
+  const VIEWPORT_GAP = 8;
+
+  function getPortal(): HTMLElement {
+    let portal = document.getElementById(PORTAL_ID);
+    if (!portal) {
+      portal = document.createElement('div');
+      portal.id = PORTAL_ID;
+      portal.className = 'term-info__portal';
+      portal.setAttribute('role', 'tooltip');
+      document.body.appendChild(portal);
+    }
+    return portal;
+  }
+
+  function showTooltip(trigger: HTMLElement) {
+    const source = trigger.nextElementSibling;
+    if (!source) return;
+
+    const portal = getPortal();
+    portal.innerHTML = source.innerHTML;
+    portal.classList.add('is-visible');
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const portalRect = portal.getBoundingClientRect();
+
+    let left = triggerRect.left + triggerRect.width / 2 - portalRect.width / 2;
+    left = Math.max(
+      VIEWPORT_GAP,
+      Math.min(left, window.innerWidth - portalRect.width - VIEWPORT_GAP)
+    );
+
+    let top = triggerRect.bottom + VIEWPORT_GAP;
+    if (top + portalRect.height > window.innerHeight - VIEWPORT_GAP) {
+      top = triggerRect.top - portalRect.height - VIEWPORT_GAP;
+    }
+
+    portal.style.left = `${left}px`;
+    portal.style.top = `${top}px`;
+  }
+
+  function hideTooltip() {
+    const portal = document.getElementById(PORTAL_ID);
+    portal?.classList.remove('is-visible');
+  }
+
+  function findTrigger(target: EventTarget | null): HTMLElement | null {
+    if (!(target instanceof Element)) return null;
+    return target.closest('.term-info__trigger');
+  }
+
+  if (!window.__ujgTermTooltipInit) {
+    window.__ujgTermTooltipInit = true;
+
+    document.addEventListener('mouseover', (event) => {
+      const trigger = findTrigger(event.target);
+      if (trigger) showTooltip(trigger);
+    });
+    document.addEventListener('mouseout', (event) => {
+      const trigger = findTrigger(event.target);
+      if (trigger) hideTooltip();
+    });
+    document.addEventListener('focusin', (event) => {
+      const trigger = findTrigger(event.target);
+      if (trigger) showTooltip(trigger);
+    });
+    document.addEventListener('focusout', (event) => {
+      const trigger = findTrigger(event.target);
+      if (trigger) hideTooltip();
+    });
+    window.addEventListener('scroll', hideTooltip, true);
+    window.addEventListener('resize', hideTooltip);
+  }
+</script>

@@ -1333,26 +1333,26 @@ a.pill {
 
   /*
    * Glossary tooltip for `word^i` / `[phrase]^i` markers (see
-   * InlineRenderer.astro). CSS-only show/hide (:hover/:focus-within); the
-   * tooltip's own content is real HTML (set:html), not a CSS attr() string,
-   * since definitions can carry inline markdown (code/bold/italic).
+   * InlineRenderer.astro). The trigger + hidden content source live inline
+   * here; the *visible* tooltip is a single shared `position:fixed` portal
+   * appended to <body> by a small script (see InlineRenderer.astro), shown/
+   * positioned on hover/focus from the trigger's real bounding rect.
    *
-   * Opens downward, not upward: table headers are the main use case, and
-   * they sit at the top of `.spec-table-wrap`, which clips (overflow-y:
-   * hidden) anything positioned above its own box.
+   * This can't be CSS-only (:hover/:focus-within, in place): the trigger
+   * can sit inside `.spec-table-wrap`, which needs both overflow-x:auto
+   * (horizontal scroll) and overflow-y:hidden (rounded corners) — that
+   * combination clips any descendant that visually extends past the wrap's
+   * box, regardless of z-index. Moving the visible tooltip out of that
+   * ancestor entirely is the only fix.
    */
   .spec .term-info-group {
     /* white-space: nowrap; */
-    position: relative;
   }
 
   .spec .term-info {
-    position: absolute;
     display: inline-block;
-    bottom: 0.5em;
-    right: -1em;
+    margin-left: 0.3em;
     vertical-align: baseline;
-    white-space: normal;
   }
 
   .spec .term-info__trigger {
@@ -1377,13 +1377,16 @@ a.pill {
     outline: none;
   }
 
+  /* Hidden always — read by the portal script, never shown in place. */
   .spec .term-info__tooltip {
     display: none;
-    position: absolute;
-    left: 50%;
-    top: calc(100% + 6px);
-    transform: translateX(-50%);
-    z-index: 20;
+  }
+
+  /* Shared portal, appended to <body>; not a descendant of `.spec`. */
+  .term-info__portal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
     width: max-content;
     max-width: 260px;
     padding: var(--spacing-xs) var(--spacing-sm);
@@ -1399,12 +1402,11 @@ a.pill {
     white-space: normal;
   }
 
-  .spec .term-info:hover .term-info__tooltip,
-  .spec .term-info:focus-within .term-info__tooltip {
+  .term-info__portal.is-visible {
     display: block;
   }
 
-  .spec .term-info__tooltip code {
+  .term-info__portal code {
     font-size: 0.78em;
   }
 
