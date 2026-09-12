@@ -648,6 +648,9 @@ a.pill {
 
   .stat {
     @apply min-w-[120px] bg-card p-[14px_var(--spacing-md)] rounded-md border border-border;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .stat__value {
     @apply block text-2xl font-bold;
@@ -657,7 +660,7 @@ a.pill {
   }
 
   .stat-grid {
-    @apply mt-0 mb-spec-l flex flex-col gap-lg;
+    @apply mt-0 mb-spec-l flex flex-col gap-sm;
   }
   .stat-grid__header {
     @apply flex flex-col gap-1;
@@ -717,6 +720,12 @@ a.pill {
   }
   .bar-list__fill {
     @apply block h-full rounded-pill opacity-50;
+  }
+
+  /* Images inside a spec table cell (e.g. side-by-side evidence comparisons) should never overflow their column. */
+  .spec table img {
+    @apply block w-full rounded-md border border-border;
+    height: auto;
   }
 
   .panel {
@@ -918,13 +927,7 @@ a.pill {
   grid-template-columns: minmax(0, 0.8fr) minmax(280px, 1fr);
   gap: var(--spacing-lg);
   align-items: end;
-  padding: var(--spacing-lg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent 52%),
-    var(--panel);
-  box-shadow: var(--shadow-panel);
+  padding: var(--spacing-lg) 0;
 }
 
 .case-studies-intro h1 {
@@ -948,21 +951,14 @@ a.pill {
   grid-template-rows: auto 1fr;
   min-height: 420px;
   overflow: hidden;
-  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   background: var(--card);
   color: var(--foreground);
   text-decoration: none;
-  box-shadow: var(--shadow-panel);
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    background-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .case-study-card:hover {
-  border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
-  transform: translateY(-2px);
   background: color-mix(in srgb, var(--accent-soft) 28%, var(--card));
 }
 
@@ -976,38 +972,56 @@ a.pill {
   display: block;
   min-height: 170px;
   overflow: hidden;
+  background: var(--muted);
+}
+
+/* Scattered-dot placeholder pattern for cards without a cover image. The
+   --pattern-hue custom property (set inline per card from a hash of the
+   study's slug) rotates the tint so cards don't all look identical. */
+.case-study-card__visual:not(.has-image) {
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
-    linear-gradient(160deg, var(--panel-solid), color-mix(in srgb, var(--accent-soft) 70%, white));
-}
-
-.case-study-card__visual::before,
-.case-study-card__visual::after {
-  content: '';
-  position: absolute;
-  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
-  background: color-mix(in srgb, var(--card) 74%, transparent);
-}
-
-.case-study-card__visual::before {
-  width: 58%;
-  height: 54%;
-  left: 12%;
-  top: 18%;
-  border-radius: var(--radius-md);
-}
-
-.case-study-card__visual::after {
-  width: 34%;
-  height: 32%;
-  right: 12%;
-  bottom: 14%;
-  border-radius: var(--radius-sm);
-}
-
-.case-study-card__visual.has-image::before,
-.case-study-card__visual.has-image::after {
-  display: none;
+    radial-gradient(
+      circle at 12% 22%,
+      color-mix(in srgb, var(--accent) 38%, transparent) 0 3px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 42% 58%,
+      color-mix(in srgb, var(--accent) 28%, transparent) 0 2px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 76% 18%,
+      color-mix(in srgb, var(--accent) 42%, transparent) 0 4px,
+      transparent 4px
+    ),
+    radial-gradient(
+      circle at 88% 68%,
+      color-mix(in srgb, var(--accent) 24%, transparent) 0 2px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 28% 84%,
+      color-mix(in srgb, var(--accent) 32%, transparent) 0 3px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 62% 38%,
+      color-mix(in srgb, var(--accent) 20%, transparent) 0 2px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 55% 10%,
+      color-mix(in srgb, var(--accent) 22%, transparent) 0 2px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 8% 62%,
+      color-mix(in srgb, var(--accent) 26%, transparent) 0 3px,
+      transparent 3px
+    ),
+    var(--muted);
+  filter: hue-rotate(var(--pattern-hue, 0deg));
 }
 
 .case-study-card__visual img {
@@ -1054,7 +1068,6 @@ a.pill {
 
 .case-study-card__tags span,
 .case-study-tags span {
-  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
   border-radius: var(--radius-pill);
   background: var(--accent-soft);
   color: var(--accent);
@@ -1073,10 +1086,7 @@ a.pill {
 
 .case-studies-empty {
   max-width: 760px;
-  padding: var(--spacing-lg);
-  border: 1px dashed color-mix(in srgb, var(--accent) 30%, var(--border));
-  border-radius: var(--radius-xl);
-  background: var(--panel);
+  padding: var(--spacing-lg) 0;
 }
 
 .case-studies-empty h2 {
@@ -1321,6 +1331,85 @@ a.pill {
            scroll-mt-[calc(var(--spacing-header)+(--spacing(4)))];
   }
 
+  /*
+   * Glossary tooltip for `word^i` / `[phrase]^i` markers (see
+   * InlineRenderer.astro). The trigger + hidden content source live inline
+   * here; the *visible* tooltip is a single shared `position:fixed` portal
+   * appended to <body> by a small script (see InlineRenderer.astro), shown/
+   * positioned on hover/focus from the trigger's real bounding rect.
+   *
+   * This can't be CSS-only (:hover/:focus-within, in place): the trigger
+   * can sit inside `.spec-table-wrap`, which needs both overflow-x:auto
+   * (horizontal scroll) and overflow-y:hidden (rounded corners) — that
+   * combination clips any descendant that visually extends past the wrap's
+   * box, regardless of z-index. Moving the visible tooltip out of that
+   * ancestor entirely is the only fix.
+   */
+  .spec .term-info-group {
+    /* white-space: nowrap; */
+  }
+
+  .spec .term-info {
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: baseline;
+  }
+
+  .spec .term-info__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--muted-foreground);
+    font-size: 0.7rem;
+    line-height: 1;
+    cursor: help;
+  }
+
+  .spec .term-info__trigger:hover,
+  .spec .term-info__trigger:focus-visible {
+    color: var(--accent);
+    outline: none;
+  }
+
+  /* Hidden always — read by the portal script, never shown in place. */
+  .spec .term-info__tooltip {
+    display: none;
+  }
+
+  /* Shared portal, appended to <body>; not a descendant of `.spec`. */
+  .term-info__portal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    width: max-content;
+    max-width: 260px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--foreground);
+    font-size: 0.8rem;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.4;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .term-info__portal.is-visible {
+    display: block;
+  }
+
+  .term-info__portal code {
+    font-size: 0.78em;
+  }
+
   /* Headings: Gemini spacing */
   .spec h1,
   .spec h2,
@@ -1401,6 +1490,81 @@ a.pill {
     background: color-mix(in oklab, var(--card) 84%, var(--background));
   }
 
+  /*
+   * Wide table variant (BlockRenderer adds this for tables with >6 columns):
+   * on wide viewports, let the table bleed past the text column on each side
+   * without touching the sidebar/viewport edge. 1200px reserves sidebar
+   * (300px) + container padding (64px) + a generous text-column estimate
+   * with headroom to spare, so the calc below only ever grows the bleed
+   * once that's genuinely true; it resolves to 0 (i.e. the same width as a
+   * regular .spec-table-wrap) well above mobile/tablet widths, where the
+   * shared overflow-x:auto above still applies.
+   */
+  .spec .spec-table-wrap--wide {
+    container-type: inline-size;
+    --table-bleed: max(0px, min(320px, calc((100vw - 1200px) / 2)));
+    width: calc(100% + var(--table-bleed) * 2);
+    margin-inline: calc(var(--table-bleed) * -1);
+  }
+
+  /*
+   * Data columns default to centered rather than following each cell's
+   * markdown alignment mark (":---:"/"---:"), so alignment stays one
+   * consistent, CSS-driven rule instead of being decided per column in the
+   * table source. The label column keeps the base left alignment.
+   */
+  .spec .spec-table-wrap--wide th:not(:first-child),
+  .spec .spec-table-wrap--wide td:not(:first-child) {
+    text-align: center;
+  }
+
+  /*
+   * The first column holds a long running label ("Claude Sonnet 5 ·
+   * explicit-gated") that table-layout:auto's proportional guess otherwise
+   * squeezes too narrow (it can even orphan a single "·" on its own line).
+   * min-width, not width: under table-layout:auto a plain `width` is only a
+   * sizing hint the browser can still compress once total column-content
+   * pressure exceeds the wrap (e.g. once every header also carries a
+   * glossary icon, or the table has 9 columns instead of 6-8) — min-width
+   * is treated as a much harder floor, and any real overflow beyond it
+   * falls back to the wrap's own overflow-x:auto scroll instead of
+   * silently shrinking the column below a readable width.
+   */
+  .spec .spec-table-wrap--wide th:first-child,
+  .spec .spec-table-wrap--wide td:first-child {
+    min-width: 230px;
+  }
+
+  /*
+   * Wide tables can have 6-9 data columns splitting whatever's left after
+   * the first column; the default px-6 (24px each side) cell padding eats
+   * a large share of that per-column space.
+   */
+  .spec .spec-table-wrap--wide th,
+  .spec .spec-table-wrap--wide td {
+    @apply px-3;
+  }
+
+  /*
+   * Column headers here are sometimes single long compound words with no
+   * space or hyphen (Component, Duplicated, Responsive...). table-layout:
+   * auto's content-proportional columns comfortably fit these in practice
+   * (verified from mobile through very wide desktop), but hyphenation is a
+   * harmless safety net for a future header/column combination that
+   * doesn't: it gives a real syllable break (e.g. "Compo-nent") instead of
+   * overflow-wrap:break-word's arbitrary mid-word cut when one is needed,
+   * and does nothing when one isn't.
+   *
+   * table-layout:fixed's equal-division columns were tried here and
+   * reverted: at every width where a wide table's wrap is actually
+   * reachable (given the bleed cap above), fixed columns ended up
+   * narrower than auto's content-driven ones, reintroducing the same
+   * mid-word-break failure this rule exists to avoid.
+   */
+  .spec .spec-table-wrap--wide thead th {
+    hyphens: auto;
+  }
+
   .spec table {
     @apply w-full border-separate border-spacing-0 text-sm;
     table-layout: auto;
@@ -1427,6 +1591,7 @@ a.pill {
     border-top: 1px solid color-mix(in oklab, var(--border) 88%, transparent);
   }
 
+  .spec table th,
   .spec table td {
     overflow-wrap: break-word;
   }
@@ -1440,20 +1605,6 @@ a.pill {
 
   .spec table :is(td, th) > :last-child {
     @apply mb-0;
-  }
-
-  @variant md {
-    .spec .spec-table-wrap {
-      overflow-x: hidden;
-    }
-
-    .spec table {
-      /* table-layout: fixed; */
-    }
-
-    .spec .spec-table-wrap > table {
-      min-width: 100%;
-    }
   }
 
   /* Custom code block */
@@ -1764,6 +1915,10 @@ a.pill {
   /* Static Markdown pages use the spec typography without being ED spec documents. */
   .static-page .spec h2 {
     margin-top: 3.75rem;
+    margin-bottom: 1rem;
+  }
+  .static-page .spec h3 {
+    margin-top: 2.75rem;
     margin-bottom: 1rem;
   }
 

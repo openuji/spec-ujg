@@ -12,6 +12,7 @@ export interface CaseStudyFrontmatter {
   tags?: unknown;
   heroImage?: unknown;
   cardImage?: unknown;
+  vocabulary?: unknown;
 }
 
 export interface CaseStudyManifest {
@@ -27,6 +28,7 @@ export interface CaseStudy {
   tags: string[];
   heroImage?: string;
   cardImage?: string;
+  vocabulary: Record<string, string>;
   publishedAt: string;
   updatedAt: string;
   entryPath: string;
@@ -46,6 +48,17 @@ function asOptionalString(value: unknown): string | undefined {
 function asStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
+}
+
+function asStringRecord(value: unknown): Record<string, string> {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return {};
+  const result: Record<string, string> = {};
+  for (const [key, entry] of Object.entries(value)) {
+    if (typeof entry === 'string' && entry.trim() !== '') {
+      result[key] = entry;
+    }
+  }
+  return result;
 }
 
 function readManifest(entryPath: string): CaseStudyManifest {
@@ -224,6 +237,7 @@ function buildCaseStudy(
     tags: asStringArray(frontmatter.tags),
     heroImage: asOptionalString(frontmatter.heroImage),
     cardImage: asOptionalString(frontmatter.cardImage),
+    vocabulary: asStringRecord(frontmatter.vocabulary),
     publishedAt: manifest.publishedAt,
     updatedAt: manifest.updatedAt,
     entryPath,
