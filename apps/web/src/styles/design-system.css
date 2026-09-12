@@ -1342,13 +1342,15 @@ a.pill {
    * hidden) anything positioned above its own box.
    */
   .spec .term-info-group {
-    white-space: nowrap;
+    /* white-space: nowrap; */
+    position: relative;
   }
 
   .spec .term-info {
-    position: relative;
+    position: absolute;
     display: inline-block;
-    margin-left: 0.3em;
+    bottom: 0.5em;
+    right: -1em;
     vertical-align: baseline;
     white-space: normal;
   }
@@ -1518,10 +1520,17 @@ a.pill {
    * The first column holds a long running label ("Claude Sonnet 5 ·
    * explicit-gated") that table-layout:auto's proportional guess otherwise
    * squeezes too narrow (it can even orphan a single "·" on its own line).
+   * min-width, not width: under table-layout:auto a plain `width` is only a
+   * sizing hint the browser can still compress once total column-content
+   * pressure exceeds the wrap (e.g. once every header also carries a
+   * glossary icon, or the table has 9 columns instead of 6-8) — min-width
+   * is treated as a much harder floor, and any real overflow beyond it
+   * falls back to the wrap's own overflow-x:auto scroll instead of
+   * silently shrinking the column below a readable width.
    */
   .spec .spec-table-wrap--wide th:first-child,
   .spec .spec-table-wrap--wide td:first-child {
-    width: 230px;
+    min-width: 230px;
   }
 
   /*
