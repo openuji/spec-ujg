@@ -133,25 +133,30 @@ const canonicalHref =
 
         // Content that arrives after the browser's own hash jump — Mermaid SVGs
         // replacing several screens of source text, lazy images without
-        // dimensions, webfonts — resizes the page above the target and leaves
-        // the reader parked somewhere else. Re-apply the position until the
-        // layout stops moving, or until the reader takes over.
+        // dimensions, webfonts — resizes the page above the target and drags
+        // the reader away from it. Re-scrolling after the fact corrects the
+        // position but the reader sees every correction as a jump, so instead
+        // keep the target pinned: measure how far it drifted and undo that in
+        // the ResizeObserver callback, which runs after layout but before
+        // paint, making the compensation invisible.
         function settleHashScroll() {
-          if (!location.hash) return;
+          if (!location.hash || typeof ResizeObserver === 'undefined') return;
 
           const targetId = decodeURIComponent(location.hash.slice(1));
-          const stopAt = Date.now() + 2500;
-          let timer;
+          let anchorTop = null;
+          let observer = null;
+          let stopTimer;
           let cancelled = false;
 
           function teardown() {
-            clearTimeout(timer);
+            clearTimeout(stopTimer);
+            if (observer) observer.disconnect();
+            observer = null;
             window.removeEventListener('wheel', cancel);
             window.removeEventListener('touchmove', cancel);
             window.removeEventListener('pointerdown', cancel);
             window.removeEventListener('keydown', cancel);
-            window.removeEventListener('ujg:mermaid-rendered', realign);
-            window.removeEventListener('load', realign);
+            window.removeEventListener('ujg:mermaid-rendered', repin);
           }
 
           function cancel() {
@@ -159,35 +164,58 @@ const canonicalHref =
             teardown();
           }
 
-          function realign() {
-            if (cancelled) return;
+          function repin() {
+            if (cancelled || anchorTop === null) return;
+
             const target = document.getElementById(targetId);
-            // scrollIntoView honours the heading's scroll-margin-top, so the
-            // sticky header does not cover the target.
-            if (target) target.scrollIntoView({ behavior: 'auto' });
+            if (!target) return;
+
+            const drift = target.getBoundingClientRect().top - anchorTop;
+            if (Math.abs(drift) < 1) return;
+
+            window.scrollBy(0, drift);
+
+            // Scrolling clamps at the end of the document, so re-measure
+            // instead of assuming the correction fully landed.
+            anchorTop = target.getBoundingClientRect().top;
           }
 
-          function tick() {
+          function start() {
             if (cancelled) return;
-            realign();
-            if (Date.now() < stopAt) {
-              timer = setTimeout(tick, 150);
-            } else {
-              teardown();
-            }
+
+            const target = document.getElementById(targetId);
+            if (!target) return;
+
+            // Establish the resting position once. scrollIntoView honours the
+            // heading's scroll-margin-top, so the sticky header never covers it.
+            target.scrollIntoView({ behavior: 'auto' });
+            anchorTop = target.getBoundingClientRect().top;
+
+            observer = new ResizeObserver(repin);
+            observer.observe(document.body);
+            document.querySelectorAll('.mermaid-container').forEach(function (el) {
+              observer.observe(el);
+            });
+
+            // Late content stops arriving; stop watching so ordinary scrolling
+            // is never second-guessed.
+            stopTimer = setTimeout(teardown, 5000);
           }
 
           // Deliberate input hands control back to the reader immediately.
-          // Note: we never listen for 'scroll' here, since our own realign
+          // Note: we never listen for 'scroll', since our own correction
           // would cancel itself.
           window.addEventListener('wheel', cancel, { passive: true });
           window.addEventListener('touchmove', cancel, { passive: true });
           window.addEventListener('pointerdown', cancel);
           window.addEventListener('keydown', cancel);
-          window.addEventListener('ujg:mermaid-rendered', realign);
-          window.addEventListener('load', realign);
+          window.addEventListener('ujg:mermaid-rendered', repin);
 
-          tick();
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', start, { once: true });
+          } else {
+            start();
+          }
         }
 
         function init() {

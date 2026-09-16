@@ -184,12 +184,13 @@ const { code, id } = Astro.props;
   }
 
   /* Before Mermaid runs, the raw source can stand several screens tall and then
-     collapse into a compact SVG, moving everything below it. Cap it so the swap
-     stays close to a no-op for layout. */
+     collapse into a compact SVG, moving everything below it. Reserve a small
+     fixed box instead, so the swap stays close to a no-op for layout and the
+     reader never sees a flash of diagram source. */
   .mermaid-container pre.mermaid[data-mermaid-pending] {
-    max-height: 9rem;
+    height: 6rem;
     overflow: hidden;
-    opacity: 0.35;
+    visibility: hidden;
   }
 
   .mermaid-container :global(svg) {
