@@ -8,7 +8,7 @@ const { code, id } = Astro.props;
 ---
 
 <div class="mermaid-container" id={id}>
-  <pre class="mermaid" data-mermaid-source={code}>{code}</pre>
+  <pre class="mermaid" data-mermaid-pending="true" data-mermaid-source={code}>{code}</pre>
 </div>
 
 <script>
@@ -117,6 +117,9 @@ const { code, id } = Astro.props;
         node.textContent = source;
         node.removeAttribute('data-processed');
         console.warn('Mermaid render failed', error);
+      } finally {
+        // Failed renders fall back to the full source, so drop the cap either way.
+        node.removeAttribute('data-mermaid-pending');
       }
     }
   }
@@ -137,6 +140,10 @@ const { code, id } = Astro.props;
       }
     } while (rerenderQueued);
     isRendering = false;
+
+    // Diagrams replace their own source text, so the page above an anchor can
+    // shrink by several screens here. Let listeners re-measure.
+    window.dispatchEvent(new CustomEvent('ujg:mermaid-rendered'));
   }
 
   function queueMermaidRender() {
@@ -174,6 +181,15 @@ const { code, id } = Astro.props;
     color: inherit;
     display: flex;
     justify-content: center;
+  }
+
+  /* Before Mermaid runs, the raw source can stand several screens tall and then
+     collapse into a compact SVG, moving everything below it. Cap it so the swap
+     stays close to a no-op for layout. */
+  .mermaid-container pre.mermaid[data-mermaid-pending] {
+    max-height: 9rem;
+    overflow: hidden;
+    opacity: 0.35;
   }
 
   .mermaid-container :global(svg) {

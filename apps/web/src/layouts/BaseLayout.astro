@@ -131,10 +131,70 @@ const canonicalHref =
           }
         }
 
+        // Content that arrives after the browser's own hash jump — Mermaid SVGs
+        // replacing several screens of source text, lazy images without
+        // dimensions, webfonts — resizes the page above the target and leaves
+        // the reader parked somewhere else. Re-apply the position until the
+        // layout stops moving, or until the reader takes over.
+        function settleHashScroll() {
+          if (!location.hash) return;
+
+          const targetId = decodeURIComponent(location.hash.slice(1));
+          const stopAt = Date.now() + 2500;
+          let timer;
+          let cancelled = false;
+
+          function teardown() {
+            clearTimeout(timer);
+            window.removeEventListener('wheel', cancel);
+            window.removeEventListener('touchmove', cancel);
+            window.removeEventListener('pointerdown', cancel);
+            window.removeEventListener('keydown', cancel);
+            window.removeEventListener('ujg:mermaid-rendered', realign);
+            window.removeEventListener('load', realign);
+          }
+
+          function cancel() {
+            cancelled = true;
+            teardown();
+          }
+
+          function realign() {
+            if (cancelled) return;
+            const target = document.getElementById(targetId);
+            // scrollIntoView honours the heading's scroll-margin-top, so the
+            // sticky header does not cover the target.
+            if (target) target.scrollIntoView({ behavior: 'auto' });
+          }
+
+          function tick() {
+            if (cancelled) return;
+            realign();
+            if (Date.now() < stopAt) {
+              timer = setTimeout(tick, 150);
+            } else {
+              teardown();
+            }
+          }
+
+          // Deliberate input hands control back to the reader immediately.
+          // Note: we never listen for 'scroll' here, since our own realign
+          // would cancel itself.
+          window.addEventListener('wheel', cancel, { passive: true });
+          window.addEventListener('touchmove', cancel, { passive: true });
+          window.addEventListener('pointerdown', cancel);
+          window.addEventListener('keydown', cancel);
+          window.addEventListener('ujg:mermaid-rendered', realign);
+          window.addEventListener('load', realign);
+
+          tick();
+        }
+
         function init() {
           document.addEventListener('click', handleLinkClick, { capture: true });
           // Also highlight on page load if hash exists
           handleHashChange();
+          settleHashScroll();
         }
 
         document.addEventListener('astro:page-load', init);
