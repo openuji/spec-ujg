@@ -1,0 +1,407 @@
+ujgTarget: ed-2026-07-13
+
+touchpoints:
+  "urn:touchpoint:nextcloud-a":
+    label: "Nextcloud A"
+  "urn:touchpoint:nextcloud-b":
+    label: "Nextcloud B"
+
+actors:
+  "urn:actor:alice":
+    label: "Alice"
+  "urn:actor:bob":
+    label: "Bob"
+
+artifacts:
+  "urn:artifact:federated-share":
+    label: "Federated share for the test file"
+    sourceTouchpointRef: "urn:touchpoint:nextcloud-a"
+    targetTouchpointRefs:
+      - "urn:touchpoint:nextcloud-b"
+
+actions:
+  "urn:action:alice-confirm-share":
+    label: "Alice confirms the remote share"
+    producedArtifactRefs:
+      - "urn:artifact:federated-share"
+  "urn:action:bob-accept-share":
+    label: "Bob accepts the incoming remote share"
+    consumedArtifactRefs:
+      - "urn:artifact:federated-share"
+  "urn:action:bob-open-accepted-file":
+    label: "Bob opens the accepted file"
+    consumedArtifactRefs:
+      - "urn:artifact:federated-share"
+
+journeyEntryIndex:
+  id: "urn:index:nextcloud-federated-sharing"
+  label: "Federated sharing local journey entries"
+  stateRefs:
+    - "urn:composite:alice-federated-sharing"
+    - "urn:composite:bob-remote-share"
+
+states:
+  "urn:composite:alice-federated-sharing":
+    type: "CompositeState"
+    label: "Alice federated sharing entry"
+    subjourney:
+      id: "urn:journey:alice-federated-sharing"
+      label: "Alice shares a file with a remote recipient"
+      subjectActorRef: "urn:actor:alice"
+      defaultEntryRef: "urn:entry:alice-federated-sharing"
+      entries:
+        "urn:entry:alice-federated-sharing":
+          label: "Alice files entry"
+          stateRef: "urn:state:alice-files-ready"
+      states:
+        "urn:state:alice-files-ready":
+          label: "Alice files app is ready"
+          surface:
+            id: "urn:surface:alice-files-ready"
+            label: "Alice files list with target file"
+            touchpointRef: "urn:touchpoint:nextcloud-a"
+        "urn:state:alice-share-panel-open":
+          label: "Alice sharing panel is open"
+          surface:
+            id: "urn:surface:alice-share-panel-open"
+            label: "Alice share panel for target file"
+            touchpointRef: "urn:touchpoint:nextcloud-a"
+        "urn:state:alice-remote-recipient-entered":
+          label: "Alice entered Bob as a remote recipient"
+          surface:
+            id: "urn:surface:alice-remote-recipient-entered"
+            label: "Alice remote recipient entry"
+            touchpointRef: "urn:touchpoint:nextcloud-a"
+        "urn:state:alice-share-confirmed":
+          label: "Alice confirmed the remote share"
+          surface:
+            id: "urn:surface:alice-share-confirmed"
+            label: "Alice outgoing remote share is confirmed"
+            touchpointRef: "urn:touchpoint:nextcloud-a"
+      transitions:
+        - id: "urn:transition:alice-opens-file-menu"
+          label: "Alice opens the sharing panel"
+          from: "urn:state:alice-files-ready"
+          to: "urn:state:alice-share-panel-open"
+          surface:
+            id: "urn:surface:alice-opens-file-menu"
+            label: "Alice file share action"
+            touchpointRef: "urn:touchpoint:nextcloud-a"
+        - id: "urn:transition:alice-enters-remote-bob"
+          label: "Alice enters Bob's federated address"
+          from: "urn:state:alice-share-panel-open"
+          to: "urn:state:alice-remote-recipient-entered"
+          surface:
+            id: "urn:surface:alice-enters-remote-bob"
+            label: "Alice remote recipient input"
+            touchpointRef: "urn:touchpoint:nextcloud-a"
+        - id: "urn:transition:alice-confirms-share"
+          label: "Alice confirms the share"
+          from: "urn:state:alice-remote-recipient-entered"
+          to: "urn:state:alice-share-confirmed"
+          surface:
+            id: "urn:surface:alice-confirms-share"
+            label: "Alice confirm-share action"
+            touchpointRef: "urn:touchpoint:nextcloud-a"
+          actionRef: "urn:action:alice-confirm-share"
+  "urn:composite:bob-remote-share":
+    type: "CompositeState"
+    label: "Bob remote-share entry"
+    subjourney:
+      id: "urn:journey:bob-remote-share"
+      label: "Bob accepts an incoming remote share"
+      subjectActorRef: "urn:actor:bob"
+      defaultEntryRef: "urn:entry:bob-remote-share"
+      entries:
+        "urn:entry:bob-remote-share":
+          label: "Bob incoming share entry"
+          stateRef: "urn:state:bob-incoming-share-visible"
+      states:
+        "urn:state:bob-incoming-share-visible":
+          label: "Bob sees the pending remote share"
+          surface:
+            id: "urn:surface:bob-incoming-share-visible"
+            label: "Bob incoming remote share row"
+            touchpointRef: "urn:touchpoint:nextcloud-b"
+        "urn:state:bob-share-accepted":
+          label: "Bob accepted the remote share"
+          surface:
+            id: "urn:surface:bob-share-accepted"
+            label: "Bob accepted remote share"
+            touchpointRef: "urn:touchpoint:nextcloud-b"
+        "urn:state:bob-file-visible":
+          label: "Bob can see the shared file"
+          surface:
+            id: "urn:surface:bob-file-visible"
+            label: "Bob sees accepted file"
+            touchpointRef: "urn:touchpoint:nextcloud-b"
+      transitions:
+        - id: "urn:transition:bob-accepts-share"
+          label: "Bob accepts the incoming share"
+          from: "urn:state:bob-incoming-share-visible"
+          to: "urn:state:bob-share-accepted"
+          surface:
+            id: "urn:surface:bob-accepts-share"
+            label: "Bob accept-share action"
+            touchpointRef: "urn:touchpoint:nextcloud-b"
+          actionRef: "urn:action:bob-accept-share"
+        - id: "urn:transition:bob-opens-accepted-file"
+          label: "Bob opens the accepted shared file"
+          from: "urn:state:bob-share-accepted"
+          to: "urn:state:bob-file-visible"
+          surface:
+            id: "urn:surface:bob-opens-accepted-file"
+            label: "Bob open-file action"
+            touchpointRef: "urn:touchpoint:nextcloud-b"
+          actionRef: "urn:action:bob-open-accepted-file"
+
+messageBundle:
+  "urn:message:sharing-panel":
+    label: "Sharing panel label"
+    namespace: "nextcloud.sharing"
+    messageKey: "sharing.panel"
+    defaultLocale: "en"
+    locales:
+      en:
+        value: "Sharing"
+  "urn:message:remote-recipient-input":
+    label: "Remote recipient input label"
+    namespace: "nextcloud.sharing"
+    messageKey: "sharing.remoteRecipientInput"
+    defaultLocale: "en"
+    locales:
+      en:
+        value: "Name, federated cloud ID or email address"
+  "urn:message:share-action":
+    label: "Share action"
+    namespace: "nextcloud.actions"
+    messageKey: "actions.share"
+    defaultLocale: "en"
+    locales:
+      en:
+        value: "Share"
+  "urn:message:confirm-share-action":
+    label: "Confirm share action"
+    namespace: "nextcloud.actions"
+    messageKey: "actions.confirmShare"
+    defaultLocale: "en"
+    locales:
+      en:
+        value: "Share"
+  "urn:message:accept-action":
+    label: "Accept action"
+    namespace: "nextcloud.actions"
+    messageKey: "actions.accept"
+    defaultLocale: "en"
+    locales:
+      en:
+        value: "Accept"
+  "urn:message:open-action":
+    label: "Open action"
+    namespace: "nextcloud.actions"
+    messageKey: "actions.open"
+    defaultLocale: "en"
+    locales:
+      en:
+        value: "Open"
+
+accessible:
+  features:
+    "urn:feature:artifact-instance-key":
+      label: "Artifact instance key"
+      accessibleFeatureName: "file-id"
+      accessibleFeatureValue: "*"
+    "urn:feature:remote-recipient-instance-key":
+      label: "Remote recipient instance key"
+      accessibleFeatureName: "federated-cloud-id"
+      accessibleFeatureValue: "*"
+
+  locators:
+    "urn:locator:sharing-panel":
+      label: "Sharing panel"
+      role: "complementary"
+      accessibleNameRef: "urn:message:sharing-panel"
+    "urn:locator:alice-file-row":
+      label: "Alice target file row"
+      role: "row"
+      accessibleFeatureRefs:
+        - "urn:feature:artifact-instance-key"
+    "urn:locator:remote-recipient-entry":
+      label: "Remote recipient result"
+      role: "option"
+      accessibleFeatureRefs:
+        - "urn:feature:remote-recipient-instance-key"
+      contextLocatorRefs:
+        - "urn:locator:sharing-panel"
+    "urn:locator:alice-share-row":
+      label: "Confirmed outgoing share row"
+      role: "row"
+      accessibleFeatureRefs:
+        - "urn:feature:remote-recipient-instance-key"
+      contextLocatorRefs:
+        - "urn:locator:sharing-panel"
+    "urn:locator:incoming-share-row":
+      label: "Incoming share row"
+      role: "row"
+      accessibleFeatureRefs:
+        - "urn:feature:artifact-instance-key"
+    "urn:locator:accepted-share-row":
+      label: "Accepted share row"
+      role: "row"
+      accessibleFeatureRefs:
+        - "urn:feature:artifact-instance-key"
+    "urn:locator:bob-file-row":
+      label: "Bob accepted file row"
+      role: "row"
+      accessibleFeatureRefs:
+        - "urn:feature:artifact-instance-key"
+    "urn:locator:file-share-action":
+      label: "File share action"
+      role: "button"
+      accessibleNameRef: "urn:message:share-action"
+      contextLocatorRefs:
+        - "urn:locator:alice-file-row"
+    "urn:locator:remote-recipient-input":
+      label: "Remote recipient input"
+      role: "textbox"
+      accessibleNameRef: "urn:message:remote-recipient-input"
+      contextLocatorRefs:
+        - "urn:locator:sharing-panel"
+    "urn:locator:confirm-share-button":
+      label: "Confirm share button"
+      role: "button"
+      accessibleNameRef: "urn:message:confirm-share-action"
+      contextLocatorRefs:
+        - "urn:locator:remote-recipient-entry"
+    "urn:locator:bob-accept-share-button":
+      label: "Bob accept share button"
+      role: "button"
+      accessibleNameRef: "urn:message:accept-action"
+      contextLocatorRefs:
+        - "urn:locator:incoming-share-row"
+    "urn:locator:bob-open-file-action":
+      label: "Bob open file action"
+      role: "button"
+      accessibleNameRef: "urn:message:open-action"
+      contextLocatorRefs:
+        - "urn:locator:bob-file-row"
+resolvers:
+  "urn:resolver:artifact-instance":
+    label: "Resolve repeated artifact surface instances"
+    instanceKeyFeatureRef: "urn:feature:artifact-instance-key"
+observationBindings:
+  "urn:obs:alice-files-ready-presence":
+    label: "Observe Alice files ready"
+    observeSurfaceRef: "urn:surface:alice-files-ready"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#presence"
+    locatorRefs:
+      - "urn:locator:alice-file-row"
+    surfaceInstanceResolverRef: "urn:resolver:artifact-instance"
+  "urn:obs:alice-share-panel-open-presence":
+    label: "Observe Alice share panel open"
+    observeSurfaceRef: "urn:surface:alice-share-panel-open"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#presence"
+    locatorRefs:
+      - "urn:locator:sharing-panel"
+  "urn:obs:alice-remote-recipient-entered-presence":
+    label: "Observe Alice remote recipient entered"
+    observeSurfaceRef: "urn:surface:alice-remote-recipient-entered"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#presence"
+    locatorRefs:
+      - "urn:locator:remote-recipient-entry"
+  "urn:obs:alice-share-confirmed-presence":
+    label: "Observe Alice share confirmed"
+    observeSurfaceRef: "urn:surface:alice-share-confirmed"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#presence"
+    locatorRefs:
+      - "urn:locator:alice-share-row"
+    surfaceInstanceResolverRef: "urn:resolver:artifact-instance"
+  "urn:obs:bob-incoming-share-visible-presence":
+    label: "Observe Bob incoming share"
+    observeSurfaceRef: "urn:surface:bob-incoming-share-visible"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#presence"
+    locatorRefs:
+      - "urn:locator:incoming-share-row"
+    surfaceInstanceResolverRef: "urn:resolver:artifact-instance"
+  "urn:obs:bob-share-accepted-presence":
+    label: "Observe Bob share accepted"
+    observeSurfaceRef: "urn:surface:bob-share-accepted"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#presence"
+    locatorRefs:
+      - "urn:locator:accepted-share-row"
+    surfaceInstanceResolverRef: "urn:resolver:artifact-instance"
+  "urn:obs:bob-file-visible-presence":
+    label: "Observe Bob file visible"
+    observeSurfaceRef: "urn:surface:bob-file-visible"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#presence"
+    locatorRefs:
+      - "urn:locator:bob-file-row"
+    surfaceInstanceResolverRef: "urn:resolver:artifact-instance"
+  "urn:obs:alice-opens-file-menu-activation":
+    label: "Activate Alice share action"
+    observeSurfaceRef: "urn:surface:alice-opens-file-menu"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#activation"
+    locatorRefs:
+      - "urn:locator:file-share-action"
+    surfaceInstanceResolverRef: "urn:resolver:artifact-instance"
+  "urn:obs:alice-enters-remote-bob-activation":
+    label: "Activate Alice remote recipient entry"
+    observeSurfaceRef: "urn:surface:alice-enters-remote-bob"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#activation"
+    locatorRefs:
+      - "urn:locator:remote-recipient-input"
+  "urn:obs:alice-confirms-share-activation":
+    label: "Activate Alice share confirmation"
+    observeSurfaceRef: "urn:surface:alice-confirms-share"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#activation"
+    locatorRefs:
+      - "urn:locator:confirm-share-button"
+    surfaceInstanceResolverRef: "urn:resolver:artifact-instance"
+  "urn:obs:bob-accepts-share-activation":
+    label: "Activate Bob share acceptance"
+    observeSurfaceRef: "urn:surface:bob-accepts-share"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#activation"
+    locatorRefs:
+      - "urn:locator:bob-accept-share-button"
+    surfaceInstanceResolverRef: "urn:resolver:artifact-instance"
+  "urn:obs:bob-opens-accepted-file-activation":
+    label: "Activate Bob open accepted file"
+    observeSurfaceRef: "urn:surface:bob-opens-accepted-file"
+    observationEventRef: "https://ujg.specs.openuji.org/ed/ns/observability#activation"
+    locatorRefs:
+      - "urn:locator:bob-open-file-action"
+    surfaceInstanceResolverRef: "urn:resolver:artifact-instance"
+
+phases:
+  "urn:phase:remote-share-offered":
+    label: "Remote share offered"
+    order: 1
+  "urn:phase:federated-access-established":
+    label: "Federated access established"
+    order: 2
+
+experienceSteps:
+  "urn:step:alice-share-confirmed":
+    label: "Alice outgoing share confirmed"
+    order: 1
+    surfaceRefs:
+      - "urn:surface:alice-share-confirmed"
+    phaseRef: "urn:phase:remote-share-offered"
+  "urn:step:bob-incoming-share-visible":
+    label: "Bob incoming share visible"
+    order: 2
+    surfaceRefs:
+      - "urn:surface:bob-incoming-share-visible"
+    phaseRef: "urn:phase:remote-share-offered"
+  "urn:step:bob-share-accepted":
+    label: "Bob share accepted"
+    order: 1
+    surfaceRefs:
+      - "urn:surface:bob-share-accepted"
+    phaseRef: "urn:phase:federated-access-established"
+  "urn:step:bob-file-visible":
+    label: "Bob accepted file visible"
+    order: 2
+    surfaceRefs:
+      - "urn:surface:bob-file-visible"
+    phaseRef: "urn:phase:federated-access-established"
