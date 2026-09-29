@@ -12,40 +12,6 @@ ujgsurfaceshape:GraphNodeRefTargetShape a sh:NodeShape ;
     [ sh:class ujggraph:Command ]
   ) .
 
-ujgsurfaceshape:UserRefHostShape a sh:NodeShape ;
-  sh:targetClass
-    ujggraph:Journey,
-    ujggraph:JourneyEntry,
-    ujggraph:State,
-    ujggraph:CompositeState,
-    ujggraph:Command,
-    ujggraph:Transition,
-    ujggraph:JourneyExit,
-    ujggraph:OutgoingTransition,
-    ujggraph:OutgoingTransitionGroup ;
-  sh:nodeKind sh:IRI ;
-
-  sh:property [
-    sh:path ujgsurface:userRef ;
-    sh:class ujgsurface:User ;
-    sh:nodeKind sh:IRI ;
-    sh:maxCount 1 ;
-  ] .
-
-ujgsurfaceshape:UserRefUsageShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgsurface:userRef ;
-  sh:or (
-    [ sh:class ujggraph:Journey ]
-    [ sh:class ujggraph:JourneyEntry ]
-    [ sh:class ujggraph:State ]
-    [ sh:class ujggraph:CompositeState ]
-    [ sh:class ujggraph:Command ]
-    [ sh:class ujggraph:Transition ]
-    [ sh:class ujggraph:JourneyExit ]
-    [ sh:class ujggraph:OutgoingTransition ]
-    [ sh:class ujggraph:OutgoingTransitionGroup ]
-  ) .
-
 ujgsurfaceshape:SurfaceShape a sh:NodeShape ;
   sh:targetClass ujgsurface:Surface ;
   sh:nodeKind sh:IRI ;
@@ -70,8 +36,8 @@ ujgsurfaceshape:SurfaceInstanceShape a sh:NodeShape ;
     sh:maxCount 1 ;
   ] .
 
-ujgsurfaceshape:UserShape a sh:NodeShape ;
-  sh:targetClass ujgsurface:User ;
+ujgsurfaceshape:PersonaShape a sh:NodeShape ;
+  sh:targetClass ujgsurface:Persona ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
