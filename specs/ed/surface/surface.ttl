@@ -21,10 +21,10 @@ ujgsurface:SurfaceInstance a owl:Class ;
 ujgsurface:Touchpoint a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
-ujgsurface:User a owl:Class ;
+ujgsurface:Persona a owl:Class ;
   rdfs:subClassOf ujg:Node ;
-  rdfs:label "User" ;
-  rdfs:comment "A human participant, persona, or human role whose journey perspective or ownership scope graph nodes can belong to." .
+  rdfs:label "Persona" ;
+  rdfs:comment "A human role, archetype, or participant perspective associated with one or more human-facing touchpoints." .
 
 ### Properties
 
@@ -43,28 +43,11 @@ ujgsurface:surfaceRef a owl:ObjectProperty ;
   rdfs:domain ujgsurface:SurfaceInstance ;
   rdfs:range ujgsurface:Surface .
 
-ujgsurface:userRef a owl:ObjectProperty ;
-  rdfs:domain [
-    a owl:Class ;
-    owl:unionOf (
-      ujggraph:Journey
-      ujggraph:JourneyEntry
-      ujggraph:State
-      ujggraph:CompositeState
-      ujggraph:Command
-      ujggraph:Transition
-      ujggraph:JourneyExit
-      ujggraph:OutgoingTransition
-      ujggraph:OutgoingTransitionGroup
-    )
-  ] ;
-  rdfs:range ujgsurface:User ;
-  rdfs:label "user ref" ;
-  rdfs:comment "References the User whose journey perspective or ownership scope a graph node belongs to." .
-
 ujgsurface:touchpointRefs a owl:ObjectProperty ;
-  rdfs:domain ujgsurface:User ;
-  rdfs:range ujgsurface:Touchpoint .
+  rdfs:domain ujgsurface:Persona ;
+  rdfs:range ujgsurface:Touchpoint ;
+  rdfs:label "touchpoint refs" ;
+  rdfs:comment "References touchpoints associated with this human role, archetype, or participant perspective." .
 
 ujgsurface:journeyRefs a owl:ObjectProperty ;
   rdfs:domain ujgsurface:Touchpoint ;

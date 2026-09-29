@@ -1,43 +1,113 @@
 ## Overview
 
-This core-family specification defines materialized user-facing [=Surface|Surfaces=], their concrete
-runtime occurrences, their presenting touchpoints, and human users whose journeys are modeled.
+This core-family specification describes how an intended journey is made visible to people. It
+defines four concepts:
 
-A `Surface` assigns stable visible identity to one supported Graph node: `State`, `CompositeState`,
-or `Command`. A `SurfaceInstance` identifies one concrete runtime-visible occurrence. A
-`Touchpoint` identifies the system, channel, or service boundary that can present
-meaningful `Journey` segments. A `User` identifies a human participant, persona, or role whose journey
-perspective a Graph node can belong to.
+- A [=Persona=] describes a human role or perspective, such as a customer or support agent.
+- A [=Touchpoint=] describes where an experience is presented, such as a website, mobile app,
+  kiosk, or call center.
+- A [=Surface=] gives a stable identity to something visible that represents a Graph node.
+- A [=SurfaceInstance=] identifies one concrete occurrence of a Surface at runtime.
 
-Surface annotations do not change Graph topology, traversal, Runtime ordering, or rendering
-behavior. Supported Graph nodes remain valid without surfaces, and surfaces remain valid without
-runtime instances.
+The concepts form two independent relationship chains:
+
+```mermaid
+flowchart LR
+  Persona -->|touchpointRefs| Touchpoint
+  Touchpoint -->|journeyRefs| Journey
+  SurfaceInstance -->|surfaceRef| Surface
+  Surface -->|graphNodeRef| GraphNode["State, CompositeState, or Command"]
+```
+
+The first chain describes the human perspective and presenting boundary around a Journey. The
+second describes how visible materialization connects to Graph meaning. Neither chain adds Graph
+edges, changes traversal, or identifies who actually used a system at runtime.
+
+Graph does not depend on Surface. A Graph model remains meaningful without personas, touchpoints,
+surfaces, or runtime instances.
 
 Examples compose the shared baseline context with
 `https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld`.
 
 ## Terminology
 
-- <dfn>Surface</dfn>: A stable, addressable, design-system-agnostic materialized boundary for one supported Graph node.
-- <dfn>SurfaceInstance</dfn>: A concrete runtime-visible occurrence of one Surface.
-- <dfn>Touchpoint</dfn>: A system, channel, or service boundary that can present one or more `Journey` segments.
-- <dfn>User</dfn>: A human participant, persona, or human role whose journey perspective or ownership scope a Graph node can belong to.
-- <dfn>User reference</dfn>: A `userRef` from a supported Graph node to a [=User=].
+- <dfn>Persona</dfn>: A human role, archetype, or participant perspective relevant to an
+  experience.
+- <dfn>Touchpoint</dfn>: A system, channel, or service boundary through which one or more Journeys
+  are presented.
+- <dfn>Surface</dfn>: A stable, addressable, design-system-agnostic visible boundary for one
+  supported Graph node.
+- <dfn>SurfaceInstance</dfn>: One concrete runtime-visible occurrence of a Surface.
+
+## Persona {data-cop-concept="persona"}
+
+A [=Persona=] gives a name to a human perspective that matters to an experience. For example,
+"Customer", "Support agent", and "Store manager" can be personas. A persona can be associated with
+one or more [=Touchpoint|Touchpoints=] through `touchpointRefs`.
+
+A Persona is not a person record. It does not identify an account, authenticated identity, runtime
+actor, authorization subject, legal person, system, or organization. It also does not own Graph
+nodes. Graph nodes therefore never need a Persona in order to be understood.
+
+<spec-statement>
+1. A [=Persona=] **MUST** have an IRI so it can be referenced consistently.
+2. A [=Persona=] **MAY** have a `label`, `tags`, and one or more `touchpointRefs`.
+3. Every `touchpointRefs` value **MUST** identify a [=Touchpoint=].
+4. Graph nodes **MUST NOT** reference a [=Persona=] directly.
+5. Persona relationships **MUST NOT** create Graph edges, alter Graph traversal, assert that
+   something occurred, identify a Runtime actor, or imply authentication or authorization.
+</spec-statement>
+
+```mermaid
+classDiagram
+  class Persona {
+    id
+    label
+    tags
+    touchpointRefs
+  }
+  class Touchpoint
+  Persona --> "0..*" Touchpoint : touchpointRefs
+```
+
+Example JSON nodes:
+
+```json
+[
+  {
+    "@type": "Persona",
+    "@id": "urn:ujg:persona:customer",
+    "label": "Customer",
+    "tags": ["shopper"],
+    "touchpointRefs": ["urn:ujg:touchpoint:web"]
+  },
+  {
+    "@type": "Touchpoint",
+    "@id": "urn:ujg:touchpoint:web",
+    "label": "Web shop",
+    "channel": "web"
+  }
+]
+```
 
 ## Touchpoint {data-cop-concept="touchpoint"}
 
-A [=Touchpoint=] identifies a presenting boundary for meaningful Graph segments. It can reference
-[=Journey=] nodes so touchpoint switches align with intentional journey boundaries, not
-arbitrary individual [=State=] surfaces. It does not by itself identify a [=User=],
-authorization subject, Runtime observer, or protocol state.
+A [=Touchpoint=] describes where people encounter an experience. A website, mobile app, kiosk,
+branch office, and call center are all possible touchpoints. The optional `channel` is a short name
+for the kind of boundary, while `journeyRefs` identifies the [=Journey|Journeys=] presented there.
+
+Touchpoints connect to meaningful Journey boundaries rather than individual States or Surfaces.
+This keeps a coherent part of an experience together. A Touchpoint does not identify a Persona,
+account, Runtime observer, or protocol state by itself.
 
 <spec-statement>
-1. A [=Touchpoint=] **MUST** be identified by an IRI and declare exactly one `label`.
-2. A [=Touchpoint=] **MAY** declare at most one `channel`.
-3. A [=Touchpoint=] **MAY** declare one or more `journeyRefs`.
-4. Every `journeyRefs` value **MUST** reference a [=Journey=].
-5. `journeyRefs` **MUST NOT** create hidden Graph edges, change traversal behavior, assert
-   occurrence, or change Runtime event ordering.
+1. A [=Touchpoint=] **MUST** have an IRI and one `label`.
+2. A [=Touchpoint=] **MAY** have one `channel` and one or more `journeyRefs`.
+3. Every `journeyRefs` value **MUST** identify a [=Journey=].
+4. Touchpoint assignment **SHOULD** be made at a Journey boundary when that Journey represents one
+   coherent experience on the Touchpoint.
+5. `journeyRefs` **MUST NOT** create hidden Graph edges, change traversal, assert occurrence, or
+   change Runtime event ordering.
 </spec-statement>
 
 ```mermaid
@@ -60,136 +130,36 @@ Example JSON node:
   "@id": "urn:ujg:touchpoint:web",
   "label": "Web shop",
   "channel": "web",
-  "journeyRefs": ["urn:ujg:journey:web-shop"]
+  "journeyRefs": ["urn:ujg:journey:checkout"]
 }
 ```
 
-
-## User {data-cop-concept="user"}
-
-A [=User=] identifies a human participant, persona, or human role in a journey. User assignment is
-descriptive Surface structure for human journey perspective. It does not define accounts,
-authentication, authorization enforcement, identity providers, provenance, Runtime observation, legal
-accountability, systems, organizations, or [=Touchpoint|Touchpoints=].
-
-<spec-statement>
-1. A [=User=] **MUST** be identified by an IRI.
-2. A [=User=] **MAY** declare one `label`.
-3. A [=User=] **MAY** declare one or more `tags`.
-4. A [=User=] **MAY** declare one or more `touchpointRefs`.
-5. Every `touchpointRefs` value **MUST** reference a [=Touchpoint=].
-6. `userRef` **MAY** appear on Graph nodes that belong to a user, including [=Journey=],
-   [=JourneyEntry=], [=State=], [=CompositeState=], [=Command=], [=Transition=], [=JourneyExit=],
-   [=OutgoingTransition=], and [=OutgoingTransitionGroup=].
-7. A Graph node **MUST NOT** declare more than one `userRef`.
-8. Every `userRef` value **MUST** reference a [=User=].
-9. `userRef` and `touchpointRefs` **MUST NOT** create hidden Graph edges, change traversal behavior,
-   assert occurrence, define authorization, define Runtime attribution, or change Runtime event
-   ordering.
-</spec-statement>
-
-A [=Journey=] can be assigned to a user with `userRef`. Graph nodes that belong to that journey
-inherit the journey's user unless they declare their own `userRef`. This includes entries, local
-states, transitions, exits, and outgoing transition groups listed by the journey.
-
-When a [=CompositeState=] references child [=Journey|Journeys=] with `subjourneyRefs`, each child
-journey inherits the composite state's effective user unless that child journey declares its own
-`userRef`. Nodes that belong to a child journey then inherit from that child journey unless they
-declare their own user.
-
-```mermaid
-classDiagram
-  class User {
-    id
-    label
-    tags
-    touchpointRefs
-  }
-  class Touchpoint
-  class Journey {
-    userRef
-  }
-  class State {
-    userRef
-  }
-  class CompositeState {
-    userRef
-  }
-  class Command {
-    userRef
-  }
-  class Transition {
-    userRef
-  }
-  class OutgoingTransition {
-    userRef
-  }
-
-  User --> "0..*" Touchpoint : touchpointRefs
-  Journey --> User : userRef
-  State --> User : userRef
-  CompositeState --> User : userRef
-  Command --> User : userRef
-  Transition --> User : userRef
-  OutgoingTransition --> User : userRef
-```
-
-Example JSON nodes:
-
-```json
-[
-  {
-    "@type": "Touchpoint",
-    "@id": "urn:ujg:touchpoint:web",
-    "label": "Web shop",
-    "channel": "web"
-  },
-  {
-    "@type": "User",
-    "@id": "urn:ujg:user:customer",
-    "label": "Customer",
-    "touchpointRefs": ["urn:ujg:touchpoint:web"]
-  },
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:cart",
-    "label": "Cart",
-    "userRef": "urn:ujg:user:customer"
-  }
-]
-```
-
-
 ## Surface {data-cop-concept="surface"}
 
-A [=Surface=] identifies one stable visible boundary and attaches it to one `State`,
-`CompositeState`, or `Command`. Multiple surfaces may expose the same Graph node when they are
-distinct visible occurrences, not renderer variants.
+A [=Surface=] gives a stable identity to one visible boundary and connects that boundary to its
+Graph meaning with `graphNodeRef`. The referenced Graph node can be a `State`, `CompositeState`, or
+`Command`.
 
-When a [=Surface=] references a Graph node whose traversal has concrete occurrence multiplicity,
-the [=Surface=] may also have multiple concrete visible occurrences corresponding to those Graph
-occurrences. For example, a [=Surface=] attached to a multi-instance [=State=], or to a [=Command=]
-whose visible materialization belongs to that [=State=]'s concrete occurrences, can be visible once
-for each concrete source-state occurrence. Surface does not define the multiplicity, instance
-identity, collection source, or rendering behavior; those remain outside Surface vocabulary and
-derive from Graph semantics and runtime or application data.
+For example, a shipping form can be the Surface for a shipping `State`. A visible "Place order"
+control can be the Surface for a `Command`. Referencing a Command does not prescribe a button, link,
+or any other widget; it only says which intentional invocation the visible boundary represents.
 
-A [=Surface=] attached to a [=Command=] means stable visible materialization of that intentional
-invocation. It does not prescribe a widget type, and it does not make the referenced [=Command=] a
-button, link, CTA, or other presentation primitive. Related [=Transition=] or
-[=OutgoingTransition=] edges can reference the same invocation with `commandRef`.
+Multiple Surfaces can reference the same Graph node when they are genuinely different visible
+boundaries. A different color, framework, or renderer does not by itself make a new Surface.
 
-Structural, automatic, or otherwise non-invoked progression does not need a [=Command=] or a
-[=Surface=].
+When Graph traversal creates multiple concrete occurrences, the corresponding Surface can also
+appear more than once. Surface does not define occurrence counts, instance keys, collection data,
+or rendering behavior. Those details come from Graph semantics and runtime or application data.
 
 <spec-statement>
-1. A [=Surface=] **MUST** be identified by an IRI.
-2. A [=Surface=] **MUST** declare exactly one `graphNodeRef`.
-3. `graphNodeRef` **MUST** reference a `State`, `CompositeState`, or `Command`.
-4. A [=Surface=] **MUST NOT** declare touchpoint identity directly.
-5. A [=Surface=] **MUST NOT** change Graph traversal or assert that its referenced Graph node occurred.
-6. A [=Surface=] **MUST NOT** declare occurrence multiplicity, instance keys, data sources, collection iteration, or rendering behavior.
-7. A [=Surface=] **MUST NOT** reference a [=Transition=] or [=OutgoingTransition=] through `graphNodeRef`.
+1. A [=Surface=] **MUST** have an IRI and exactly one `graphNodeRef`.
+2. `graphNodeRef` **MUST** identify a `State`, `CompositeState`, or `Command`.
+3. A [=Surface=] **MUST NOT** declare a Persona or Touchpoint directly.
+4. A [=Surface=] **MUST NOT** change Graph traversal or assert that its Graph node occurred.
+5. A [=Surface=] **MUST NOT** define occurrence multiplicity, instance keys, data sources,
+   collection iteration, or rendering behavior.
+6. A [=Surface=] **MUST NOT** reference a [=Transition=] or [=OutgoingTransition=] through
+   `graphNodeRef`.
 </spec-statement>
 
 ```mermaid
@@ -211,20 +181,23 @@ Example JSON node:
 ```json
 {
   "@type": "Surface",
-  "@id": "urn:ujg:surface:cart",
-  "graphNodeRef": "urn:ujg:state:cart"
+  "@id": "urn:ujg:surface:shipping-form",
+  "graphNodeRef": "urn:ujg:state:shipping"
 }
 ```
 
 ## SurfaceInstance {data-cop-concept="surface-instance"}
 
-A [=SurfaceInstance=] identifies one concrete runtime-visible occurrence of a [=Surface=]. Runtime
-events use `surfaceInstanceRef` to identify where an observed moment occurred.
+A [=SurfaceInstance=] identifies one concrete occurrence of a [=Surface=]. For example, the same
+shipping form Surface can appear during many executions, and each visible occurrence can have its
+own SurfaceInstance. Runtime events use `surfaceInstanceRef` to say where an observed moment
+occurred.
 
 <spec-statement>
-1. A [=SurfaceInstance=] **MUST** be identified by an IRI.
-2. A [=SurfaceInstance=] **MUST** declare exactly one `surfaceRef` referencing a [=Surface=].
-3. A [=SurfaceInstance=] **MUST NOT** declare Graph-node identity directly; Graph meaning is resolved through the referenced Surface.
+1. A [=SurfaceInstance=] **MUST** have an IRI and exactly one `surfaceRef`.
+2. `surfaceRef` **MUST** identify a [=Surface=].
+3. A [=SurfaceInstance=] **MUST NOT** declare Graph-node identity directly; its Graph meaning is
+   found through the referenced Surface.
 </spec-statement>
 
 ```mermaid
@@ -242,24 +215,50 @@ Example JSON node:
 ```json
 {
   "@type": "SurfaceInstance",
-  "@id": "urn:ujg:surface-instance:cart:1",
-  "surfaceRef": "urn:ujg:surface:cart"
+  "@id": "urn:ujg:surface-instance:shipping-form:1",
+  "surfaceRef": "urn:ujg:surface:shipping-form"
 }
 ```
 
 ## Shared Semantics
 
-1. `graphNodeRef` is the canonical assignment direction from Surface to Graph.
-2. An `OutgoingTransitionGroup` does not have a Surface; model stable visible invocation identity
-   for its child [=OutgoingTransition=] nodes with [=Command=] and `commandRef` when needed.
-3. Touchpoint assignment, when modeled, is declared from [=Touchpoint=] to meaningful [=Journey=] boundaries with `journeyRefs`.
-4. A Consumer resolving an individual [=Surface=]'s effective touchpoint follows the surface's `graphNodeRef` to the Graph node, resolves the effective [=Journey=] that owns or makes that Graph node available, and then finds a [=Touchpoint=] whose `journeyRefs` includes that journey.
-5. A consumer may ignore Surface semantics while preserving recognized JSON-LD data.
-6. Surface terms do not select components, templates, slots, tokens, or renderers.
-7. `userRef`, `touchpointRefs`, and `journeyRefs` describe human journey perspective and presenting boundaries, not Graph traversal.
-8. Concrete Surface occurrence multiplicity derives from Graph traversal semantics and runtime or application data; Surface does not add vocabulary for multiplicity.
+1. `Persona.touchpointRefs` and `Touchpoint.journeyRefs` form the descriptive path from a human
+   perspective to the Journeys presented for that perspective.
+2. `Surface.graphNodeRef` is the canonical relationship from a visible boundary to Graph meaning.
+3. `SurfaceInstance.surfaceRef` is the canonical relationship from one concrete visible occurrence
+   to its stable Surface.
+4. To find the Touchpoints applicable to a Surface, a consumer first finds the Journey or Journeys
+   in which the referenced Graph node is used, then finds Touchpoints whose `journeyRefs` include
+   those Journeys. A shared Graph node can therefore lead to more than one applicable Touchpoint.
+5. To find the Personas associated with those Touchpoints, a consumer finds Personas whose
+   `touchpointRefs` include them. This can produce no Persona, one Persona, or several Personas.
+6. An associated Persona describes the intended human perspective. It **MUST NOT** be treated as
+   the identity of a person observed at runtime.
+7. An `OutgoingTransitionGroup` does not have a Surface. When its child
+   [=OutgoingTransition|OutgoingTransitions=] need stable visible invocation identity, model a
+   [=Command=] and let the outgoing transitions share that Command through `commandRef`.
+8. Surface terms do not select design-system components, templates, slots, tokens, or renderers.
+9. Concrete Surface occurrence multiplicity derives from Graph traversal and runtime or application
+   data; Surface does not add its own multiplicity vocabulary.
+10. A consumer may ignore Surface semantics while preserving recognized JSON-LD data.
+
+## Migration From User
+
+Documents written against an earlier Editor's Draft can migrate without changing their overall
+Graph structure:
+
+- Change each Surface-module `User` node to `Persona`. Its existing `@id` may stay the same.
+- Remove `userRef` from every Graph node. Persona context is not inherited by entries, states,
+  transitions, commands, exits, or child journeys.
+- Connect each Persona to relevant Touchpoints with `touchpointRefs`.
+- Connect each Touchpoint to coherent Journey boundaries with `journeyRefs`.
+
+There is no compatibility alias for `User` or `userRef` in this Editor's Draft.
 
 ## Normative Artifacts
+
+The following sections contain the exact machine-readable vocabulary, JSON-LD term mappings, and
+validation rules. Readers who only need the conceptual model can continue to the examples.
 
 ### Ontology {data-cop-concept="ontology"}
 
@@ -283,6 +282,10 @@ The Surface SHACL shape is published at `https://ujg.specs.openuji.org/ed/ns/sur
 
 ### Combined Surface Example
 
+In this example, the Customer Persona is associated with the Web shop Touchpoint. That Touchpoint
+presents the Checkout Journey. The shipping form Surface gives visible identity to the Shipping
+State, and the SurfaceInstance identifies one concrete occurrence of that form.
+
 ```json
 {
   "@context": [
@@ -293,41 +296,34 @@ The Surface SHACL shape is published at `https://ujg.specs.openuji.org/ed/ns/sur
   "@type": "UJGDocument",
   "nodes": [
     {
-      "@type": "CompositeState",
-      "@id": "urn:ujg:composite:checkout-web",
-      "label": "Checkout web segment",
-      "subjourneyRefs": ["urn:ujg:journey:checkout-web"]
-    },
-    {
-      "@type": "Journey",
-      "@id": "urn:ujg:journey:checkout-web",
-      "defaultEntryRef": "urn:ujg:entry:checkout-web-default",
-      "entryRefs": ["urn:ujg:entry:checkout-web-default"],
-      "stateRefs": ["urn:ujg:state:shipping"]
-    },
-    {
-      "@type": "JourneyEntry",
-      "@id": "urn:ujg:entry:checkout-web-default",
-      "stateRef": "urn:ujg:state:shipping"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:shipping",
-      "label": "Shipping",
-      "userRef": "urn:ujg:user:customer"
+      "@type": "Persona",
+      "@id": "urn:ujg:persona:customer",
+      "label": "Customer",
+      "touchpointRefs": ["urn:ujg:touchpoint:web"]
     },
     {
       "@type": "Touchpoint",
       "@id": "urn:ujg:touchpoint:web",
       "label": "Web shop",
       "channel": "web",
-      "journeyRefs": ["urn:ujg:journey:checkout-web"]
+      "journeyRefs": ["urn:ujg:journey:checkout"]
     },
     {
-      "@type": "User",
-      "@id": "urn:ujg:user:customer",
-      "label": "Customer",
-      "touchpointRefs": ["urn:ujg:touchpoint:web"]
+      "@type": "Journey",
+      "@id": "urn:ujg:journey:checkout",
+      "defaultEntryRef": "urn:ujg:entry:checkout-default",
+      "entryRefs": ["urn:ujg:entry:checkout-default"],
+      "stateRefs": ["urn:ujg:state:shipping"]
+    },
+    {
+      "@type": "JourneyEntry",
+      "@id": "urn:ujg:entry:checkout-default",
+      "stateRef": "urn:ujg:state:shipping"
+    },
+    {
+      "@type": "State",
+      "@id": "urn:ujg:state:shipping",
+      "label": "Shipping"
     },
     {
       "@type": "Surface",
