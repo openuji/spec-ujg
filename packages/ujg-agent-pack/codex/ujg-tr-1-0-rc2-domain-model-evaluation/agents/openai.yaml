@@ -1,4 +1,0 @@
-interface:
-  display_name: "UJG TR 1.0 RC2 Domain Model Evaluation"
-  short_description: "Evaluate UJG Domain Models for TR 1.0 RC2"
-  default_prompt: "Use $ujg-tr-1-0-rc2-domain-model-evaluation to evaluate a generated DomainModel against the supplied UJG document, Domain Model JSON Schema, and any explicit domain knowledge."

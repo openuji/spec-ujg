@@ -1,6 +1,9 @@
 # build output
 **/dist/
 
+# generated agent skills (pnpm agent-pack:generate)
+packages/ujg-agent-pack/build/
+
 # generated copy of specs/case-studies/*/evidence (scripts/copy-case-study-evidence.js)
 apps/web/public/case-studies/
 
