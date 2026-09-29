@@ -1,4 +1,0 @@
-interface:
-  display_name: "UJG TR 1.0 RC2 Observability Modeling"
-  short_description: "Model UJG Observability for TR 1.0 RC2"
-  default_prompt: "Use $ujg-tr-1-0-rc2-observability-modeling to generate or review UJG JSON-LD for this target and scope."
