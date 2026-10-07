@@ -29,16 +29,19 @@ The generator checks that every `specs/tr/<version>` directory has a matching `t
 
 ## Generated Artifacts
 
-Generated outputs are committed for reviewability:
+Generated outputs are not committed. `pnpm agent-pack:generate` writes them to the gitignored `build/` folder so they can be inspected before install:
 
-- `agents/<target>/<skill-key>/AGENTS.md`
-- `codex/<skill-name>/SKILL.md`
-- `codex/<skill-name>/agents/openai.yaml`
-- `codex/<skill-name>/references/skill-tree.json`
-- `codex/<skill-name>/references/related-skills.md`
-- `manifest.json`
+- `build/agents/<target>/<skill-key>/AGENTS.md`
+- `build/codex/<skill-name>/SKILL.md`
+- `build/codex/<skill-name>/agents/openai.yaml`
+- `build/codex/<skill-name>/references/{skill-tree.json,related-skills.md,package-state.json}`
+- `build/claude/<skill-name>/SKILL.md`
+- `build/claude/<skill-name>/references/{skill-tree.json,related-skills.md,package-state.json}`
+- `build/manifest.json`
 
-Do not hand-edit generated files. Edit source files or `agent-pack.config.json`, then regenerate.
+Codex and Claude skills are built from the same source and share the same `SKILL.md` frontmatter (`name`, `description`) and body. Claude skills do not include the Codex-only `agents/openai.yaml`.
+
+`build/` is disposable: `generate`, `install`, and `pack` wipe and regenerate it from `sources/`, `agent-pack.config.json`, and the spec tree. Never edit it; edit the sources instead.
 
 ## Skill Awareness
 
@@ -46,7 +49,7 @@ The generator reads spec `config.json` files from each target spec tree. It uses
 
 For example, `modules/design-system` depends on `graph` and `surface`, so the generated design-system skill knows it should consult graph-related guidance when topology or traversal is involved.
 
-Each Codex skill includes lightweight references:
+Each generated Codex and Claude skill includes lightweight references:
 
 - `references/skill-tree.json`: machine-readable target, skill, and module dependency graph.
 - `references/related-skills.md`: human-readable sibling-skill summary.
@@ -56,7 +59,7 @@ Each Codex skill includes lightweight references:
 Run from the repository root:
 
 ```sh
-pnpm agent-pack:update
+pnpm agent-pack:generate
 pnpm agent-pack:validate
 pnpm agent-pack:review
 pnpm agent-pack:review:accept -- --target ed --skill root
@@ -65,12 +68,13 @@ pnpm agent-pack:check
 pnpm agent-pack:test
 pnpm agent-pack:pack
 pnpm agent-pack:install:codex -- --target ed
+pnpm agent-pack:install:claude -- --target ed
 ```
 
 Package-local equivalents:
 
 ```sh
-pnpm --filter @openuji/ujg-agent-pack run update
+pnpm --filter @openuji/ujg-agent-pack run generate
 pnpm --filter @openuji/ujg-agent-pack run validate
 pnpm --filter @openuji/ujg-agent-pack run review
 pnpm --filter @openuji/ujg-agent-pack run review:accept -- --target ed --skill root
@@ -86,11 +90,11 @@ After a published spec change:
 1. Run `pnpm agent-pack:review`.
 2. Inspect reports under `reviews/<target>/<skill-key>/latest.md`.
 3. Update source skill text if the spec change affects guidance.
-4. Run `pnpm agent-pack:update`.
+4. Optionally run `pnpm agent-pack:generate` and inspect the generated skills under `build/`.
 5. Accept reviewed skill states with `pnpm agent-pack:review:accept -- --target <target> --skill <skill-key>`.
 6. Run `pnpm agent-pack:check`.
 
-Review acceptance is stored in `reviews/registry.json`. The registry records the accepted source hash and relevant spec hash for each target/skill pair. `check` fails when generated files are stale, validation fails, or a source/spec change has not been accepted.
+Review acceptance is stored in `reviews/registry.json`. The registry records the accepted source hash and relevant spec hash for each target/skill pair. `check` fails when generated skills fail validation (frontmatter shape, name and description limits) or a source/spec change has not been accepted.
 
 ### What Review Accept Means
 
@@ -120,6 +124,10 @@ pnpm agent-pack:review:accept
 
 ## Install Behavior
 
+Every install first validates the skills and checks review state, then regenerates `build/` and copies the selected target's skills from `build/<format>/`. What you inspected in `build/` is what gets installed, as long as the sources have not changed in between.
+
+### Codex
+
 `pnpm agent-pack:install:codex -- --target <id>` installs generated Codex skills for one target into:
 
 ```text
@@ -144,7 +152,24 @@ The installer syncs only the managed generated skill directories for the selecte
 
 Single-skill install is intentionally unsupported. Use target-level install whenever a target's generated skills should be updated.
 
-Every generated Codex skill includes `references/package-state.json`, which records the package id/version, target id, skill key/name, source hash, spec hash, config hash, and artifact hash.
+### Claude
+
+`pnpm agent-pack:install:claude -- --target <id>` installs generated Claude skills for one target into the user skill directory:
+
+```text
+${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/<skill-name>
+```
+
+Pass `--project <dir>` to install into a project's skill directory instead:
+
+```sh
+pnpm agent-pack:install:claude -- --target ed --project /path/to/repo
+# -> /path/to/repo/.claude/skills/<skill-name>
+```
+
+Claude install follows the same rules as Codex install. It is target-level only, replaces the current skills for that target, and removes managed skills for that target that no longer exist, without touching unrelated skills.
+
+Every generated Codex and Claude skill includes `references/package-state.json`, which records the package id/version, target id, skill key/name, source hash, spec hash, config hash, and artifact hash.
 
 ## Files To Edit
 
@@ -157,9 +182,7 @@ Edit:
 
 Do not hand-edit:
 
-- `agents/**`
-- `codex/**`
-- `manifest.json`
+- `build/**` (gitignored, regenerated)
 - `reviews/**/latest.md`
 
 Review registry changes should be made through `pnpm agent-pack:review:accept`.
