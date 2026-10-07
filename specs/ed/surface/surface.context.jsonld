@@ -7,7 +7,7 @@
     "Surface": "ujgsurface:Surface",
     "SurfaceInstance": "ujgsurface:SurfaceInstance",
     "Touchpoint": "ujgsurface:Touchpoint",
-    "User": "ujgsurface:User",
+    "Persona": "ujgsurface:Persona",
 
     "graphNodeRef": {
       "@id": "ujgsurface:graphNodeRef",
@@ -15,10 +15,6 @@
     },
     "surfaceRef": {
       "@id": "ujgsurface:surfaceRef",
-      "@type": "@id"
-    },
-    "userRef": {
-      "@id": "ujgsurface:userRef",
       "@type": "@id"
     },
     "touchpointRefs": {
