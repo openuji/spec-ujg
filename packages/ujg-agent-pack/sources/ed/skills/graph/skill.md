@@ -63,12 +63,13 @@ Multiple child journeys inside one `CompositeState` coexist in the same composit
 scheduling, synchronization, fork/join, all-children-complete behavior, or hidden graph edges.
 Observations from sibling child journeys may overlap or interleave without changing Graph topology.
 
-Use `toEntryRef` only when a parent transition into a `CompositeState` must select a specific child
+On a parent `Transition` into a `CompositeState`, use `toEntryRef` only to select a specific child
 `JourneyEntry`. The entry must belong to exactly one child journey referenced by that composite's
-`subjourneyRefs`; `toEntryRef` remains a singular boundary refinement, not an endpoint or a set of
-entries. Otherwise child entry selection uses the relevant child journey's `defaultEntryRef` when one
-exists, or remains unresolved by Graph and must be resolved externally by materialization or execution
-context. Do not infer a child entry from `entryRefs` ordering or `subjourneyRefs` ordering.
+`subjourneyRefs`; in this use `toEntryRef` remains a singular boundary refinement, not an endpoint or
+a set of entries. Otherwise child entry selection uses the relevant child journey's
+`defaultEntryRef` when one exists, or remains unresolved by Graph and must be resolved externally by
+materialization or execution context. Do not infer a child entry from `entryRefs` ordering or
+`subjourneyRefs` ordering.
 
 Use `JourneyExit` and `fromExitRef` only for exported child outcomes that a parent genuinely reacts
 to. Model the child outcome as a direct terminal `JourneyExit`, not as a pseudo-state. A child
@@ -89,7 +90,16 @@ When a transition's `from` references a multi-instance `State`, traverse the one
 from a concrete occurrence of that state. Do not add transition properties such as `perInstance`,
 `perSourceInstance`, `perTargetInstance`, or `repeatableTransition`.
 
-Use `OutgoingTransition` for ordinary navigation affordances. Use `toCurrentState: true` only when the effective graph state is preserved and only a non-topological dimension changes.
+Use `OutgoingTransition` for ordinary navigation affordances. Every `OutgoingTransition` must declare
+exactly one `toEntryRef` to a `JourneyEntry` owned by exactly one Journey. Resolve the destination as
+`toEntryRef -> JourneyEntry.stateRef`; never put `to` on an OutgoingTransition or reference a
+destination State directly. The entry may belong to the source Journey, including when it points to
+the same State; that is explicit Journey re-entry rather than an implicit current-state target.
+An `OutgoingTransitionGroup` injects the same transition and therefore the same fixed `toEntryRef`
+at every effective source. Never reinterpret that target relative to the source. Use a group only
+when the fixed destination entry is correct everywhere; when the destination must preserve one of
+several active States, define a state-scoped OutgoingTransition and matching JourneyEntry for each
+State instead.
 Use `commandRef` on an `OutgoingTransition` only when the outgoing affordance has stable intentional
 invocation identity.
 

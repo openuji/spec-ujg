@@ -12,8 +12,8 @@ Spec URL: https://ujg.specs.openuji.org/ed/extensions/domain-model
 
 ## Review Inputs
 
-- Source hash: sha256:9c5252f3ae2d7ed408ed6b3defa8ca636ec398362280da8c6c5cf6c70a949a14
-- Spec hash: sha256:38a1b7670f6f6c90e2253f063eecc430e32a8d568d06c8b80ac69a1062d5d042
+- Source hash: sha256:878183abcbf6093065afafed962942bfa85cb1a81b5990864802b4e6c4e9701c
+- Spec hash: sha256:ce803624bcbe2c61ab435ba1662e1b652583bfe0bcac74a2d5ac14eb10ec397c
 
 ## Source Headings Likely Affected
 
@@ -35,5 +35,5 @@ Spec URL: https://ujg.specs.openuji.org/ed/extensions/domain-model
 - Confirm source guidance still matches the current spec module definitions.
 - Confirm cross-skill dependencies still route work to the right sibling skill.
 - Update source skill text if the spec changed semantics, terms, constraints, or boundaries.
-- Run `pnpm agent-pack:update` after source edits.
-- Accept the review only after the source and generated artifacts match the current spec.
+- Run `pnpm agent-pack:generate` to inspect generated skills under `build/`.
+- Accept the review only after the source matches the current spec.

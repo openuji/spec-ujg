@@ -128,6 +128,8 @@ function readConfig() {
       'scope',
       'nameSuffix',
       'moduleId',
+      'moduleIds',
+      'relatedSkillKeys',
       'description',
       'shortDescription',
       'defaultPrompt',
@@ -136,6 +138,21 @@ function readConfig() {
       const unsupportedKeys = Object.keys(skill).filter((key) => !allowedSkillKeys.has(key));
       if (unsupportedKeys.length > 0) {
         throw new Error(`Skill ${skill.key} contains unsupported config keys: ${unsupportedKeys.join(', ')}`);
+      }
+      if ('moduleIds' in skill && !Array.isArray(skill.moduleIds)) {
+        throw new Error(`Skill ${skill.key} moduleIds must be an array`);
+      }
+      if ('relatedSkillKeys' in skill && !Array.isArray(skill.relatedSkillKeys)) {
+        throw new Error(`Skill ${skill.key} relatedSkillKeys must be an array`);
+      }
+    }
+
+    const configuredSkillKeys = new Set(target.skills.map((skill) => skill.key));
+    for (const skill of target.skills) {
+      for (const relatedKey of skill.relatedSkillKeys || []) {
+        if (!configuredSkillKeys.has(relatedKey)) {
+          throw new Error(`Skill ${skill.key} references unknown related skill key ${relatedKey}`);
+        }
       }
     }
 
@@ -258,6 +275,13 @@ function dependentClosure(modules, moduleId) {
 
 function buildTargetContext(config, target) {
   const modules = collectSpecModules(target);
+  for (const skill of target.skills) {
+    for (const moduleId of skill.moduleIds || []) {
+      if (!modules.has(moduleId)) {
+        throw new Error(`Skill ${skill.key} references unknown module ${moduleId}`);
+      }
+    }
+  }
   const skills = target.skills
     .filter((skill) => sourceExists(target, skill))
     .map((skill) => {
@@ -286,6 +310,10 @@ function buildAllContexts(config) {
 }
 
 function skillModuleIds(context, skill) {
+  if (Array.isArray(skill.moduleIds)) {
+    return sortedModuleIds(context.modules, skill.moduleIds);
+  }
+
   return skill.moduleId
     ? dependencyClosure(context.modules, skill.moduleId)
     : sortedModuleIds(context.modules, context.modules.keys());
@@ -361,19 +389,35 @@ function skillsForModule(context, moduleId) {
   return context.skills.filter((skill) => skill.moduleId === moduleId);
 }
 
+function moduleScopeLabel(skill) {
+  if (Array.isArray(skill.moduleIds)) return skill.moduleIds.join(', ');
+  return skill.moduleId || 'whole target';
+}
+
 function generatedSkillTree(context, currentSkill) {
+  const visibleModuleIds = Array.isArray(currentSkill.moduleIds)
+    ? new Set(currentSkill.moduleIds)
+    : null;
+  const visibleSkillKeys = Array.isArray(currentSkill.relatedSkillKeys)
+    ? new Set([currentSkill.key, ...currentSkill.relatedSkillKeys])
+    : null;
   const moduleGraph = Object.fromEntries(
     [...context.modules.values()]
+      .filter((module) => !visibleModuleIds || visibleModuleIds.has(module.id))
       .sort((left, right) => left.id.localeCompare(right.id))
       .map((module) => {
-        const generatedSkills = skillsForModule(context, module.id).map((skill) => skill.name);
+        const generatedSkills = skillsForModule(context, module.id)
+          .filter((skill) => !visibleSkillKeys || visibleSkillKeys.has(skill.key))
+          .map((skill) => skill.name);
 
         return [
           module.id,
           {
             title: module.title,
-            deps: module.deps,
-            dependents: dependentClosure(context.modules, module.id),
+            deps: module.deps.filter((id) => !visibleModuleIds || visibleModuleIds.has(id)),
+            dependents: dependentClosure(context.modules, module.id).filter(
+              (id) => !visibleModuleIds || visibleModuleIds.has(id)
+            ),
             generatedSkill: generatedSkills[0] || null,
             generatedSkills,
           },
@@ -392,22 +436,30 @@ function generatedSkillTree(context, currentSkill) {
       key: currentSkill.key,
       name: currentSkill.name,
       moduleId: currentSkill.moduleId,
+      moduleIds: currentSkill.moduleIds,
       scope: currentSkill.scope,
       publicUrl: currentSkill.publicUrl,
     },
-    skills: context.skills.map((skill) => ({
-      key: skill.key,
-      name: skill.name,
-      moduleId: skill.moduleId,
-      scope: skill.scope,
-      publicUrl: skill.publicUrl,
-      source: skill.sourceRelativePath,
-    })),
+    skills: context.skills
+      .filter((skill) => !visibleSkillKeys || visibleSkillKeys.has(skill.key))
+      .map((skill) => ({
+        key: skill.key,
+        name: skill.name,
+        moduleId: skill.moduleId,
+        scope: skill.scope,
+        publicUrl: skill.publicUrl,
+        source: skill.sourceRelativePath,
+      })),
     moduleGraph,
   };
 }
 
 function relatedSkills(context, currentSkill) {
+  if (Array.isArray(currentSkill.relatedSkillKeys)) {
+    const relatedKeys = new Set(currentSkill.relatedSkillKeys);
+    return context.skills.filter((skill) => relatedKeys.has(skill.key));
+  }
+
   if (currentSkill.key === 'root') {
     return context.skills.filter((skill) => skill.key !== 'root');
   }
@@ -443,7 +495,7 @@ function relatedSkillsMarkdown(context, currentSkill) {
 
 Target: ${context.target.label}
 Current skill: ${currentSkill.name}
-Module scope: ${currentSkill.moduleId || 'whole target'}
+Module scope: ${moduleScopeLabel(currentSkill)}
 
 ## Sibling Skills
 
@@ -467,7 +519,7 @@ function skillTreeContextMarkdown(context, skill) {
 Target: ${context.target.label}
 Public spec URL: ${context.target.publicUrl}
 Scope: ${skill.scope}
-Module scope: ${skill.moduleId || 'whole target'}
+Module scope: ${moduleScopeLabel(skill)}
 
 Related generated skills:
 ${related.length > 0 ? related.map((item) => `- ${item.name}: ${item.scope}`).join('\n') : '- None'}

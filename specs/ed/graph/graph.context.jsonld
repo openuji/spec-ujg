@@ -67,10 +67,6 @@
       "@id": "ujggraph:to",
       "@type": "@id"
     },
-    "toCurrentState": {
-      "@id": "ujggraph:toCurrentState",
-      "@type": "xsd:boolean"
-    },
     "fromExitRef": {
       "@id": "ujggraph:fromExitRef",
       "@type": "@id"

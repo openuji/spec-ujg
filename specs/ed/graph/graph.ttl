@@ -114,10 +114,6 @@ ujggraph:from a owl:ObjectProperty ;
 ujggraph:to a owl:ObjectProperty ;
   rdfs:range ujggraph:LocalVertex .
 
-ujggraph:toCurrentState a owl:DatatypeProperty ;
-  rdfs:domain ujggraph:OutgoingTransition ;
-  rdfs:range xsd:boolean .
-
 ujggraph:fromExitRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:Transition ;
   rdfs:range ujggraph:JourneyExit ;
@@ -125,10 +121,16 @@ ujggraph:fromExitRef a owl:ObjectProperty ;
   rdfs:comment "Identifies the exported JourneyExit completed by one child journey of the CompositeState used as the transition's from value. This property is not a transition endpoint." .
 
 ujggraph:toEntryRef a owl:ObjectProperty ;
-  rdfs:domain ujggraph:Transition ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:Transition
+      ujggraph:OutgoingTransition
+    )
+  ] ;
   rdfs:range ujggraph:JourneyEntry ;
   rdfs:label "to entry ref" ;
-  rdfs:comment "Identifies the JourneyEntry selected when entering one child journey of the CompositeState used as the transition's to value. This property is not a transition endpoint." .
+  rdfs:comment "Selects a JourneyEntry. On a Transition, it refines entry into one child Journey of the CompositeState used as to. On an OutgoingTransition, it identifies the destination Journey entry contract." .
 
 ujggraph:commandRef a owl:ObjectProperty ;
   rdfs:range ujggraph:Command ;

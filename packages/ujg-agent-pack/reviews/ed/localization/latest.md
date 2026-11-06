@@ -12,8 +12,8 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/l10n
 
 ## Review Inputs
 
-- Source hash: sha256:28f96d7e9248f8ebeeb250f3157bf904ce998998e56b8666c70f3cdbb877419b
-- Spec hash: sha256:22e6321eca172564134eb14826b20fe0007bfe01cbeac6319037220b423c14a1
+- Source hash: sha256:6d2bf7de019a1febaa6026c67ab8724f07feefe46853429f7bd69a4a8d610858
+- Spec hash: sha256:7a59a9dce20124f9637b10dc40c3bd91100acaeb35f689f77ff70f70a715c06b
 
 ## Source Headings Likely Affected
 
@@ -24,5 +24,5 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/l10n
 - Confirm source guidance still matches the current spec module definitions.
 - Confirm cross-skill dependencies still route work to the right sibling skill.
 - Update source skill text if the spec changed semantics, terms, constraints, or boundaries.
-- Run `pnpm agent-pack:update` after source edits.
-- Accept the review only after the source and generated artifacts match the current spec.
+- Run `pnpm agent-pack:generate` to inspect generated skills under `build/`.
+- Accept the review only after the source matches the current spec.

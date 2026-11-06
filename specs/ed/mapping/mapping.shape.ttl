@@ -43,6 +43,26 @@ ujgmappingshape:JourneyMappingShape a sh:NodeShape ;
     sh:class ujgmapping:MappedStep ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "JourneyMapping segments for one JourneyExecution must not map the same RuntimeEvent more than once." ;
+    sh:select """
+      SELECT $this ?event
+      WHERE {
+        $this ujgmapping:mappedRuntimeRef ?runtime ;
+              ujgmapping:mappedStepRef ?step .
+        ?step ujgmapping:mappedEventRef ?event .
+
+        ?other a ujgmapping:JourneyMapping ;
+               ujgmapping:mappedRuntimeRef ?runtime ;
+               ujgmapping:mappedStepRef ?otherStep .
+        ?otherStep ujgmapping:mappedEventRef ?event .
+
+        FILTER ($this != ?other)
+      }
+    """ ;
   ] .
 
 ujgmappingshape:MappedStepShape a sh:NodeShape ;

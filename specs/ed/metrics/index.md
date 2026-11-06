@@ -22,10 +22,10 @@ histograms, sketches, or event taxonomies. Those can be defined by profiles or f
 - <dfn>Count metric</dfn>: A non-negative integer metric that counts occurrences.
 - <dfn>Rate metric</dfn>: A decimal metric in the closed interval `0..1`, computed from an explicit
   numerator and denominator.
-- <dfn>Mapping-derived metric</dfn>: A metric computed from one or more [=JourneyMapping=] records
-  and their [=MappedStep=] records.
-- <dfn>Source mapping</dfn>: The [=JourneyMapping=] used to compute a single-execution metric,
-  identified by `sourceMappingRef` when applicable.
+- <dfn>Mapping-derived metric</dfn>: A metric computed from one or more journey-segment
+  [=JourneyMapping=] records and their [=MappedStep=] records.
+- <dfn>Source mapping</dfn>: The journey-segment [=JourneyMapping=] used to compute a single-mapping
+  metric, identified by `sourceMappingRef` when applicable.
 
 ## MetricObservation {data-cop-concept="metric-observation"}
 
@@ -107,7 +107,7 @@ Mapping-derived metrics use these primary attachment points:
 
 | Attachment point | Meaning | Appropriate metrics |
 | --- | --- | --- |
-| [=JourneyMapping=] | One interpreted execution chain | `stepCount`, `movementCount`, `explainedMovementCount`, `unexplainedMovementCount`, `unexplainedMovementRate`, `boundaryCrossingCount` |
+| [=JourneyMapping=] | One interpreted journey segment of an execution chain | `stepCount`, `movementCount`, `explainedMovementCount`, `unexplainedMovementCount`, `unexplainedMovementRate`, `boundaryCrossingCount` |
 | [=MappedStep=] | One interpreted state-observation runtime event | boolean per-step observations such as whether the step is root, explained, or unexplained |
 | [=Journey=] | Aggregate over mappings resolved to this root traversable journey | `executionCount`, `stepCount`, `unexplainedMovementRate`, `stateVisitCount`, `transitionTraversalCount` |
 | [=State=] or [=CompositeState=] | Aggregate over mapped steps resolving to this state | `stateVisitCount`, `boundaryEntryCount`, `boundaryExitCount` |
@@ -123,18 +123,22 @@ with `observedAffordanceEventRef` do not increment `stepCount`.
    causal chain of each `MappedStep.mappedEventRef`.
 2. A Consumer computing Mapping-derived metrics MUST NOT use the serialized order of
    `mappedStepRef` as the metric order.
-3. The root mapped step MUST be included in `stepCount`.
-4. The root mapped step MUST be included in state visit counts for the state resolved by that step.
-5. The root mapped step MUST NOT be included in `movementCount`, `explainedMovementCount`,
+3. Every mapped step MUST be included once in `stepCount` for its JourneyMapping segment.
+4. The Runtime root mapped step MUST be included in state visit counts for the state resolved by that step.
+5. The Runtime root mapped step MUST NOT be included in `movementCount`, `explainedMovementCount`,
    `unexplainedMovementCount`, or movement-rate denominators.
-6. A non-root mapped step is an explained movement when Mapping semantics determine that its
+6. The first mapped step of every later segment MUST be counted as a movement, including
+   same-Journey or same-State re-entry through an [=OutgoingTransition=].
+7. A non-root mapped step is an explained movement when Mapping semantics determine that its
    `explainedByTransitionRef` identifies a relevant effective [=Transition=] or
    [=OutgoingTransition=].
-7. A non-root mapped step is an unexplained movement when Mapping semantics derive a jump for that
+8. A non-root mapped step is an unexplained movement when Mapping semantics derive a jump for that
    step.
-8. `unexplainedMovementRate` MUST be computed as
+9. One destination-segment first step explained by an [=OutgoingTransition=] MUST increment
+   `outgoingTraversalCount` exactly once.
+10. `unexplainedMovementRate` MUST be computed as
    `unexplainedMovementCount / movementCount`.
-9. If `movementCount` is zero, `unexplainedMovementRate` is undefined and MUST NOT be serialized as
+11. If `movementCount` is zero, `unexplainedMovementRate` is undefined and MUST NOT be serialized as
    `0`.
 
 </spec-statement>
@@ -145,8 +149,8 @@ The following metric keys are core for this draft.
 
 | Metric key | Unit | Subject | Definition |
 | --- | --- | --- | --- |
-| `stepCount` | `count` | [=JourneyMapping=], [=Journey=] | Number of mapped steps, including the root step. |
-| `movementCount` | `count` | [=JourneyMapping=], [=Journey=] | Number of non-root mapped steps. |
+| `stepCount` | `count` | [=JourneyMapping=], [=Journey=] | Number of mapped steps in the segment; the Runtime root is included only in its initial segment. |
+| `movementCount` | `count` | [=JourneyMapping=], [=Journey=] | Number of mapped steps other than the Runtime root, including later segment starts. |
 | `explainedMovementCount` | `count` | [=JourneyMapping=], [=Journey=] | Number of non-root mapped steps explained by a relevant effective transition. |
 | `unexplainedMovementCount` | `count` | [=JourneyMapping=], [=Journey=] | Number of non-root mapped steps for which Mapping derives a jump. |
 | `unexplainedMovementRate` | `ratio` | [=JourneyMapping=], [=Journey=] | `unexplainedMovementCount / movementCount`. |
@@ -181,12 +185,13 @@ does not define dwell-time or elapsed-time metric keys as core metrics.
 
 ## Aggregation {data-cop-concept="aggregation"}
 
-Metrics may be computed from one [=JourneyMapping=] or aggregated over disjoint sets of mappings.
-Aggregates must preserve the meaning of the underlying metric key.
+Metrics may be computed from one journey-segment [=JourneyMapping=] or aggregated over disjoint sets
+of mapping segments. Aggregates must preserve the meaning of the underlying metric key and must not
+count the same MappedStep in more than one segment.
 
 <spec-statement>
 
-1. Count metrics are additive across disjoint execution sets.
+1. Count metrics are additive across disjoint mapping segments or execution sets.
 2. Rate metrics MUST be recomputed from their underlying numerator and denominator.
 3. Consumers SHOULD NOT average precomputed rates unless the averaging method is explicitly declared
    using `aggregationMethod`.

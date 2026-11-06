@@ -15,7 +15,7 @@ This module defines the vocabulary for intended user flow. It extends [[UJG Core
 - <dfn>CompositeState</dfn>: A state that contains one or more child [=Journey|Journeys=]. Multiple child Journeys define independent local flows within the same composite scope.
 - <dfn>Composite scope</dfn>: The set of child Journeys referenced by one [=CompositeState=].
 - <dfn>JourneyExit</dfn>: A terminal local graph vertex and exported completion contract declared by a [=Journey=].
-- <dfn>OutgoingTransition</dfn>: A navigational affordance pointing to a next possible [=State=] or [=CompositeState=].
+- <dfn>OutgoingTransition</dfn>: A navigational affordance that enters a [=Journey=] through a [=JourneyEntry=].
 - <dfn>OutgoingTransitionGroup</dfn>: A reusable set of outgoing transitions that a Consumer can treat as present on multiple states (e.g., global nav).
 
 ---
@@ -712,9 +712,8 @@ Payment Journey:
 
 ### Boundary Entry and Exit Mapping {data-cop-concept="boundary-mapping"}
 
-`toEntryRef` and `fromExitRef` are mapping properties on parent [=Transition=] resources. They
-describe how a parent-local [=CompositeState=] connects to entry and exit contracts belonging to its
-child Journeys.
+When used on a parent [=Transition=], `toEntryRef` and `fromExitRef` describe how a parent-local
+[=CompositeState=] connects to entry and exit contracts belonging to its child Journeys.
 
 These properties are not transition endpoints. The transition's `from` and `to` values remain local to the enclosing journey.
 
@@ -757,8 +756,8 @@ These properties are not transition endpoints. The transition's `from` and `to` 
    represent a conjunction, disjunction, set, or synchronization of exits.
 </spec-statement>
 
-`toEntryRef` and `fromExitRef` **MUST NOT** replace local `from` or `to`, point directly to child
-States, or create hidden Graph edges.
+In this parent-boundary use, `toEntryRef` and `fromExitRef` **MUST NOT** replace local `from` or `to`,
+point directly to child States, or create hidden Graph edges.
 
 ```mermaid
 classDiagram
@@ -819,73 +818,131 @@ Example parent continuation after a child exit:
 
 ## OutgoingTransition {data-cop-concept="outgoing-transition"}
 
-An [=OutgoingTransition=] is a navigational affordance. It defines a possible effective target state but does not declare a structural transition in a journey's local topology.
+An [=OutgoingTransition=] is a navigational affordance that enters a Journey through an explicit
+[=JourneyEntry=]. It does not declare structural progression in the source Journey's local topology.
 
 An [=OutgoingTransition=] has no explicit `from` property. Its effective source comes from either a state-scoped `outgoingTransitionRefs` value or an injected [=OutgoingTransitionGroup=].
 
+The two movement types serve different modeling purposes:
+
+| | Local [=Transition=] | [=OutgoingTransition=] |
+| --- | --- | --- |
+| Source | Explicit local `from` vertex | State where the affordance is available |
+| Destination | Local `to` vertex | `toEntryRef` entry contract |
+| Meaning | Ordinary progression inside one Journey | Leave local progression and enter a Journey through a named entry |
+
+The destination entry's `stateRef` identifies the first local [=State=] or [=CompositeState=] of the
+destination Journey. Consumers do not bypass the entry contract by linking the outgoing affordance
+directly to that state.
+
 <spec-statement>
 1. An [=OutgoingTransition=] **MUST** be identified by an IRI and **MAY** declare one `label`.
-2. An [=OutgoingTransition=] **MUST** use exactly one target mechanism: one `to` value, or `toCurrentState: true`.
+2. An [=OutgoingTransition=] **MUST** declare exactly one `toEntryRef`.
 3. An [=OutgoingTransition=] **MAY** reference one [=Command=] with `commandRef`.
-4. `to` **MAY** reference a resolvable [=State=] or [=CompositeState=], including one outside the journey that contributes the affordance.
-5. `toCurrentState: false` is equivalent to absence and does not satisfy the target requirement.
-6. An [=OutgoingTransition=] is a navigational affordance, not local topology: it **MUST NOT** target a [=JourneyExit=], appear in `transitionRefs`, or model ordinary internal progression.
+4. `toEntryRef` **MUST** reference a [=JourneyEntry=] owned by exactly one [=Journey=].
+5. The destination entry's `stateRef` **MUST** reference a [=State=] or [=CompositeState=] in that
+   owner Journey's `stateRefs`.
+6. The destination entry **MAY** belong to the Journey where the affordance is available. Such a
+   target is explicit Journey re-entry, including when the entry points to the effective source state.
+7. An [=OutgoingTransition=] **MUST NOT** declare `to`, target a [=JourneyExit=], appear in
+   `transitionRefs`, or model ordinary internal progression.
 </spec-statement>
 
-If the `to` target belongs to a known page, surface, or flow entry, that entry should normally be listed in a [=JourneyEntryIndex=]. Do not list the target state in the source [=Journey=]'s `stateRefs` unless it also belongs to the source journey's local topology.
+A [=JourneyEntryIndex=] may catalogue the destination entry for discovery, but index membership is
+not required for navigation. The entry remains owned by its declaring Journey.
 
 ```mermaid
 classDiagram
   class OutgoingTransition {
-    to
-    toCurrentState
+    toEntryRef
     commandRef
+  }
+  class Journey {
+    entryRefs
+    stateRefs
+  }
+  class JourneyEntry {
+    stateRef
   }
   class State
   class CompositeState
   class Command
 
-  OutgoingTransition --> State : fixed target
-  OutgoingTransition --> CompositeState : fixed target
-  OutgoingTransition --> State : current-state target
-  OutgoingTransition --> CompositeState : current-state target
+  OutgoingTransition --> JourneyEntry : toEntryRef
+  Journey --> JourneyEntry : entryRefs
+  JourneyEntry --> State : stateRef
+  JourneyEntry --> CompositeState : stateRef
   OutgoingTransition --> Command : commandRef
-  note for OutgoingTransition "target mechanism is either to or toCurrentState"
 ```
 
-Example JSON nodes:
-
-Fixed target navigation:
+Cross-Journey navigation names the destination entry rather than its State:
 
 ```json
-{
-  "@type": "OutgoingTransition",
-  "@id": "urn:ujg:ot:go-home",
-  "label": "Home",
-  "to": "urn:ujg:state:home",
-  "commandRef": "urn:ujg:command:go-home"
-}
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:home",
+    "defaultEntryRef": "urn:ujg:entry:home",
+    "entryRefs": ["urn:ujg:entry:home"],
+    "stateRefs": ["urn:ujg:state:home"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:home",
+    "label": "Home entry",
+    "stateRef": "urn:ujg:state:home"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:home",
+    "label": "Home"
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:ujg:ot:go-home",
+    "label": "Home",
+    "toEntryRef": "urn:ujg:entry:home",
+    "commandRef": "urn:ujg:command:go-home"
+  },
+  {
+    "@type": "Command",
+    "@id": "urn:ujg:command:go-home",
+    "label": "Go home"
+  }
+]
 ```
 
-### Relative Current-State Targeting
-
-Use `toCurrentState: true` for affordances that keep the current graph state while changing a
-non-topological dimension such as locale, presentation mode, or filter context. The target resolves
-to the [=State=] or [=CompositeState=] where the affordance is available.
-
-`toCurrentState` changes only Graph target resolution. It does not define runtime events, URLs,
-payloads, locale metadata, or private extension behavior.
-
-
-Current-state targeting:
+The same pattern represents same-state re-entry: the OutgoingTransition targets a JourneyEntry whose
+`stateRef` is the state where the affordance is available. This remains explicit re-entry, not an
+implicit relative target.
 
 ```json
-{
-  "@type": "OutgoingTransition",
-  "@id": "urn:ujg:ot:keep-current-state",
-  "label": "Keep current state",
-  "toCurrentState": true
-}
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:confirmation",
+    "defaultEntryRef": "urn:ujg:entry:confirmation",
+    "entryRefs": ["urn:ujg:entry:confirmation"],
+    "stateRefs": ["urn:ujg:state:confirmation"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:confirmation",
+    "stateRef": "urn:ujg:state:confirmation"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:confirmation",
+    "label": "Confirmation",
+    "outgoingTransitionRefs": ["urn:ujg:ot:reenter-confirmation"]
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:ujg:ot:reenter-confirmation",
+    "label": "Re-enter confirmation",
+    "toEntryRef": "urn:ujg:entry:confirmation"
+  }
+]
 ```
 
 ---
@@ -901,11 +958,20 @@ Group injection does not add structural [=Transition=] resources to `transitionR
 2. Each `outgoingTransitionRefs` value **MUST** reference an [=OutgoingTransition=].
 3. A [=Journey=] **MAY** attach a group through `outgoingTransitionGroupRefs`.
 4. A journey-level group applies each referenced [=OutgoingTransition=] to each [=State=] or [=CompositeState=] in the journey's `stateRefs`.
-5. `toCurrentState: true` resolves at the state where the group is applied; groups **MUST NOT** create outgoing affordances from [=JourneyExit=] nodes.
+5. Groups **MUST NOT** create outgoing affordances from [=JourneyExit=] nodes.
+6. A grouped [=OutgoingTransition=]'s `toEntryRef` remains the same fixed IRI at every effective
+   source. Consumers **MUST NOT** reinterpret that destination relative to the source state.
 </spec-statement>
 
-Consumers **SHOULD** treat duplicate effective outgoing edges with the same source and target as one
-effective edge.
+Use a group only when the same destination entry is correct from every effective source. A group
+cannot express “re-enter whichever state is currently active.” When an affordance preserves one of
+several possible source states—such as a state-preserving locale switch—model a state-scoped
+[=OutgoingTransition=] for each source state and target a [=JourneyEntry=] whose `stateRef` is that
+state. The entries and transitions are distinct even when the affordances have the same label and
+locale metadata.
+
+Consumers **SHOULD** treat duplicate effective outgoing edges with the same source and `toEntryRef`
+as one effective edge. Entries remain distinct targets even when their `stateRef` values are equal.
 
 ```mermaid
 classDiagram
@@ -916,17 +982,13 @@ classDiagram
     outgoingTransitionRefs
   }
   class OutgoingTransition {
-    to
-    toCurrentState
+    toEntryRef
   }
-  class State
-  class CompositeState
+  class JourneyEntry
 
   Journey --> OutgoingTransitionGroup : outgoingTransitionGroupRefs
   OutgoingTransitionGroup --> OutgoingTransition : outgoingTransitionRefs
-  OutgoingTransition --> State : effective target
-  OutgoingTransition --> CompositeState : effective target
-  note for OutgoingTransition "target mechanism is either to or toCurrentState"
+  OutgoingTransition --> JourneyEntry : toEntryRef
 ```
 
 Example JSON node:
@@ -952,8 +1014,10 @@ Direct state-scoped affordances are for local navigational options, not for ordi
 1. A [=State=] **MAY** declare `outgoingTransitionRefs`.
 2. Each state-scoped `outgoingTransitionRefs` value **MUST** reference an [=OutgoingTransition=].
 3. The declaring [=State=] is the effective source of the referenced [=OutgoingTransition=].
-4. `toCurrentState: true` resolves to the declaring [=State=].
-5. State-scoped outgoing affordances are not members of the enclosing [=Journey=]'s `transitionRefs`.
+4. State-scoped outgoing affordances are not members of the enclosing [=Journey=]'s `transitionRefs`.
+5. When the intended destination entry varies with the effective source, Producers **MUST** use
+   source-specific [=OutgoingTransition|OutgoingTransitions=] instead of a group with one fixed
+   destination.
 </spec-statement>
 
 Only ordinary [=State=] nodes declare state-scoped outgoing affordances. If navigation should be
@@ -968,14 +1032,12 @@ classDiagram
   class CompositeState
   class JourneyExit
   class OutgoingTransition {
-    to
-    toCurrentState
+    toEntryRef
   }
+  class JourneyEntry
 
   State --> OutgoingTransition : outgoingTransitionRefs
-  OutgoingTransition --> State : effective target
-  OutgoingTransition --> CompositeState : effective target
-  note for OutgoingTransition "target mechanism is either to or toCurrentState"
+  OutgoingTransition --> JourneyEntry : toEntryRef
 ```
 
 Example JSON nodes:
@@ -992,16 +1054,35 @@ Example JSON nodes:
 ```
 
 ```json
-{
-  "@type": "OutgoingTransition",
-  "@id": "urn:ujg:ot:w3c-searchpage-form-back-home",
-  "label": "Back to home page",
-  "to": "urn:ujg:state:w3c-root-homepage"
-}
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:w3c-homepage",
+    "defaultEntryRef": "urn:ujg:entry:w3c-homepage",
+    "entryRefs": ["urn:ujg:entry:w3c-homepage"],
+    "stateRefs": ["urn:ujg:state:w3c-root-homepage"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:w3c-homepage",
+    "stateRef": "urn:ujg:state:w3c-root-homepage"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:w3c-root-homepage",
+    "label": "W3C homepage"
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:ujg:ot:w3c-searchpage-form-back-home",
+    "label": "Back to home page",
+    "toEntryRef": "urn:ujg:entry:w3c-homepage"
+  }
+]
 ```
 
-This is a local "Back to home page" navigation affordance, not an internal [=Transition=]. Its `to`
-target can be outside the current journey's `stateRefs`.
+This is a "Back to home page" navigation affordance, not an internal [=Transition=]. The source
+Journey references the destination entry contract, never the destination State directly.
 
 ---
 
@@ -1020,7 +1101,7 @@ context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`, which preserves Gr
 
 ### Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `Command`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, `multiInstance`, `toCurrentState`, and `outgoingTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `Command`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, `multiInstance`, and `outgoingTransitionRefs`.
 
 :::include ./graph.ttl :::
 
@@ -1050,12 +1131,16 @@ To ensure graph integrity, the following constraints **MUST** be met:
 1. Every Graph reference **MUST** resolve within the current scope or imported modules.
 2. References **MUST** resolve to the class expected by the property that uses them.
 3. Local [=Transition=] endpoints **MUST** stay inside the declaring [=Journey=]'s local vertex set.
-4. `toEntryRef` and `fromExitRef` **MUST** resolve through one of the child Journeys referenced by the relevant [=CompositeState=]'s `subjourneyRefs`. The referenced [=JourneyEntry=] or [=JourneyExit=] **MUST** be owned by exactly one such child Journey.
-5. Every `subjourneyRefs` value **MUST** resolve to a [=Journey=].
-6. A `subjourneyRefs` set **MUST** contain at least one Journey.
-7. The same Journey **MUST NOT** occur more than once in the RDF set represented by `subjourneyRefs`.
-8. Child Journey containment **MUST NOT** weaken [=Transition=] endpoint locality.
-9. No edge between child Journeys is inferred from their common [=CompositeState=].
-10. Each [=OutgoingTransition=] **MUST** resolve to exactly one target mechanism: fixed `to` or `toCurrentState: true`.
-11. Each `commandRef` **MUST** resolve to a [=Command=].
+4. On a [=Transition=], `toEntryRef` and `fromExitRef` **MUST** resolve through one of the child
+   Journeys referenced by the relevant [=CompositeState=]'s `subjourneyRefs`. The referenced
+   [=JourneyEntry=] or [=JourneyExit=] **MUST** be owned by exactly one such child Journey.
+5. On an [=OutgoingTransition=], `toEntryRef` **MUST** resolve to a [=JourneyEntry=] owned by exactly
+   one [=Journey=], and the entry's `stateRef` **MUST** resolve inside that Journey's `stateRefs`.
+6. Every `subjourneyRefs` value **MUST** resolve to a [=Journey=].
+7. A `subjourneyRefs` set **MUST** contain at least one Journey.
+8. The same Journey **MUST NOT** occur more than once in the RDF set represented by `subjourneyRefs`.
+9. Child Journey containment **MUST NOT** weaken [=Transition=] endpoint locality.
+10. No edge between child Journeys is inferred from their common [=CompositeState=].
+11. Each [=OutgoingTransition=] **MUST** declare exactly one `toEntryRef` and **MUST NOT** declare `to`.
+12. Each `commandRef` **MUST** resolve to a [=Command=].
 </spec-statement>

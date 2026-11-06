@@ -241,3 +241,38 @@ test('codex: --project flag is rejected', (t) => {
 
   assert.match(result.stderr, /Codex install does not support --project/);
 });
+
+test('ed root skill exposes only the base module family', () => {
+  const root = targetSkills('ed').find((item) => item.key === 'root');
+  assert.ok(root, 'missing ED root skill');
+
+  const skillRoot = join(buildRoot, 'codex', root.name);
+  const skillText = readFileSync(join(skillRoot, 'SKILL.md'), 'utf8');
+  const relatedText = readFileSync(join(skillRoot, 'references', 'related-skills.md'), 'utf8');
+  const tree = readJson(join(skillRoot, 'references', 'skill-tree.json'));
+  const excludedVocabulary =
+    /\b(Localization|Observability|Phase|Artifact|PainPoint|MessageMeta)\b|Design System|Entry Binding|Data Contract|Domain Model|targetLocaleRef|copyRef|l10n:/i;
+
+  assert.doesNotMatch(skillText, excludedVocabulary);
+  assert.doesNotMatch(relatedText, excludedVocabulary);
+  assert.deepEqual(Object.keys(tree.moduleGraph).sort(), [
+    'core',
+    'graph',
+    'mapping',
+    'metrics',
+    'runtime',
+    'surface',
+  ]);
+  assert.deepEqual(tree.currentSkill.moduleIds, [
+    'core',
+    'graph',
+    'surface',
+    'runtime',
+    'mapping',
+    'metrics',
+  ]);
+  assert.deepEqual(
+    tree.skills.map((skill) => skill.key),
+    ['root', 'core', 'graph']
+  );
+});

@@ -1,7 +1,7 @@
 # Skill Review: ujg-ed-modeling
 
 Target: Editor's Draft
-Skill scope: whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules
+Skill scope: base UJG document modeling across Core, Graph, Surface, Runtime, Mapping, and Metrics
 Source: sources/ed/skills/root/skill.md
 Spec URL: https://ujg.specs.openuji.org/ed
 
@@ -12,19 +12,20 @@ Spec URL: https://ujg.specs.openuji.org/ed
 
 ## Review Inputs
 
-- Source hash: sha256:51c9f15e9603fd999915b67d8bfaa8de253249785af821685feab3d99ffef956
-- Spec hash: sha256:b0b1a708caaee2d6da831e1edea8c8088675d9e7e98306e3bcd94e78a12bc768
+- Source hash: sha256:d62cd83dbe9e108bfb4c303384f8a2863e0b7dde5ab782b146b5eedb611161d3
+- Spec hash: sha256:e891a5984da6cb0008d781bfe319a1b7ecfa82446544baabd35425da10958fed
 
 ## Source Headings Likely Affected
 
-- UJG ED Modeling Skill
-- Modeling bias
-- Page and entry modeling
+- UJG ED Base Modeling Skill
+- Graph modeling
+- Surface modeling
+- Runtime modeling
 
 ## Checklist
 
 - Confirm source guidance still matches the current spec module definitions.
 - Confirm cross-skill dependencies still route work to the right sibling skill.
 - Update source skill text if the spec changed semantics, terms, constraints, or boundaries.
-- Run `pnpm agent-pack:update` after source edits.
-- Accept the review only after the source and generated artifacts match the current spec.
+- Run `pnpm agent-pack:generate` to inspect generated skills under `build/`.
+- Accept the review only after the source matches the current spec.
