@@ -19,13 +19,6 @@ ujggraphshape:LocalVertexShape a sh:NodeShape ;
     [ sh:class ujggraph:JourneyExit ]
   ) .
 
-ujggraphshape:OutgoingTargetShape a sh:NodeShape ;
-  sh:nodeKind sh:IRI ;
-  sh:or (
-    [ sh:class ujggraph:State ]
-    [ sh:class ujggraph:CompositeState ]
-  ) .
-
 ujggraphshape:CommandShape a sh:NodeShape ;
   sh:targetClass ujggraph:Command ;
   sh:nodeKind sh:IRI ;
@@ -808,13 +801,22 @@ ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
 
   sh:property [
     sh:path ujggraph:to ;
-    sh:maxCount 1 ;
-    sh:node ujggraphshape:OutgoingTargetShape ;
+    sh:maxCount 0 ;
+    sh:message "An OutgoingTransition must not declare to; target a JourneyEntry with toEntryRef." ;
   ] ;
 
   sh:property [
     sh:path ujggraph:toCurrentState ;
-    sh:datatype xsd:boolean ;
+    sh:maxCount 0 ;
+    sh:message "toCurrentState is not part of the Editor's Draft; target a JourneyEntry with toEntryRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:toEntryRef ;
+    sh:class ujggraph:JourneyEntry ;
+    sh:node ujggraphshape:JourneyEntryShape ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
     sh:maxCount 1 ;
   ] ;
 
@@ -835,32 +837,6 @@ ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
     sh:path ujggraph:subjourneyRefs ;
     sh:maxCount 0 ;
     sh:message "An OutgoingTransition must not declare subjourneyRefs." ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "An OutgoingTransition must declare exactly one effective target mechanism: either exactly one to value or toCurrentState true." ;
-    sh:select """
-      SELECT $this
-      WHERE {
-        FILTER (
-          NOT EXISTS { $this ujggraph:to ?to . }
-          && NOT EXISTS { $this ujggraph:toCurrentState true . }
-        )
-      }
-    """ ;
-  ] ;
-
-  sh:sparql [
-    a sh:SPARQLConstraint ;
-    sh:message "An OutgoingTransition with toCurrentState true must not also declare to." ;
-    sh:select """
-      SELECT $this ?to
-      WHERE {
-        $this ujggraph:to ?to ;
-              ujggraph:toCurrentState true .
-      }
-    """ ;
   ] .
 
 ujggraphshape:OutgoingTransitionGroupShape a sh:NodeShape ;

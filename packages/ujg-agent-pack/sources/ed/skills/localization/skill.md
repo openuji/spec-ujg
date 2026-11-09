@@ -147,19 +147,60 @@ Do not use `copyRef` to define traversal, visibility, routing, state identity, c
 
 Use Graph `OutgoingTransition` for locale switch affordances.
 
-If the locale switch keeps the same effective graph state, use:
+Every locale-switch OutgoingTransition uses `toEntryRef` to select an explicit `JourneyEntry`.
+`l10n:targetLocaleRef` declares requested-locale metadata and never infers the Graph destination.
+
+If the locale switch preserves whichever of several States is active, use one state-scoped
+OutgoingTransition per source State. Each transition targets the JourneyEntry whose `stateRef` is
+that State:
 
 ```json
-{
-  "@type": "OutgoingTransition",
-  "@id": "urn:example:ot:locale-en",
-  "label": "English",
-  "toCurrentState": true,
-  "l10n:targetLocaleRef": "urn:example:l10n:locale:en"
-}
+[
+  {
+    "@type": "State",
+    "@id": "urn:example:state:form",
+    "outgoingTransitionRefs": ["urn:example:ot:locale-en-from-form"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:example:entry:form",
+    "stateRef": "urn:example:state:form"
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:example:ot:locale-en-from-form",
+    "label": "English",
+    "toEntryRef": "urn:example:entry:form",
+    "l10n:targetLocaleRef": "urn:example:l10n:locale:en"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:example:state:success",
+    "outgoingTransitionRefs": ["urn:example:ot:locale-en-from-success"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:example:entry:success",
+    "stateRef": "urn:example:state:success"
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:example:ot:locale-en-from-success",
+    "label": "English",
+    "toEntryRef": "urn:example:entry:success",
+    "l10n:targetLocaleRef": "urn:example:l10n:locale:en"
+  }
+]
 ```
 
-If the locale switch targets a distinct modeled state, use `to` plus `l10n:targetLocaleRef`.
+The owning Journey lists both States and both Entries. Do not place one of these transitions in a
+Journey-level OutgoingTransitionGroup: a group injects one fixed `toEntryRef` into every source and
+cannot mean “the entry for whichever State is active.” A grouped locale switch is valid only when
+every source intentionally enters the same locale landing entry.
+
+If content structure differs by locale, model the distinct Graph Journeys, Entries, States, and
+Transitions and target the destination locale's JourneyEntry. Localization annotations do not
+themselves mutate topology; Graph owns the difference.
 
 Add Graph `commandRef` to a locale-switch `OutgoingTransition` only when the locale switch has stable
 intentional invocation identity that needs a Surface attached to a Command or shared command
@@ -190,7 +231,11 @@ Do not model composite messages with `messagePartRefs`, `CompositeMessage`, or `
 * Does every `Message` have one `messageMetaRef`, one `localeRef`, and one `value`?
 * Did I avoid duplicate `Message` nodes for the same `messageMetaRef` and `localeRef`?
 * Is `targetLocaleRef` used only on `OutgoingTransition`?
-* Does a same-state locale switch use `toCurrentState: true`?
+* Does every locale switch use one explicit `toEntryRef`?
+* If a locale switch re-enters the same State, does its JourneyEntry point to that State?
+* If several States preserve their own position across a locale switch, does each State have its
+  own OutgoingTransition and matching JourneyEntry rather than one shared group transition?
+* If locale changes structure, is the different topology modeled explicitly in Graph?
 * Did I avoid duplicate locale states unless topology really differs?
 * Did I keep runtime locale facts, loaders, URLs, and payloads out of l10n?
-* Did Localization avoid changing Graph traversal?
+* Did Localization avoid inferring or changing Graph traversal by itself?

@@ -13,7 +13,9 @@
 ### Classes
 
 ujgmapping:JourneyMapping a owl:Class ;
-  rdfs:subClassOf ujg:Node .
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Journey Mapping" ;
+  rdfs:comment "A journey-local segment of a mapped JourneyExecution." .
 
 ujgmapping:MappedStep a owl:Class ;
   rdfs:subClassOf ujg:Node .

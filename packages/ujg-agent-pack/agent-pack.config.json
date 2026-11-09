@@ -11,9 +11,14 @@
         {
           "key": "root",
           "title": "Modeling",
-          "scope": "whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules",
+          "scope": "base UJG document modeling across Core, Graph, Surface, Runtime, Mapping, and Metrics",
           "nameSuffix": "modeling",
-          "moduleId": null
+          "moduleId": null,
+          "moduleIds": ["core", "graph", "surface", "runtime", "mapping", "metrics"],
+          "relatedSkillKeys": ["core", "graph"],
+          "description": "Generate, review, correct, and reason about base User Journey Graph JSON-LD for the Editor's Draft across Core, Graph, Surface, Runtime, Mapping, and Metrics.",
+          "shortDescription": "Model base UJG modules for ED",
+          "defaultPrompt": "Use $ujg-ed-modeling to generate or review Editor's Draft UJG JSON-LD across Core, Graph, Surface, Runtime, Mapping, and Metrics."
         },
         {
           "key": "core",

@@ -91,13 +91,18 @@ Treat these as conformance failures unless explicitly authorized and documented:
 
 ## Entry and Continuation Authority
 
-For every non-default `JourneyEntry`, `JourneyExit`, and cross-journey `toEntryRef`, record its permitted predecessor and authority model.
+For every non-default `JourneyEntry`, `JourneyExit`, parent-boundary `toEntryRef`, and outgoing
+`toEntryRef`, record its permitted predecessor and authority model.
 
 For a parent transition using `toEntryRef`, verify that the selected `JourneyEntry` belongs to exactly
 one child journey in the target composite's `subjourneyRefs`. For a parent transition using
 `fromExitRef`, verify that the selected `JourneyExit` belongs to exactly one child journey in the
 source composite's `subjourneyRefs`. These refs are singular boundary refinements, not endpoint sets
 or synchronization contracts.
+
+For an `OutgoingTransition`, verify that `toEntryRef` names a JourneyEntry owned by exactly one
+Journey and that the effective destination is that entry's `stateRef`. Treat same-Journey and
+same-State targets as explicit re-entry and never authorize a direct outgoing State reference.
 
 When a child `JourneyExit` is reached, treat it as leaving that containing `CompositeState`
 occurrence. Do not treat it as completing sibling child journeys or as collective composite

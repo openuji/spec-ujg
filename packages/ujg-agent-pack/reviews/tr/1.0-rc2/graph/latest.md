@@ -24,5 +24,5 @@ Spec URL: https://ujg.specs.openuji.org/tr/1.0-rc2/graph
 - Confirm source guidance still matches the current spec module definitions.
 - Confirm cross-skill dependencies still route work to the right sibling skill.
 - Update source skill text if the spec changed semantics, terms, constraints, or boundaries.
-- Run `pnpm agent-pack:update` after source edits.
-- Accept the review only after the source and generated artifacts match the current spec.
+- Run `pnpm agent-pack:generate` to inspect generated skills under `build/`.
+- Accept the review only after the source matches the current spec.
