@@ -1,0 +1,1166 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Core - UJG 1.0 Release Candidate 3</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="A family of open specifications that model user journeys as graphs of states and transitions."><link rel="canonical" href="https://ujg.specs.openuji.org/tr/1.0-rc3/core"><script type="application/ld+json">{
+  "@context": {
+    "dct": "http://purl.org/dc/terms/",
+    "spec": "http://www.w3.org/ns/spec#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "id": "@id",
+    "type": "@type"
+  },
+  "@graph": [
+    {
+      "id": "/tr/1.0-rc3/core",
+      "type": "spec:Specification",
+      "dct:title": "Core",
+      "spec:classesOfProducts": {
+        "id": "/tr/1.0-rc3/core#classes-of-products",
+        "type": "skos:ConceptScheme",
+        "skos:prefLabel": "Classes of Products",
+        "skos:hasTopConcept": [
+          {
+            "id": "/tr/1.0-rc3/core#jsonld-context"
+          }
+        ]
+      },
+      "spec:requirement": [
+        {
+          "id": "/tr/1.0-rc3/core#a-compact-ujg-json-ld-document-must-include-the-core-json-ld-context"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#a-specification-that-defines-compact-terms-not-defined-by-core-must-normatively-identify-the-published-url-of-the-json-ld-context-that-defines-those-terms"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#a-compact-ujg-json-ld-document-that-uses-terms-not-defined-by-core-must-compose-the-core-context-with-the-published-contexts-that-define-those-terms"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#when-a-compact-ujg-json-ld-document-uses-terms-not-defined-by-core-its-context-must-reference-the-published-urls-of-the-contexts-that-define-those-terms"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#specifications-or-deployments-may-publish-convenience-aggregate-contexts-that-compose-the-core-context-with-additional-contexts-but-such-aggregate-contexts-are-outside-the-scope-of-core"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#a-ujg-module-that-defines-compact-terms-not-defined-by-core-must-publish-a-json-ld-context-for-those-terms"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#a-ujg-module-that-depends-on-core-or-another-ujg-module-must-identify-the-modules-whose-terms-classes-or-validation-semantics-it-relies-on"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#a-first-level-ujg-module-must-identify-only-main-spec-family-modules-as-dependencies-and-must-not-depend-on-another-optional-module"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#a-first-level-ujg-module-may-define-references-from-core-node-instances-or-classes-defined-by-main-spec-family-modules-provided-those-references-do-not-alter-core-identity-import-resolution-reference-resolution-graph-traversal-or-runtime-ordering"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#a-first-level-bridge-module-should-define-a-narrow-domain-neutral-vocabulary-that-can-be-specialized-by-modules-that-depend-on-it"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#a-second-level-ujg-module-must-depend-on-at-least-one-first-level-ujg-module-and-may-also-depend-on-main-spec-family-modules"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#a-second-level-ujg-module-must-not-attach-specialized-domain-semantics-directly-to-core-or-graph-nodes-when-an-appropriate-first-level-bridge-module-exists-for-that-domain"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#module-references-must-not-create-hidden-graph-traversal-runtime-ordering-mapping-conformance-or-profile-requirements-unless-those-semantics-are-explicitly-defined-by-the-module-that-owns-the-references"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#consumers-that-do-not-implement-an-optional-module-may-ignore-that-modules-terms-provided-they-preserve-json-ld-identity-and-unknown-extension-data-according-to-core-processing-rules"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#extensions-may-appear-on-a-ujgdocument-or-any-node"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#if-present-extensions-must-be-a-json-object"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#each-top-level-key-in-extensions-must-be-a-namespace-string-controlled-by-the-extension-author-authors-should-use-reverse-dns-names-or-uri-based-identifiers"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#each-top-level-value-in-extensions-must-be-a-json-object"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#consumers-must-preserve-unknown-extension-entries-during-read-transform-write-unless-operating-in-an-explicitly-lossy-mode"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#consumers-must-not-let-unknown-extensions-affect-core-identity-import-resolution-reference-resolution-graph-traversal-or-graph-semantics"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#consumers-may-apply-namespace-specific-processing-for-recognized-extensions"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#extensions-that-change-core-graph-meaning-should-be-standardized-as-first-class-ujg-modules-rather-than-hidden-inside-extensions"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#terms-intended-to-participate-in-interoperable-graph-semantics-reference-resolution-validation-or-rdf-querying-must-be-defined-by-published-json-ld-contexts-and-corresponding-module-artifacts-rather-than-being-hidden-inside-extensions"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#identifiers-that-appear-only-inside-extensions-must-not-be-treated-as-core-or-graph-references-for-standardized-ujg-processing-unless-an-implementation-applies-explicit-namespace-specific-processing-outside-module-conformance"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#imports-values-must-be-iri-references"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#an-imports-value-may-be-an-absolute-iri-or-a-relative-iri-reference"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#relative-import-references-must-be-resolved-against-the-location-of-the-importing-ujgdocument"
+        },
+        {
+          "id": "/tr/1.0-rc3/core#if-no-stable-document-location-is-available-relative-imports-are-implementation-specific-and-may-not-be-portable"
+        }
+      ]
+    },
+    {
+      "id": "/tr/1.0-rc3/core#jsonld-context",
+      "type": "skos:Concept",
+      "skos:prefLabel": "Jsonld-context",
+      "skos:inScheme": {
+        "id": "/tr/1.0-rc3/core#classes-of-products"
+      },
+      "skos:topConceptOf": {
+        "id": "/tr/1.0-rc3/core#classes-of-products"
+      }
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-compact-ujg-json-ld-document-must-include-the-core-json-ld-context",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A compact UJG JSON-LD document MUST include the Core JSON-LD context."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-specification-that-defines-compact-terms-not-defined-by-core-must-normatively-identify-the-published-url-of-the-json-ld-context-that-defines-those-terms",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A specification that defines compact terms not defined by Core MUST normatively identify the published URL of the JSON-LD context that defines those terms."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-compact-ujg-json-ld-document-that-uses-terms-not-defined-by-core-must-compose-the-core-context-with-the-published-contexts-that-define-those-terms",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A compact UJG JSON-LD document that uses terms not defined by Core MUST compose the Core context with the published contexts that define those terms."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#when-a-compact-ujg-json-ld-document-uses-terms-not-defined-by-core-its-context-must-reference-the-published-urls-of-the-contexts-that-define-those-terms",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "When a compact UJG JSON-LD document uses terms not defined by Core, its @context MUST reference the published URLs of the contexts that define those terms."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#specifications-or-deployments-may-publish-convenience-aggregate-contexts-that-compose-the-core-context-with-additional-contexts-but-such-aggregate-contexts-are-outside-the-scope-of-core",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MAY"
+      },
+      "spec:statement": "Specifications or deployments MAY publish convenience aggregate contexts that compose the Core context with additional contexts, but such aggregate contexts are outside the scope of Core."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-ujg-module-that-defines-compact-terms-not-defined-by-core-must-publish-a-json-ld-context-for-those-terms",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A UJG module that defines compact terms not defined by Core MUST publish a JSON-LD context for those terms."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-ujg-module-that-depends-on-core-or-another-ujg-module-must-identify-the-modules-whose-terms-classes-or-validation-semantics-it-relies-on",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A UJG module that depends on Core or another UJG module MUST identify the modules whose terms, classes, or validation semantics it relies on."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-first-level-ujg-module-must-identify-only-main-spec-family-modules-as-dependencies-and-must-not-depend-on-another-optional-module",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUSTNOT"
+      },
+      "spec:statement": "A first-level UJG module MUST identify only main spec family modules as dependencies and MUST NOT depend on another optional module."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-first-level-ujg-module-may-define-references-from-core-node-instances-or-classes-defined-by-main-spec-family-modules-provided-those-references-do-not-alter-core-identity-import-resolution-reference-resolution-graph-traversal-or-runtime-ordering",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MAY"
+      },
+      "spec:statement": "A first-level UJG module MAY define references from Core Node instances or classes defined by main spec family modules, provided those references do not alter Core identity, import resolution, reference resolution, graph traversal, or runtime ordering."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-first-level-bridge-module-should-define-a-narrow-domain-neutral-vocabulary-that-can-be-specialized-by-modules-that-depend-on-it",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:SHOULD"
+      },
+      "spec:statement": "A first-level bridge module SHOULD define a narrow, domain-neutral vocabulary that can be specialized by modules that depend on it."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-second-level-ujg-module-must-depend-on-at-least-one-first-level-ujg-module-and-may-also-depend-on-main-spec-family-modules",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:statement": "A second-level UJG module MUST depend on at least one first-level UJG module and MAY also depend on main spec family modules."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#a-second-level-ujg-module-must-not-attach-specialized-domain-semantics-directly-to-core-or-graph-nodes-when-an-appropriate-first-level-bridge-module-exists-for-that-domain",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUSTNOT"
+      },
+      "spec:statement": "A second-level UJG module MUST NOT attach specialized domain semantics directly to Core or Graph nodes when an appropriate first-level bridge module exists for that domain."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#module-references-must-not-create-hidden-graph-traversal-runtime-ordering-mapping-conformance-or-profile-requirements-unless-those-semantics-are-explicitly-defined-by-the-module-that-owns-the-references",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUSTNOT"
+      },
+      "spec:statement": "Module references MUST NOT create hidden graph traversal, runtime ordering, mapping conformance, or profile requirements unless those semantics are explicitly defined by the module that owns the references."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#consumers-that-do-not-implement-an-optional-module-may-ignore-that-modules-terms-provided-they-preserve-json-ld-identity-and-unknown-extension-data-according-to-core-processing-rules",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MAY"
+      },
+      "spec:statement": "Consumers that do not implement an optional module MAY ignore that module's terms, provided they preserve JSON-LD identity and unknown extension data according to Core processing rules."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#extensions-may-appear-on-a-ujgdocument-or-any-node",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MAY"
+      },
+      "spec:statement": "extensions MAY appear on a UJGDocument or any Node."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#if-present-extensions-must-be-a-json-object",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "If present, extensions MUST be a JSON object."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#each-top-level-key-in-extensions-must-be-a-namespace-string-controlled-by-the-extension-author-authors-should-use-reverse-dns-names-or-uri-based-identifiers",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:statement": "Each top-level key in extensions MUST be a namespace string controlled by the extension author. Authors SHOULD use reverse-DNS names or URI-based identifiers."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#each-top-level-value-in-extensions-must-be-a-json-object",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "Each top-level value in extensions MUST be a JSON object."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#consumers-must-preserve-unknown-extension-entries-during-read-transform-write-unless-operating-in-an-explicitly-lossy-mode",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "Consumers MUST preserve unknown extension entries during read-transform-write unless operating in an explicitly lossy mode."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#consumers-must-not-let-unknown-extensions-affect-core-identity-import-resolution-reference-resolution-graph-traversal-or-graph-semantics",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUSTNOT"
+      },
+      "spec:statement": "Consumers MUST NOT let unknown extensions affect Core identity, import resolution, reference resolution, Graph traversal, or Graph semantics."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#consumers-may-apply-namespace-specific-processing-for-recognized-extensions",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MAY"
+      },
+      "spec:statement": "Consumers MAY apply namespace-specific processing for recognized extensions."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#extensions-that-change-core-graph-meaning-should-be-standardized-as-first-class-ujg-modules-rather-than-hidden-inside-extensions",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:SHOULD"
+      },
+      "spec:statement": "Extensions that change core graph meaning SHOULD be standardized as first-class UJG modules rather than hidden inside extensions."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#terms-intended-to-participate-in-interoperable-graph-semantics-reference-resolution-validation-or-rdf-querying-must-be-defined-by-published-json-ld-contexts-and-corresponding-module-artifacts-rather-than-being-hidden-inside-extensions",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "Terms intended to participate in interoperable graph semantics, reference resolution, validation, or RDF querying MUST be defined by published JSON-LD contexts and corresponding module artifacts rather than being hidden inside extensions."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#identifiers-that-appear-only-inside-extensions-must-not-be-treated-as-core-or-graph-references-for-standardized-ujg-processing-unless-an-implementation-applies-explicit-namespace-specific-processing-outside-module-conformance",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUSTNOT"
+      },
+      "spec:statement": "Identifiers that appear only inside extensions MUST NOT be treated as Core or Graph references for standardized UJG processing unless an implementation applies explicit namespace-specific processing outside module conformance."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#imports-values-must-be-iri-references",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "imports values MUST be IRI references."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#an-imports-value-may-be-an-absolute-iri-or-a-relative-iri-reference",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MAY"
+      },
+      "spec:statement": "An imports value MAY be an absolute IRI or a relative IRI reference."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#relative-import-references-must-be-resolved-against-the-location-of-the-importing-ujgdocument",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "Relative import references MUST be resolved against the location of the importing UJGDocument."
+    },
+    {
+      "id": "/tr/1.0-rc3/core#if-no-stable-document-location-is-available-relative-imports-are-implementation-specific-and-may-not-be-portable",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/core#jsonld-context"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MAY"
+      },
+      "spec:statement": "If no stable document location is available, relative imports are implementation-specific and may not be portable."
+    }
+  ]
+}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet"><script>
+      (function () {
+        const storageKey = 'ujg-theme';
+        try {
+          const stored = localStorage.getItem(storageKey);
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', stored);
+          } else {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+            document.documentElement.setAttribute('data-theme', systemTheme);
+          }
+        } catch {
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+          document.documentElement.setAttribute('data-theme', systemTheme);
+        }
+      })();
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/tr/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DcSP9LZ1.js"></script><script>
+      (function () {
+        if (window._smoothScrollSetup) return;
+        window._smoothScrollSetup = true;
+
+        const shouldReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        function highlightTarget(target) {
+          if (!target) return;
+          target.classList.remove('target-highlight');
+          // Trigger reflow to restart animation
+          void target.offsetWidth;
+          target.classList.add('target-highlight');
+
+          // Optional: remove class after animation finishes to keep DOM clean
+          // but it's not strictly necessary as it's a one-shot animation
+          setTimeout(() => {
+            target.classList.remove('target-highlight');
+          }, 2100);
+        }
+
+        function handleLinkClick(e) {
+          const link = e.target.closest('a');
+          if (!link?.hash || link.origin !== location.origin) return;
+
+          const urlPath = link.pathname.replace(/\/$/, '');
+          const locPath = location.pathname.replace(/\/$/, '');
+          if (urlPath !== locPath) return;
+
+          const target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+          if (!target) return;
+
+          e.preventDefault();
+          target.scrollIntoView({
+            behavior: shouldReduceMotion.matches ? 'auto' : 'smooth',
+          });
+          history.pushState(null, '', link.hash);
+          highlightTarget(target);
+        }
+
+        function handleHashChange() {
+          const hash = location.hash;
+          if (hash) {
+            const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+            if (target) {
+              highlightTarget(target);
+            }
+          }
+        }
+
+        // Content that arrives after the browser's own hash jump — Mermaid SVGs
+        // replacing several screens of source text, lazy images without
+        // dimensions, webfonts — resizes the page above the target and drags
+        // the reader away from it. Re-scrolling after the fact corrects the
+        // position but the reader sees every correction as a jump, so instead
+        // keep the target pinned: measure how far it drifted and undo that in
+        // the ResizeObserver callback, which runs after layout but before
+        // paint, making the compensation invisible.
+        function settleHashScroll() {
+          if (!location.hash || typeof ResizeObserver === 'undefined') return;
+
+          const targetId = decodeURIComponent(location.hash.slice(1));
+          let anchorTop = null;
+          let observer = null;
+          let stopTimer;
+          let cancelled = false;
+
+          function teardown() {
+            clearTimeout(stopTimer);
+            if (observer) observer.disconnect();
+            observer = null;
+            window.removeEventListener('wheel', cancel);
+            window.removeEventListener('touchmove', cancel);
+            window.removeEventListener('pointerdown', cancel);
+            window.removeEventListener('keydown', cancel);
+            window.removeEventListener('ujg:mermaid-rendered', repin);
+          }
+
+          function cancel() {
+            cancelled = true;
+            teardown();
+          }
+
+          function repin() {
+            if (cancelled || anchorTop === null) return;
+
+            const target = document.getElementById(targetId);
+            if (!target) return;
+
+            const drift = target.getBoundingClientRect().top - anchorTop;
+            if (Math.abs(drift) < 1) return;
+
+            window.scrollBy(0, drift);
+
+            // Scrolling clamps at the end of the document, so re-measure
+            // instead of assuming the correction fully landed.
+            anchorTop = target.getBoundingClientRect().top;
+          }
+
+          function start() {
+            if (cancelled) return;
+
+            const target = document.getElementById(targetId);
+            if (!target) return;
+
+            // Establish the resting position once. scrollIntoView honours the
+            // heading's scroll-margin-top, so the sticky header never covers it.
+            target.scrollIntoView({ behavior: 'auto' });
+            anchorTop = target.getBoundingClientRect().top;
+
+            observer = new ResizeObserver(repin);
+            observer.observe(document.body);
+            document.querySelectorAll('.mermaid-container').forEach(function (el) {
+              observer.observe(el);
+            });
+
+            // Late content stops arriving; stop watching so ordinary scrolling
+            // is never second-guessed.
+            stopTimer = setTimeout(teardown, 5000);
+          }
+
+          // Deliberate input hands control back to the reader immediately.
+          // Note: we never listen for 'scroll', since our own correction
+          // would cancel itself.
+          window.addEventListener('wheel', cancel, { passive: true });
+          window.addEventListener('touchmove', cancel, { passive: true });
+          window.addEventListener('pointerdown', cancel);
+          window.addEventListener('keydown', cancel);
+          window.addEventListener('ujg:mermaid-rendered', repin);
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', start, { once: true });
+          } else {
+            start();
+          }
+        }
+
+        function init() {
+          document.addEventListener('click', handleLinkClick, { capture: true });
+          // Also highlight on page load if hash exists
+          handleHashChange();
+          settleHashScroll();
+        }
+
+        document.addEventListener('astro:page-load', init);
+        init();
+      })();
+    </script><style>.mermaid-container[data-astro-cid-najdirf6]{padding:1.5rem;border-radius:12px;border:1px solid var(--border);text-align:center;margin:1.5rem 0;overflow-x:auto}.mermaid-container[data-astro-cid-najdirf6] pre[data-astro-cid-najdirf6].mermaid{background:transparent;border:none;padding:0;margin:0;color:inherit;display:flex;justify-content:center}.mermaid-container[data-astro-cid-najdirf6] pre[data-astro-cid-najdirf6].mermaid[data-mermaid-pending]{height:6rem;overflow:hidden;visibility:hidden}.mermaid-container[data-astro-cid-najdirf6] svg{max-width:100%;height:auto;font-size:13px!important;overflow:visible}.mermaid-container[data-astro-cid-najdirf6] svg text,.mermaid-container[data-astro-cid-najdirf6] svg tspan,.mermaid-container[data-astro-cid-najdirf6] svg .label,.mermaid-container[data-astro-cid-najdirf6] svg .nodeLabel,.mermaid-container[data-astro-cid-najdirf6] svg .edgeLabel,.mermaid-container[data-astro-cid-najdirf6] svg .cluster-label,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject div,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject span,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject p{font-size:13px!important;line-height:1.25!important}.mermaid-container[data-astro-cid-najdirf6] svg foreignObject{overflow:visible}.mermaid-container[data-astro-cid-najdirf6] .edgeLabel text,.mermaid-container[data-astro-cid-najdirf6] .edgeLabel tspan,.mermaid-container[data-astro-cid-najdirf6] .edgeLabel span p{font-size:12px!important}.mermaid-container[data-astro-cid-najdirf6] .cluster-label span p{font-size:13px!important;padding:.2rem .4rem!important}:root[data-theme=dark] .mermaid-container[data-astro-cid-najdirf6] .note{fill:#2f2712!important;stroke:#c99a2e!important}:root[data-theme=dark] .mermaid-container[data-astro-cid-najdirf6] .noteText,:root[data-theme=dark] .mermaid-container[data-astro-cid-najdirf6] .noteText tspan{fill:#f8e7a1!important;color:#f8e7a1!important}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .mermaid-container[data-astro-cid-najdirf6] .note{fill:#2f2712!important;stroke:#c99a2e!important}:root:not([data-theme=light]) .mermaid-container[data-astro-cid-najdirf6] .noteText,:root:not([data-theme=light]) .mermaid-container[data-astro-cid-najdirf6] .noteText tspan{fill:#f8e7a1!important;color:#f8e7a1!important}}
+</style>
+<link rel="stylesheet" href="/tr/_astro/_slug_.CYbIro8n.css">
+<style>.spec-header[data-astro-cid-crpkus26]{margin-bottom:3rem}.nav[data-astro-cid-crpkus26].breadcrumb{display:flex;gap:.5rem;align-items:center;margin-bottom:2rem;font-size:.9rem}.nav[data-astro-cid-crpkus26].breadcrumb a[data-astro-cid-crpkus26]{color:var(--accent);text-decoration:none}.nav[data-astro-cid-crpkus26].breadcrumb a[data-astro-cid-crpkus26]:hover{text-decoration:underline}.sep[data-astro-cid-crpkus26]{color:var(--text-secondary)}.current[data-astro-cid-crpkus26]{font-weight:700;color:var(--text-primary)}.title-area[data-astro-cid-crpkus26]{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem}h1[data-astro-cid-crpkus26]{margin:0;font-size:2.5rem;line-height:1.2;color:var(--text-primary)}.subtitle[data-astro-cid-crpkus26]{font-size:1.25rem;color:var(--text-secondary);margin:0 0 2rem;font-weight:400}.abstract[data-astro-cid-crpkus26]{border-top:1px solid var(--border, rgba(255, 255, 255, .1));padding-top:2rem;margin-top:2rem}.abstract[data-astro-cid-crpkus26] h2[data-astro-cid-crpkus26]{font-size:1.1rem;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary)}.abstract[data-astro-cid-crpkus26] p[data-astro-cid-crpkus26]{line-height:1.7;color:var(--text-primary);max-width:800px;margin:0}.pro-theme-cg[data-astro-cid-crpkus26]{position:relative;padding-top:1rem}.cg-copyright[data-astro-cid-crpkus26]{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border, rgba(255, 255, 255, .1));font-size:.85rem;color:var(--text-secondary);line-height:1.5}.cg-copyright[data-astro-cid-crpkus26] a[data-astro-cid-crpkus26]{color:var(--text-primary);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--text-primary) 30%,transparent)}.cg-copyright[data-astro-cid-crpkus26] a[data-astro-cid-crpkus26]:hover{border-bottom-color:var(--accent);color:var(--accent)}
+@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-ykqntimn-1"] { view-transition-name: astro-ykqntimn-1; }@layer astro { ::view-transition-old(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="bg-spec">    <header class="bg-panel backdrop-blur-md sticky top-0 z-header border-b border-border"> <div class="h-header px-lg flex items-center gap-2 md:justify-between"> <div class="flex md:hidden"> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="ZuSn0J" prefix="r30" component-url="/tr/_astro/MobilePanel.YK44Q9Bg.js" component-export="MobilePanel" renderer-url="/tr/_astro/client.C714R2Xt.js" props="{}" ssr client="load" opts="{&quot;name&quot;:&quot;MobilePanel&quot;,&quot;value&quot;:true}" await-children><button class="sidebar-restore-btn p-2 border border-border bg-card text-muted-foreground shadow-panel rounded-md hover:bg-accent-soft/50 hover:text-foreground transition-[background-color,color,box-shadow] duration-300" title="Expand sidebar" aria-label="Expand sidebar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right w-5 h-5" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M15 3v18"></path></svg></button><!--astro:end--></astro-island> </div> <div class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden whitespace-nowrap"> <a href="/" class="flex shrink-0 text-primary font-bold hover:text-accent"> <span>UJG</span> </a>  <span class="shrink-0 text-secondary-foreground">/</span> <a href="/tr/1.0-rc3" class="shrink-0 text-primary font-bold hover:text-accent transition-colors duration-200"> UJG 1.0 Release Candidate 3 </a>  <span class="shrink-0 text-secondary-foreground">/</span> <astro-island uid="ZAP4l7" prefix="r31" component-url="/tr/_astro/BreadcrumbSelect.BD4voL3K.js" component-export="default" renderer-url="/tr/_astro/client.C714R2Xt.js" props="{&quot;valueHref&quot;:[0,&quot;/tr/1.0-rc3/core&quot;],&quot;options&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;Architecture&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/architecture&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Core&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/core&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Graph&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/graph&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Surface&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/surface&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Runtime&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/runtime&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Mapping&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/mapping&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Metrics&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/metrics&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Profiles&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/profiles&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Conformance&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/conformance&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Entry Binding&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/entry-binding&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Localization&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/l10n&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Conditions&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/condition&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Effect&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/effect&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Data Contract&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/data-contract&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Artifact&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/artifact&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Observability&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/observability&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Phase&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/phase&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Experience Annotation&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/experience-annotation&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Design System&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/design-system&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Domain Model&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/extensions/domain-model&quot;],&quot;family&quot;:[0,&quot;extension&quot;]}]]]}" ssr client="load" opts="{&quot;name&quot;:&quot;BreadcrumbSelect&quot;,&quot;value&quot;:true}" await-children><button type="button" role="combobox" aria-controls="radix-_r31R_0_" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-slot="select-trigger" data-size="default" class="border-input data-[placeholder]:text-muted-foreground [&amp;_svg:not([class*=&#x27;text-&#x27;])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs outline-none focus-visible:ring-[3px] hover:bg-accent-soft/40 disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 h-auto w-auto gap-1 text-secondary-foreground hover:text-accent transition-[color,box-shadow] duration-200" aria-label="Switch section"><span data-slot="select-value" style="pointer-events:none"></span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down size-4 opacity-50" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select><!--astro:end--></astro-island> </div> <nav class="hidden md:flex"> <a href="https://github.com/openuji/spec-ujg" class="inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200" aria-label="GitHub repository" title="GitHub repository"> <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path> </svg> <span class="sr-only">GitHub</span> </a> </nav> </div> </header> <div class="sidebar-container is-initializing flex px-lg" data-astro-transition-scope="astro-ykqntimn-1"> <aside class="sidebar w-sidebar border-r border-border shrink-0"> <div class="sidebar-content sticky top-[var(--height-header)] -ml-3"> <astro-island uid="24cIL7" prefix="r27" component-url="/tr/_astro/Toc.CLRXBS5d.js" component-export="Toc" renderer-url="/tr/_astro/client.C714R2Xt.js" props="{&quot;toc&quot;:[1,[[0,{&quot;id&quot;:[0,&quot;overview&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Overview&quot;],&quot;number&quot;:[0,&quot;1&quot;]}],[0,{&quot;id&quot;:[0,&quot;terminology&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Terminology&quot;],&quot;number&quot;:[0,&quot;2&quot;]}],[0,{&quot;id&quot;:[0,&quot;node&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Node&quot;],&quot;number&quot;:[0,&quot;3&quot;]}],[0,{&quot;id&quot;:[0,&quot;ujgdocument&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;UJGDocument&quot;],&quot;number&quot;:[0,&quot;4&quot;]}],[0,{&quot;id&quot;:[0,&quot;normative-artifacts&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Normative Artifacts&quot;],&quot;number&quot;:[0,&quot;5&quot;],&quot;children&quot;:[1,[[0,{&quot;id&quot;:[0,&quot;ontology&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;Ontology&quot;],&quot;number&quot;:[0,&quot;5.1&quot;]}],[0,{&quot;id&quot;:[0,&quot;json-ld-context&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;JSON-LD Context&quot;],&quot;number&quot;:[0,&quot;5.2&quot;],&quot;children&quot;:[1,[[0,{&quot;id&quot;:[0,&quot;context-composition&quot;],&quot;depth&quot;:[0,4],&quot;text&quot;:[0,&quot;Context Composition&quot;],&quot;number&quot;:[0,&quot;5.2.1&quot;],&quot;children&quot;:[1,[[0,{&quot;id&quot;:[0,&quot;composed-context-example&quot;],&quot;depth&quot;:[0,5],&quot;text&quot;:[0,&quot;Composed Context Example&quot;],&quot;number&quot;:[0,&quot;5.2.1.1&quot;]}]]]}],[0,{&quot;id&quot;:[0,&quot;module-layering&quot;],&quot;depth&quot;:[0,4],&quot;text&quot;:[0,&quot;Module Layering&quot;],&quot;number&quot;:[0,&quot;5.2.2&quot;]}],[0,{&quot;id&quot;:[0,&quot;extensions&quot;],&quot;depth&quot;:[0,4],&quot;text&quot;:[0,&quot;Extensions&quot;],&quot;number&quot;:[0,&quot;5.2.3&quot;]}],[0,{&quot;id&quot;:[0,&quot;import-resolution&quot;],&quot;depth&quot;:[0,4],&quot;text&quot;:[0,&quot;Import Resolution&quot;],&quot;number&quot;:[0,&quot;5.2.4&quot;]}]]]}],[0,{&quot;id&quot;:[0,&quot;validation&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;Validation&quot;],&quot;number&quot;:[0,&quot;5.3&quot;]}]]]}],[0,{&quot;id&quot;:[0,&quot;examples&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Examples&quot;],&quot;number&quot;:[0,&quot;6&quot;],&quot;children&quot;:[1,[[0,{&quot;id&quot;:[0,&quot;minimal-document&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;Minimal Document&quot;],&quot;number&quot;:[0,&quot;6.1&quot;]}],[0,{&quot;id&quot;:[0,&quot;document-with-extension-payload&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;Document With Extension Payload&quot;],&quot;number&quot;:[0,&quot;6.2&quot;]}],[0,{&quot;id&quot;:[0,&quot;document-with-relative-imports&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;Document With Relative Imports&quot;],&quot;number&quot;:[0,&quot;6.3&quot;]}],[0,{&quot;id&quot;:[0,&quot;document-with-nodes&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;Document With Nodes&quot;],&quot;number&quot;:[0,&quot;6.4&quot;]}]]]}]]]}" ssr client="load" opts="{&quot;name&quot;:&quot;Toc&quot;,&quot;value&quot;:true}" await-children><div class="overflow-y-auto max-h-[calc(100vh-var(--height-header))] py-md pr-3"><div class="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground pb-base pl-3 pr-2"><span>Table of Contents</span><button class="hidden md:flex text-muted-foreground hover:text-foreground transition-[background-color,color] p-1 rounded-md hover:bg-accent-soft/50" title="Collapse sidebar" aria-label="Collapse sidebar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-left w-4 h-4" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path></svg></button></div><nav class="flex flex-col"><ul class="flex flex-col list-none p-0"><li class="flex flex-col"><a href="#overview" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">1</span><span>Overview</span></a></li><li class="flex flex-col"><a href="#terminology" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">2</span><span>Terminology</span></a></li><li class="flex flex-col"><a href="#node" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">3</span><span>Node</span></a></li><li class="flex flex-col"><a href="#ujgdocument" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">4</span><span>UJGDocument</span></a></li><li class="flex flex-col"><a href="#normative-artifacts" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5</span><span>Normative Artifacts</span></a><ul class="flex flex-col list-none p-0 m-0 border-l border-border ml-4"><li class="flex flex-col"><a href="#ontology" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5.1</span><span>Ontology</span></a></li><li class="flex flex-col"><a href="#json-ld-context" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5.2</span><span>JSON-LD Context</span></a><ul class="flex flex-col list-none p-0 m-0 border-l border-border ml-4"><li class="flex flex-col"><a href="#context-composition" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5.2.1</span><span>Context Composition</span></a><ul class="flex flex-col list-none p-0 m-0 border-l border-border ml-4"><li class="flex flex-col"><a href="#composed-context-example" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5.2.1.1</span><span>Composed Context Example</span></a></li></ul></li><li class="flex flex-col"><a href="#module-layering" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5.2.2</span><span>Module Layering</span></a></li><li class="flex flex-col"><a href="#extensions" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5.2.3</span><span>Extensions</span></a></li><li class="flex flex-col"><a href="#import-resolution" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5.2.4</span><span>Import Resolution</span></a></li></ul></li><li class="flex flex-col"><a href="#validation" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5.3</span><span>Validation</span></a></li></ul></li><li class="flex flex-col"><a href="#examples" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6</span><span>Examples</span></a><ul class="flex flex-col list-none p-0 m-0 border-l border-border ml-4"><li class="flex flex-col"><a href="#minimal-document" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6.1</span><span>Minimal Document</span></a></li><li class="flex flex-col"><a href="#document-with-extension-payload" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6.2</span><span>Document With Extension Payload</span></a></li><li class="flex flex-col"><a href="#document-with-relative-imports" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6.3</span><span>Document With Relative Imports</span></a></li><li class="flex flex-col"><a href="#document-with-nodes" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6.4</span><span>Document With Nodes</span></a></li></ul></li></ul></nav></div><!--astro:end--></astro-island> </div> </aside> <main class="max-w-spec min-w-0 mx-auto py-md md:p-md text-base leading-relaxed"> <article> <div class="w-20 p-2 pt-3 pl-3 border border-border rounded-md"> <img src="/tr/_astro/w3c-cg-draft.CzkmfRfp.png" alt="W3C Community Group Draft Report" class="w-full"> </div> <div class="flex items-center gap-md mt-md"> <h1>Core</h1> <span class="pill draft uppercase text-xs w-fit font-mono">draft</span> </div> <header class="spec-header pro-theme-cg" data-astro-cid-crpkus26> <section class="my-8 p-6 rounded-r-lg border-l-4 border-border bg-panel"> <h2 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3 mt-0 border-none">
+Status of this Document
+</h2> <div class="text-xs leading-relaxed text-secondary-foreground"> <p>
+This report was published by the  <a href="https://www.w3.org/community/ujg/" class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"> User Journey Graph Community Group </a>
+. It is not a W3C Standard nor is it on the W3C Standards Track. Please note that under
+          the  <a href="https://www.w3.org/community/about/process/cla/" class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors">
+W3C Community Contributor License Agreement (CLA)
+</a> 
+there is a limited opt-out and other conditions apply. Learn more about  <a href="https://www.w3.org/community/" class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors">
+W3C Community and Business Groups
+</a>
+.
+</p> </div> </section> <div class="metadata-grid border border-border rounded-xl p-4 md:p-8 bg-card shadow-sm overflow-hidden"> <dl class="grid grid-cols-[96px_minmax(0,1fr)] md:grid-cols-[120px_minmax(0,1fr)] gap-x-4 md:gap-x-8 gap-y-6"> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Status
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> CG-DRAFT </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Version
+</dt> <dd class="text-base text-foreground self-baseline font-mono min-w-0 [overflow-wrap:anywhere]"> 1.0-rc3 </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Published
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> 2026-11-09 </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Last Update
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> 2026-11-09 </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Editors
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> <ul class="list-none p-0 m-0 space-y-2"> <li class="p-0 m-0"> Seva Dolgopolov   </li> </ul> </dd> </div>  <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Group
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> <a href="https://www.w3.org/community/ujg/" class="text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent transition-colors [overflow-wrap:anywhere]"> User Journey Graph Community Group </a> </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Repository
+</dt> <dd class="text-base self-baseline min-w-0 [overflow-wrap:anywhere]"> <a href="https://github.com/openuji/spec-ujg/blob/main/specs/tr/1.0-rc3/core/index.md" class="inline-flex max-w-full items-center gap-2 text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent transition-colors"> <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path> </svg> <span class="[overflow-wrap:anywhere]">View Source</span> </a> </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+License
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> W3C-Software-and-Document </dd> </div> </dl> </div>   </header>  <div class="spec"> <section id="overview" class="spec-section"><script type="module">const c="ujg-term-tooltip-portal";function u(){let t=document.getElementById(c);return t||(t=document.createElement("div"),t.id=c,t.className="term-info__portal",t.setAttribute("role","tooltip"),document.body.appendChild(t)),t}function g(t){const e=t.nextElementSibling;if(!e)return;const n=u();n.innerHTML=e.innerHTML,n.classList.add("is-visible");const i=t.getBoundingClientRect(),o=n.getBoundingClientRect();let s=i.left+i.width/2-o.width/2;s=Math.max(8,Math.min(s,window.innerWidth-o.width-8));let l=i.bottom+8;l+o.height>window.innerHeight-8&&(l=i.top-o.height-8),n.style.left=`${s}px`,n.style.top=`${l}px`}function r(){document.getElementById(c)?.classList.remove("is-visible")}function d(t){return t instanceof Element?t.closest(".term-info__trigger"):null}window.__ujgTermTooltipInit||(window.__ujgTermTooltipInit=!0,document.addEventListener("mouseover",t=>{const e=d(t.target);e&&g(e)}),document.addEventListener("mouseout",t=>{d(t.target)&&r()}),document.addEventListener("focusin",t=>{const e=d(t.target);e&&g(e)}),document.addEventListener("focusout",t=>{d(t.target)&&r()}),window.addEventListener("scroll",r,!0),window.addEventListener("resize",r));</script><h2 class="section-heading"><span class="section-number">1. </span>Overview</h2><p>This module defines the shared Core artifacts for UJG documents.</p><p>The Core module is published under <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/</code>. Implementations should use these canonical URLs when referencing the Core vocabulary, JSON-LD context, and SHACL validation shape.</p><p>The Core module consists of:</p><ul><li><p><code>core.ttl</code>: the ontology for Core classes and properties, published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core</code></p></li><li><p><code>core.context.jsonld</code>: the JSON-LD context for compact JSON-LD documents, published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld</code></p></li><li><p><code>core.shape.ttl</code>: the SHACL shape used for Core validation, published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.shape</code></p></li></ul></section><section id="terminology" class="spec-section"><h2 class="section-heading"><span class="section-number">2. </span>Terminology</h2><ul><li><p><dfn id="dfn-ujgdocument" title="ujgdocument">UJGDocument</dfn>: The Core document class for a JSON-LD bundle.</p></li><li><p><dfn id="dfn-node" title="node">Node</dfn>: The base Core class for addressable objects that may appear in <code>nodes</code>.</p></li><li><p><dfn id="dfn-main-spec-family" title="main spec family">Main spec family</dfn>: The shared UJG specification family that defines the common
+interoperability baseline for UJG documents and tools, excluding optional modules and document
+extensions.</p></li><li><p><dfn id="dfn-ujg-module" title="ujg module">UJG module</dfn>: A published UJG specification unit that defines vocabulary terms, JSON-LD
+context entries, validation shapes, or processing rules. A UJG module may belong to the
+<a href="/tr/1.0-rc3/core#dfn-main-spec-family" class="xref" title="main spec family">main spec family</a> or to the optional module family.</p></li><li><p><dfn id="dfn-optional-module" title="optional module">Optional module</dfn>: A UJG module for a capability that not every compliant UJG document or
+tool needs.</p></li><li><p><dfn id="dfn-first-level-ujg-module" title="first-level ujg module">First-level UJG module</dfn>: An optional module whose dependencies are limited to the
+<a href="/tr/1.0-rc3/core#dfn-main-spec-family" class="xref" title="main spec family">main spec family</a>.</p></li><li><p><dfn id="dfn-first-level-bridge-module" title="first-level bridge module">First-level bridge module</dfn>: A first-level UJG module designed to stay small and reusable
+so more specialized modules can build on it.</p></li><li><p><dfn id="dfn-second-level-ujg-module" title="second-level ujg module">Second-level UJG module</dfn>: An optional module that depends on at least one first-level UJG
+module to describe a more specialized capability.</p></li></ul></section><section id="node" class="spec-section"><h2 class="section-heading"><span class="section-number">3. </span>Node</h2><p><a href="/tr/1.0-rc3/core#dfn-node" class="xref" title="Node">Node</a> is the base Core class for addressable objects that may appear in a <a href="/tr/1.0-rc3/core#dfn-ujgdocument" class="xref" title="UJGDocument">UJGDocument</a>
+<code>nodes</code> collection. Most documents use concrete subclasses from Graph, Surface, Runtime, or optional
+modules rather than plain <code>Node</code>.</p><div class="mermaid-container" data-astro-cid-najdirf6> <pre class="mermaid" data-mermaid-pending="true" data-mermaid-source="classDiagram
+  class Node {
+    id
+    extensions
+  }" data-astro-cid-najdirf6>classDiagram
+  class Node {
+    id
+    extensions
+  }</pre> </div> <script type="module" src="/tr/_astro/Mermaid.astro_astro_type_script_index_0_lang.98AqllmF.js"></script> <p>Plain <code>Node</code> is useful for Core-only extension payloads. Interoperable graph, runtime, surface, or
+module semantics should use a defined concrete class.</p><p>Example JSON node:</p><div class="code-block-wrapper"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@id&#34;: &#34;urn:ujg:node:vendor-private&#34;,
+  &#34;@type&#34;: &#34;Node&#34;,
+  &#34;extensions&#34;: {
+    &#34;com.acme.example&#34;: {
+      &#34;note&#34;: &#34;Private payload preserved by Core consumers.&#34;
+    }
+  }
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:node:vendor-private"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Node"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "extensions"</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#005CC5">    "com.acme.example"</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#005CC5">      "note"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Private payload preserved by Core consumers."</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:node:vendor-private"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Node"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "extensions"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "com.acme.example"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "note"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Private payload preserved by Core consumers."</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div>  </div> <script type="module">function a(){document.querySelectorAll(".copy-btn").forEach(o=>{const e=o.cloneNode(!0);o.parentNode?.replaceChild(e,o);let c;e.addEventListener("click",async()=>{const s=e.getAttribute("data-code")||"",l=e.querySelector(".copy-btn-status");try{await navigator.clipboard.writeText(s),window.clearTimeout(c),e.classList.add("is-copied"),e.setAttribute("aria-label","Code copied"),l&&(l.textContent="Copied"),c=window.setTimeout(()=>{e.classList.remove("is-copied"),e.setAttribute("aria-label","Copy code"),l&&(l.textContent="")},1800)}catch(t){console.error("Failed to copy code:",t)}})})}function r(){document.querySelectorAll(".code-collapse-toggle").forEach(o=>{const e=o.cloneNode(!0);o.parentNode?.replaceChild(e,o);const c=e.closest(".code-block-wrapper--collapsible"),s=e.querySelector(".code-collapse-toggle-label");if(!c||!s)return;const l=t=>{c.classList.toggle("is-collapsed",!t),c.classList.toggle("is-expanded",t),e.setAttribute("aria-expanded",String(t)),e.setAttribute("aria-label",t?"Collapse code block":"Show full code block"),s.textContent=t?"COLLAPSE":"SHOW FULL"};l(!1),e.addEventListener("click",()=>{const t=e.getAttribute("aria-expanded")!=="true";l(t),t||c.scrollIntoView({block:"start",behavior:"auto"})})})}a();r();document.addEventListener("astro:page-load",()=>{a(),r()});</script></section><section id="ujgdocument" class="spec-section"><h2 class="section-heading"><span class="section-number">4. </span>UJGDocument</h2><p>A <a href="/tr/1.0-rc3/core#dfn-ujgdocument" class="xref" title="UJGDocument">UJGDocument</a> is the Core JSON-LD document container. It may import other UJG documents, list
+addressable <a href="/tr/1.0-rc3/core#dfn-node" class="xref" title="Node">Node</a> instances in <code>nodes</code>, and carry document-level <code>extensions</code>.</p><div class="mermaid-container" data-astro-cid-najdirf6> <pre class="mermaid" data-mermaid-pending="true" data-mermaid-source="classDiagram
+  class Node
+  class UJGDocument {
+    id
+    imports
+    nodes
+    extensions
+  }
+  UJGDocument --> &#34;0..*&#34; UJGDocument : imports
+  UJGDocument --> &#34;0..*&#34; Node : nodes" data-astro-cid-najdirf6>classDiagram
+  class Node
+  class UJGDocument {
+    id
+    imports
+    nodes
+    extensions
+  }
+  UJGDocument --&gt; &quot;0..*&quot; UJGDocument : imports
+  UJGDocument --&gt; &quot;0..*&quot; Node : nodes</pre> </div>  <p>Example JSON document:</p><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@context&#34;: &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld&#34;,
+  &#34;@id&#34;: &#34;https://example.com/ujg/core/minimal.jsonld&#34;,
+  &#34;@type&#34;: &#34;UJGDocument&#34;,
+  &#34;nodes&#34;: [
+    {
+      &#34;@id&#34;: &#34;urn:ujg:node:vendor-private&#34;,
+      &#34;@type&#34;: &#34;Node&#34;
+    }
+  ]
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@context"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://example.com/ujg/core/minimal.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"UJGDocument"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "nodes"</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:node:vendor-private"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Node"</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  ]</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@context"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://example.com/ujg/core/minimal.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"UJGDocument"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "nodes"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:node:vendor-private"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Node"</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> </section><section id="normative-artifacts" class="spec-section"><h2 class="section-heading"><span class="section-number">5. </span>Normative Artifacts</h2><section id="ontology" class="spec-section"><h3 class="section-heading"><span class="section-number">5.1. </span>Ontology</h3><p>The normative Core ontology is defined in the Turtle document below and is published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core</code>. It declares the <code>UJGDocument</code> and <code>Node</code> classes together with the Core properties used by this module.</p><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> turtle </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+
+<https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#> a owl:Ontology ;
+  rdfs:label &#34;UJG Core 1.0 Vocabulary&#34;@en ;
+  dct:description &#34;UJG Ontology declaration&#34; .
+
+### Classes
+
+ujg:UJGDocument a owl:Class .
+ujg:Node        a owl:Class .
+
+ujg:documentImports a owl:ObjectProperty ;
+  rdfs:domain ujg:UJGDocument ; 
+  rdfs:range ujg:UJGDocument .
+
+ujg:documentNodes a owl:ObjectProperty;
+  rdfs:domain ujg:UJGDocument ; 
+  rdfs:range ujg:Node .
+
+### Properties
+
+ujg:extensions a owl:DatatypeProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf ( ujg:UJGDocument ujg:Node )
+  ] ;
+  rdfs:range rdf:JSON ."> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="turtle"><code><span class="line"><span style="color:#D73A49">@prefix ujg:</span><span style="color:#6F42C1"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix owl:</span><span style="color:#6F42C1"> &#x3C;http://www.w3.org/2002/07/owl#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix rdfs:</span><span style="color:#6F42C1">&#x3C;http://www.w3.org/2000/01/rdf-schema#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix dct:</span><span style="color:#6F42C1"> &#x3C;http://purl.org/dc/terms/></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix rdf:</span><span style="color:#6F42C1"> &#x3C;http://www.w3.org/1999/02/22-rdf-syntax-ns#></span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1">&#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#></span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">Ontology</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">label</span><span style="color:#032F62"> "UJG Core 1.0 Vocabulary"</span><span style="color:#24292E">@</span><span style="color:#6F42C1">en</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  dct:</span><span style="color:#005CC5">description</span><span style="color:#032F62"> "UJG Ontology declaration"</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">### Classes</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujg:</span><span style="color:#005CC5">UJGDocument</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">Class</span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">ujg:</span><span style="color:#005CC5">Node</span><span style="color:#D73A49">        a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">Class</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujg:</span><span style="color:#005CC5">documentImports</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">ObjectProperty</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">domain</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">UJGDocument</span><span style="color:#24292E"> ; </span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">range</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">UJGDocument</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujg:</span><span style="color:#005CC5">documentNodes</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">ObjectProperty</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">domain</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">UJGDocument</span><span style="color:#24292E"> ; </span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">range</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">Node</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">### Properties</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujg:</span><span style="color:#005CC5">extensions</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">DatatypeProperty</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">domain</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">    a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">Class</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    owl:</span><span style="color:#005CC5">unionOf</span><span style="color:#24292E"> ( </span><span style="color:#D73A49">ujg:</span><span style="color:#005CC5">UJGDocument</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">Node</span><span style="color:#24292E"> )</span></span>
+<span class="line"><span style="color:#24292E">  ] ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">range</span><span style="color:#D73A49"> rdf:</span><span style="color:#005CC5">JSON</span><span style="color:#24292E"> .</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="turtle"><code><span class="line"><span style="color:#F97583">@prefix ujg:</span><span style="color:#B392F0"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix owl:</span><span style="color:#B392F0"> &#x3C;http://www.w3.org/2002/07/owl#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix rdfs:</span><span style="color:#B392F0">&#x3C;http://www.w3.org/2000/01/rdf-schema#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix dct:</span><span style="color:#B392F0"> &#x3C;http://purl.org/dc/terms/></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix rdf:</span><span style="color:#B392F0"> &#x3C;http://www.w3.org/1999/02/22-rdf-syntax-ns#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">&#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#></span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">Ontology</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">label</span><span style="color:#9ECBFF"> "UJG Core 1.0 Vocabulary"</span><span style="color:#E1E4E8">@</span><span style="color:#B392F0">en</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  dct:</span><span style="color:#79B8FF">description</span><span style="color:#9ECBFF"> "UJG Ontology declaration"</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">### Classes</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujg:</span><span style="color:#79B8FF">UJGDocument</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">Class</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">ujg:</span><span style="color:#79B8FF">Node</span><span style="color:#F97583">        a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">Class</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujg:</span><span style="color:#79B8FF">documentImports</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">ObjectProperty</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">domain</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">UJGDocument</span><span style="color:#E1E4E8"> ; </span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">range</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">UJGDocument</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujg:</span><span style="color:#79B8FF">documentNodes</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">ObjectProperty</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">domain</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">UJGDocument</span><span style="color:#E1E4E8"> ; </span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">range</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">Node</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">### Properties</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujg:</span><span style="color:#79B8FF">extensions</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">DatatypeProperty</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">domain</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">    a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">Class</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    owl:</span><span style="color:#79B8FF">unionOf</span><span style="color:#E1E4E8"> ( </span><span style="color:#F97583">ujg:</span><span style="color:#79B8FF">UJGDocument</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">Node</span><span style="color:#E1E4E8"> )</span></span>
+<span class="line"><span style="color:#E1E4E8">  ] ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">range</span><span style="color:#F97583"> rdf:</span><span style="color:#79B8FF">JSON</span><span style="color:#E1E4E8"> .</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> </section><section id="json-ld-context" class="spec-section"><h3 class="section-heading"><span class="section-number">5.2. </span>JSON-LD Context</h3><p>The normative Core JSON-LD context is defined below and is published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld</code>. Examples in this section use the compact terms from this context, including <code>@id</code>, <code>@type</code>, <code>imports</code>, <code>nodes</code>, and <code>extensions</code>.</p><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> json-ld </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@context&#34;: {
+    &#34;@version&#34;: 1.1,
+    
+    &#34;ujg&#34;: &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#&#34;,
+    &#34;@vocab&#34;: &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#&#34;,
+
+    &#34;imports&#34;: {
+      &#34;@id&#34;: &#34;ujg:documentImports&#34;, &#34;@type&#34;: &#34;@id&#34;, &#34;@container&#34;: &#34;@set&#34;
+    },
+    &#34;nodes&#34;: {
+      &#34;@id&#34;: &#34;ujg:documentNodes&#34;, &#34;@container&#34;: &#34;@set&#34;
+    },
+    &#34;extensions&#34;: {
+      &#34;@id&#34;: &#34;ujg:extensions&#34;, &#34;@type&#34;: &#34;@json&#34;
+    }
+  }
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<span class="line"><span>  "@context": {</span></span>
+<span class="line"><span>    "@version": 1.1,</span></span>
+<span class="line"><span>    </span></span>
+<span class="line"><span>    "ujg": "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#",</span></span>
+<span class="line"><span>    "@vocab": "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#",</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    "imports": {</span></span>
+<span class="line"><span>      "@id": "ujg:documentImports", "@type": "@id", "@container": "@set"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "nodes": {</span></span>
+<span class="line"><span>      "@id": "ujg:documentNodes", "@container": "@set"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "extensions": {</span></span>
+<span class="line"><span>      "@id": "ujg:extensions", "@type": "@json"</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<span class="line"><span>  "@context": {</span></span>
+<span class="line"><span>    "@version": 1.1,</span></span>
+<span class="line"><span>    </span></span>
+<span class="line"><span>    "ujg": "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#",</span></span>
+<span class="line"><span>    "@vocab": "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#",</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    "imports": {</span></span>
+<span class="line"><span>      "@id": "ujg:documentImports", "@type": "@id", "@container": "@set"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "nodes": {</span></span>
+<span class="line"><span>      "@id": "ujg:documentNodes", "@container": "@set"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "extensions": {</span></span>
+<span class="line"><span>      "@id": "ujg:extensions", "@type": "@json"</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> <section id="context-composition" class="spec-section"><h4 class="section-heading"><span class="section-number">5.2.1. </span>Context Composition</h4><p class="spec-statement level-must" id="a-compact-ujg-json-ld-document-must-include-the-core-json-ld-context">A compact UJG JSON-LD document <strong>MUST</strong> include the Core JSON-LD context.</p><p class="spec-statement level-must" id="a-specification-that-defines-compact-terms-not-defined-by-core-must-normatively-identify-the-published-url-of-the-json-ld-context-that-defines-those-terms">A specification that defines compact terms not defined by Core <strong>MUST</strong> normatively identify the published URL of the JSON-LD context that defines those terms.</p><p class="spec-statement level-must" id="a-compact-ujg-json-ld-document-that-uses-terms-not-defined-by-core-must-compose-the-core-context-with-the-published-contexts-that-define-those-terms">A compact UJG JSON-LD document that uses terms not defined by Core <strong>MUST</strong> compose the Core context with the published contexts that define those terms.</p><p class="spec-statement level-must" id="when-a-compact-ujg-json-ld-document-uses-terms-not-defined-by-core-its-context-must-reference-the-published-urls-of-the-contexts-that-define-those-terms">When a compact UJG JSON-LD document uses terms not defined by Core, its <code>@context</code> <strong>MUST</strong> reference the published URLs of the contexts that define those terms.</p><p class="spec-statement level-may" id="specifications-or-deployments-may-publish-convenience-aggregate-contexts-that-compose-the-core-context-with-additional-contexts-but-such-aggregate-contexts-are-outside-the-scope-of-core">Specifications or deployments <strong>MAY</strong> publish convenience aggregate contexts that compose the Core context with additional contexts, but such aggregate contexts are outside the scope of Core.</p><p>A composed context is expressed as a JSON-LD <code>@context</code> array in which the Core context appears together with one or more additional contexts required by the document and published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/context.jsonld</code></p><section id="composed-context-example" class="spec-section"><h5 class="section-heading"><span class="section-number">5.2.1.1. </span>Composed Context Example</h5><div class="code-block-wrapper"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@context&#34;: [
+    &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld&#34;,
+    &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/graph.context.jsonld&#34;,
+    &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface.context.jsonld&#34;,
+    &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.context.jsonld&#34;
+  ]
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@context"</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#032F62">    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/graph.context.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface.context.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.context.jsonld"</span></span>
+<span class="line"><span style="color:#24292E">  ]</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@context"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#9ECBFF">    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/graph.context.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface.context.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.context.jsonld"</span></span>
+<span class="line"><span style="color:#E1E4E8">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div>  </div> </section></section><section id="module-layering" class="spec-section"><h4 class="section-heading"><span class="section-number">5.2.2. </span>Module Layering</h4><p class="spec-statement level-must" id="a-ujg-module-that-defines-compact-terms-not-defined-by-core-must-publish-a-json-ld-context-for-those-terms">A <a href="/tr/1.0-rc3/core#dfn-ujg-module" class="xref" title="UJG module">UJG module</a> that defines compact terms not defined by Core <strong>MUST</strong> publish a JSON-LD context for those terms.</p><p class="spec-statement level-must" id="a-ujg-module-that-depends-on-core-or-another-ujg-module-must-identify-the-modules-whose-terms-classes-or-validation-semantics-it-relies-on">A <a href="/tr/1.0-rc3/core#dfn-ujg-module" class="xref" title="UJG module">UJG module</a> that depends on Core or another UJG module <strong>MUST</strong> identify the modules whose terms, classes, or validation semantics it relies on.</p><p class="spec-statement level-must not" id="a-first-level-ujg-module-must-identify-only-main-spec-family-modules-as-dependencies-and-must-not-depend-on-another-optional-module">A <a href="/tr/1.0-rc3/core#dfn-first-level-ujg-module" class="xref" title="first-level UJG module">first-level UJG module</a> <strong>MUST</strong> identify only <a href="/tr/1.0-rc3/core#dfn-main-spec-family" class="xref" title="main spec family">main spec family</a> modules as dependencies and <strong>MUST NOT</strong> depend on another <a href="/tr/1.0-rc3/core#dfn-optional-module" class="xref" title="optional module">optional module</a>.</p><p class="spec-statement level-may" id="a-first-level-ujg-module-may-define-references-from-core-node-instances-or-classes-defined-by-main-spec-family-modules-provided-those-references-do-not-alter-core-identity-import-resolution-reference-resolution-graph-traversal-or-runtime-ordering">A <a href="/tr/1.0-rc3/core#dfn-first-level-ujg-module" class="xref" title="first-level UJG module">first-level UJG module</a> <strong>MAY</strong> define references from Core <a href="/tr/1.0-rc3/core#dfn-node" class="xref" title="Node">Node</a> instances or classes defined by <a href="/tr/1.0-rc3/core#dfn-main-spec-family" class="xref" title="main spec family">main spec family</a> modules, provided those references do not alter Core identity, import resolution, reference resolution, graph traversal, or runtime ordering.</p><p class="spec-statement level-should" id="a-first-level-bridge-module-should-define-a-narrow-domain-neutral-vocabulary-that-can-be-specialized-by-modules-that-depend-on-it">A <a href="/tr/1.0-rc3/core#dfn-first-level-bridge-module" class="xref" title="first-level bridge module">first-level bridge module</a> <strong>SHOULD</strong> define a narrow, domain-neutral vocabulary that can be specialized by modules that depend on it.</p><p class="spec-statement level-ambiguous" id="a-second-level-ujg-module-must-depend-on-at-least-one-first-level-ujg-module-and-may-also-depend-on-main-spec-family-modules">A <a href="/tr/1.0-rc3/core#dfn-second-level-ujg-module" class="xref" title="second-level UJG module">second-level UJG module</a> <strong>MUST</strong> depend on at least one <a href="/tr/1.0-rc3/core#dfn-first-level-ujg-module" class="xref" title="first-level UJG module">first-level UJG module</a> and <strong>MAY</strong> also depend on <a href="/tr/1.0-rc3/core#dfn-main-spec-family" class="xref" title="main spec family">main spec family</a> modules.</p><p class="spec-statement level-must not" id="a-second-level-ujg-module-must-not-attach-specialized-domain-semantics-directly-to-core-or-graph-nodes-when-an-appropriate-first-level-bridge-module-exists-for-that-domain">A <a href="/tr/1.0-rc3/core#dfn-second-level-ujg-module" class="xref" title="second-level UJG module">second-level UJG module</a> <strong>MUST NOT</strong> attach specialized domain semantics directly to Core or Graph nodes when an appropriate first-level bridge module exists for that domain.</p><p class="spec-statement level-must not" id="module-references-must-not-create-hidden-graph-traversal-runtime-ordering-mapping-conformance-or-profile-requirements-unless-those-semantics-are-explicitly-defined-by-the-module-that-owns-the-references">Module references <strong>MUST NOT</strong> create hidden graph traversal, runtime ordering, mapping conformance, or profile requirements unless those semantics are explicitly defined by the module that owns the references.</p><p class="spec-statement level-may" id="consumers-that-do-not-implement-an-optional-module-may-ignore-that-modules-terms-provided-they-preserve-json-ld-identity-and-unknown-extension-data-according-to-core-processing-rules">Consumers that do not implement an <a href="/tr/1.0-rc3/core#dfn-optional-module" class="xref" title="optional module">optional module</a> <strong>MAY</strong> ignore that module&#39;s terms, provided they preserve JSON-LD identity and unknown extension data according to Core processing rules.</p></section><section id="extensions" class="spec-section"><h4 class="section-heading"><span class="section-number">5.2.3. </span>Extensions</h4><p class="spec-statement level-may" id="extensions-may-appear-on-a-ujgdocument-or-any-node"><code>extensions</code> <strong>MAY</strong> appear on a <a href="/tr/1.0-rc3/core#dfn-ujgdocument" class="xref" title="UJGDocument">UJGDocument</a> or any <a href="/tr/1.0-rc3/core#dfn-node" class="xref" title="Node">Node</a>.</p><p class="spec-statement level-none" id="ujgdocument-level-extensions-attach-document-extensions-to-the-containing-document-node-level-extensions-attach-opaque-extension-payloads-to-the-containing-node"><a href="/tr/1.0-rc3/core#dfn-ujgdocument" class="xref" title="UJGDocument">UJGDocument</a>-level <code>extensions</code> attach document extensions to the containing
+document. <a href="/tr/1.0-rc3/core#dfn-node" class="xref" title="Node">Node</a>-level <code>extensions</code> attach opaque extension payloads to the containing
+node.</p><p class="spec-statement level-must" id="if-present-extensions-must-be-a-json-object">If present, <code>extensions</code> <strong>MUST</strong> be a JSON object.</p><p class="spec-statement level-ambiguous" id="each-top-level-key-in-extensions-must-be-a-namespace-string-controlled-by-the-extension-author-authors-should-use-reverse-dns-names-or-uri-based-identifiers">Each top-level key in <code>extensions</code> <strong>MUST</strong> be a namespace string controlled by the extension author. Authors <strong>SHOULD</strong> use reverse-DNS names or URI-based identifiers.</p><p class="spec-statement level-must" id="each-top-level-value-in-extensions-must-be-a-json-object">Each top-level value in <code>extensions</code> <strong>MUST</strong> be a JSON object.</p><p class="spec-statement level-must" id="consumers-must-preserve-unknown-extension-entries-during-read-transform-write-unless-operating-in-an-explicitly-lossy-mode">Consumers <strong>MUST</strong> preserve unknown extension entries during read-transform-write unless operating in an explicitly lossy mode.</p><p class="spec-statement level-must not" id="consumers-must-not-let-unknown-extensions-affect-core-identity-import-resolution-reference-resolution-graph-traversal-or-graph-semantics">Consumers <strong>MUST NOT</strong> let unknown extensions affect Core identity, import
+resolution, reference resolution, Graph traversal, or Graph semantics.</p><p class="spec-statement level-may" id="consumers-may-apply-namespace-specific-processing-for-recognized-extensions">Consumers <strong>MAY</strong> apply namespace-specific processing for recognized extensions.</p><p class="spec-statement level-should" id="extensions-that-change-core-graph-meaning-should-be-standardized-as-first-class-ujg-modules-rather-than-hidden-inside-extensions">Extensions that change core graph meaning <strong>SHOULD</strong> be standardized as first-class UJG modules rather than hidden inside <code>extensions</code>.</p><p class="spec-statement level-must" id="terms-intended-to-participate-in-interoperable-graph-semantics-reference-resolution-validation-or-rdf-querying-must-be-defined-by-published-json-ld-contexts-and-corresponding-module-artifacts-rather-than-being-hidden-inside-extensions">Terms intended to participate in interoperable graph semantics, reference resolution, validation, or RDF querying <strong>MUST</strong> be defined by published JSON-LD contexts and corresponding module artifacts rather than being hidden inside <code>extensions</code>.</p><p class="spec-statement level-must not" id="identifiers-that-appear-only-inside-extensions-must-not-be-treated-as-core-or-graph-references-for-standardized-ujg-processing-unless-an-implementation-applies-explicit-namespace-specific-processing-outside-module-conformance">Identifiers that appear only inside <code>extensions</code> <strong>MUST NOT</strong> be treated as Core or Graph references for standardized UJG processing unless an implementation applies explicit namespace-specific processing outside module conformance.</p></section><section id="import-resolution" class="spec-section"><h4 class="section-heading"><span class="section-number">5.2.4. </span>Import Resolution</h4><p class="spec-statement level-must" id="imports-values-must-be-iri-references"><code>imports</code> values <strong>MUST</strong> be IRI references.</p><p class="spec-statement level-may" id="an-imports-value-may-be-an-absolute-iri-or-a-relative-iri-reference">An <code>imports</code> value <strong>MAY</strong> be an absolute IRI or a relative IRI reference.</p><p class="spec-statement level-must" id="relative-import-references-must-be-resolved-against-the-location-of-the-importing-ujgdocument">Relative import references <strong>MUST</strong> be resolved against the location of the importing <a href="/tr/1.0-rc3/core#dfn-ujgdocument" class="xref" title="UJGDocument">UJGDocument</a>.</p><p class="spec-statement level-none" id="for-a-document-retrieved-via-http-s-the-base-for-resolution-is-the-document-url-for-a-document-loaded-from-a-file-url-the-base-for-resolution-is-the-file-url-of-the-importing-document">For a document retrieved via HTTP(S), the base for resolution is the document URL. For a document loaded from a file URL, the base for resolution is the file URL of the importing document.</p><p class="spec-statement level-none" id="core-does-not-define-a-manifest-root-package-root-or-workspace-root-for-import-resolution">Core does not define a manifest root, package root, or workspace root for import resolution.</p><p class="spec-statement level-may" id="if-no-stable-document-location-is-available-relative-imports-are-implementation-specific-and-may-not-be-portable">If no stable document location is available, relative imports are implementation-specific and may not be portable.</p><blockquote><aside class="note note-note" id="note-90dd5bb0" role="note"><div class="note-header">NOTE</div><div class="note-content"><p>JSON-LD defines a base IRI mechanism, including local <code>@base</code>, but Core import resolution is defined by the importing document location. External contexts do not apply <code>@base</code>, and relative references are only reliable when a base is well defined. See <a href="https://www.w3.org/TR/2020/REC-json-ld11-20200716/" class="cite" data-cite="JSON-LD 1.1.">[JSON-LD 1.1.]</a>.</p></div></aside></blockquote><blockquote><aside class="note note-note" id="note-48719ac9" role="note"><div class="note-header">NOTE</div><div class="note-content"><p>Authors <strong>SHOULD</strong> prefer relative import references for intra-package documents so the same document set can be moved between local development and deployed environments without changing import values, provided the relative directory layout is preserved.</p></div></aside></blockquote></section></section><section id="validation" class="spec-section"><h3 class="section-heading"><span class="section-number">5.3. </span>Validation</h3><p>The normative Core SHACL shape is defined below and is published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.shape</code>. It constrains <a href="/tr/1.0-rc3/core#dfn-ujgdocument" class="xref" title="UJGDocument">UJGDocument</a> and <a href="/tr/1.0-rc3/core#dfn-node" class="xref" title="Node">Node</a> instances and is the validation artifact for Core semantics.</p><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> turtle </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ujgshape: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.shape#> .
+
+
+ujgshape:UJGDocumentShape a sh:NodeShape ;
+  sh:targetClass ujg:UJGDocument ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujg:documentImports ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 0 ;
+  ] ;
+
+  sh:property [
+    sh:path ujg:documentNodes ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 0 ;
+  ] ;
+
+  sh:property [
+    sh:path ujg:extensions ;
+    sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgshape:NodeShape a sh:NodeShape ;
+  sh:targetClass ujg:Node ;
+  sh:targetObjectsOf ujg:documentNodes ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujg:extensions ;
+    sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
+  ] ."> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="turtle"><code><span class="line"><span style="color:#D73A49">@prefix ujg:</span><span style="color:#6F42C1"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix sh:</span><span style="color:#6F42C1"> &#x3C;http://www.w3.org/ns/shacl#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix rdf:</span><span style="color:#6F42C1"> &#x3C;http://www.w3.org/1999/02/22-rdf-syntax-ns#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix ujgshape:</span><span style="color:#6F42C1"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.shape#></span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgshape:</span><span style="color:#005CC5">UJGDocumentShape</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">NodeShape</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">targetClass</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">UJGDocument</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">nodeKind</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">IRI</span><span style="color:#24292E"> ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">property</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">path</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">documentImports</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">nodeKind</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">IRI</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">minCount</span><span style="color:#005CC5"> 0</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#24292E">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">property</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">path</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">documentNodes</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">nodeKind</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">IRI</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">minCount</span><span style="color:#005CC5"> 0</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#24292E">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">property</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">path</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">extensions</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">datatype</span><span style="color:#D73A49"> rdf:</span><span style="color:#005CC5">JSON</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">maxCount</span><span style="color:#005CC5"> 1</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#24292E">  ] .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgshape:</span><span style="color:#005CC5">NodeShape</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">NodeShape</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">targetClass</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">Node</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">targetObjectsOf</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">documentNodes</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">nodeKind</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">IRI</span><span style="color:#24292E"> ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">property</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">path</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">extensions</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">datatype</span><span style="color:#D73A49"> rdf:</span><span style="color:#005CC5">JSON</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">maxCount</span><span style="color:#005CC5"> 1</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#24292E">  ] .</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="turtle"><code><span class="line"><span style="color:#F97583">@prefix ujg:</span><span style="color:#B392F0"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix sh:</span><span style="color:#B392F0"> &#x3C;http://www.w3.org/ns/shacl#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix rdf:</span><span style="color:#B392F0"> &#x3C;http://www.w3.org/1999/02/22-rdf-syntax-ns#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix ujgshape:</span><span style="color:#B392F0"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.shape#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgshape:</span><span style="color:#79B8FF">UJGDocumentShape</span><span style="color:#F97583"> a</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">NodeShape</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">targetClass</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">UJGDocument</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">nodeKind</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">IRI</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">property</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">path</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">documentImports</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">nodeKind</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">IRI</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">minCount</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#E1E4E8">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">property</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">path</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">documentNodes</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">nodeKind</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">IRI</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">minCount</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#E1E4E8">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">property</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">path</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">extensions</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">datatype</span><span style="color:#F97583"> rdf:</span><span style="color:#79B8FF">JSON</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">maxCount</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#E1E4E8">  ] .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgshape:</span><span style="color:#79B8FF">NodeShape</span><span style="color:#F97583"> a</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">NodeShape</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">targetClass</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">Node</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">targetObjectsOf</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">documentNodes</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">nodeKind</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">IRI</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">property</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">path</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">extensions</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">datatype</span><span style="color:#F97583"> rdf:</span><span style="color:#79B8FF">JSON</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">maxCount</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#E1E4E8">  ] .</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> </section></section><section id="examples" class="spec-section"><h2 class="section-heading"><span class="section-number">6. </span>Examples</h2><p>The examples below are informative. Each example uses <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld</code> as its JSON-LD context and stays within the Core vocabulary. Graph-native optional terms belong in composed module contexts, not inside <code>extensions</code>.</p><section id="minimal-document" class="spec-section"><h3 class="section-heading"><span class="section-number">6.1. </span>Minimal Document</h3><div class="code-block-wrapper"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@context&#34;: &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld&#34;,
+  &#34;@id&#34;: &#34;https://example.com/ujg/core/minimal.jsonld&#34;,
+  &#34;@type&#34;: &#34;UJGDocument&#34;
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@context"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://example.com/ujg/core/minimal.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"UJGDocument"</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@context"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://example.com/ujg/core/minimal.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"UJGDocument"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div>  </div> </section><section id="document-with-extension-payload" class="spec-section"><h3 class="section-heading"><span class="section-number">6.2. </span>Document With Extension Payload</h3><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@context&#34;: &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld&#34;,
+  &#34;@id&#34;: &#34;https://example.com/ujg/core/document-extension.jsonld&#34;,
+  &#34;@type&#34;: &#34;UJGDocument&#34;,
+  &#34;extensions&#34;: {
+    &#34;com.example.package&#34;: {
+      &#34;source&#34;: &#34;private-tooling&#34;
+    }
+  },
+  &#34;nodes&#34;: []
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@context"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://example.com/ujg/core/document-extension.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"UJGDocument"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "extensions"</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#005CC5">    "com.example.package"</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#005CC5">      "source"</span><span style="color:#24292E">: </span><span style="color:#032F62">"private-tooling"</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#005CC5">  "nodes"</span><span style="color:#24292E">: []</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@context"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://example.com/ujg/core/document-extension.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"UJGDocument"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "extensions"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "com.example.package"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "source"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"private-tooling"</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#79B8FF">  "nodes"</span><span style="color:#E1E4E8">: []</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> </section><section id="document-with-relative-imports" class="spec-section"><h3 class="section-heading"><span class="section-number">6.3. </span>Document With Relative Imports</h3><div class="code-block-wrapper"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@context&#34;: &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld&#34;,
+  &#34;@id&#34;: &#34;https://example.com/ujg/flows/order/main.jsonld&#34;,
+  &#34;@type&#34;: &#34;UJGDocument&#34;,
+  &#34;imports&#34;: [
+    &#34;./shared/states.jsonld&#34;,
+    &#34;../runtime/events.jsonld&#34;,
+    &#34;https://example.com/ujg/common/errors.jsonld&#34;
+  ]
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@context"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://example.com/ujg/flows/order/main.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"UJGDocument"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "imports"</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#032F62">    "./shared/states.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "../runtime/events.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "https://example.com/ujg/common/errors.jsonld"</span></span>
+<span class="line"><span style="color:#24292E">  ]</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@context"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://example.com/ujg/flows/order/main.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"UJGDocument"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "imports"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#9ECBFF">    "./shared/states.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "../runtime/events.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "https://example.com/ujg/common/errors.jsonld"</span></span>
+<span class="line"><span style="color:#E1E4E8">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div>  </div> <p>Resolved imports:</p><ul><li><p><code>./shared/states.jsonld</code> → <code>https://example.com/ujg/flows/order/shared/states.jsonld</code></p></li><li><p><code>../runtime/events.jsonld</code> → <code>https://example.com/ujg/flows/runtime/events.jsonld</code></p></li><li><p><code>https://example.com/ujg/common/errors.jsonld</code> → unchanged</p></li></ul><p>This follows <a href="https://www.rfc-editor.org/rfc/rfc3986" class="cite" data-cite="RFC3986">[RFC3986]</a> relative-reference resolution and the <a href="https://www.w3.org/TR/2020/REC-json-ld11-20200716/" class="cite" data-cite="JSON-LD 1.1.">[JSON-LD 1.1.]</a> rule that relative IRI references resolve from the document base IRI.</p></section><section id="document-with-nodes" class="spec-section"><h3 class="section-heading"><span class="section-number">6.4. </span>Document With Nodes</h3><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@context&#34;: &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld&#34;,
+  &#34;@id&#34;: &#34;https://example.com/ujg/core/nodes.jsonld&#34;,
+  &#34;@type&#34;: &#34;UJGDocument&#34;,
+  &#34;nodes&#34;: [
+    {
+      &#34;@id&#34;: &#34;urn:ujg:node:alpha&#34;,
+      &#34;@type&#34;: &#34;Node&#34;
+    },
+    {
+      &#34;@id&#34;: &#34;urn:ujg:node:beta&#34;,
+      &#34;@type&#34;: &#34;Node&#34;,
+      &#34;extensions&#34;: {
+        &#34;com.example.audit&#34;: {
+          &#34;checksum&#34;: &#34;sha256:abc123&#34;
+        }
+      }
+    }
+  ]
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@context"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://example.com/ujg/core/nodes.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"UJGDocument"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "nodes"</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:node:alpha"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Node"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:node:beta"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Node"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "extensions"</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#005CC5">        "com.example.audit"</span><span style="color:#24292E">: {</span></span>
+<span class="line"><span style="color:#005CC5">          "checksum"</span><span style="color:#24292E">: </span><span style="color:#032F62">"sha256:abc123"</span></span>
+<span class="line"><span style="color:#24292E">        }</span></span>
+<span class="line"><span style="color:#24292E">      }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  ]</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@context"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://example.com/ujg/core/nodes.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"UJGDocument"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "nodes"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:node:alpha"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Node"</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:node:beta"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Node"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "extensions"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">        "com.example.audit"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">          "checksum"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"sha256:abc123"</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> </section></section> <footer class="text-sm mt-xl"> <div class="cg-copyright"> <p>
+Copyright © 2026 the Contributors to the  ujg/core/1.0-rc3, published by the  <a href="https://www.w3.org/community/ujg/">User Journey Graph Community Group</a> under
+          the  <a href="https://www.w3.org/community/about/process/cla/"> W3C Community Contributor License Agreement (CLA) </a>
+. A human-readable  <a href="https://www.w3.org/community/about/process/cla-deed/">
+summary
+</a> 
+is available.
+</p> </div> </footer> </div> </article>  </main> </div> <script type="module" src="/tr/_astro/SpecLayout.astro_astro_type_script_index_0_lang.CKupH4wW.js"></script>  <footer class="site-footer border-t border-border bg-panel backdrop-blur-md mt-auto"> <div class="max-w-content mx-auto px-4 md:px-12 py-4 grid grid-cols-[1fr_auto_1fr] items-center"> <div class="footer-icons flex items-center gap-3 col-start-1 justify-self-start"> <a href="https://github.com/openuji/spec-ujg" class="footer-icon-link inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository"> <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path> </svg> <span class="sr-only">GitHub</span> </a> <a href="https://matrix.to/#/%23ujg:matrix.org" class="footer-icon-link inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200" target="_blank" rel="noopener" aria-label="Matrix room" title="Matrix room"> <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"> <path d="M.632.55v22.9H2.28V24H0V0h2.28v.55zm7.043 7.26v1.157h.033c.309-.443.683-.784 1.117-1.024.433-.245.936-.365 1.5-.365.54 0 1.033.107 1.481.314.448.208.785.582 1.02 1.108.254-.374.6-.706 1.034-.992.434-.287.95-.43 1.546-.43.453 0 .872.056 1.26.167.388.11.716.286.993.53.276.245.489.559.646.951.152.392.23.863.23 1.417v5.728h-2.349V11.52c0-.286-.01-.559-.032-.812a1.755 1.755 0 0 0-.18-.66 1.106 1.106 0 0 0-.438-.448c-.194-.11-.457-.166-.785-.166-.332 0-.6.064-.803.189a1.38 1.38 0 0 0-.48.499 1.946 1.946 0 0 0-.231.696 5.56 5.56 0 0 0-.06.785v4.768h-2.35v-4.8c0-.254-.004-.503-.018-.752a2.074 2.074 0 0 0-.143-.688 1.052 1.052 0 0 0-.415-.503c-.194-.125-.476-.19-.854-.19-.111 0-.259.024-.439.074-.18.051-.36.143-.53.282-.171.138-.319.337-.439.595-.12.259-.18.6-.18 1.02v4.966H5.46V7.81zm15.693 15.64V.55H21.72V0H24v24h-2.28v-.55z"></path> </svg> <span class="sr-only">Matrix room</span> </a> </div> <div class="footer-meta text-xs text-secondary-foreground col-start-2 justify-self-center text-center"> <p>
+generated by <a target="_blank" href="https://speculator.openuji.dev">Speculator</a> </p> </div> <button type="button" class="theme-switcher js-theme-switcher col-start-3 justify-self-end" aria-label="Toggle color theme"></button> </div> </footer> <script type="module" src="/tr/_astro/BaseLayout.astro_astro_type_script_index_0_lang.BzHbvdlQ.js"></script> </body> </html>

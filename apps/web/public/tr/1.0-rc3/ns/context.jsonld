@@ -1,0 +1,8 @@
+{
+  "@context": [
+    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core.context.jsonld",
+    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/graph.context.jsonld",
+    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.context.jsonld",
+    "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/experience.context.jsonld"
+  ]
+}

@@ -154,6 +154,62 @@
       "specHash": "sha256:1080320fbcc44c0f581d45d8ed0f7bbd25b34563f5620d375e8ee9a71a9cd028",
       "target": "tr/1.0-rc2"
     },
+    "tr/1.0-rc3/core": {
+      "reportPath": "reviews/tr/1.0-rc3/core/latest.md",
+      "skill": "core",
+      "sourceHash": "sha256:4150b1324f3006b882c644a781490a7acc0116a6e6111095ca361ec66b76fd61",
+      "specHash": "sha256:8d5b46ca6983a03b17c24f3bff633491083459f69cfc7da3e774500fe4d6bd00",
+      "target": "tr/1.0-rc3"
+    },
+    "tr/1.0-rc3/design-system": {
+      "reportPath": "reviews/tr/1.0-rc3/design-system/latest.md",
+      "skill": "design-system",
+      "sourceHash": "sha256:4b9366137b36e5cd91a36a98b729c65d9ceed40fc6ad7909be0c867a240fc5e2",
+      "specHash": "sha256:e7d888179ab3d2392952547bd8c74679db0b655d29e0fd5b183087db4564d56d",
+      "target": "tr/1.0-rc3"
+    },
+    "tr/1.0-rc3/domain-model-evaluation": {
+      "reportPath": "reviews/tr/1.0-rc3/domain-model-evaluation/latest.md",
+      "skill": "domain-model-evaluation",
+      "sourceHash": "sha256:63b6b82ebc16f4b8bacbad4c29c2f9228241582fe21f95485845a8f627e611fb",
+      "specHash": "sha256:e16738fce6a7fce60a7e67a7da68aff506e8b1ba335ac493e86c5fae4114d046",
+      "target": "tr/1.0-rc3"
+    },
+    "tr/1.0-rc3/domain-model-implementation": {
+      "reportPath": "reviews/tr/1.0-rc3/domain-model-implementation/latest.md",
+      "skill": "domain-model-implementation",
+      "sourceHash": "sha256:878183abcbf6093065afafed962942bfa85cb1a81b5990864802b4e6c4e9701c",
+      "specHash": "sha256:e16738fce6a7fce60a7e67a7da68aff506e8b1ba335ac493e86c5fae4114d046",
+      "target": "tr/1.0-rc3"
+    },
+    "tr/1.0-rc3/graph": {
+      "reportPath": "reviews/tr/1.0-rc3/graph/latest.md",
+      "skill": "graph",
+      "sourceHash": "sha256:c5040b7dfec25268c601d50f73717b02165e7f4a549a36df994368efbdc8f7c4",
+      "specHash": "sha256:5c984cafd9d071eca27bc575dd7d71168247460c10a276c3e094d2730c88b8c9",
+      "target": "tr/1.0-rc3"
+    },
+    "tr/1.0-rc3/localization": {
+      "reportPath": "reviews/tr/1.0-rc3/localization/latest.md",
+      "skill": "localization",
+      "sourceHash": "sha256:3c41f93f9307d5aee84d6e5142587fdc570646cfa5d40b6662ced15a8e83b64c",
+      "specHash": "sha256:f0811db2541438576e745446628e50c13b78add43652dc4beb0fef47c0839870",
+      "target": "tr/1.0-rc3"
+    },
+    "tr/1.0-rc3/observability": {
+      "reportPath": "reviews/tr/1.0-rc3/observability/latest.md",
+      "skill": "observability",
+      "sourceHash": "sha256:d2cf70caa13ed54006f643ebe4f76b4763b6cdc1f16deaac6739b05183d246a3",
+      "specHash": "sha256:6549523556847d40be4bf6d31891ce06eba7b877e5424553c447e11e11fbd298",
+      "target": "tr/1.0-rc3"
+    },
+    "tr/1.0-rc3/root": {
+      "reportPath": "reviews/tr/1.0-rc3/root/latest.md",
+      "skill": "root",
+      "sourceHash": "sha256:3a918f749462d52af799987ec0fd2518db3737d2750c4e79d787b9bbdd436861",
+      "specHash": "sha256:9fd4c604318828fb2ce37959a197b77183a4a185d7e66278b3faad1c79023f16",
+      "target": "tr/1.0-rc3"
+    },
     "tr/2026.06/design-system": {
       "reportPath": "reviews/tr/2026.06/design-system/latest.md",
       "skill": "design-system",

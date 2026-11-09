@@ -1,0 +1,76 @@
+@prefix ujgdata: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/data-contract#> .
+@prefix ujgdatashape: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/data-contract.shape#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/graph#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ujgdatashape:DataSchemaShape a sh:NodeShape ;
+  sh:targetClass ujgdata:DataSchema ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgdata:dataSchemaSource ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgdatashape:DataBindingShape a sh:NodeShape ;
+  sh:targetClass ujgdata:DataBinding ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgdata:dataSurfaceRef ;
+    sh:class ujgsurface:Surface ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgdata:dataSchemaRef ;
+    sh:class ujgdata:DataSchema ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] .
+
+ujgdatashape:DataSchemaSourceUsageShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgdata:dataSchemaSource ;
+  sh:class ujgdata:DataSchema ;
+  sh:nodeKind sh:IRI .
+
+ujgdatashape:DataBindingUsageShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgdata:dataSurfaceRef ;
+  sh:targetSubjectsOf ujgdata:dataSchemaRef ;
+  sh:class ujgdata:DataBinding ;
+  sh:nodeKind sh:IRI .
+
+ujgdatashape:SurfaceDataBindingCardinalityShape a sh:NodeShape ;
+  sh:targetClass ujgsurface:Surface ;
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A Surface must be referenced by at most one DataBinding through dataSurfaceRef." ;
+    sh:select """
+      PREFIX ujgdata: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/data-contract#>
+
+      SELECT $this WHERE {
+        ?first ujgdata:dataSurfaceRef $this .
+        ?second ujgdata:dataSurfaceRef $this .
+        FILTER(str(?first) < str(?second))
+      }
+    """ ;
+  ] .
