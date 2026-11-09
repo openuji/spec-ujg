@@ -1,0 +1,60 @@
+{
+  "id": "mapping",
+  "title": "Mapping",
+  "maturityLevel": "draft",
+  "baseUrl": "${SPEC_BASE_URL}/tr/1.0-rc3",
+  "deps": [
+    "runtime",
+    "surface",
+    "graph",
+    "modules/phase"
+  ],
+  "custom": {
+    "family": "spec",
+    "order": 60
+  },
+  "respec": {
+    "noConformance": true,
+    "group": {
+      "name": "User Journey Graph Community Group",
+      "url": "https://www.w3.org/community/ujg/"
+    },
+    "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/tr/1.0-rc3/mapping/index.md",
+    "editors": [
+      {
+        "name": "Seva Dolgopolov",
+        "w3cid": "169225"
+      }
+    ],
+    "license": "W3C-Software-and-Document",
+    "localBiblio": {
+      "UJG Core": {
+        "title": "UJG Core",
+        "url": "/tr/1.0-rc3/core"
+      },
+      "UJG Graph": {
+        "title": "UJG Graph",
+        "url": "/tr/1.0-rc3/graph"
+      },
+      "UJG Runtime": {
+        "title": "UJG Runtime",
+        "url": "/tr/1.0-rc3/runtime"
+      },
+      "UJG Surface": {
+        "title": "UJG Surface",
+        "url": "/tr/1.0-rc3/surface"
+      },
+      "UJG Phase": {
+        "title": "UJG Phase",
+        "url": "/tr/1.0-rc3/modules/phase"
+      },
+      "UJG Conditions": {
+        "title": "UJG Conditions",
+        "url": "/tr/1.0-rc3/modules/condition"
+      }
+    },
+    "specStatus": "CG-DRAFT",
+    "publishDate": "2026-11-09",
+    "version": "1.0-rc3"
+  }
+}

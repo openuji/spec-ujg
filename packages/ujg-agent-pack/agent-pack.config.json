@@ -156,6 +156,79 @@
       ]
     },
     {
+      "id": "tr/1.0-rc3",
+      "kind": "tr",
+      "version": "1.0-rc3",
+      "label": "Technical Report 1.0 RC3",
+      "shortLabel": "TR 1.0 RC3",
+      "specRoot": "../../specs/tr/1.0-rc3",
+      "publicUrl": "https://ujg.specs.openuji.org/tr/1.0-rc3",
+      "skills": [
+        {
+          "key": "root",
+          "title": "Modeling",
+          "scope": "whole UJG document modeling across Core, Graph, Surface and Experience, Runtime, Mapping, Metrics, Localization, Observability, Experience Annotation, and optional modules",
+          "nameSuffix": "modeling",
+          "moduleId": null
+        },
+        {
+          "key": "core",
+          "title": "Core Modeling",
+          "scope": "Core module document containers, imports, top-level nodes, and extensions",
+          "nameSuffix": "core-modeling",
+          "moduleId": "core"
+        },
+        {
+          "key": "graph",
+          "title": "Graph Modeling",
+          "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
+          "nameSuffix": "graph-modeling",
+          "moduleId": "graph"
+        },
+        {
+          "key": "design-system",
+          "title": "Design System Modeling",
+          "scope": "Design System module semantics and its relationship to Graph and Surface",
+          "nameSuffix": "design-system-modeling",
+          "moduleId": "modules/design-system"
+        },
+        {
+          "key": "localization",
+          "title": "Localization Modeling",
+          "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata",
+          "nameSuffix": "l10n-modeling",
+          "moduleId": "modules/l10n"
+        },
+        {
+          "key": "observability",
+          "title": "Observability Modeling",
+          "scope": "Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver",
+          "nameSuffix": "observability-modeling",
+          "moduleId": "modules/observability"
+        },
+        {
+          "key": "domain-model-evaluation",
+          "title": "Domain Model Evaluation",
+          "scope": "Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality",
+          "nameSuffix": "domain-model-evaluation",
+          "moduleId": "extensions/domain-model",
+          "description": "Evaluate generated DomainModel outputs for the UJG 1.0 RC3 snapshot against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality.",
+          "shortDescription": "Evaluate UJG Domain Models for TR 1.0 RC3",
+          "defaultPrompt": "Use $ujg-tr-1-0-rc3-domain-model-evaluation to evaluate a generated DomainModel against the supplied UJG document, Domain Model JSON Schema, and any explicit domain knowledge."
+        },
+        {
+          "key": "domain-model-implementation",
+          "title": "Domain Model Implementation Conformance",
+          "scope": "software implementation conformance against a full UJG document with the Domain Model Document Extension, including domain behavior, guarded branches, effects, invariants, and journey semantics",
+          "nameSuffix": "domain-model-implementation",
+          "moduleId": "extensions/domain-model",
+          "description": "Review or implement software against a User Journey Graph document with a Domain Model extension for the UJG 1.0 RC3 snapshot, preserving domain behavior, guarded branches, effects, invariants, and journey semantics. Use when the full UJG document is the behavioral source of truth; do not use to evaluate the DomainModel JSON alone.",
+          "shortDescription": "Review UJG domain implementations for TR 1.0 RC3",
+          "defaultPrompt": "Use $ujg-tr-1-0-rc3-domain-model-implementation to review or implement software against a full UJG document with a Domain Model extension, including graph topology, guarded branches, effects, invariants, and journey semantics."
+        }
+      ]
+    },
+    {
       "id": "tr/1.0-rc2",
       "kind": "tr",
       "version": "1.0-rc2",

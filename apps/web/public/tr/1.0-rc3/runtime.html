@@ -1,0 +1,1077 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Runtime - UJG 1.0 Release Candidate 3</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="A family of open specifications that model user journeys as graphs of states and transitions."><link rel="canonical" href="https://ujg.specs.openuji.org/tr/1.0-rc3/runtime"><script type="application/ld+json">{
+  "@context": {
+    "dct": "http://purl.org/dc/terms/",
+    "spec": "http://www.w3.org/ns/spec#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "id": "@id",
+    "type": "@type"
+  },
+  "@graph": [
+    {
+      "id": "/tr/1.0-rc3/runtime",
+      "type": "spec:Specification",
+      "dct:title": "Runtime",
+      "spec:classesOfProducts": {
+        "id": "/tr/1.0-rc3/runtime#classes-of-products",
+        "type": "skos:ConceptScheme",
+        "skos:prefLabel": "Classes of Products",
+        "skos:hasTopConcept": [
+          {
+            "id": "/tr/1.0-rc3/runtime#runtime-event"
+          },
+          {
+            "id": "/tr/1.0-rc3/runtime#validation"
+          },
+          {
+            "id": "/tr/1.0-rc3/runtime#reconstruction"
+          }
+        ]
+      },
+      "spec:requirement": [
+        {
+          "id": "/tr/1.0-rc3/runtime#a-runtimeevent-must-reference-exactly-one-journeyexecution-using-executionid"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#a-runtimeevent-must-reference-exactly-one-surfaceinstance-using-surfaceinstanceref"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#surfaceinstanceref-must-resolve-to-a-surfaceinstance-in-the-current-document-set-or-imported-documents"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#the-referenced-surface-instance-must-be-sufficient-to-identify-the-observed-runtime-occurrence"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#a-runtimeevent-may-reference-its-immediate-predecessor-using-previousid"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#runtime-event-order-must-be-reconstructed-using-previousid-links-not-timestamps"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#the-payload-property-when-present-is-opaque-runtime-data-and-must-not-be-required-for-resolving-surfaceinstanceref"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#within-a-single-execution-events-where-executionid-equals-the-journeyexecution-id-root-exactly-one-event-must-be-the-root-event"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#within-a-single-execution-events-where-executionid-equals-the-journeyexecution-id-resolution-every-present-previousid-must-match-the-id-of-an-event-in-the-same-execution"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#within-a-single-execution-events-where-executionid-equals-the-journeyexecution-id-single-successor-an-event-id-must-not-be-referenced-as-previousid-by-more-than-one-event-in-the-same-execution"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#within-a-single-execution-events-where-executionid-equals-the-journeyexecution-id-acyclic-the-chain-must-not-contain-cycles"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#a-consumer-reconstructing-event-order-must-identify-the-root-event"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#a-consumer-reconstructing-event-order-must-repeatedly-select-the-unique-event-whose-previousid-equals-the-current-events-id"
+        },
+        {
+          "id": "/tr/1.0-rc3/runtime#a-consumer-reconstructing-event-order-must-continue-until-no-successor-exists"
+        }
+      ]
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#runtime-event",
+      "type": "skos:Concept",
+      "skos:prefLabel": "Runtime-event",
+      "skos:inScheme": {
+        "id": "/tr/1.0-rc3/runtime#classes-of-products"
+      },
+      "skos:topConceptOf": {
+        "id": "/tr/1.0-rc3/runtime#classes-of-products"
+      }
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#validation",
+      "type": "skos:Concept",
+      "skos:prefLabel": "Validation",
+      "skos:inScheme": {
+        "id": "/tr/1.0-rc3/runtime#classes-of-products"
+      },
+      "skos:topConceptOf": {
+        "id": "/tr/1.0-rc3/runtime#classes-of-products"
+      }
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#reconstruction",
+      "type": "skos:Concept",
+      "skos:prefLabel": "Reconstruction",
+      "skos:inScheme": {
+        "id": "/tr/1.0-rc3/runtime#classes-of-products"
+      },
+      "skos:topConceptOf": {
+        "id": "/tr/1.0-rc3/runtime#classes-of-products"
+      }
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#a-runtimeevent-must-reference-exactly-one-journeyexecution-using-executionid",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#runtime-event"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A RuntimeEvent MUST reference exactly one JourneyExecution using executionId."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#a-runtimeevent-must-reference-exactly-one-surfaceinstance-using-surfaceinstanceref",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#runtime-event"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A RuntimeEvent MUST reference exactly one SurfaceInstance using surfaceInstanceRef."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#surfaceinstanceref-must-resolve-to-a-surfaceinstance-in-the-current-document-set-or-imported-documents",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#runtime-event"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "surfaceInstanceRef MUST resolve to a SurfaceInstance in the current document set or imported documents."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#the-referenced-surface-instance-must-be-sufficient-to-identify-the-observed-runtime-occurrence",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#runtime-event"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "The referenced surface instance MUST be sufficient to identify the observed runtime occurrence."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#a-runtimeevent-may-reference-its-immediate-predecessor-using-previousid",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#runtime-event"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MAY"
+      },
+      "spec:statement": "A RuntimeEvent MAY reference its immediate predecessor using previousId."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#runtime-event-order-must-be-reconstructed-using-previousid-links-not-timestamps",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#runtime-event"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "Runtime event order MUST be reconstructed using previousId links, not timestamps."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#the-payload-property-when-present-is-opaque-runtime-data-and-must-not-be-required-for-resolving-surfaceinstanceref",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#runtime-event"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUSTNOT"
+      },
+      "spec:statement": "The payload property, when present, is opaque runtime data and MUST NOT be required for resolving surfaceInstanceRef."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#within-a-single-execution-events-where-executionid-equals-the-journeyexecution-id-root-exactly-one-event-must-be-the-root-event",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#validation"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "Within a single execution (events where executionId equals the JourneyExecution @id): Root: Exactly one event MUST be the Root Event."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#within-a-single-execution-events-where-executionid-equals-the-journeyexecution-id-resolution-every-present-previousid-must-match-the-id-of-an-event-in-the-same-execution",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#validation"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "Within a single execution (events where executionId equals the JourneyExecution @id): Resolution: Every present previousId MUST match the @id of an event in the same execution."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#within-a-single-execution-events-where-executionid-equals-the-journeyexecution-id-single-successor-an-event-id-must-not-be-referenced-as-previousid-by-more-than-one-event-in-the-same-execution",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#validation"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUSTNOT"
+      },
+      "spec:statement": "Within a single execution (events where executionId equals the JourneyExecution @id): Single Successor: An event @id MUST NOT be referenced as previousId by more than one event in the same execution."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#within-a-single-execution-events-where-executionid-equals-the-journeyexecution-id-acyclic-the-chain-must-not-contain-cycles",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#validation"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUSTNOT"
+      },
+      "spec:statement": "Within a single execution (events where executionId equals the JourneyExecution @id): Acyclic: The chain MUST NOT contain cycles."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#a-consumer-reconstructing-event-order-must-identify-the-root-event",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#reconstruction"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A Consumer reconstructing event order MUST: Identify the Root Event."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#a-consumer-reconstructing-event-order-must-repeatedly-select-the-unique-event-whose-previousid-equals-the-current-events-id",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#reconstruction"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A Consumer reconstructing event order MUST: Repeatedly select the unique event whose previousId equals the current event's @id."
+    },
+    {
+      "id": "/tr/1.0-rc3/runtime#a-consumer-reconstructing-event-order-must-continue-until-no-successor-exists",
+      "type": "spec:Requirement",
+      "spec:requirementSubject": {
+        "id": "/tr/1.0-rc3/runtime#reconstruction"
+      },
+      "spec:requirementLevel": {
+        "id": "spec:MUST"
+      },
+      "spec:statement": "A Consumer reconstructing event order MUST: Continue until no successor exists."
+    }
+  ]
+}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet"><script>
+      (function () {
+        const storageKey = 'ujg-theme';
+        try {
+          const stored = localStorage.getItem(storageKey);
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', stored);
+          } else {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+            document.documentElement.setAttribute('data-theme', systemTheme);
+          }
+        } catch {
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+          document.documentElement.setAttribute('data-theme', systemTheme);
+        }
+      })();
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/tr/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DcSP9LZ1.js"></script><script>
+      (function () {
+        if (window._smoothScrollSetup) return;
+        window._smoothScrollSetup = true;
+
+        const shouldReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        function highlightTarget(target) {
+          if (!target) return;
+          target.classList.remove('target-highlight');
+          // Trigger reflow to restart animation
+          void target.offsetWidth;
+          target.classList.add('target-highlight');
+
+          // Optional: remove class after animation finishes to keep DOM clean
+          // but it's not strictly necessary as it's a one-shot animation
+          setTimeout(() => {
+            target.classList.remove('target-highlight');
+          }, 2100);
+        }
+
+        function handleLinkClick(e) {
+          const link = e.target.closest('a');
+          if (!link?.hash || link.origin !== location.origin) return;
+
+          const urlPath = link.pathname.replace(/\/$/, '');
+          const locPath = location.pathname.replace(/\/$/, '');
+          if (urlPath !== locPath) return;
+
+          const target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+          if (!target) return;
+
+          e.preventDefault();
+          target.scrollIntoView({
+            behavior: shouldReduceMotion.matches ? 'auto' : 'smooth',
+          });
+          history.pushState(null, '', link.hash);
+          highlightTarget(target);
+        }
+
+        function handleHashChange() {
+          const hash = location.hash;
+          if (hash) {
+            const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+            if (target) {
+              highlightTarget(target);
+            }
+          }
+        }
+
+        // Content that arrives after the browser's own hash jump — Mermaid SVGs
+        // replacing several screens of source text, lazy images without
+        // dimensions, webfonts — resizes the page above the target and drags
+        // the reader away from it. Re-scrolling after the fact corrects the
+        // position but the reader sees every correction as a jump, so instead
+        // keep the target pinned: measure how far it drifted and undo that in
+        // the ResizeObserver callback, which runs after layout but before
+        // paint, making the compensation invisible.
+        function settleHashScroll() {
+          if (!location.hash || typeof ResizeObserver === 'undefined') return;
+
+          const targetId = decodeURIComponent(location.hash.slice(1));
+          let anchorTop = null;
+          let observer = null;
+          let stopTimer;
+          let cancelled = false;
+
+          function teardown() {
+            clearTimeout(stopTimer);
+            if (observer) observer.disconnect();
+            observer = null;
+            window.removeEventListener('wheel', cancel);
+            window.removeEventListener('touchmove', cancel);
+            window.removeEventListener('pointerdown', cancel);
+            window.removeEventListener('keydown', cancel);
+            window.removeEventListener('ujg:mermaid-rendered', repin);
+          }
+
+          function cancel() {
+            cancelled = true;
+            teardown();
+          }
+
+          function repin() {
+            if (cancelled || anchorTop === null) return;
+
+            const target = document.getElementById(targetId);
+            if (!target) return;
+
+            const drift = target.getBoundingClientRect().top - anchorTop;
+            if (Math.abs(drift) < 1) return;
+
+            window.scrollBy(0, drift);
+
+            // Scrolling clamps at the end of the document, so re-measure
+            // instead of assuming the correction fully landed.
+            anchorTop = target.getBoundingClientRect().top;
+          }
+
+          function start() {
+            if (cancelled) return;
+
+            const target = document.getElementById(targetId);
+            if (!target) return;
+
+            // Establish the resting position once. scrollIntoView honours the
+            // heading's scroll-margin-top, so the sticky header never covers it.
+            target.scrollIntoView({ behavior: 'auto' });
+            anchorTop = target.getBoundingClientRect().top;
+
+            observer = new ResizeObserver(repin);
+            observer.observe(document.body);
+            document.querySelectorAll('.mermaid-container').forEach(function (el) {
+              observer.observe(el);
+            });
+
+            // Late content stops arriving; stop watching so ordinary scrolling
+            // is never second-guessed.
+            stopTimer = setTimeout(teardown, 5000);
+          }
+
+          // Deliberate input hands control back to the reader immediately.
+          // Note: we never listen for 'scroll', since our own correction
+          // would cancel itself.
+          window.addEventListener('wheel', cancel, { passive: true });
+          window.addEventListener('touchmove', cancel, { passive: true });
+          window.addEventListener('pointerdown', cancel);
+          window.addEventListener('keydown', cancel);
+          window.addEventListener('ujg:mermaid-rendered', repin);
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', start, { once: true });
+          } else {
+            start();
+          }
+        }
+
+        function init() {
+          document.addEventListener('click', handleLinkClick, { capture: true });
+          // Also highlight on page load if hash exists
+          handleHashChange();
+          settleHashScroll();
+        }
+
+        document.addEventListener('astro:page-load', init);
+        init();
+      })();
+    </script><style>.mermaid-container[data-astro-cid-najdirf6]{padding:1.5rem;border-radius:12px;border:1px solid var(--border);text-align:center;margin:1.5rem 0;overflow-x:auto}.mermaid-container[data-astro-cid-najdirf6] pre[data-astro-cid-najdirf6].mermaid{background:transparent;border:none;padding:0;margin:0;color:inherit;display:flex;justify-content:center}.mermaid-container[data-astro-cid-najdirf6] pre[data-astro-cid-najdirf6].mermaid[data-mermaid-pending]{height:6rem;overflow:hidden;visibility:hidden}.mermaid-container[data-astro-cid-najdirf6] svg{max-width:100%;height:auto;font-size:13px!important;overflow:visible}.mermaid-container[data-astro-cid-najdirf6] svg text,.mermaid-container[data-astro-cid-najdirf6] svg tspan,.mermaid-container[data-astro-cid-najdirf6] svg .label,.mermaid-container[data-astro-cid-najdirf6] svg .nodeLabel,.mermaid-container[data-astro-cid-najdirf6] svg .edgeLabel,.mermaid-container[data-astro-cid-najdirf6] svg .cluster-label,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject div,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject span,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject p{font-size:13px!important;line-height:1.25!important}.mermaid-container[data-astro-cid-najdirf6] svg foreignObject{overflow:visible}.mermaid-container[data-astro-cid-najdirf6] .edgeLabel text,.mermaid-container[data-astro-cid-najdirf6] .edgeLabel tspan,.mermaid-container[data-astro-cid-najdirf6] .edgeLabel span p{font-size:12px!important}.mermaid-container[data-astro-cid-najdirf6] .cluster-label span p{font-size:13px!important;padding:.2rem .4rem!important}:root[data-theme=dark] .mermaid-container[data-astro-cid-najdirf6] .note{fill:#2f2712!important;stroke:#c99a2e!important}:root[data-theme=dark] .mermaid-container[data-astro-cid-najdirf6] .noteText,:root[data-theme=dark] .mermaid-container[data-astro-cid-najdirf6] .noteText tspan{fill:#f8e7a1!important;color:#f8e7a1!important}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .mermaid-container[data-astro-cid-najdirf6] .note{fill:#2f2712!important;stroke:#c99a2e!important}:root:not([data-theme=light]) .mermaid-container[data-astro-cid-najdirf6] .noteText,:root:not([data-theme=light]) .mermaid-container[data-astro-cid-najdirf6] .noteText tspan{fill:#f8e7a1!important;color:#f8e7a1!important}}
+</style>
+<link rel="stylesheet" href="/tr/_astro/_slug_.CYbIro8n.css">
+<style>.spec-header[data-astro-cid-crpkus26]{margin-bottom:3rem}.nav[data-astro-cid-crpkus26].breadcrumb{display:flex;gap:.5rem;align-items:center;margin-bottom:2rem;font-size:.9rem}.nav[data-astro-cid-crpkus26].breadcrumb a[data-astro-cid-crpkus26]{color:var(--accent);text-decoration:none}.nav[data-astro-cid-crpkus26].breadcrumb a[data-astro-cid-crpkus26]:hover{text-decoration:underline}.sep[data-astro-cid-crpkus26]{color:var(--text-secondary)}.current[data-astro-cid-crpkus26]{font-weight:700;color:var(--text-primary)}.title-area[data-astro-cid-crpkus26]{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem}h1[data-astro-cid-crpkus26]{margin:0;font-size:2.5rem;line-height:1.2;color:var(--text-primary)}.subtitle[data-astro-cid-crpkus26]{font-size:1.25rem;color:var(--text-secondary);margin:0 0 2rem;font-weight:400}.abstract[data-astro-cid-crpkus26]{border-top:1px solid var(--border, rgba(255, 255, 255, .1));padding-top:2rem;margin-top:2rem}.abstract[data-astro-cid-crpkus26] h2[data-astro-cid-crpkus26]{font-size:1.1rem;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary)}.abstract[data-astro-cid-crpkus26] p[data-astro-cid-crpkus26]{line-height:1.7;color:var(--text-primary);max-width:800px;margin:0}.pro-theme-cg[data-astro-cid-crpkus26]{position:relative;padding-top:1rem}.cg-copyright[data-astro-cid-crpkus26]{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border, rgba(255, 255, 255, .1));font-size:.85rem;color:var(--text-secondary);line-height:1.5}.cg-copyright[data-astro-cid-crpkus26] a[data-astro-cid-crpkus26]{color:var(--text-primary);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--text-primary) 30%,transparent)}.cg-copyright[data-astro-cid-crpkus26] a[data-astro-cid-crpkus26]:hover{border-bottom-color:var(--accent);color:var(--accent)}
+@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-ykqntimn-1"] { view-transition-name: astro-ykqntimn-1; }@layer astro { ::view-transition-old(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="bg-spec">    <header class="bg-panel backdrop-blur-md sticky top-0 z-header border-b border-border"> <div class="h-header px-lg flex items-center gap-2 md:justify-between"> <div class="flex md:hidden"> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="ZuSn0J" prefix="r20" component-url="/tr/_astro/MobilePanel.YK44Q9Bg.js" component-export="MobilePanel" renderer-url="/tr/_astro/client.C714R2Xt.js" props="{}" ssr client="load" opts="{&quot;name&quot;:&quot;MobilePanel&quot;,&quot;value&quot;:true}" await-children><button class="sidebar-restore-btn p-2 border border-border bg-card text-muted-foreground shadow-panel rounded-md hover:bg-accent-soft/50 hover:text-foreground transition-[background-color,color,box-shadow] duration-300" title="Expand sidebar" aria-label="Expand sidebar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right w-5 h-5" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M15 3v18"></path></svg></button><!--astro:end--></astro-island> </div> <div class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden whitespace-nowrap"> <a href="/" class="flex shrink-0 text-primary font-bold hover:text-accent"> <span>UJG</span> </a>  <span class="shrink-0 text-secondary-foreground">/</span> <a href="/tr/1.0-rc3" class="shrink-0 text-primary font-bold hover:text-accent transition-colors duration-200"> UJG 1.0 Release Candidate 3 </a>  <span class="shrink-0 text-secondary-foreground">/</span> <astro-island uid="1J2K4b" prefix="r21" component-url="/tr/_astro/BreadcrumbSelect.BD4voL3K.js" component-export="default" renderer-url="/tr/_astro/client.C714R2Xt.js" props="{&quot;valueHref&quot;:[0,&quot;/tr/1.0-rc3/runtime&quot;],&quot;options&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;Architecture&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/architecture&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Core&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/core&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Graph&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/graph&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Surface&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/surface&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Runtime&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/runtime&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Mapping&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/mapping&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Metrics&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/metrics&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Profiles&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/profiles&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Conformance&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/conformance&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Entry Binding&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/entry-binding&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Localization&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/l10n&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Conditions&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/condition&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Effect&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/effect&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Data Contract&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/data-contract&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Artifact&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/artifact&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Observability&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/observability&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Phase&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/phase&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Experience Annotation&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/experience-annotation&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Design System&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/design-system&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Domain Model&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/extensions/domain-model&quot;],&quot;family&quot;:[0,&quot;extension&quot;]}]]]}" ssr client="load" opts="{&quot;name&quot;:&quot;BreadcrumbSelect&quot;,&quot;value&quot;:true}" await-children><button type="button" role="combobox" aria-controls="radix-_r21R_0_" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-slot="select-trigger" data-size="default" class="border-input data-[placeholder]:text-muted-foreground [&amp;_svg:not([class*=&#x27;text-&#x27;])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs outline-none focus-visible:ring-[3px] hover:bg-accent-soft/40 disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 h-auto w-auto gap-1 text-secondary-foreground hover:text-accent transition-[color,box-shadow] duration-200" aria-label="Switch section"><span data-slot="select-value" style="pointer-events:none"></span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down size-4 opacity-50" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select><!--astro:end--></astro-island> </div> <nav class="hidden md:flex"> <a href="https://github.com/openuji/spec-ujg" class="inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200" aria-label="GitHub repository" title="GitHub repository"> <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path> </svg> <span class="sr-only">GitHub</span> </a> </nav> </div> </header> <div class="sidebar-container is-initializing flex px-lg" data-astro-transition-scope="astro-ykqntimn-1"> <aside class="sidebar w-sidebar border-r border-border shrink-0"> <div class="sidebar-content sticky top-[var(--height-header)] -ml-3"> <astro-island uid="Z2p6o2F" prefix="r17" component-url="/tr/_astro/Toc.CLRXBS5d.js" component-export="Toc" renderer-url="/tr/_astro/client.C714R2Xt.js" props="{&quot;toc&quot;:[1,[[0,{&quot;id&quot;:[0,&quot;overview&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Overview&quot;],&quot;number&quot;:[0,&quot;1&quot;]}],[0,{&quot;id&quot;:[0,&quot;terminology&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Terminology&quot;],&quot;number&quot;:[0,&quot;2&quot;]}],[0,{&quot;id&quot;:[0,&quot;runtime-model&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Runtime Model&quot;],&quot;number&quot;:[0,&quot;3&quot;]}],[0,{&quot;id&quot;:[0,&quot;journeyexecution&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;JourneyExecution&quot;],&quot;number&quot;:[0,&quot;4&quot;]}],[0,{&quot;id&quot;:[0,&quot;runtimeevent&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;RuntimeEvent&quot;],&quot;number&quot;:[0,&quot;5&quot;]}],[0,{&quot;id&quot;:[0,&quot;normative-artifacts&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Normative Artifacts&quot;],&quot;number&quot;:[0,&quot;6&quot;],&quot;children&quot;:[1,[[0,{&quot;id&quot;:[0,&quot;ontology&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;Ontology&quot;],&quot;number&quot;:[0,&quot;6.1&quot;]}],[0,{&quot;id&quot;:[0,&quot;json-ld-context&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;JSON-LD Context&quot;],&quot;number&quot;:[0,&quot;6.2&quot;]}],[0,{&quot;id&quot;:[0,&quot;validation&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;Validation&quot;],&quot;number&quot;:[0,&quot;6.3&quot;]}]]]}],[0,{&quot;id&quot;:[0,&quot;reconstruction&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Reconstruction&quot;],&quot;number&quot;:[0,&quot;7&quot;]}],[0,{&quot;id&quot;:[0,&quot;examples&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Examples&quot;],&quot;number&quot;:[0,&quot;8&quot;],&quot;children&quot;:[1,[[0,{&quot;id&quot;:[0,&quot;combined-json-example&quot;],&quot;depth&quot;:[0,3],&quot;text&quot;:[0,&quot;Combined JSON Example&quot;],&quot;number&quot;:[0,&quot;8.1&quot;]}]]]}]]]}" ssr client="load" opts="{&quot;name&quot;:&quot;Toc&quot;,&quot;value&quot;:true}" await-children><div class="overflow-y-auto max-h-[calc(100vh-var(--height-header))] py-md pr-3"><div class="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground pb-base pl-3 pr-2"><span>Table of Contents</span><button class="hidden md:flex text-muted-foreground hover:text-foreground transition-[background-color,color] p-1 rounded-md hover:bg-accent-soft/50" title="Collapse sidebar" aria-label="Collapse sidebar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-left w-4 h-4" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path></svg></button></div><nav class="flex flex-col"><ul class="flex flex-col list-none p-0"><li class="flex flex-col"><a href="#overview" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">1</span><span>Overview</span></a></li><li class="flex flex-col"><a href="#terminology" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">2</span><span>Terminology</span></a></li><li class="flex flex-col"><a href="#runtime-model" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">3</span><span>Runtime Model</span></a></li><li class="flex flex-col"><a href="#journeyexecution" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">4</span><span>JourneyExecution</span></a></li><li class="flex flex-col"><a href="#runtimeevent" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5</span><span>RuntimeEvent</span></a></li><li class="flex flex-col"><a href="#normative-artifacts" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6</span><span>Normative Artifacts</span></a><ul class="flex flex-col list-none p-0 m-0 border-l border-border ml-4"><li class="flex flex-col"><a href="#ontology" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6.1</span><span>Ontology</span></a></li><li class="flex flex-col"><a href="#json-ld-context" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6.2</span><span>JSON-LD Context</span></a></li><li class="flex flex-col"><a href="#validation" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6.3</span><span>Validation</span></a></li></ul></li><li class="flex flex-col"><a href="#reconstruction" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">7</span><span>Reconstruction</span></a></li><li class="flex flex-col"><a href="#examples" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">8</span><span>Examples</span></a><ul class="flex flex-col list-none p-0 m-0 border-l border-border ml-4"><li class="flex flex-col"><a href="#combined-json-example" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">8.1</span><span>Combined JSON Example</span></a></li></ul></li></ul></nav></div><!--astro:end--></astro-island> </div> </aside> <main class="max-w-spec min-w-0 mx-auto py-md md:p-md text-base leading-relaxed"> <article> <div class="w-20 p-2 pt-3 pl-3 border border-border rounded-md"> <img src="/tr/_astro/w3c-cg-draft.CzkmfRfp.png" alt="W3C Community Group Draft Report" class="w-full"> </div> <div class="flex items-center gap-md mt-md"> <h1>Runtime</h1> <span class="pill draft uppercase text-xs w-fit font-mono">draft</span> </div> <header class="spec-header pro-theme-cg" data-astro-cid-crpkus26> <section class="my-8 p-6 rounded-r-lg border-l-4 border-border bg-panel"> <h2 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3 mt-0 border-none">
+Status of this Document
+</h2> <div class="text-xs leading-relaxed text-secondary-foreground"> <p>
+This report was published by the  <a href="https://www.w3.org/community/ujg/" class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"> User Journey Graph Community Group </a>
+. It is not a W3C Standard nor is it on the W3C Standards Track. Please note that under
+          the  <a href="https://www.w3.org/community/about/process/cla/" class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors">
+W3C Community Contributor License Agreement (CLA)
+</a> 
+there is a limited opt-out and other conditions apply. Learn more about  <a href="https://www.w3.org/community/" class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors">
+W3C Community and Business Groups
+</a>
+.
+</p> </div> </section> <div class="metadata-grid border border-border rounded-xl p-4 md:p-8 bg-card shadow-sm overflow-hidden"> <dl class="grid grid-cols-[96px_minmax(0,1fr)] md:grid-cols-[120px_minmax(0,1fr)] gap-x-4 md:gap-x-8 gap-y-6"> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Status
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> CG-DRAFT </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Version
+</dt> <dd class="text-base text-foreground self-baseline font-mono min-w-0 [overflow-wrap:anywhere]"> 1.0-rc3 </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Published
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> 2026-11-09 </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Last Update
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> 2026-11-09 </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Editors
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> <ul class="list-none p-0 m-0 space-y-2"> <li class="p-0 m-0"> Seva Dolgopolov   </li> </ul> </dd> </div>  <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Group
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> <a href="https://www.w3.org/community/ujg/" class="text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent transition-colors [overflow-wrap:anywhere]"> User Journey Graph Community Group </a> </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Repository
+</dt> <dd class="text-base self-baseline min-w-0 [overflow-wrap:anywhere]"> <a href="https://github.com/openuji/spec-ujg/blob/main/specs/tr/1.0-rc3/runtime/index.md" class="inline-flex max-w-full items-center gap-2 text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent transition-colors"> <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path> </svg> <span class="[overflow-wrap:anywhere]">View Source</span> </a> </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+License
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> W3C-Software-and-Document </dd> </div> </dl> </div>   </header>  <div class="spec"> <section id="overview" class="spec-section"><script type="module">const c="ujg-term-tooltip-portal";function u(){let t=document.getElementById(c);return t||(t=document.createElement("div"),t.id=c,t.className="term-info__portal",t.setAttribute("role","tooltip"),document.body.appendChild(t)),t}function g(t){const e=t.nextElementSibling;if(!e)return;const n=u();n.innerHTML=e.innerHTML,n.classList.add("is-visible");const i=t.getBoundingClientRect(),o=n.getBoundingClientRect();let s=i.left+i.width/2-o.width/2;s=Math.max(8,Math.min(s,window.innerWidth-o.width-8));let l=i.bottom+8;l+o.height>window.innerHeight-8&&(l=i.top-o.height-8),n.style.left=`${s}px`,n.style.top=`${l}px`}function r(){document.getElementById(c)?.classList.remove("is-visible")}function d(t){return t instanceof Element?t.closest(".term-info__trigger"):null}window.__ujgTermTooltipInit||(window.__ujgTermTooltipInit=!0,document.addEventListener("mouseover",t=>{const e=d(t.target);e&&g(e)}),document.addEventListener("mouseout",t=>{d(t.target)&&r()}),document.addEventListener("focusin",t=>{const e=d(t.target);e&&g(e)}),document.addEventListener("focusout",t=>{d(t.target)&&r()}),window.addEventListener("scroll",r,!0),window.addEventListener("resize",r));</script><h2 class="section-heading"><span class="section-number">1. </span>Overview</h2><p>This module defines the data model for recording actual user behavior as a <strong>causally ordered event chain</strong> within a bounded execution. Ordering is established by explicit linkage between events, not by timestamps. Runtime events reference the concrete <code>SurfaceInstance</code> where the runtime moment was observed.</p><p>Runtime records observed execution facts. A Client does not need to receive or understand the whole UJG graph document in order to emit runtime events. Each event records the observed surface instance, and Mapping can later resolve that instance through <code>SurfaceInstance.surfaceRef</code> and <code>Surface.graphNodeRef</code>.</p></section><section id="terminology" class="spec-section"><h2 class="section-heading"><span class="section-number">2. </span>Terminology</h2><ul><li><p><dfn id="dfn-journeyexecution" title="journeyexecution">JourneyExecution</dfn>: A bounded execution identifier for one logical trace.</p></li><li><p><dfn id="dfn-runtimeevent" title="runtimeevent">RuntimeEvent</dfn>: An atomic record of a single observed runtime moment.</p></li><li><p><dfn id="dfn-event-chain" title="event chain">Event Chain</dfn>: A sequence where each event references its immediate predecessor via <code>previousId</code>.</p></li><li><p><dfn id="dfn-root-event" title="root event">Root Event</dfn>: The event in a <a href="/tr/1.0-rc3/runtime#dfn-journeyexecution" class="xref" title="JourneyExecution">JourneyExecution</a> whose <code>previousId</code> is omitted.</p></li></ul><hr></section><section id="runtime-model" class="spec-section"><h2 class="section-heading"><span class="section-number">3. </span>Runtime Model</h2><p>The Runtime model is a chain of <a href="/tr/1.0-rc3/runtime#dfn-runtimeevent" class="xref" title="RuntimeEvent">RuntimeEvents</a> within one <a href="/tr/1.0-rc3/runtime#dfn-journeyexecution" class="xref" title="JourneyExecution">JourneyExecution</a>.
+Each event points at the concrete <a href="/tr/1.0-rc3/surface#dfn-surfaceinstance" class="xref" title="SurfaceInstance">SurfaceInstance</a> where the observed runtime moment occurred.</p><div class="mermaid-container" data-astro-cid-najdirf6> <pre class="mermaid" data-mermaid-pending="true" data-mermaid-source="graph TB
+  subgraph JourneyExecution[&#34;Execution&#34;]
+    direction LR
+    E1[RuntimeEvent A<br/>id e1]
+    E2[RuntimeEvent B<br/>e2 after e1]
+    E3[RuntimeEvent C<br/>e3 after e2]
+  E2 -->|previousId| E1
+  E3 -->|previousId| E2
+  end
+  E1 -->|surfaceInstanceRef| SI1[SurfaceInstance<br/>cart]
+  E2 -->|surfaceInstanceRef| SI2[SurfaceInstance<br/>payment]
+  E3 -->|surfaceInstanceRef| SI3[SurfaceInstance<br/>confirmation]
+  SI1 -->|surfaceRef| S1[Surface<br/>cart]
+  SI2 -->|surfaceRef| S2[Surface<br/>payment]
+  SI3 -->|surfaceRef| S3[Surface<br/>confirmation]" data-astro-cid-najdirf6>graph TB
+  subgraph JourneyExecution[&quot;Execution&quot;]
+    direction LR
+    E1[RuntimeEvent A&lt;br/&gt;id e1]
+    E2[RuntimeEvent B&lt;br/&gt;e2 after e1]
+    E3[RuntimeEvent C&lt;br/&gt;e3 after e2]
+  E2 --&gt;|previousId| E1
+  E3 --&gt;|previousId| E2
+  end
+  E1 --&gt;|surfaceInstanceRef| SI1[SurfaceInstance&lt;br/&gt;cart]
+  E2 --&gt;|surfaceInstanceRef| SI2[SurfaceInstance&lt;br/&gt;payment]
+  E3 --&gt;|surfaceInstanceRef| SI3[SurfaceInstance&lt;br/&gt;confirmation]
+  SI1 --&gt;|surfaceRef| S1[Surface&lt;br/&gt;cart]
+  SI2 --&gt;|surfaceRef| S2[Surface&lt;br/&gt;payment]
+  SI3 --&gt;|surfaceRef| S3[Surface&lt;br/&gt;confirmation]</pre> </div> <script type="module" src="/tr/_astro/Mermaid.astro_astro_type_script_index_0_lang.98AqllmF.js"></script> <p>A <a href="/tr/1.0-rc3/runtime#dfn-journeyexecution" class="xref" title="JourneyExecution">JourneyExecution</a> identifies one logical trace. It is not required to enumerate its <a href="/tr/1.0-rc3/runtime#dfn-runtimeevent" class="xref" title="RuntimeEvent">RuntimeEvents</a>. Runtime events are associated with an execution by <code>executionId</code>, which supports append-only event streams.</p><p>A <a href="/tr/1.0-rc3/runtime#dfn-runtimeevent" class="xref" title="RuntimeEvent">RuntimeEvent</a> records one runtime moment and may reference its immediate predecessor via <code>previousId</code>; if <code>previousId</code> is omitted, the event is the <a href="/tr/1.0-rc3/runtime#dfn-root-event" class="xref" title="Root Event">Root Event</a>.</p><p>A <a href="/tr/1.0-rc3/runtime#dfn-runtimeevent" class="xref" title="RuntimeEvent">RuntimeEvent</a> references exactly one <a href="/tr/1.0-rc3/surface#dfn-surfaceinstance" class="xref" title="SurfaceInstance">SurfaceInstance</a> using <code>surfaceInstanceRef</code>. The referenced <a href="/tr/1.0-rc3/surface#dfn-surfaceinstance" class="xref" title="SurfaceInstance">SurfaceInstance</a> supplies the concrete visible occurrence where the event was observed.</p><p>The core runtime address is <code>RuntimeEvent.surfaceInstanceRef</code>. Consumers that need Graph meaning resolve the surface instance through <code>SurfaceInstance.surfaceRef</code> and then through <code>Surface.graphNodeRef</code>.</p></section><section id="journeyexecution" class="spec-section"><h2 class="section-heading"><span class="section-number">4. </span>JourneyExecution</h2><p>A <a href="/tr/1.0-rc3/runtime#dfn-journeyexecution" class="xref" title="JourneyExecution">JourneyExecution</a> identifies one bounded logical trace. It is referenced by events, but it does
+not enumerate or own those events.</p><div class="mermaid-container" data-astro-cid-najdirf6> <pre class="mermaid" data-mermaid-pending="true" data-mermaid-source="classDiagram
+  class JourneyExecution {
+    id
+  }" data-astro-cid-najdirf6>classDiagram
+  class JourneyExecution {
+    id
+  }</pre> </div>  <p>Example JSON node:</p><div class="code-block-wrapper"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@type&#34;: &#34;JourneyExecution&#34;,
+  &#34;@id&#34;: &#34;urn:ujg:execution:12345&#34;
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"JourneyExecution"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:execution:12345"</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"JourneyExecution"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:execution:12345"</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div>  </div> <script type="module">function a(){document.querySelectorAll(".copy-btn").forEach(o=>{const e=o.cloneNode(!0);o.parentNode?.replaceChild(e,o);let c;e.addEventListener("click",async()=>{const s=e.getAttribute("data-code")||"",l=e.querySelector(".copy-btn-status");try{await navigator.clipboard.writeText(s),window.clearTimeout(c),e.classList.add("is-copied"),e.setAttribute("aria-label","Code copied"),l&&(l.textContent="Copied"),c=window.setTimeout(()=>{e.classList.remove("is-copied"),e.setAttribute("aria-label","Copy code"),l&&(l.textContent="")},1800)}catch(t){console.error("Failed to copy code:",t)}})})}function r(){document.querySelectorAll(".code-collapse-toggle").forEach(o=>{const e=o.cloneNode(!0);o.parentNode?.replaceChild(e,o);const c=e.closest(".code-block-wrapper--collapsible"),s=e.querySelector(".code-collapse-toggle-label");if(!c||!s)return;const l=t=>{c.classList.toggle("is-collapsed",!t),c.classList.toggle("is-expanded",t),e.setAttribute("aria-expanded",String(t)),e.setAttribute("aria-label",t?"Collapse code block":"Show full code block"),s.textContent=t?"COLLAPSE":"SHOW FULL"};l(!1),e.addEventListener("click",()=>{const t=e.getAttribute("aria-expanded")!=="true";l(t),t||c.scrollIntoView({block:"start",behavior:"auto"})})})}a();r();document.addEventListener("astro:page-load",()=>{a(),r()});</script></section><section id="runtimeevent" class="spec-section"><h2 class="section-heading"><span class="section-number">5. </span>RuntimeEvent</h2><div class="spec-statement-group"><ol start="1"><li><p>A <a href="/tr/1.0-rc3/runtime#dfn-runtimeevent" class="xref" title="RuntimeEvent">RuntimeEvent</a> MUST reference exactly one <a href="/tr/1.0-rc3/runtime#dfn-journeyexecution" class="xref" title="JourneyExecution">JourneyExecution</a> using <code>executionId</code>.</p></li><li><p>A <a href="/tr/1.0-rc3/runtime#dfn-runtimeevent" class="xref" title="RuntimeEvent">RuntimeEvent</a> MUST reference exactly one <a href="/tr/1.0-rc3/surface#dfn-surfaceinstance" class="xref" title="SurfaceInstance">SurfaceInstance</a> using <code>surfaceInstanceRef</code>.</p></li><li><p><code>surfaceInstanceRef</code> MUST resolve to a <code>SurfaceInstance</code> in the current document set or imported documents.</p></li><li><p>The referenced surface instance MUST be sufficient to identify the observed runtime occurrence.</p></li><li><p>A <a href="/tr/1.0-rc3/runtime#dfn-runtimeevent" class="xref" title="RuntimeEvent">RuntimeEvent</a> MAY reference its immediate predecessor using <code>previousId</code>.</p></li><li><p>If <code>previousId</code> is omitted, the event is a <a href="/tr/1.0-rc3/runtime#dfn-root-event" class="xref" title="Root Event">Root Event</a> in the execution chain.</p></li><li><p>Runtime event order MUST be reconstructed using <code>previousId</code> links, not timestamps.</p></li><li><p>The <code>payload</code> property, when present, is opaque runtime data and MUST NOT be required for resolving <code>surfaceInstanceRef</code>.</p></li></ol></div><div class="mermaid-container" data-astro-cid-najdirf6> <pre class="mermaid" data-mermaid-pending="true" data-mermaid-source="classDiagram
+  class JourneyExecution
+  class SurfaceInstance
+  class RuntimeEvent {
+    id
+    executionId
+    previousId
+    surfaceInstanceRef
+    payload
+  }
+  RuntimeEvent --> JourneyExecution : executionId
+  RuntimeEvent --> RuntimeEvent : previousId
+  RuntimeEvent --> SurfaceInstance : surfaceInstanceRef" data-astro-cid-najdirf6>classDiagram
+  class JourneyExecution
+  class SurfaceInstance
+  class RuntimeEvent {
+    id
+    executionId
+    previousId
+    surfaceInstanceRef
+    payload
+  }
+  RuntimeEvent --&gt; JourneyExecution : executionId
+  RuntimeEvent --&gt; RuntimeEvent : previousId
+  RuntimeEvent --&gt; SurfaceInstance : surfaceInstanceRef</pre> </div>  <p>Example JSON node:</p><div class="code-block-wrapper"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@type&#34;: &#34;RuntimeEvent&#34;,
+  &#34;@id&#34;: &#34;urn:ujg:event:12345:200&#34;,
+  &#34;executionId&#34;: &#34;urn:ujg:execution:12345&#34;,
+  &#34;previousId&#34;: &#34;urn:ujg:event:12345:100&#34;,
+  &#34;surfaceInstanceRef&#34;: &#34;urn:ujg:surface-instance:payment-card&#34;,
+  &#34;payload&#34;: { &#34;action&#34;: &#34;field.complete&#34;, &#34;field&#34;: &#34;card-number&#34; }
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"RuntimeEvent"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:event:12345:200"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "executionId"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:execution:12345"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "previousId"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:event:12345:100"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "surfaceInstanceRef"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:surface-instance:payment-card"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "payload"</span><span style="color:#24292E">: { </span><span style="color:#005CC5">"action"</span><span style="color:#24292E">: </span><span style="color:#032F62">"field.complete"</span><span style="color:#24292E">, </span><span style="color:#005CC5">"field"</span><span style="color:#24292E">: </span><span style="color:#032F62">"card-number"</span><span style="color:#24292E"> }</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"RuntimeEvent"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:event:12345:200"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "executionId"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:execution:12345"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "previousId"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:event:12345:100"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "surfaceInstanceRef"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:surface-instance:payment-card"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "payload"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"action"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"field.complete"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"field"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"card-number"</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div>  </div> </section><section id="normative-artifacts" class="spec-section"><h2 class="section-heading"><span class="section-number">6. </span>Normative Artifacts</h2><p>This module is published through the following artifacts:</p><ul><li><p><code>runtime.ttl</code>: ontology, published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime</code></p></li><li><p><code>runtime.context.jsonld</code>: JSON-LD term mappings, published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.context.jsonld</code></p></li><li><p><code>runtime.shape.ttl</code>: SHACL validation rules, published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.shape</code></p></li></ul><p>Examples in this page use an explicit context array composed from the published module contexts. The same composition is also published as the convenience context <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/context.jsonld</code>.</p><section id="ontology" class="spec-section"><h3 class="section-heading"><span class="section-number">6.1. </span>Ontology</h3><p>The normative Runtime ontology is defined below and is published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime</code>. It is the authoritative structural definition for <code>JourneyExecution</code>, <code>RuntimeEvent</code>, and the properties that connect them.</p><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> turtle </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#> .
+@prefix ujgruntime: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+
+<https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#> a owl:Ontology ;
+  rdfs:label &#34;UJG Runtime 1.0 Vocabulary&#34;@en ;
+  dct:description &#34;UJG Runtime ontology declaration&#34; .
+
+### Classes
+
+ujgruntime:JourneyExecution a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgruntime:RuntimeEvent a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgruntime:executionId a owl:ObjectProperty ;
+  rdfs:domain ujgruntime:RuntimeEvent ;
+  rdfs:range ujgruntime:JourneyExecution .
+
+ujgruntime:previousId a owl:ObjectProperty ;
+  rdfs:domain ujgruntime:RuntimeEvent ;
+  rdfs:range ujgruntime:RuntimeEvent .
+
+ujgruntime:surfaceInstanceRef a owl:ObjectProperty ;
+  rdfs:domain ujgruntime:RuntimeEvent ;
+  rdfs:range ujgsurface:SurfaceInstance .
+
+ujgruntime:payload a owl:DatatypeProperty ;
+  rdfs:domain ujgruntime:RuntimeEvent ;
+  rdfs:range rdf:JSON ."> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="turtle"><code><span class="line"><span style="color:#D73A49">@prefix ujg:</span><span style="color:#6F42C1"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix ujgruntime:</span><span style="color:#6F42C1"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix ujgsurface:</span><span style="color:#6F42C1"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix owl:</span><span style="color:#6F42C1"> &#x3C;http://www.w3.org/2002/07/owl#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix rdfs:</span><span style="color:#6F42C1"> &#x3C;http://www.w3.org/2000/01/rdf-schema#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix rdf:</span><span style="color:#6F42C1"> &#x3C;http://www.w3.org/1999/02/22-rdf-syntax-ns#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix dct:</span><span style="color:#6F42C1"> &#x3C;http://purl.org/dc/terms/></span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1">&#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#></span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">Ontology</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">label</span><span style="color:#032F62"> "UJG Runtime 1.0 Vocabulary"</span><span style="color:#24292E">@</span><span style="color:#6F42C1">en</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  dct:</span><span style="color:#005CC5">description</span><span style="color:#032F62"> "UJG Runtime ontology declaration"</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">### Classes</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgruntime:</span><span style="color:#005CC5">JourneyExecution</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">Class</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">subClassOf</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">Node</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgruntime:</span><span style="color:#005CC5">RuntimeEvent</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">Class</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">subClassOf</span><span style="color:#D73A49"> ujg:</span><span style="color:#005CC5">Node</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">### Properties</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgruntime:</span><span style="color:#005CC5">executionId</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">ObjectProperty</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">domain</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">RuntimeEvent</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">range</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">JourneyExecution</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgruntime:</span><span style="color:#005CC5">previousId</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">ObjectProperty</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">domain</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">RuntimeEvent</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">range</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">RuntimeEvent</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgruntime:</span><span style="color:#005CC5">surfaceInstanceRef</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">ObjectProperty</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">domain</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">RuntimeEvent</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">range</span><span style="color:#D73A49"> ujgsurface:</span><span style="color:#005CC5">SurfaceInstance</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgruntime:</span><span style="color:#005CC5">payload</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> owl:</span><span style="color:#005CC5">DatatypeProperty</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">domain</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">RuntimeEvent</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  rdfs:</span><span style="color:#005CC5">range</span><span style="color:#D73A49"> rdf:</span><span style="color:#005CC5">JSON</span><span style="color:#24292E"> .</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="turtle"><code><span class="line"><span style="color:#F97583">@prefix ujg:</span><span style="color:#B392F0"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix ujgruntime:</span><span style="color:#B392F0"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix ujgsurface:</span><span style="color:#B392F0"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix owl:</span><span style="color:#B392F0"> &#x3C;http://www.w3.org/2002/07/owl#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix rdfs:</span><span style="color:#B392F0"> &#x3C;http://www.w3.org/2000/01/rdf-schema#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix rdf:</span><span style="color:#B392F0"> &#x3C;http://www.w3.org/1999/02/22-rdf-syntax-ns#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix dct:</span><span style="color:#B392F0"> &#x3C;http://purl.org/dc/terms/></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">&#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#></span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">Ontology</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">label</span><span style="color:#9ECBFF"> "UJG Runtime 1.0 Vocabulary"</span><span style="color:#E1E4E8">@</span><span style="color:#B392F0">en</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  dct:</span><span style="color:#79B8FF">description</span><span style="color:#9ECBFF"> "UJG Runtime ontology declaration"</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">### Classes</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgruntime:</span><span style="color:#79B8FF">JourneyExecution</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">Class</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">subClassOf</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">Node</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgruntime:</span><span style="color:#79B8FF">RuntimeEvent</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">Class</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">subClassOf</span><span style="color:#F97583"> ujg:</span><span style="color:#79B8FF">Node</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">### Properties</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgruntime:</span><span style="color:#79B8FF">executionId</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">ObjectProperty</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">domain</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">RuntimeEvent</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">range</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">JourneyExecution</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgruntime:</span><span style="color:#79B8FF">previousId</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">ObjectProperty</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">domain</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">RuntimeEvent</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">range</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">RuntimeEvent</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgruntime:</span><span style="color:#79B8FF">surfaceInstanceRef</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">ObjectProperty</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">domain</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">RuntimeEvent</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">range</span><span style="color:#F97583"> ujgsurface:</span><span style="color:#79B8FF">SurfaceInstance</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgruntime:</span><span style="color:#79B8FF">payload</span><span style="color:#F97583"> a</span><span style="color:#F97583"> owl:</span><span style="color:#79B8FF">DatatypeProperty</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">domain</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">RuntimeEvent</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  rdfs:</span><span style="color:#79B8FF">range</span><span style="color:#F97583"> rdf:</span><span style="color:#79B8FF">JSON</span><span style="color:#E1E4E8"> .</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> </section><section id="json-ld-context" class="spec-section"><h3 class="section-heading"><span class="section-number">6.2. </span>JSON-LD Context</h3><p>The normative Runtime JSON-LD context is defined below and is published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.context.jsonld</code>. It provides the compact JSON-LD term mappings for Runtime examples, including IRI-valued references and opaque JSON <code>payload</code> values.</p><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> json-ld </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@context&#34;: {
+    &#34;@version&#34;: 1.1,
+
+    &#34;ujgruntime&#34;: &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#&#34;,
+
+    &#34;JourneyExecution&#34;: &#34;ujgruntime:JourneyExecution&#34;,
+    &#34;RuntimeEvent&#34;: &#34;ujgruntime:RuntimeEvent&#34;,
+
+    &#34;executionId&#34;: {
+      &#34;@id&#34;: &#34;ujgruntime:executionId&#34;,
+      &#34;@type&#34;: &#34;@id&#34;
+    },
+    &#34;previousId&#34;: {
+      &#34;@id&#34;: &#34;ujgruntime:previousId&#34;,
+      &#34;@type&#34;: &#34;@id&#34;
+    },
+    &#34;surfaceInstanceRef&#34;: {
+      &#34;@id&#34;: &#34;ujgruntime:surfaceInstanceRef&#34;,
+      &#34;@type&#34;: &#34;@id&#34;
+    },
+    &#34;payload&#34;: {
+      &#34;@id&#34;: &#34;ujgruntime:payload&#34;,
+      &#34;@type&#34;: &#34;@json&#34;
+    }
+  }
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<span class="line"><span>  "@context": {</span></span>
+<span class="line"><span>    "@version": 1.1,</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    "ujgruntime": "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#",</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    "JourneyExecution": "ujgruntime:JourneyExecution",</span></span>
+<span class="line"><span>    "RuntimeEvent": "ujgruntime:RuntimeEvent",</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    "executionId": {</span></span>
+<span class="line"><span>      "@id": "ujgruntime:executionId",</span></span>
+<span class="line"><span>      "@type": "@id"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "previousId": {</span></span>
+<span class="line"><span>      "@id": "ujgruntime:previousId",</span></span>
+<span class="line"><span>      "@type": "@id"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "surfaceInstanceRef": {</span></span>
+<span class="line"><span>      "@id": "ujgruntime:surfaceInstanceRef",</span></span>
+<span class="line"><span>      "@type": "@id"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "payload": {</span></span>
+<span class="line"><span>      "@id": "ujgruntime:payload",</span></span>
+<span class="line"><span>      "@type": "@json"</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>{</span></span>
+<span class="line"><span>  "@context": {</span></span>
+<span class="line"><span>    "@version": 1.1,</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    "ujgruntime": "https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#",</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    "JourneyExecution": "ujgruntime:JourneyExecution",</span></span>
+<span class="line"><span>    "RuntimeEvent": "ujgruntime:RuntimeEvent",</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    "executionId": {</span></span>
+<span class="line"><span>      "@id": "ujgruntime:executionId",</span></span>
+<span class="line"><span>      "@type": "@id"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "previousId": {</span></span>
+<span class="line"><span>      "@id": "ujgruntime:previousId",</span></span>
+<span class="line"><span>      "@type": "@id"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "surfaceInstanceRef": {</span></span>
+<span class="line"><span>      "@id": "ujgruntime:surfaceInstanceRef",</span></span>
+<span class="line"><span>      "@type": "@id"</span></span>
+<span class="line"><span>    },</span></span>
+<span class="line"><span>    "payload": {</span></span>
+<span class="line"><span>      "@id": "ujgruntime:payload",</span></span>
+<span class="line"><span>      "@type": "@json"</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span>  }</span></span>
+<span class="line"><span>}</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> <hr></section><section id="validation" class="spec-section"><h3 class="section-heading"><span class="section-number">6.3. </span>Validation</h3><p>The normative Runtime SHACL shape is defined below and is published at <code>https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.shape</code>. It is the authoritative validation artifact for Runtime structural constraints.</p><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> turtle </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="@prefix ujgruntime: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ujgruntimeshape: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.shape#> .
+
+
+ujgruntimeshape:JourneyExecutionShape a sh:NodeShape ;
+  sh:targetClass ujgruntime:JourneyExecution ;
+  sh:nodeKind sh:IRI .
+
+ujgruntimeshape:RuntimeEventShape a sh:NodeShape ;
+  sh:targetClass ujgruntime:RuntimeEvent ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujgruntime:executionId ;
+    sh:class ujgruntime:JourneyExecution ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:previousId ;
+    sh:class ujgruntime:RuntimeEvent ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:surfaceInstanceRef ;
+    sh:class ujgsurface:SurfaceInstance ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujgruntime:payload ;
+    sh:datatype rdf:JSON ;
+    sh:maxCount 1 ;
+  ] ."> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="turtle"><code><span class="line"><span style="color:#D73A49">@prefix ujgruntime:</span><span style="color:#6F42C1"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix ujgsurface:</span><span style="color:#6F42C1"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix sh:</span><span style="color:#6F42C1"> &#x3C;http://www.w3.org/ns/shacl#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix rdf:</span><span style="color:#6F42C1"> &#x3C;http://www.w3.org/1999/02/22-rdf-syntax-ns#></span><span style="color:#24292E"> .</span></span>
+<span class="line"><span style="color:#D73A49">@prefix ujgruntimeshape:</span><span style="color:#6F42C1"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.shape#></span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgruntimeshape:</span><span style="color:#005CC5">JourneyExecutionShape</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">NodeShape</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">targetClass</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">JourneyExecution</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">nodeKind</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">IRI</span><span style="color:#24292E"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">ujgruntimeshape:</span><span style="color:#005CC5">RuntimeEventShape</span><span style="color:#D73A49"> a</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">NodeShape</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">targetClass</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">RuntimeEvent</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">nodeKind</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">IRI</span><span style="color:#24292E"> ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">property</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">path</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">executionId</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">class</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">JourneyExecution</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">nodeKind</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">IRI</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">minCount</span><span style="color:#005CC5"> 1</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">maxCount</span><span style="color:#005CC5"> 1</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#24292E">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">property</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">path</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">previousId</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">class</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">RuntimeEvent</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">nodeKind</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">IRI</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">maxCount</span><span style="color:#005CC5"> 1</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#24292E">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">property</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">path</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">surfaceInstanceRef</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">class</span><span style="color:#D73A49"> ujgsurface:</span><span style="color:#005CC5">SurfaceInstance</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">nodeKind</span><span style="color:#D73A49"> sh:</span><span style="color:#005CC5">IRI</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">minCount</span><span style="color:#005CC5"> 1</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">maxCount</span><span style="color:#005CC5"> 1</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#24292E">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  sh:</span><span style="color:#005CC5">property</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">path</span><span style="color:#D73A49"> ujgruntime:</span><span style="color:#005CC5">payload</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">datatype</span><span style="color:#D73A49"> rdf:</span><span style="color:#005CC5">JSON</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#D73A49">    sh:</span><span style="color:#005CC5">maxCount</span><span style="color:#005CC5"> 1</span><span style="color:#24292E"> ;</span></span>
+<span class="line"><span style="color:#24292E">  ] .</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="turtle"><code><span class="line"><span style="color:#F97583">@prefix ujgruntime:</span><span style="color:#B392F0"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix ujgsurface:</span><span style="color:#B392F0"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix sh:</span><span style="color:#B392F0"> &#x3C;http://www.w3.org/ns/shacl#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix rdf:</span><span style="color:#B392F0"> &#x3C;http://www.w3.org/1999/02/22-rdf-syntax-ns#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"><span style="color:#F97583">@prefix ujgruntimeshape:</span><span style="color:#B392F0"> &#x3C;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/runtime.shape#></span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgruntimeshape:</span><span style="color:#79B8FF">JourneyExecutionShape</span><span style="color:#F97583"> a</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">NodeShape</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">targetClass</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">JourneyExecution</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">nodeKind</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">IRI</span><span style="color:#E1E4E8"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">ujgruntimeshape:</span><span style="color:#79B8FF">RuntimeEventShape</span><span style="color:#F97583"> a</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">NodeShape</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">targetClass</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">RuntimeEvent</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">nodeKind</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">IRI</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">property</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">path</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">executionId</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">class</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">JourneyExecution</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">nodeKind</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">IRI</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">minCount</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">maxCount</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#E1E4E8">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">property</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">path</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">previousId</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">class</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">RuntimeEvent</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">nodeKind</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">IRI</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">maxCount</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#E1E4E8">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">property</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">path</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">surfaceInstanceRef</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">class</span><span style="color:#F97583"> ujgsurface:</span><span style="color:#79B8FF">SurfaceInstance</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">nodeKind</span><span style="color:#F97583"> sh:</span><span style="color:#79B8FF">IRI</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">minCount</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">maxCount</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#E1E4E8">  ] ;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  sh:</span><span style="color:#79B8FF">property</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">path</span><span style="color:#F97583"> ujgruntime:</span><span style="color:#79B8FF">payload</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">datatype</span><span style="color:#F97583"> rdf:</span><span style="color:#79B8FF">JSON</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#F97583">    sh:</span><span style="color:#79B8FF">maxCount</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8"> ;</span></span>
+<span class="line"><span style="color:#E1E4E8">  ] .</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> <p>The rules below define additional causal constraints on event chains beyond the structural constraints captured by the SHACL shape.</p><div class="spec-statement-group"><p>Within a single execution (events where <code>executionId</code> equals the <a href="/tr/1.0-rc3/runtime#dfn-journeyexecution" class="xref" title="JourneyExecution">JourneyExecution</a> <code>@id</code>):</p><ol start="1"><li><p><strong>Root</strong>: Exactly one event MUST be the <a href="/tr/1.0-rc3/runtime#dfn-root-event" class="xref" title="Root Event">Root Event</a>.</p></li><li><p><strong>Resolution</strong>: Every present <code>previousId</code> MUST match the <code>@id</code> of an event in the same execution.</p></li><li><p><strong>Single Successor</strong>: An event <code>@id</code> MUST NOT be referenced as <code>previousId</code> by more than one event in the same execution.</p></li><li><p><strong>Acyclic</strong>: The chain MUST NOT contain cycles.</p></li></ol></div><p>If any rule above is violated, the <a href="/tr/1.0-rc3/runtime#dfn-journeyexecution" class="xref" title="JourneyExecution">JourneyExecution</a> is invalid.</p><hr></section></section><section id="reconstruction" class="spec-section"><h2 class="section-heading"><span class="section-number">7. </span>Reconstruction</h2><div class="spec-statement-group"><p>A Consumer reconstructing event order <strong>MUST</strong>:</p><ol start="1"><li><p>Identify the <a href="/tr/1.0-rc3/runtime#dfn-root-event" class="xref" title="Root Event">Root Event</a>.</p></li><li><p>Repeatedly select the unique event whose <code>previousId</code> equals the current event&#39;s <code>@id</code>.</p></li><li><p>Continue until no successor exists.</p></li></ol></div><p>A Consumer interpreting a runtime event&#39;s Graph meaning MUST resolve the event&#39;s <code>surfaceInstanceRef</code> to a <a href="/tr/1.0-rc3/surface#dfn-surfaceinstance" class="xref" title="SurfaceInstance">SurfaceInstance</a>, follow that instance&#39;s <code>surfaceRef</code> to a <a href="/tr/1.0-rc3/surface#dfn-surface" class="xref" title="Surface">Surface</a>, and use that surface&#39;s <code>graphNodeRef</code> as the observed Graph node.</p><hr></section><section id="examples" class="spec-section"><h2 class="section-heading"><span class="section-number">8. </span>Examples</h2><section id="combined-json-example" class="spec-section"><h3 class="section-heading"><span class="section-number">8.1. </span>Combined JSON Example</h3><div class="code-block-wrapper code-block-wrapper--collapsible is-collapsed" data-code-collapsible="true"> <div class="code-header"> <span class="code-language"> json </span> <button class="copy-btn" type="button" aria-label="Copy code" data-code="{
+  &#34;@context&#34;: &#34;https://ujg.specs.openuji.org/tr/1.0-rc3/ns/context.jsonld&#34;,
+  &#34;@id&#34;: &#34;https://example.com/ujg/runtime/execution-12345.jsonld&#34;,
+  &#34;@type&#34;: &#34;UJGDocument&#34;,
+  &#34;nodes&#34;: [
+    {
+      &#34;@type&#34;: &#34;JourneyExecution&#34;,
+      &#34;@id&#34;: &#34;urn:ujg:execution:12345&#34;
+    },
+    {
+      &#34;@type&#34;: &#34;State&#34;,
+      &#34;@id&#34;: &#34;urn:ujg:state:shipping-form&#34;,
+      &#34;label&#34;: &#34;Shipping form&#34;
+    },
+    {
+      &#34;@type&#34;: &#34;State&#34;,
+      &#34;@id&#34;: &#34;urn:ujg:state:payment-card&#34;,
+      &#34;label&#34;: &#34;Payment card&#34;
+    },
+    {
+      &#34;@type&#34;: &#34;Surface&#34;,
+      &#34;@id&#34;: &#34;urn:ujg:surface:shipping-form&#34;,
+      &#34;graphNodeRef&#34;: &#34;urn:ujg:state:shipping-form&#34;
+    },
+    {
+      &#34;@type&#34;: &#34;Surface&#34;,
+      &#34;@id&#34;: &#34;urn:ujg:surface:payment-card&#34;,
+      &#34;graphNodeRef&#34;: &#34;urn:ujg:state:payment-card&#34;
+    },
+    {
+      &#34;@type&#34;: &#34;SurfaceInstance&#34;,
+      &#34;@id&#34;: &#34;urn:ujg:surface-instance:shipping-form&#34;,
+      &#34;surfaceRef&#34;: &#34;urn:ujg:surface:shipping-form&#34;
+    },
+    {
+      &#34;@type&#34;: &#34;SurfaceInstance&#34;,
+      &#34;@id&#34;: &#34;urn:ujg:surface-instance:payment-card&#34;,
+      &#34;surfaceRef&#34;: &#34;urn:ujg:surface:payment-card&#34;
+    },
+    {
+      &#34;@type&#34;: &#34;RuntimeEvent&#34;,
+      &#34;@id&#34;: &#34;urn:ujg:event:12345:100&#34;,
+      &#34;executionId&#34;: &#34;urn:ujg:execution:12345&#34;,
+      &#34;surfaceInstanceRef&#34;: &#34;urn:ujg:surface-instance:shipping-form&#34;,
+      &#34;payload&#34;: { &#34;action&#34;: &#34;surface.enter&#34; }
+    },
+    {
+      &#34;@type&#34;: &#34;RuntimeEvent&#34;,
+      &#34;@id&#34;: &#34;urn:ujg:event:12345:200&#34;,
+      &#34;executionId&#34;: &#34;urn:ujg:execution:12345&#34;,
+      &#34;previousId&#34;: &#34;urn:ujg:event:12345:100&#34;,
+      &#34;surfaceInstanceRef&#34;: &#34;urn:ujg:surface-instance:payment-card&#34;,
+      &#34;payload&#34;: { &#34;action&#34;: &#34;field.complete&#34;, &#34;field&#34;: &#34;card-number&#34; }
+    }
+  ]
+}"> <span class="copy-btn-status" aria-live="polite"></span> <span class="copy-btn-icon" aria-hidden="true"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy copy-icon copy-icon--copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check copy-icon copy-icon--check" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg> </span> </button> </div> <div class="code-content"> <div class="code-theme code-theme--light"> <pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#24292E">{</span></span>
+<span class="line"><span style="color:#005CC5">  "@context"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/context.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"https://example.com/ujg/runtime/execution-12345.jsonld"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"UJGDocument"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">  "nodes"</span><span style="color:#24292E">: [</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"JourneyExecution"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:execution:12345"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"State"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:state:shipping-form"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "label"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Shipping form"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"State"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:state:payment-card"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "label"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Payment card"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Surface"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:surface:shipping-form"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "graphNodeRef"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:state:shipping-form"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"Surface"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:surface:payment-card"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "graphNodeRef"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:state:payment-card"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"SurfaceInstance"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:surface-instance:shipping-form"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "surfaceRef"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:surface:shipping-form"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"SurfaceInstance"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:surface-instance:payment-card"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "surfaceRef"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:surface:payment-card"</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"RuntimeEvent"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:event:12345:100"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "executionId"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:execution:12345"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "surfaceInstanceRef"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:surface-instance:shipping-form"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "payload"</span><span style="color:#24292E">: { </span><span style="color:#005CC5">"action"</span><span style="color:#24292E">: </span><span style="color:#032F62">"surface.enter"</span><span style="color:#24292E"> }</span></span>
+<span class="line"><span style="color:#24292E">    },</span></span>
+<span class="line"><span style="color:#24292E">    {</span></span>
+<span class="line"><span style="color:#005CC5">      "@type"</span><span style="color:#24292E">: </span><span style="color:#032F62">"RuntimeEvent"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "@id"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:event:12345:200"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "executionId"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:execution:12345"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "previousId"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:event:12345:100"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "surfaceInstanceRef"</span><span style="color:#24292E">: </span><span style="color:#032F62">"urn:ujg:surface-instance:payment-card"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">      "payload"</span><span style="color:#24292E">: { </span><span style="color:#005CC5">"action"</span><span style="color:#24292E">: </span><span style="color:#032F62">"field.complete"</span><span style="color:#24292E">, </span><span style="color:#005CC5">"field"</span><span style="color:#24292E">: </span><span style="color:#032F62">"card-number"</span><span style="color:#24292E"> }</span></span>
+<span class="line"><span style="color:#24292E">    }</span></span>
+<span class="line"><span style="color:#24292E">  ]</span></span>
+<span class="line"><span style="color:#24292E">}</span></span></code></pre> </div> <div class="code-theme code-theme--dark"> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "@context"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://ujg.specs.openuji.org/tr/1.0-rc3/ns/context.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"https://example.com/ujg/runtime/execution-12345.jsonld"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"UJGDocument"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "nodes"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"JourneyExecution"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:execution:12345"</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"State"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:state:shipping-form"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "label"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Shipping form"</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"State"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:state:payment-card"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "label"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Payment card"</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Surface"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:surface:shipping-form"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "graphNodeRef"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:state:shipping-form"</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Surface"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:surface:payment-card"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "graphNodeRef"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:state:payment-card"</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"SurfaceInstance"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:surface-instance:shipping-form"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "surfaceRef"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:surface:shipping-form"</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"SurfaceInstance"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:surface-instance:payment-card"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "surfaceRef"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:surface:payment-card"</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"RuntimeEvent"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:event:12345:100"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "executionId"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:execution:12345"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "surfaceInstanceRef"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:surface-instance:shipping-form"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "payload"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"action"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"surface.enter"</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "@type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"RuntimeEvent"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "@id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:event:12345:200"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "executionId"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:execution:12345"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "previousId"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:event:12345:100"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "surfaceInstanceRef"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"urn:ujg:surface-instance:payment-card"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "payload"</span><span style="color:#E1E4E8">: { </span><span style="color:#79B8FF">"action"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"field.complete"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">"field"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"card-number"</span><span style="color:#E1E4E8"> }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre> </div> </div> <button class="code-collapse-toggle" type="button" aria-expanded="false" aria-label="Show full code block"> <span class="code-collapse-toggle-label">SHOW FULL</span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down code-collapse-toggle-chevron" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg> </button> </div> </section></section> <footer class="text-sm mt-xl"> <div class="cg-copyright"> <p>
+Copyright © 2026 the Contributors to the  ujg/runtime/1.0-rc3, published by the  <a href="https://www.w3.org/community/ujg/">User Journey Graph Community Group</a> under
+          the  <a href="https://www.w3.org/community/about/process/cla/"> W3C Community Contributor License Agreement (CLA) </a>
+. A human-readable  <a href="https://www.w3.org/community/about/process/cla-deed/">
+summary
+</a> 
+is available.
+</p> </div> </footer> </div> </article>  </main> </div> <script type="module" src="/tr/_astro/SpecLayout.astro_astro_type_script_index_0_lang.CKupH4wW.js"></script>  <footer class="site-footer border-t border-border bg-panel backdrop-blur-md mt-auto"> <div class="max-w-content mx-auto px-4 md:px-12 py-4 grid grid-cols-[1fr_auto_1fr] items-center"> <div class="footer-icons flex items-center gap-3 col-start-1 justify-self-start"> <a href="https://github.com/openuji/spec-ujg" class="footer-icon-link inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository"> <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path> </svg> <span class="sr-only">GitHub</span> </a> <a href="https://matrix.to/#/%23ujg:matrix.org" class="footer-icon-link inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200" target="_blank" rel="noopener" aria-label="Matrix room" title="Matrix room"> <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"> <path d="M.632.55v22.9H2.28V24H0V0h2.28v.55zm7.043 7.26v1.157h.033c.309-.443.683-.784 1.117-1.024.433-.245.936-.365 1.5-.365.54 0 1.033.107 1.481.314.448.208.785.582 1.02 1.108.254-.374.6-.706 1.034-.992.434-.287.95-.43 1.546-.43.453 0 .872.056 1.26.167.388.11.716.286.993.53.276.245.489.559.646.951.152.392.23.863.23 1.417v5.728h-2.349V11.52c0-.286-.01-.559-.032-.812a1.755 1.755 0 0 0-.18-.66 1.106 1.106 0 0 0-.438-.448c-.194-.11-.457-.166-.785-.166-.332 0-.6.064-.803.189a1.38 1.38 0 0 0-.48.499 1.946 1.946 0 0 0-.231.696 5.56 5.56 0 0 0-.06.785v4.768h-2.35v-4.8c0-.254-.004-.503-.018-.752a2.074 2.074 0 0 0-.143-.688 1.052 1.052 0 0 0-.415-.503c-.194-.125-.476-.19-.854-.19-.111 0-.259.024-.439.074-.18.051-.36.143-.53.282-.171.138-.319.337-.439.595-.12.259-.18.6-.18 1.02v4.966H5.46V7.81zm15.693 15.64V.55H21.72V0H24v24h-2.28v-.55z"></path> </svg> <span class="sr-only">Matrix room</span> </a> </div> <div class="footer-meta text-xs text-secondary-foreground col-start-2 justify-self-center text-center"> <p>
+generated by <a target="_blank" href="https://speculator.openuji.dev">Speculator</a> </p> </div> <button type="button" class="theme-switcher js-theme-switcher col-start-3 justify-self-end" aria-label="Toggle color theme"></button> </div> </footer> <script type="module" src="/tr/_astro/BaseLayout.astro_astro_type_script_index_0_lang.BzHbvdlQ.js"></script> </body> </html>

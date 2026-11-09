@@ -1,0 +1,41 @@
+{
+  "id": "extensions/domain-model",
+  "title": "Domain Model",
+  "maturityLevel": "draft",
+  "baseUrl": "${SPEC_BASE_URL}/tr/1.0-rc3",
+  "deps": [
+    "core",
+    "graph",
+    "modules/condition",
+    "modules/effect",
+    "modules/entry-binding"
+  ],
+  "custom": {
+    "family": "extension",
+    "order": 100
+  },
+  "respec": {
+    "noConformance": true,
+    "group": {
+      "name": "User Journey Graph Community Group",
+      "url": "https://www.w3.org/community/ujg/"
+    },
+    "repository": "https://github.com/openuji/spec-ujg/blob/main/specs/tr/1.0-rc3/extensions/domain-model/index.md",
+    "editors": [
+      {
+        "name": "Seva Dolgopolov",
+        "w3cid": "169225"
+      }
+    ],
+    "license": "W3C-Software-and-Document",
+    "localBiblio": {
+      "UJG Core": {
+        "title": "UJG Core",
+        "url": "/tr/1.0-rc3/core"
+      }
+    },
+    "specStatus": "CG-DRAFT",
+    "publishDate": "2026-11-09",
+    "version": "1.0-rc3"
+  }
+}

@@ -1,0 +1,38 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#> .
+@prefix ujgdata: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/data-contract#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/tr/1.0-rc3/ns/data-contract#> a owl:Ontology ;
+  rdfs:label "UJG Data Contract 1.0 Vocabulary"@en ;
+  dct:description "UJG Data Contract ontology declaration" .
+
+### Classes
+
+ujgdata:DataSchema a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgdata:DataBinding a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+### Properties
+
+ujgdata:dataSchemaSource a owl:ObjectProperty ;
+  rdfs:domain ujgdata:DataSchema ;
+  rdfs:range rdfs:Resource ;
+  rdfs:label "data schema source" ;
+  rdfs:comment "References the external JSON Schema document defining this data schema." .
+
+ujgdata:dataSurfaceRef a owl:ObjectProperty ;
+  rdfs:domain ujgdata:DataBinding ;
+  rdfs:range ujgsurface:Surface ;
+  rdfs:label "data surface ref" ;
+  rdfs:comment "References the Surface whose structured data contract is described." .
+
+ujgdata:dataSchemaRef a owl:ObjectProperty ;
+  rdfs:domain ujgdata:DataBinding ;
+  rdfs:range ujgdata:DataSchema ;
+  rdfs:label "data schema ref" ;
+  rdfs:comment "References the DataSchema associated with the bound Surface." .

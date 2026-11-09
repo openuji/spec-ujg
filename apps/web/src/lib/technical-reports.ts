@@ -12,6 +12,14 @@ export interface TechnicalReport {
 
 export const TECHNICAL_REPORTS = [
   {
+    slug: '1.0-rc3',
+    title: 'UJG 1.0 Release Candidate 3',
+    status: 'Release Candidate',
+    published: '2026-11-09',
+    workspace: 'tr-1-0-rc3',
+    basePath: '/tr/1.0-rc3',
+  },
+  {
     slug: '1.0-rc2',
     title: 'UJG 1.0 Release Candidate 2',
     status: 'Release Candidate',

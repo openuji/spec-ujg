@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Architecture - UJG 1.0 Release Candidate 3</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="description" content="A family of open specifications that model user journeys as graphs of states and transitions."><link rel="canonical" href="https://ujg.specs.openuji.org/tr/1.0-rc3/architecture"><script type="application/ld+json">{
+  "@context": {
+    "dct": "http://purl.org/dc/terms/",
+    "spec": "http://www.w3.org/ns/spec#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "id": "@id",
+    "type": "@type"
+  },
+  "@graph": [
+    {
+      "id": "architecture",
+      "type": "spec:Specification",
+      "dct:title": "Architecture",
+      "spec:classesOfProducts": {
+        "id": "architecture#classes-of-products",
+        "type": "skos:ConceptScheme",
+        "skos:prefLabel": "Classes of Products",
+        "skos:hasTopConcept": []
+      },
+      "spec:requirement": []
+    }
+  ]
+}</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet"><script>
+      (function () {
+        const storageKey = 'ujg-theme';
+        try {
+          const stored = localStorage.getItem(storageKey);
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', stored);
+          } else {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+            document.documentElement.setAttribute('data-theme', systemTheme);
+          }
+        } catch {
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+          document.documentElement.setAttribute('data-theme', systemTheme);
+        }
+      })();
+    </script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/tr/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DcSP9LZ1.js"></script><script>
+      (function () {
+        if (window._smoothScrollSetup) return;
+        window._smoothScrollSetup = true;
+
+        const shouldReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        function highlightTarget(target) {
+          if (!target) return;
+          target.classList.remove('target-highlight');
+          // Trigger reflow to restart animation
+          void target.offsetWidth;
+          target.classList.add('target-highlight');
+
+          // Optional: remove class after animation finishes to keep DOM clean
+          // but it's not strictly necessary as it's a one-shot animation
+          setTimeout(() => {
+            target.classList.remove('target-highlight');
+          }, 2100);
+        }
+
+        function handleLinkClick(e) {
+          const link = e.target.closest('a');
+          if (!link?.hash || link.origin !== location.origin) return;
+
+          const urlPath = link.pathname.replace(/\/$/, '');
+          const locPath = location.pathname.replace(/\/$/, '');
+          if (urlPath !== locPath) return;
+
+          const target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+          if (!target) return;
+
+          e.preventDefault();
+          target.scrollIntoView({
+            behavior: shouldReduceMotion.matches ? 'auto' : 'smooth',
+          });
+          history.pushState(null, '', link.hash);
+          highlightTarget(target);
+        }
+
+        function handleHashChange() {
+          const hash = location.hash;
+          if (hash) {
+            const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+            if (target) {
+              highlightTarget(target);
+            }
+          }
+        }
+
+        // Content that arrives after the browser's own hash jump — Mermaid SVGs
+        // replacing several screens of source text, lazy images without
+        // dimensions, webfonts — resizes the page above the target and drags
+        // the reader away from it. Re-scrolling after the fact corrects the
+        // position but the reader sees every correction as a jump, so instead
+        // keep the target pinned: measure how far it drifted and undo that in
+        // the ResizeObserver callback, which runs after layout but before
+        // paint, making the compensation invisible.
+        function settleHashScroll() {
+          if (!location.hash || typeof ResizeObserver === 'undefined') return;
+
+          const targetId = decodeURIComponent(location.hash.slice(1));
+          let anchorTop = null;
+          let observer = null;
+          let stopTimer;
+          let cancelled = false;
+
+          function teardown() {
+            clearTimeout(stopTimer);
+            if (observer) observer.disconnect();
+            observer = null;
+            window.removeEventListener('wheel', cancel);
+            window.removeEventListener('touchmove', cancel);
+            window.removeEventListener('pointerdown', cancel);
+            window.removeEventListener('keydown', cancel);
+            window.removeEventListener('ujg:mermaid-rendered', repin);
+          }
+
+          function cancel() {
+            cancelled = true;
+            teardown();
+          }
+
+          function repin() {
+            if (cancelled || anchorTop === null) return;
+
+            const target = document.getElementById(targetId);
+            if (!target) return;
+
+            const drift = target.getBoundingClientRect().top - anchorTop;
+            if (Math.abs(drift) < 1) return;
+
+            window.scrollBy(0, drift);
+
+            // Scrolling clamps at the end of the document, so re-measure
+            // instead of assuming the correction fully landed.
+            anchorTop = target.getBoundingClientRect().top;
+          }
+
+          function start() {
+            if (cancelled) return;
+
+            const target = document.getElementById(targetId);
+            if (!target) return;
+
+            // Establish the resting position once. scrollIntoView honours the
+            // heading's scroll-margin-top, so the sticky header never covers it.
+            target.scrollIntoView({ behavior: 'auto' });
+            anchorTop = target.getBoundingClientRect().top;
+
+            observer = new ResizeObserver(repin);
+            observer.observe(document.body);
+            document.querySelectorAll('.mermaid-container').forEach(function (el) {
+              observer.observe(el);
+            });
+
+            // Late content stops arriving; stop watching so ordinary scrolling
+            // is never second-guessed.
+            stopTimer = setTimeout(teardown, 5000);
+          }
+
+          // Deliberate input hands control back to the reader immediately.
+          // Note: we never listen for 'scroll', since our own correction
+          // would cancel itself.
+          window.addEventListener('wheel', cancel, { passive: true });
+          window.addEventListener('touchmove', cancel, { passive: true });
+          window.addEventListener('pointerdown', cancel);
+          window.addEventListener('keydown', cancel);
+          window.addEventListener('ujg:mermaid-rendered', repin);
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', start, { once: true });
+          } else {
+            start();
+          }
+        }
+
+        function init() {
+          document.addEventListener('click', handleLinkClick, { capture: true });
+          // Also highlight on page load if hash exists
+          handleHashChange();
+          settleHashScroll();
+        }
+
+        document.addEventListener('astro:page-load', init);
+        init();
+      })();
+    </script><style>.mermaid-container[data-astro-cid-najdirf6]{padding:1.5rem;border-radius:12px;border:1px solid var(--border);text-align:center;margin:1.5rem 0;overflow-x:auto}.mermaid-container[data-astro-cid-najdirf6] pre[data-astro-cid-najdirf6].mermaid{background:transparent;border:none;padding:0;margin:0;color:inherit;display:flex;justify-content:center}.mermaid-container[data-astro-cid-najdirf6] pre[data-astro-cid-najdirf6].mermaid[data-mermaid-pending]{height:6rem;overflow:hidden;visibility:hidden}.mermaid-container[data-astro-cid-najdirf6] svg{max-width:100%;height:auto;font-size:13px!important;overflow:visible}.mermaid-container[data-astro-cid-najdirf6] svg text,.mermaid-container[data-astro-cid-najdirf6] svg tspan,.mermaid-container[data-astro-cid-najdirf6] svg .label,.mermaid-container[data-astro-cid-najdirf6] svg .nodeLabel,.mermaid-container[data-astro-cid-najdirf6] svg .edgeLabel,.mermaid-container[data-astro-cid-najdirf6] svg .cluster-label,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject div,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject span,.mermaid-container[data-astro-cid-najdirf6] svg foreignObject p{font-size:13px!important;line-height:1.25!important}.mermaid-container[data-astro-cid-najdirf6] svg foreignObject{overflow:visible}.mermaid-container[data-astro-cid-najdirf6] .edgeLabel text,.mermaid-container[data-astro-cid-najdirf6] .edgeLabel tspan,.mermaid-container[data-astro-cid-najdirf6] .edgeLabel span p{font-size:12px!important}.mermaid-container[data-astro-cid-najdirf6] .cluster-label span p{font-size:13px!important;padding:.2rem .4rem!important}:root[data-theme=dark] .mermaid-container[data-astro-cid-najdirf6] .note{fill:#2f2712!important;stroke:#c99a2e!important}:root[data-theme=dark] .mermaid-container[data-astro-cid-najdirf6] .noteText,:root[data-theme=dark] .mermaid-container[data-astro-cid-najdirf6] .noteText tspan{fill:#f8e7a1!important;color:#f8e7a1!important}@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .mermaid-container[data-astro-cid-najdirf6] .note{fill:#2f2712!important;stroke:#c99a2e!important}:root:not([data-theme=light]) .mermaid-container[data-astro-cid-najdirf6] .noteText,:root:not([data-theme=light]) .mermaid-container[data-astro-cid-najdirf6] .noteText tspan{fill:#f8e7a1!important;color:#f8e7a1!important}}
+</style>
+<link rel="stylesheet" href="/tr/_astro/_slug_.CYbIro8n.css">
+<style>.spec-header[data-astro-cid-crpkus26]{margin-bottom:3rem}.nav[data-astro-cid-crpkus26].breadcrumb{display:flex;gap:.5rem;align-items:center;margin-bottom:2rem;font-size:.9rem}.nav[data-astro-cid-crpkus26].breadcrumb a[data-astro-cid-crpkus26]{color:var(--accent);text-decoration:none}.nav[data-astro-cid-crpkus26].breadcrumb a[data-astro-cid-crpkus26]:hover{text-decoration:underline}.sep[data-astro-cid-crpkus26]{color:var(--text-secondary)}.current[data-astro-cid-crpkus26]{font-weight:700;color:var(--text-primary)}.title-area[data-astro-cid-crpkus26]{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem}h1[data-astro-cid-crpkus26]{margin:0;font-size:2.5rem;line-height:1.2;color:var(--text-primary)}.subtitle[data-astro-cid-crpkus26]{font-size:1.25rem;color:var(--text-secondary);margin:0 0 2rem;font-weight:400}.abstract[data-astro-cid-crpkus26]{border-top:1px solid var(--border, rgba(255, 255, 255, .1));padding-top:2rem;margin-top:2rem}.abstract[data-astro-cid-crpkus26] h2[data-astro-cid-crpkus26]{font-size:1.1rem;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary)}.abstract[data-astro-cid-crpkus26] p[data-astro-cid-crpkus26]{line-height:1.7;color:var(--text-primary);max-width:800px;margin:0}.pro-theme-cg[data-astro-cid-crpkus26]{position:relative;padding-top:1rem}.cg-copyright[data-astro-cid-crpkus26]{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border, rgba(255, 255, 255, .1));font-size:.85rem;color:var(--text-secondary);line-height:1.5}.cg-copyright[data-astro-cid-crpkus26] a[data-astro-cid-crpkus26]{color:var(--text-primary);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--text-primary) 30%,transparent)}.cg-copyright[data-astro-cid-crpkus26] a[data-astro-cid-crpkus26]:hover{border-bottom-color:var(--accent);color:var(--accent)}
+@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style><style>[data-astro-transition-scope="astro-ykqntimn-1"] { view-transition-name: astro-ykqntimn-1; }@layer astro { ::view-transition-old(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(astro-ykqntimn-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-ykqntimn-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-ykqntimn-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="bg-spec">    <header class="bg-panel backdrop-blur-md sticky top-0 z-header border-b border-border"> <div class="h-header px-lg flex items-center gap-2 md:justify-between"> <div class="flex md:hidden"> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="ZuSn0J" prefix="r4" component-url="/tr/_astro/MobilePanel.YK44Q9Bg.js" component-export="MobilePanel" renderer-url="/tr/_astro/client.C714R2Xt.js" props="{}" ssr client="load" opts="{&quot;name&quot;:&quot;MobilePanel&quot;,&quot;value&quot;:true}" await-children><button class="sidebar-restore-btn p-2 border border-border bg-card text-muted-foreground shadow-panel rounded-md hover:bg-accent-soft/50 hover:text-foreground transition-[background-color,color,box-shadow] duration-300" title="Expand sidebar" aria-label="Expand sidebar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-right w-5 h-5" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M15 3v18"></path></svg></button><!--astro:end--></astro-island> </div> <div class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden whitespace-nowrap"> <a href="/" class="flex shrink-0 text-primary font-bold hover:text-accent"> <span>UJG</span> </a>  <span class="shrink-0 text-secondary-foreground">/</span> <a href="/tr/1.0-rc3" class="shrink-0 text-primary font-bold hover:text-accent transition-colors duration-200"> UJG 1.0 Release Candidate 3 </a>  <span class="shrink-0 text-secondary-foreground">/</span> <astro-island uid="ZeWRxu" prefix="r5" component-url="/tr/_astro/BreadcrumbSelect.BD4voL3K.js" component-export="default" renderer-url="/tr/_astro/client.C714R2Xt.js" props="{&quot;valueHref&quot;:[0,&quot;/tr/1.0-rc3/architecture&quot;],&quot;options&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;Architecture&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/architecture&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Core&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/core&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Graph&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/graph&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Surface&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/surface&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Runtime&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/runtime&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Mapping&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/mapping&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Metrics&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/metrics&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Profiles&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/profiles&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Conformance&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/conformance&quot;],&quot;family&quot;:[0,&quot;spec&quot;]}],[0,{&quot;label&quot;:[0,&quot;Entry Binding&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/entry-binding&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Localization&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/l10n&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Conditions&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/condition&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Effect&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/effect&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Data Contract&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/data-contract&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Artifact&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/artifact&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Observability&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/observability&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Phase&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/phase&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Experience Annotation&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/experience-annotation&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Design System&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/modules/design-system&quot;],&quot;family&quot;:[0,&quot;module&quot;]}],[0,{&quot;label&quot;:[0,&quot;Domain Model&quot;],&quot;href&quot;:[0,&quot;/tr/1.0-rc3/extensions/domain-model&quot;],&quot;family&quot;:[0,&quot;extension&quot;]}]]]}" ssr client="load" opts="{&quot;name&quot;:&quot;BreadcrumbSelect&quot;,&quot;value&quot;:true}" await-children><button type="button" role="combobox" aria-controls="radix-_r5R_0_" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-slot="select-trigger" data-size="default" class="border-input data-[placeholder]:text-muted-foreground [&amp;_svg:not([class*=&#x27;text-&#x27;])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex items-center justify-between rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs outline-none focus-visible:ring-[3px] hover:bg-accent-soft/40 disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 h-auto w-auto gap-1 text-secondary-foreground hover:text-accent transition-[color,box-shadow] duration-200" aria-label="Switch section"><span data-slot="select-value" style="pointer-events:none"></span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down size-4 opacity-50" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button><select aria-hidden="true" tabindex="-1" style="position:absolute;border:0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;word-wrap:normal"></select><!--astro:end--></astro-island> </div> <nav class="hidden md:flex"> <a href="https://github.com/openuji/spec-ujg" class="inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200" aria-label="GitHub repository" title="GitHub repository"> <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path> </svg> <span class="sr-only">GitHub</span> </a> </nav> </div> </header> <div class="sidebar-container is-initializing flex px-lg" data-astro-transition-scope="astro-ykqntimn-1"> <aside class="sidebar w-sidebar border-r border-border shrink-0"> <div class="sidebar-content sticky top-[var(--height-header)] -ml-3"> <astro-island uid="1V6tbm" prefix="r1" component-url="/tr/_astro/Toc.CLRXBS5d.js" component-export="Toc" renderer-url="/tr/_astro/client.C714R2Xt.js" props="{&quot;toc&quot;:[1,[[0,{&quot;id&quot;:[0,&quot;abstract&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Abstract&quot;],&quot;number&quot;:[0,&quot;1&quot;]}],[0,{&quot;id&quot;:[0,&quot;conceptual-stack&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Conceptual Stack&quot;],&quot;number&quot;:[0,&quot;2&quot;]}],[0,{&quot;id&quot;:[0,&quot;guiding-principles&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Guiding Principles&quot;],&quot;number&quot;:[0,&quot;3&quot;]}],[0,{&quot;id&quot;:[0,&quot;optional-modules&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Optional Modules&quot;],&quot;number&quot;:[0,&quot;4&quot;]}],[0,{&quot;id&quot;:[0,&quot;opaque-extensions&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Opaque Extensions&quot;],&quot;number&quot;:[0,&quot;5&quot;]}],[0,{&quot;id&quot;:[0,&quot;document-extensions&quot;],&quot;depth&quot;:[0,2],&quot;text&quot;:[0,&quot;Document Extensions&quot;],&quot;number&quot;:[0,&quot;6&quot;]}]]]}" ssr client="load" opts="{&quot;name&quot;:&quot;Toc&quot;,&quot;value&quot;:true}" await-children><div class="overflow-y-auto max-h-[calc(100vh-var(--height-header))] py-md pr-3"><div class="sidebar-title flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground pb-base pl-3 pr-2"><span>Table of Contents</span><button class="hidden md:flex text-muted-foreground hover:text-foreground transition-[background-color,color] p-1 rounded-md hover:bg-accent-soft/50" title="Collapse sidebar" aria-label="Collapse sidebar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-panel-left w-4 h-4" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path></svg></button></div><nav class="flex flex-col"><ul class="flex flex-col list-none p-0"><li class="flex flex-col"><a href="#abstract" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">1</span><span>Abstract</span></a></li><li class="flex flex-col"><a href="#conceptual-stack" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">2</span><span>Conceptual Stack</span></a></li><li class="flex flex-col"><a href="#guiding-principles" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">3</span><span>Guiding Principles</span></a></li><li class="flex flex-col"><a href="#optional-modules" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">4</span><span>Optional Modules</span></a></li><li class="flex flex-col"><a href="#opaque-extensions" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">5</span><span>Opaque Extensions</span></a></li><li class="flex flex-col"><a href="#document-extensions" class="flex items-center group relative flex-1 py-1.5 pl-3 text-sm leading-snug transition-[background-color,color,border-color] border-l-2 border-transparent hover:bg-accent-soft/35 hover:text-foreground text-secondary-foreground hover:border-border"><span class="mr-2 font-mono text-2xs tracking-tight text-muted-foreground group-hover:text-foreground transition-colors">6</span><span>Document Extensions</span></a></li></ul></nav></div><!--astro:end--></astro-island> </div> </aside> <main class="max-w-spec min-w-0 mx-auto py-md md:p-md text-base leading-relaxed"> <article> <div class="w-20 p-2 pt-3 pl-3 border border-border rounded-md"> <img src="/tr/_astro/w3c-cg-draft.CzkmfRfp.png" alt="W3C Community Group Draft Report" class="w-full"> </div> <div class="flex items-center gap-md mt-md"> <h1>Architecture</h1> <span class="pill draft uppercase text-xs w-fit font-mono">draft</span> </div> <header class="spec-header pro-theme-cg" data-astro-cid-crpkus26> <section class="my-8 p-6 rounded-r-lg border-l-4 border-border bg-panel"> <h2 class="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-3 mt-0 border-none">
+Status of this Document
+</h2> <div class="text-xs leading-relaxed text-secondary-foreground"> <p>
+This report was published by the  <a href="https://www.w3.org/community/ujg/" class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors"> User Journey Graph Community Group </a>
+. It is not a W3C Standard nor is it on the W3C Standards Track. Please note that under
+          the  <a href="https://www.w3.org/community/about/process/cla/" class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors">
+W3C Community Contributor License Agreement (CLA)
+</a> 
+there is a limited opt-out and other conditions apply. Learn more about  <a href="https://www.w3.org/community/" class="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent hover:text-accent transition-colors">
+W3C Community and Business Groups
+</a>
+.
+</p> </div> </section> <div class="metadata-grid border border-border rounded-xl p-4 md:p-8 bg-card shadow-sm overflow-hidden"> <dl class="grid grid-cols-[96px_minmax(0,1fr)] md:grid-cols-[120px_minmax(0,1fr)] gap-x-4 md:gap-x-8 gap-y-6"> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Status
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> CG-DRAFT </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Version
+</dt> <dd class="text-base text-foreground self-baseline font-mono min-w-0 [overflow-wrap:anywhere]"> 1.0-rc3 </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Published
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> 2026-11-09 </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Last Update
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> 2026-11-09 </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Editors
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> <ul class="list-none p-0 m-0 space-y-2"> <li class="p-0 m-0"> Seva Dolgopolov   </li> </ul> </dd> </div>  <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Group
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> <a href="https://www.w3.org/community/ujg/" class="text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent transition-colors [overflow-wrap:anywhere]"> User Journey Graph Community Group </a> </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+Repository
+</dt> <dd class="text-base self-baseline min-w-0 [overflow-wrap:anywhere]"> <a href="https://github.com/openuji/spec-ujg/blob/main/specs/tr/1.0-rc3/architecture/index.md" class="inline-flex max-w-full items-center gap-2 text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent transition-colors"> <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path> </svg> <span class="[overflow-wrap:anywhere]">View Source</span> </a> </dd> </div> <div class="contents"> <dt class="text-xs font-bold uppercase tracking-wider text-muted-foreground self-baseline pt-0.5">
+License
+</dt> <dd class="text-base text-foreground self-baseline min-w-0 [overflow-wrap:anywhere]"> W3C-Software-and-Document </dd> </div> </dl> </div>   </header>  <div class="spec"> <section id="abstract" class="spec-section"><script type="module">const c="ujg-term-tooltip-portal";function u(){let t=document.getElementById(c);return t||(t=document.createElement("div"),t.id=c,t.className="term-info__portal",t.setAttribute("role","tooltip"),document.body.appendChild(t)),t}function g(t){const e=t.nextElementSibling;if(!e)return;const n=u();n.innerHTML=e.innerHTML,n.classList.add("is-visible");const i=t.getBoundingClientRect(),o=n.getBoundingClientRect();let s=i.left+i.width/2-o.width/2;s=Math.max(8,Math.min(s,window.innerWidth-o.width-8));let l=i.bottom+8;l+o.height>window.innerHeight-8&&(l=i.top-o.height-8),n.style.left=`${s}px`,n.style.top=`${l}px`}function r(){document.getElementById(c)?.classList.remove("is-visible")}function d(t){return t instanceof Element?t.closest(".term-info__trigger"):null}window.__ujgTermTooltipInit||(window.__ujgTermTooltipInit=!0,document.addEventListener("mouseover",t=>{const e=d(t.target);e&&g(e)}),document.addEventListener("mouseout",t=>{d(t.target)&&r()}),document.addEventListener("focusin",t=>{const e=d(t.target);e&&g(e)}),document.addEventListener("focusout",t=>{d(t.target)&&r()}),window.addEventListener("scroll",r,!0),window.addEventListener("resize",r));</script><h2 class="section-heading"><span class="section-number">1. </span>Abstract</h2><p>The <strong>User Journey Graph (UJG)</strong> standardizes user experience as <strong>computable data</strong>. It decouples the <strong>Definition of Intent</strong> (Design) from the <strong>Observation of Reality</strong> (Telemetry). This separation creates a single source of truth for Designers, Developers, and Analysts. As a deterministic protocol, it supports automation by AI agents across these roles, ensuring structural consistency.</p></section><section id="conceptual-stack" class="spec-section"><h2 class="section-heading"><span class="section-number">2. </span>Conceptual Stack</h2><p>The main spec family is organized into five logical layers:</p><ol start="1"><li><p><strong>The Core (Transport):</strong> The universal JSON-LD envelope. Ensures any tool—human or AI—can parse the file structure without ambiguity.</p></li><li><p><strong>The Graph (Definition):</strong> Defines the &quot;Happy Path.&quot; It is the vocabulary for States, Transitions, and Composition (sub-journey referencing).</p></li><li><p><strong>The Surface (Materialization):</strong> Exposes supported Graph nodes as addressable
+human-facing surfaces, touchpoints scoped to Journey boundaries, human users, and visible
+occurrences.</p></li><li><p><strong>The Runtime (Execution):</strong> Captures the &quot;Actual Path.&quot; It records observed surface events as a causal chain.</p></li><li><p><strong>The Mapping (Conformance):</strong> Closes the loop. It resolves Reality(<em>Runtime</em>) through Surface onto Intent(<em>Graph</em>) to calculate conversion and detect friction.</p></li></ol></section><section id="guiding-principles" class="spec-section"><h2 class="section-heading"><span class="section-number">3. </span>Guiding Principles</h2><ol start="1"><li><p><strong>Graph First:</strong> User experience is an automata, not a list of URLs.</p></li><li><p><strong>Stable Identity:</strong> Entities must be named with URIs to survive refactors.</p></li><li><p><strong>Separation of Concerns:</strong> A &quot;Journey&quot; (the plan) is immutable; observed surface events are runtime facts.</p></li><li><p><strong>Vendor Neutrality:</strong> The spec defines <em>data shapes</em>, not visualization rules.</p></li></ol></section><section id="optional-modules" class="spec-section"><h2 class="section-heading"><span class="section-number">4. </span>Optional Modules</h2><p>This release candidate also publishes a parallel family of <strong>optional modules</strong> for capabilities that
+build on the core UJG layers without expanding the shared interoperability baseline. Earlier drafts
+called these &quot;supported extensions&quot;, but the normative model is now module-oriented: optional
+capabilities that need interoperable graph terms publish their own ontology, JSON-LD context, and
+SHACL shape.</p><p>Optional modules are where new ideas can live before every UJG document needs them. They can add
+meaning on top of the main spec family, but they should leave the older layers intact. When an idea
+becomes common enough that most compliant tools need it, it belongs in the main spec family instead
+of staying optional.</p><p>Optional modules can grow in steps. First-level optional modules depend only on the main spec
+family, so they stay independent from each other and give the shared UJG layers simple concepts or
+attachment points to reference directly. Later modules can depend on first-level optional modules
+and describe those bridge domains in more detail. This lets new capabilities become precise without
+forcing the shared baseline, or this architecture page, to know every specialized vocabulary that
+may be added later.</p><p>Second-level optional modules depend on at least one first-level optional module. They may also
+depend on any needed main spec family modules, but cross-module optional composition belongs at this
+level rather than between first-level modules.</p></section><section id="opaque-extensions" class="spec-section"><h2 class="section-heading"><span class="section-number">5. </span>Opaque Extensions</h2><p>The specification distinguishes published module vocabularies from opaque deployment-private
+payloads. Opaque payloads are useful for local metadata and vendor integration, but they are not a
+substitute for terms that need interoperable semantics. Processing rules for opaque payloads and
+published module terms are defined by the modules that own those mechanisms.</p></section><section id="document-extensions" class="spec-section"><h2 class="section-heading"><span class="section-number">6. </span>Document Extensions</h2><p>Document Extensions define optional interoperable JSON structures attached to a <code>UJGDocument</code>.
+Unlike graph-native optional modules, their payloads do not participate directly in the UJG RDF
+graph and may use their own validation mechanisms.</p></section> <footer class="text-sm mt-xl"> <div class="cg-copyright"> <p>
+Copyright © 2026 the Contributors to the  ujg/architecture/1.0-rc3, published by the  <a href="https://www.w3.org/community/ujg/">User Journey Graph Community Group</a> under
+          the  <a href="https://www.w3.org/community/about/process/cla/"> W3C Community Contributor License Agreement (CLA) </a>
+. A human-readable  <a href="https://www.w3.org/community/about/process/cla-deed/">
+summary
+</a> 
+is available.
+</p> </div> </footer> </div> </article>  </main> </div> <script type="module" src="/tr/_astro/SpecLayout.astro_astro_type_script_index_0_lang.CKupH4wW.js"></script>  <footer class="site-footer border-t border-border bg-panel backdrop-blur-md mt-auto"> <div class="max-w-content mx-auto px-4 md:px-12 py-4 grid grid-cols-[1fr_auto_1fr] items-center"> <div class="footer-icons flex items-center gap-3 col-start-1 justify-self-start"> <a href="https://github.com/openuji/spec-ujg" class="footer-icon-link inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository"> <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path> </svg> <span class="sr-only">GitHub</span> </a> <a href="https://matrix.to/#/%23ujg:matrix.org" class="footer-icon-link inline-flex items-center justify-center text-secondary-foreground hover:text-accent transition-colors duration-200" target="_blank" rel="noopener" aria-label="Matrix room" title="Matrix room"> <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"> <path d="M.632.55v22.9H2.28V24H0V0h2.28v.55zm7.043 7.26v1.157h.033c.309-.443.683-.784 1.117-1.024.433-.245.936-.365 1.5-.365.54 0 1.033.107 1.481.314.448.208.785.582 1.02 1.108.254-.374.6-.706 1.034-.992.434-.287.95-.43 1.546-.43.453 0 .872.056 1.26.167.388.11.716.286.993.53.276.245.489.559.646.951.152.392.23.863.23 1.417v5.728h-2.349V11.52c0-.286-.01-.559-.032-.812a1.755 1.755 0 0 0-.18-.66 1.106 1.106 0 0 0-.438-.448c-.194-.11-.457-.166-.785-.166-.332 0-.6.064-.803.189a1.38 1.38 0 0 0-.48.499 1.946 1.946 0 0 0-.231.696 5.56 5.56 0 0 0-.06.785v4.768h-2.35v-4.8c0-.254-.004-.503-.018-.752a2.074 2.074 0 0 0-.143-.688 1.052 1.052 0 0 0-.415-.503c-.194-.125-.476-.19-.854-.19-.111 0-.259.024-.439.074-.18.051-.36.143-.53.282-.171.138-.319.337-.439.595-.12.259-.18.6-.18 1.02v4.966H5.46V7.81zm15.693 15.64V.55H21.72V0H24v24h-2.28v-.55z"></path> </svg> <span class="sr-only">Matrix room</span> </a> </div> <div class="footer-meta text-xs text-secondary-foreground col-start-2 justify-self-center text-center"> <p>
+generated by <a target="_blank" href="https://speculator.openuji.dev">Speculator</a> </p> </div> <button type="button" class="theme-switcher js-theme-switcher col-start-3 justify-self-end" aria-label="Toggle color theme"></button> </div> </footer> <script type="module" src="/tr/_astro/BaseLayout.astro_astro_type_script_index_0_lang.BzHbvdlQ.js"></script> </body> </html>

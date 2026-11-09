@@ -1,0 +1,60 @@
+@prefix ujg: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/graph#> .
+@prefix ujgsurface: <https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/tr/1.0-rc3/ns/surface#> a owl:Ontology ;
+  rdfs:label "UJG Surface 1.0 Vocabulary"@en ;
+  dct:description "UJG Surface ontology declaration" .
+
+### Classes
+
+ujgsurface:Surface a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgsurface:SurfaceInstance a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgsurface:Touchpoint a owl:Class ;
+  rdfs:subClassOf ujg:Node .
+
+ujgsurface:Persona a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Persona" ;
+  rdfs:comment "A human role, archetype, or participant perspective associated with one or more human-facing touchpoints." .
+
+### Properties
+
+ujgsurface:graphNodeRef a owl:ObjectProperty ;
+  rdfs:domain ujgsurface:Surface ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:State
+      ujggraph:CompositeState
+      ujggraph:Command
+    )
+  ] .
+
+ujgsurface:surfaceRef a owl:ObjectProperty ;
+  rdfs:domain ujgsurface:SurfaceInstance ;
+  rdfs:range ujgsurface:Surface .
+
+ujgsurface:touchpointRefs a owl:ObjectProperty ;
+  rdfs:domain ujgsurface:Persona ;
+  rdfs:range ujgsurface:Touchpoint ;
+  rdfs:label "touchpoint refs" ;
+  rdfs:comment "References touchpoints associated with this human role, archetype, or participant perspective." .
+
+ujgsurface:journeyRefs a owl:ObjectProperty ;
+  rdfs:domain ujgsurface:Touchpoint ;
+  rdfs:range ujggraph:Journey ;
+  rdfs:label "journey refs" ;
+  rdfs:comment "References meaningful Journey boundaries presented through this Touchpoint." .
+
+ujgsurface:channel a owl:DatatypeProperty ;
+  rdfs:domain ujgsurface:Touchpoint ;
+  rdfs:range xsd:string .
