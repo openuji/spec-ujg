@@ -61,9 +61,7 @@ Journey's `stateRefs`. A JourneyEntry is an entry contract, not a local transiti
 
 ### States, composition, and exits
 
-Use `State` for a stable observable condition. Use `State.multiInstance` only when one canonical
-State can have multiple concurrently addressable concrete occurrences in one active Journey
-occurrence.
+Use `State` for a stable observable condition.
 
 Use `CompositeState` only when it exposes one or more child Journeys through `subjourneyRefs`.
 Child states stay in their child Journey and never appear in the parent's `stateRefs`.

@@ -228,10 +228,10 @@ Rule:
 > Compose an affordance where its concrete occurrence belongs.
 Apply this to repeated, nested, item-scoped, row-scoped, card-scoped, message-scoped, or similar interactions.
 
-## Multi-instance State realization
-`State.multiInstance` is Graph semantics.
+## Multiple State occurrences
+Concrete occurrence multiplicity is Graph semantics.
 Design System MUST NOT restate it using collection, repetition, cardinality, data-source, or instance-key vocabulary.
-If a multi-instance State has stable visible occurrences:
+If a State has stable visible occurrences:
 
 ```text
 one authored State
@@ -240,11 +240,11 @@ one SurfaceRealization
 many concrete runtime occurrences
 ```
 Do not generate one Surface, Component, Template, SlotBinding, Command, or realization per runtime/domain occurrence.
-A `targetSurfaceRef` to a Surface whose Graph node is multi-instance composes the stable Surface definition; it does not constrain occurrence count.
+A `targetSurfaceRef` to a Surface composes the stable Surface definition; it does not constrain occurrence count.
 If a Command-backed child Surface belongs to each occurrence:
 - keep one authored Command;
 - keep one Command-backed Surface;
-- compose it into the multi-instance State Surface realization;
+- compose it into the State's Surface realization;
 - let occurrence context determine the concrete invocation.
 When Graph already models a repeated visible item boundary, preserve:
 
@@ -379,7 +379,7 @@ Identify existing `copyRef` / `MessageBundle` usage. Preserve valid existing loc
 Require stable visible meaning. Point affordance Surfaces to Command, not outcome Transitions. Do not suppress Command Surfaces because of conditional multiplicity. Allow multiple Surfaces per Command only when distinct visible materialization identity is justified beyond copy alone.
 
 ### 5. Resolve occurrence ownership
-Compose each nested Surface within the nearest visible State/CompositeState occurrence that owns it. Preserve multi-instance occurrence boundaries without per-instance vocabulary.
+Compose each nested Surface within the nearest visible State/CompositeState occurrence that owns it. Preserve occurrence boundaries without per-instance vocabulary.
 
 ### 6. Identify required visible composition
 List required child Surfaces. Preserve justified Command-backed affordances through `targetSurfaceRef`; do not hide them in opaque Components.
@@ -410,7 +410,7 @@ Report Graph, Command, Surface, Localization, Design System, expressivity, and m
 - Conditional branches remain outcome Transitions, not separate affordances.
 - Retry/correction Transitions reuse the same Command when the invocation is genuinely the same.
 - Item-local Command Surfaces are composed within their owning occurrence.
-- Multi-instance States retain one authored Surface/realization boundary.
+- States with multiple concrete occurrences retain one authored Surface/realization boundary.
 - No per-runtime-occurrence Command/Design System nodes or repetition vocabulary were invented.
 
 ### Localization and presentation identity

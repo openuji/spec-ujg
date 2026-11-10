@@ -28,13 +28,6 @@ Focus on intended topology:
 
 Keep runtime observations, selectors, typed values, timestamps, payloads, and analytics outside Graph.
 
-Use `State.multiInstance` only when one canonical `State` may have multiple concurrently
-addressable concrete occurrences within one active occurrence of its enclosing `Journey`.
-`multiInstance` is optional, boolean, and defaults semantically to false when absent.
-
-Do not use `multiInstance` to encode occurrence counts, instance keys, data sources, collection
-iteration, domain entities, queries, expressions, or rendering behavior.
-
 ## Modeling rules
 
 Prefer the shallowest valid graph.
@@ -86,9 +79,9 @@ Use `commandRef` only when the transition is associated with invoking a stable `
 transitions may share one `commandRef`; that shared command identity does not define branching,
 selection, ordering, or resolution semantics.
 
-When a transition's `from` references a multi-instance `State`, traverse the one stable transition
-from a concrete occurrence of that state. Do not add transition properties such as `perInstance`,
-`perSourceInstance`, `perTargetInstance`, or `repeatableTransition`.
+When a transition's `from` references a `State` with multiple concrete occurrences, traverse the one
+stable transition from a concrete occurrence of that state. Do not add transition properties such as
+`perInstance`, `perSourceInstance`, `perTargetInstance`, or `repeatableTransition`.
 
 Use `OutgoingTransition` for ordinary navigation affordances. Every `OutgoingTransition` must declare
 exactly one `toEntryRef` to a `JourneyEntry` owned by exactly one Journey. Resolve the destination as
