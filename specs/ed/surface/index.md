@@ -242,19 +242,6 @@ Example JSON node:
    data; Surface does not add its own multiplicity vocabulary.
 10. A consumer may ignore Surface semantics while preserving recognized JSON-LD data.
 
-## Migration From User
-
-Documents written against an earlier Editor's Draft can migrate without changing their overall
-Graph structure:
-
-- Change each Surface-module `User` node to `Persona`. Its existing `@id` may stay the same.
-- Remove `userRef` from every Graph node. Persona context is not inherited by entries, states,
-  transitions, commands, exits, or child journeys.
-- Connect each Persona to relevant Touchpoints with `touchpointRefs`.
-- Connect each Touchpoint to coherent Journey boundaries with `journeyRefs`.
-
-There is no compatibility alias for `User` or `userRef` in this Editor's Draft.
-
 ## Normative Artifacts
 
 The following sections contain the exact machine-readable vocabulary, JSON-LD term mappings, and
