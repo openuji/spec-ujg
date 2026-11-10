@@ -60,6 +60,8 @@ Later sections define navigation affordances that can be attached to eligible st
 1. A [=State=] **MUST** be identified by an IRI.
 2. A [=State=] **MUST** declare exactly one `label`.
 3. A [=State=] **MAY** declare one or more `tags`.
+4. Multiple concrete occurrences of the same [=State=] **MAY** exist within an active [=Journey=];
+   Graph does not define occurrence identity, cardinality, lifecycle, or materialization.
 </spec-statement>
 
 ```mermaid
@@ -68,7 +70,6 @@ classDiagram
     id
     label
     tags
-    multiInstance
   }
 ```
 
@@ -85,32 +86,6 @@ Example JSON node:
 }
 ```
 
-### multiInstance {data-cop-concept="multi-instance"}
-
-<spec-statement>
-`multiInstance` is optional. If present, it **MUST** be a boolean. Absence of `multiInstance`, or
-`multiInstance: false`, means that the [=State=] does not declare multiple concurrent concrete
-occurrences.
-
-`multiInstance: true` means that one canonical [=State=] may appear as multiple concrete occurrences
-within one active [=Journey=]. It **MUST NOT** define an occurrence count, occurrence IDs, data
-source, collection logic, domain entity mapping, query, expression, or rendering behavior.
-</spec-statement>
-
-Example multi-instance state:
-
-```json
-{
-  "@type": "State",
-  "@id": "urn:ujg:state:workshop-teaser",
-  "label": "Workshop teaser",
-  "multiInstance": true
-}
-```
-
-A Graph with this node still contains one canonical `Workshop teaser` [=State=]. Runtime or
-application data may present multiple concrete workshop teaser occurrences.
-
 ---
 
 ## Transition {data-cop-concept="transition"}
@@ -119,9 +94,8 @@ A [=Transition=] is a structural directed edge between local vertices of a [=Jou
 
 A [=Transition=] is not owned by either endpoint state. It is owned by a journey through `transitionRefs`.
 
-When a [=Transition=]'s `from` value references a [=State=] with `multiInstance: true`, the same
-[=Transition=] applies to each concrete occurrence of that state. The [=Transition=] itself remains
-one stable Graph node.
+A [=Transition=] applies to every concrete occurrence of the [=State=] its `from` value references.
+The [=Transition=] itself remains one stable Graph node.
 
 The presence of multiple child Journeys in one [=CompositeState=] does not create implicit
 Transitions between them.
@@ -134,7 +108,7 @@ Transitions between them.
 5. When listed in a [=Journey=]'s `transitionRefs`, `to` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`, or a [=JourneyExit=] in that journey's `exitRefs`.
 6. [=Transition=] endpoints **MUST** stay local to the enclosing [=Journey=].
 7. `toEntryRef` **MAY** be used only on parent transitions into [=CompositeState=] nodes, as defined by the boundary mapping rules below.
-8. A [=Transition=] from a [=State=] with `multiInstance: true` **MUST** remain one Graph node; per-instance transition properties are outside Graph.
+8. A [=Transition=] **MUST** remain one Graph node regardless of how many concrete occurrences its endpoint [=State=]s have; per-instance transition properties are outside Graph.
 9. A child Journey's [=Transition=] **MUST NOT** connect directly to a [=State=], [=CompositeState=], or [=JourneyExit=] owned only by another child Journey.
 </spec-statement>
 
@@ -170,21 +144,6 @@ Example JSON node:
   "commandRef": "urn:ujg:command:submit-search"
 }
 ```
-
-Example transition from a multi-instance state:
-
-```json
-{
-  "@type": "Transition",
-  "@id": "urn:ujg:transition:open-workshop",
-  "label": "Open workshop",
-  "from": "urn:ujg:state:workshop-teaser",
-  "to": "urn:ujg:state:workshop-detail"
-}
-```
-
-The `open-workshop` transition is declared once; it may be taken from any concrete `Workshop teaser`
-occurrence.
 
 ---
 
@@ -598,18 +557,16 @@ entered first or that both must be visited.
    ancestor is left only through movement that exits that ancestor's own composite scope.
 </spec-statement>
 
-### Interaction with multiInstance
+### Composite occurrence isolation
 
 <spec-statement>
-1. Multiple child Journeys and `multiInstance` describe independent dimensions.
-2. More than one `subjourneyRefs` value **MUST NOT** imply `multiInstance: true`.
-3. `multiInstance: true` on a [=CompositeState=] means that multiple concrete occurrences of the same
-   canonical CompositeState may coexist.
-4. Each concrete CompositeState occurrence has a distinct composite scope occurrence for Mapping
+1. Multiple concrete occurrences of the same canonical [=CompositeState=] **MAY** coexist within one
+   active [=Journey=].
+2. Each concrete CompositeState occurrence has a distinct composite scope occurrence for Mapping
    purposes.
-5. Child observations associated with one CompositeState occurrence **MUST NOT** be used as local
+3. Child observations associated with one CompositeState occurrence **MUST NOT** be used as local
    predecessors for child observations associated with another occurrence.
-6. Graph does not define occurrence identifiers or occurrence-association data.
+4. Graph does not define occurrence identifiers or occurrence-association data.
 </spec-statement>
 
 ---
@@ -1101,7 +1058,7 @@ context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`, which preserves Gr
 
 ### Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `Command`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, `multiInstance`, and `outgoingTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `LocalVertex`, `State`, `CompositeState`, `Transition`, `Command`, `JourneyExit`, `OutgoingTransition`, `OutgoingTransitionGroup`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, and `outgoingTransitionRefs`.
 
 :::include ./graph.ttl :::
 

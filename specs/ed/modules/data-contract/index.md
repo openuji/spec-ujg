@@ -119,9 +119,10 @@ The schema may describe values such as a workshop title, date, location, or regi
 does not define where those values come from, how they are queried, whether they are cached, or how
 they map to domain properties.
 
-For a [=State=] with `multiInstance: true`, the [=DataBinding=] describes one concrete surface
-occurrence. This module does not define collection sources, queries, iteration, pagination,
-occurrence counts, entity enumeration, loading behavior, or rendering behavior.
+For a [=State=] or [=CompositeState=], the [=DataBinding=] describes one concrete surface occurrence
+regardless of how many concrete occurrences exist. This module does not define collection sources,
+queries, iteration, pagination, occurrence counts, entity enumeration, loading behavior, or rendering
+behavior.
 
 ## Command Surface Contracts {data-cop-concept="command-surface-contracts"}
 
