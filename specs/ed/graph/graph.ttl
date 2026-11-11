@@ -53,6 +53,12 @@ ujggraph:JourneyExit a owl:Class ;
 ujggraph:OutgoingTransition a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
+ujggraph:InvokingTransition a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujggraph:OutgoingTransition ;
+  rdfs:label "Invoking Transition" ;
+  rdfs:comment "An affordance that invokes a Journey through a JourneyEntry and resumes the source State occurrence when that Journey reaches one of its exits." .
+
 ujggraph:OutgoingTransitionGroup a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
@@ -120,16 +126,17 @@ ujggraph:toEntryRef a owl:ObjectProperty ;
     owl:unionOf (
       ujggraph:Transition
       ujggraph:OutgoingTransition
+      ujggraph:InvokingTransition
     )
   ] ;
   rdfs:range ujggraph:JourneyEntry ;
   rdfs:label "to entry ref" ;
-  rdfs:comment "Selects a JourneyEntry. On a Transition, it refines entry into one child Journey of the CompositeState used as to. On an OutgoingTransition, it identifies the destination Journey entry contract." .
+  rdfs:comment "Selects a JourneyEntry. On a Transition, it refines entry into one child Journey of the CompositeState used as to. On an OutgoingTransition, it identifies the destination Journey entry contract. On an InvokingTransition, it identifies the entry contract of the invoked Journey." .
 
 ujggraph:commandRef a owl:ObjectProperty ;
   rdfs:range ujggraph:Command ;
   rdfs:label "command ref" ;
-  rdfs:comment "Associates a Transition or OutgoingTransition with the stable semantic identity of an intentional invocation." .
+  rdfs:comment "Associates a Transition, OutgoingTransition, or InvokingTransition with the stable semantic identity of an intentional invocation." .
 
 ujggraph:subjourneyRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:CompositeState ;
@@ -145,6 +152,12 @@ ujggraph:outgoingTransitionRefs a owl:ObjectProperty ;
       ujggraph:OutgoingTransitionGroup
     )
   ] ;
-  rdfs:range ujggraph:OutgoingTransition ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:OutgoingTransition
+      ujggraph:InvokingTransition
+    )
+  ] ;
   rdfs:label "outgoing transition refs" ;
-  rdfs:comment "References outgoing navigational affordances. When used on an OutgoingTransitionGroup, the references define a reusable group. When used on a non-composite State, the references define outgoing affordances available from that specific state." .
+  rdfs:comment "References outgoing affordances: OutgoingTransition or InvokingTransition nodes. When used on an OutgoingTransitionGroup, the references define a reusable group. When used on a non-composite State, the references define outgoing affordances available from that specific state." .

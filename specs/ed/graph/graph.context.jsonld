@@ -15,6 +15,7 @@
     "Command": "ujggraph:Command",
     "JourneyExit": "ujggraph:JourneyExit",
     "OutgoingTransition": "ujggraph:OutgoingTransition",
+    "InvokingTransition": "ujggraph:InvokingTransition",
     "OutgoingTransitionGroup": "ujggraph:OutgoingTransitionGroup",
 
     "label": "ujggraph:label",

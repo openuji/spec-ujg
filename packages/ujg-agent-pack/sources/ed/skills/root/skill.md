@@ -84,8 +84,9 @@ owned by exactly one referenced child Journey. Otherwise child entry selection u
 Journey's `defaultEntryRef` when present or remains unresolved.
 
 Use `Command` only as stable semantic identity for an intentional invocation. A Command does not
-define source, destination, branching, rendering, runtime occurrence, or results. A Transition or
-OutgoingTransition may use `commandRef` when that stable invocation identity is needed.
+define source, destination, branching, rendering, runtime occurrence, or results. A Transition,
+OutgoingTransition, or InvokingTransition may use `commandRef` when that stable invocation identity
+is needed.
 
 ### Outgoing navigation
 
@@ -109,6 +110,11 @@ destination varies by source, define source-specific OutgoingTransitions and ent
 
 Do not place OutgoingTransitions in `transitionRefs`, inject them from JourneyExit nodes, or use
 them for ordinary internal progression.
+
+When the user should return to the same source State after another Journey exits, use
+`InvokingTransition` instead of OutgoingTransition. It attaches the same way and has the same
+`toEntryRef` rules; the invoked Journey must declare at least one exit. See the Graph modeling skill
+for completion and cancellation rules.
 
 ## Surface modeling
 

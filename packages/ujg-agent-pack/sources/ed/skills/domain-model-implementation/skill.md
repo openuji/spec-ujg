@@ -104,6 +104,14 @@ For an `OutgoingTransition`, verify that `toEntryRef` names a JourneyEntry owned
 Journey and that the effective destination is that entry's `stateRef`. Treat same-Journey and
 same-State targets as explicit re-entry and never authorize a direct outgoing State reference.
 
+For an `InvokingTransition`, apply the same `toEntryRef` checks, but keep the source State
+occurrence and its active composite scope alive while the invoked Journey runs. Resume that exact
+source occurrence when the invoked Journey reaches one of its own `exitRefs`; do not enter a
+JourneyEntry or take a Transition to get back. Treat the reached exit as the invocation's outcome.
+If the invoked Journey is left any other way, such as through an `OutgoingTransition`, cancel the
+invocation and never resume the source from it. Nested invocations each resume their own source.
+Never resume a source occurrence that no longer exists or was reconstructed.
+
 When a child `JourneyExit` is reached, treat it as leaving that containing `CompositeState`
 occurrence. Do not treat it as completing sibling child journeys or as collective composite
 completion unless the UJG explicitly models such behavior elsewhere.

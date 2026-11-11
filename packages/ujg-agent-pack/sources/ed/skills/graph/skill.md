@@ -100,6 +100,19 @@ State instead.
 Use `commandRef` on an `OutgoingTransition` only when the outgoing affordance has stable intentional
 invocation identity.
 
+Use `InvokingTransition` instead of `OutgoingTransition` when the affordance opens another Journey
+and the user returns to the same source State when that Journey exits, such as a settings dialog
+opened from a footer. It has the same shape as an OutgoingTransition: exactly one `toEntryRef`,
+optional `commandRef`, no `to`, never in `transitionRefs`, and it attaches through the same
+`outgoingTransitionRefs` on a State or an `OutgoingTransitionGroup`. A group may mix both classes.
+The Journey that owns its `toEntryRef` must declare at least one `exitRefs` value. Reaching any of
+that Journey's own exits resumes the source State; leaving it any other way cancels the invocation
+without a return. Never add the invoked Journey to `subjourneyRefs`, never model the return as a
+Transition or OutgoingTransition back to the source, and never type one node as both classes. Do
+not attach a group containing an InvokingTransition to the Journey it invokes unless nested
+self-invocation is intended. Mapping does not yet explain invocations, so do not add
+`explainedByTransitionRef` values pointing at an InvokingTransition.
+
 ## Cross-skill awareness
 
 When Graph modeling touches surface structure, design-system binding, localization metadata, runtime observations, or implementation extensions, consult the generated related-skills reference before continuing.
