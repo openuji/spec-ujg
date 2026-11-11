@@ -51,10 +51,14 @@ Use `CompositeState` only when a parent journey contains or exposes one or more 
 journeys with `subjourneyRefs`. `subjourneyRefs` is a set of child `Journey` IRIs and must contain at
 least one value. Do not use the legacy singular child-journey field in ED JSON-LD.
 
-Multiple child journeys inside one `CompositeState` coexist in the same composite scope. Their
-`subjourneyRefs` serialization order does not define traversal order, priority, causality,
-scheduling, synchronization, fork/join, all-children-complete behavior, or hidden graph edges.
-Observations from sibling child journeys may overlap or interleave without changing Graph topology.
+Multiple child journeys inside one `CompositeState` must coexist in the same composite scope: each
+is independently available without requiring progression through another. Their `subjourneyRefs`
+serialization order does not define traversal order, priority, causality, scheduling,
+synchronization, fork/join, all-children-complete behavior, or hidden graph edges. Observations from
+sibling child journeys may overlap or interleave without changing Graph topology. Do not group child
+journeys that are experienced in a defined sequence (e.g., shipping before payment, step 1 before
+step 2) under one `CompositeState` — model that sequence as separate `State`/`CompositeState` nodes
+connected by `Transition` within the enclosing journey instead.
 
 On a parent `Transition` into a `CompositeState`, use `toEntryRef` only to select a specific child
 `JourneyEntry`. The entry must belong to exactly one child journey referenced by that composite's

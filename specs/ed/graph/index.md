@@ -498,8 +498,13 @@ not list the child Journeys' states directly.
    causality, activation order, or presentation order.
 9. A Consumer **MUST NOT** infer a [=Transition=], dependency, condition, synchronization rule, or
    completion relationship between child Journeys from their common containment.
-10. While an occurrence of the [=CompositeState=] is current, observations belonging to different
-    child Journeys **MAY** overlap or interleave.
+10. Multiple `subjourneyRefs` values represent child Journeys that coexist within the same
+    [=CompositeState=] occurrence: each is independently available without requiring progression
+    through another. While such an occurrence is current, observations belonging to different child
+    Journeys **MAY** overlap or interleave. Child Journeys that are experienced in a defined sequence
+    **MUST NOT** be grouped under one [=CompositeState=]; a Producer **MUST** instead model that
+    sequence as separate States or CompositeStates connected by explicit Transitions within the
+    enclosing Journey.
 11. A child Journey's internal movement does not, by itself, change the current local position of
     another child Journey.
 12. A [=CompositeState=] with one child Journey defines ordinary nested composition.
@@ -532,18 +537,20 @@ Example JSON node:
 ```json
 {
   "@type": "CompositeState",
-  "@id": "urn:ujg:state:checkout",
-  "label": "Checkout",
+  "@id": "urn:ujg:state:product-page",
+  "label": "Product page",
   "subjourneyRefs": [
-    "urn:ujg:journey:shipping",
-    "urn:ujg:journey:payment"
+    "urn:ujg:journey:product-browsing",
+    "urn:ujg:journey:sticky-cart"
   ]
 }
 ```
 
-The Shipping and Payment Journeys are separate local topology scopes. Graph permits their
-observations to interleave while Checkout is current. It does not assert that either Journey is
-entered first or that both must be visited.
+The Product browsing and Sticky cart Journeys are separate local topology scopes that coexist: the
+sticky cart stays independently available regardless of how the shopper navigates product content,
+and neither Journey must be entered first or finished before the other. A checkout flow where
+shipping must be completed before payment becomes available is not this pattern — it is a sequence,
+and belongs in separate States connected by explicit Transitions, per item 10 above.
 
 ### Nested composition
 
