@@ -158,8 +158,8 @@ or rendering behavior. Those details come from Graph semantics and runtime or ap
 4. A [=Surface=] **MUST NOT** change Graph traversal or assert that its Graph node occurred.
 5. A [=Surface=] **MUST NOT** define occurrence multiplicity, instance keys, data sources,
    collection iteration, or rendering behavior.
-6. A [=Surface=] **MUST NOT** reference a [=Transition=] or [=OutgoingTransition=] through
-   `graphNodeRef`.
+6. A [=Surface=] **MUST NOT** reference a [=Transition=], [=OutgoingTransition=], or
+   [=InvokingTransition=] through `graphNodeRef`.
 </spec-statement>
 
 ```mermaid
@@ -234,9 +234,9 @@ Example JSON node:
    `touchpointRefs` include them. This can produce no Persona, one Persona, or several Personas.
 6. An associated Persona describes the intended human perspective. It **MUST NOT** be treated as
    the identity of a person observed at runtime.
-7. An `OutgoingTransitionGroup` does not have a Surface. When its child
-   [=OutgoingTransition|OutgoingTransitions=] need stable visible invocation identity, model a
-   [=Command=] and let the outgoing transitions share that Command through `commandRef`.
+7. When [=OutgoingTransition=] or [=InvokingTransition=] nodes need stable visible invocation
+   identity, model a [=Command=] and let those transitions share that Command through
+   `commandRef`.
 8. Surface terms do not select design-system components, templates, slots, tokens, or renderers.
 9. Concrete Surface occurrence multiplicity derives from Graph traversal and runtime or application
    data; Surface does not add its own multiplicity vocabulary.

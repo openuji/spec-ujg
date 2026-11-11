@@ -103,14 +103,24 @@ or synchronization contracts.
 For an `OutgoingTransition`, verify that `toEntryRef` names a JourneyEntry owned by exactly one
 Journey and that the effective destination is that entry's `stateRef`. Treat same-Journey and
 same-State targets as explicit re-entry and never authorize a direct outgoing State reference.
+Offer an entry transition listed on a CompositeState at every State nested inside it, through child
+Journeys at any depth, not only while the CompositeState itself is the active node.
 
-For an `InvokingTransition`, apply the same `toEntryRef` checks, but keep the source State
-occurrence and its active composite scope alive while the invoked Journey runs. Resume that exact
+For an `InvokingTransition`, apply the same `toEntryRef` checks, but retain the source State
+occurrence and its active composite scope while the invoked Journey runs. Keep them suspended: take
+no Transition from them and do not offer their entry transitions, including those listed by
+CompositeStates that contain the source. States of sibling child Journeys outside the suspended
+scope stay active and keep their own availability. Resume that exact
 source occurrence when the invoked Journey reaches one of its own `exitRefs`; do not enter a
 JourneyEntry or take a Transition to get back. Treat the reached exit as the invocation's outcome.
-If the invoked Journey is left any other way, such as through an `OutgoingTransition`, cancel the
-invocation and never resume the source from it. Nested invocations each resume their own source.
-Never resume a source occurrence that no longer exists or was reconstructed.
+Cancel the invocation when the invoked Journey is left any other way, including through any
+`OutgoingTransition` taken inside it, even one that re-enters the same Journey. On cancellation,
+never resume the source: leave it with its composite scope, and if it sits inside another invoked
+Journey, leave that Journey and cancel its invocation too, up the chain. If the source occurrence is
+left first, for example because a sibling child Journey in its composite scope reaches an exit,
+cancel the invocation and leave the invoked Journey together with any invocation nested inside it.
+Nested invocations each resume their own source. Never resume a reconstructed copy of a source
+occurrence.
 
 When a child `JourneyExit` is reached, treat it as leaving that containing `CompositeState`
 occurrence. Do not treat it as completing sibling child journeys or as collective composite

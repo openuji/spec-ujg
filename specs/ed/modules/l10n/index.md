@@ -145,7 +145,7 @@ Example JSON nodes:
     "@type": "State",
     "@id": "urn:ujg:state:order-confirmation",
     "label": "Order confirmation",
-    "outgoingTransitionRefs": ["urn:example:ot:language-english"],
+    "entryTransitionRefs": ["urn:example:ot:language-english"],
     "l10n:copyRef": "urn:l10n:message-meta:order-confirmation-title"
   },
   {
@@ -247,9 +247,9 @@ the SHACL shape.
    States is active, each source State **MUST** directly reference a state-specific OutgoingTransition.
    Each transition's `toEntryRef` **MUST** target the JourneyEntry for the corresponding destination
    State.
-8. **Fixed group destinations:** An OutgoingTransitionGroup **MAY** contain a locale switch only when
-   its one fixed destination entry is correct for every effective source. Consumers **MUST NOT**
-   reinterpret a grouped transition's `toEntryRef` as relative to the active State.
+8. **Shared locale switches:** Several States **MAY** list the same locale-switch transition only
+   when its one fixed destination entry is correct for each of them. Consumers **MUST NOT**
+   reinterpret a shared transition's `toEntryRef` as relative to the active State.
 9. **Locale topology:** When locales share topology, a state-scoped locale-switch OutgoingTransition
    may target an entry whose `stateRef` is the same State where that affordance is available. When
    content structure differs by locale, it may target an entry owned by a locale-specific Journey
@@ -315,13 +315,13 @@ A state-preserving switch is source-specific because each OutgoingTransition has
       "@type": "State",
       "@id": "urn:state:checkout-form",
       "label": "Form",
-      "outgoingTransitionRefs": ["urn:ot:english-from-form"]
+      "entryTransitionRefs": ["urn:ot:english-from-form"]
     },
     {
       "@type": "State",
       "@id": "urn:state:checkout-success",
       "label": "Success",
-      "outgoingTransitionRefs": ["urn:ot:english-from-success"]
+      "entryTransitionRefs": ["urn:ot:english-from-success"]
     },
     {
       "@type": "Transition",
@@ -348,10 +348,9 @@ A state-preserving switch is source-specific because each OutgoingTransition has
 ```
 
 The two locale-switch affordances may look identical in the interface, but they are different Graph
-edges with different destination entries. A Journey-level OutgoingTransitionGroup would be wrong
-for this state-preserving behavior: it would inject one transition with one fixed entry into both
-States. A group remains appropriate when every source intentionally enters the same locale landing
-entry.
+edges with different destination entries. One locale-switch transition listed by both States would
+be wrong for this state-preserving behavior: it has one fixed entry. Sharing one transition remains
+appropriate when every source intentionally enters the same locale landing entry.
 
 ### Locale Switch Affordance Example
 
@@ -391,7 +390,7 @@ entry.
       "@type": "State",
       "@id": "urn:state:confirmation-en",
       "label": "English confirmation",
-      "outgoingTransitionRefs": ["urn:example:ot:language-german"]
+      "entryTransitionRefs": ["urn:example:ot:language-german"]
     },
     {
       "@type": "Journey",

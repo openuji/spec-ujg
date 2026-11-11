@@ -17,14 +17,13 @@ Focus on intended topology:
 - `JourneyEntryIndex`
 - `Journey`
 - `JourneyEntry`
-- `LocalVertex`
 - `State`
 - `CompositeState`
 - `Transition`
 - `Command`
 - `JourneyExit`
 - `OutgoingTransition`
-- `OutgoingTransitionGroup`
+- `InvokingTransition`
 
 Keep runtime observations, selectors, typed values, timestamps, payloads, and analytics outside Graph.
 
@@ -92,25 +91,41 @@ exactly one `toEntryRef` to a `JourneyEntry` owned by exactly one Journey. Resol
 `toEntryRef -> JourneyEntry.stateRef`; never put `to` on an OutgoingTransition or reference a
 destination State directly. The entry may belong to the source Journey, including when it points to
 the same State; that is explicit Journey re-entry rather than an implicit current-state target.
-An `OutgoingTransitionGroup` injects the same transition and therefore the same fixed `toEntryRef`
-at every effective source. Never reinterpret that target relative to the source. Use a group only
-when the fixed destination entry is correct everywhere; when the destination must preserve one of
-several active States, define a state-scoped OutgoingTransition and matching JourneyEntry for each
-State instead.
+Several States may list the same OutgoingTransition; it keeps the same fixed `toEntryRef` at every
+one of them. Never reinterpret that target relative to the source. Share a transition only when the
+fixed destination entry is correct from each State; when the destination must preserve one of
+several active States, define a separate OutgoingTransition and matching JourneyEntry for each State.
 Use `commandRef` on an `OutgoingTransition` only when the outgoing affordance has stable intentional
 invocation identity.
+
+`OutgoingTransition` and `InvokingTransition` are both entry transitions. A State or CompositeState
+lists them, in `entryTransitionRefs`; neither class declares `from`, `fromExitRef`, or
+`entryTransitionRefs`. A Journey never declares them; for a footer or header shown on many States,
+list the same transitions on each of those States. An entry transition listed on a CompositeState
+is available at every State nested inside it, through child Journeys at any depth, so list a footer
+on a composed page once on its CompositeState. List it on a child State only when it is available just there. Two entry
+transitions available at the same State occurrence merge only when class, `toEntryRef`, and
+`commandRef` all match.
 
 Use `InvokingTransition` instead of `OutgoingTransition` when the affordance opens another Journey
 and the user returns to the same source State when that Journey exits, such as a settings dialog
 opened from a footer. It has the same shape as an OutgoingTransition: exactly one `toEntryRef`,
 optional `commandRef`, no `to`, never in `transitionRefs`, and it attaches through the same
-`outgoingTransitionRefs` on a State or an `OutgoingTransitionGroup`. A group may mix both classes.
+`entryTransitionRefs` on a State. One State may list both classes.
 The Journey that owns its `toEntryRef` must declare at least one `exitRefs` value. Reaching any of
-that Journey's own exits resumes the source State; leaving it any other way cancels the invocation
-without a return. Never add the invoked Journey to `subjourneyRefs`, never model the return as a
+that Journey's own exits resumes the source State. While the invocation runs, the source is
+suspended: nothing listed on it, or on a CompositeState that contains it, is offered through it, so a
+footer is not available inside the invoked Journey unless that Journey's own States list it. Leaving
+it any other way cancels the invocation
+without a return, and that includes any OutgoingTransition taken inside it, even one that re-enters
+the same Journey. Cancellation leaves the retained source as well, and cancels any enclosing
+invocation in turn. If the source is left first, for example because a sibling child Journey in its
+composite scope reaches an exit, the invocation is cancelled too. So a link inside an invoked Journey
+never returns to the source; if the user must come back after following it, model a separate
+InvokingTransition for that link. Never add the invoked Journey to `subjourneyRefs`, never model the return as a
 Transition or OutgoingTransition back to the source, and never type one node as both classes. Do
-not attach a group containing an InvokingTransition to the Journey it invokes unless nested
-self-invocation is intended. Mapping does not yet explain invocations, so do not add
+not list an InvokingTransition on States of the Journey it invokes unless nested self-invocation is
+intended. Mapping does not yet explain invocations, so do not add
 `explainedByTransitionRef` values pointing at an InvokingTransition.
 
 ## Cross-skill awareness

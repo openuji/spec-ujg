@@ -159,7 +159,7 @@ that State:
   {
     "@type": "State",
     "@id": "urn:example:state:form",
-    "outgoingTransitionRefs": ["urn:example:ot:locale-en-from-form"]
+    "entryTransitionRefs": ["urn:example:ot:locale-en-from-form"]
   },
   {
     "@type": "JourneyEntry",
@@ -176,7 +176,7 @@ that State:
   {
     "@type": "State",
     "@id": "urn:example:state:success",
-    "outgoingTransitionRefs": ["urn:example:ot:locale-en-from-success"]
+    "entryTransitionRefs": ["urn:example:ot:locale-en-from-success"]
   },
   {
     "@type": "JourneyEntry",
@@ -193,10 +193,10 @@ that State:
 ]
 ```
 
-The owning Journey lists both States and both Entries. Do not place one of these transitions in a
-Journey-level OutgoingTransitionGroup: a group injects one fixed `toEntryRef` into every source and
-cannot mean “the entry for whichever State is active.” A grouped locale switch is valid only when
-every source intentionally enters the same locale landing entry.
+The owning Journey lists both States and both Entries. Do not list one of these transitions on both
+States: a transition has one fixed `toEntryRef` and cannot mean “the entry for whichever State is
+active.” A locale switch shared by several States is valid only when every source intentionally
+enters the same locale landing entry.
 
 If content structure differs by locale, model the distinct Graph Journeys, Entries, States, and
 Transitions and target the destination locale's JourneyEntry. Localization annotations do not
@@ -234,7 +234,7 @@ Do not model composite messages with `messagePartRefs`, `CompositeMessage`, or `
 * Does every locale switch use one explicit `toEntryRef`?
 * If a locale switch re-enters the same State, does its JourneyEntry point to that State?
 * If several States preserve their own position across a locale switch, does each State have its
-  own OutgoingTransition and matching JourneyEntry rather than one shared group transition?
+  own OutgoingTransition and matching JourneyEntry rather than one shared transition?
 * If locale changes structure, is the different topology modeled explicitly in Graph?
 * Did I avoid duplicate locale states unless topology really differs?
 * Did I keep runtime locale facts, loaders, URLs, and payloads out of l10n?
