@@ -26,10 +26,15 @@ ujggraph:JourneyEntryIndex a owl:Class ;
   rdfs:comment "A catalogue of addressable JourneyEntry contracts. A JourneyEntryIndex does not define traversal, ordering, reachability, or parent-owned progression." .
 
 ujggraph:State a owl:Class ;
-  rdfs:subClassOf ujg:Node .
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "State" ;
+  rdfs:comment "A discrete node in the experience. A State is the only local vertex that declares entryTransitionRefs." .
 
 ujggraph:CompositeState a owl:Class ;
-  rdfs:subClassOf ujggraph:State .
+  rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujggraph:State ;
+  rdfs:label "Composite State" ;
+  rdfs:comment "A local vertex that contains one or more child Journeys through subjourneyRefs. A CompositeState is a sibling of State, not a subclass of it, and it does not declare entryTransitionRefs." .
 
 ujggraph:Transition a owl:Class ;
   rdfs:subClassOf ujg:Node .
@@ -41,7 +46,7 @@ ujggraph:Command a owl:Class ;
 
 ujggraph:JourneyExit a owl:Class ;
   rdfs:subClassOf ujg:Node ;
-  owl:disjointWith ujggraph:State ;
+  owl:disjointWith ujggraph:State, ujggraph:CompositeState ;
   rdfs:label "Journey Exit" ;
   rdfs:comment "A terminal local graph vertex and exported completion contract of a journey." .
 
@@ -77,13 +82,25 @@ ujggraph:entryRefs a owl:ObjectProperty ;
 
 ujggraph:stateRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:JourneyEntry ;
-  rdfs:range ujggraph:State ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:State
+      ujggraph:CompositeState
+    )
+  ] ;
   rdfs:label "state ref" ;
   rdfs:comment "References the local State or CompositeState where a JourneyEntry begins traversal." .
 
 ujggraph:stateRefs a owl:ObjectProperty ;
-  rdfs:range ujggraph:State ;
-  rdfs:comment "References graph states. On Journey, stateRefs lists experiential local vertices." .
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:State
+      ujggraph:CompositeState
+    )
+  ] ;
+  rdfs:comment "References State and CompositeState vertices. On Journey, stateRefs lists experiential local vertices." .
 
 ujggraph:transitionRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
@@ -97,13 +114,20 @@ ujggraph:exitRefs a owl:ObjectProperty ;
 
 ujggraph:from a owl:ObjectProperty ;
   rdfs:domain ujggraph:Transition ;
-  rdfs:range ujggraph:State .
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:State
+      ujggraph:CompositeState
+    )
+  ] .
 
 ujggraph:to a owl:ObjectProperty ;
   rdfs:range [
     a owl:Class ;
     owl:unionOf (
       ujggraph:State
+      ujggraph:CompositeState
       ujggraph:JourneyExit
     )
   ] .
@@ -148,4 +172,4 @@ ujggraph:entryTransitionRefs a owl:ObjectProperty ;
     )
   ] ;
   rdfs:label "entry transition refs" ;
-  rdfs:comment "References the entry transitions (OutgoingTransition or InvokingTransition nodes) available from a State. On a CompositeState, they are also available at every State occurrence nested inside it, through its child Journeys at any depth." .
+  rdfs:comment "References the entry transitions (OutgoingTransition or InvokingTransition nodes) available at a State. Only a State declares it. The listed transitions are available at occurrences of that State only: they are not inherited by States nested in a CompositeState, and a CompositeState does not declare them." .

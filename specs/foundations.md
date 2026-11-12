@@ -389,7 +389,7 @@ David Harel's *Statecharts: A Visual Formalism for Complex Systems* appeared in 
 
 The important engineering problem was scalability: a large flat state graph rapidly becomes difficult to reason about.
 
-[UJG Graph](/ed/graph) addresses a related compositional problem through [`Journey`](/ed/graph#dfn-journey), [`Transition`](/ed/graph#dfn-transition), and [`CompositeState`](/ed/graph#dfn-compositestate). A [`Journey`](/ed/graph#dfn-journey) is a named container for local traversable flow topology. A [`CompositeState`](/ed/graph#dfn-compositestate) is a specialized [`State`](/ed/graph#dfn-state) that refers to a child [`Journey`](/ed/graph#dfn-journey); the parent retains the composite as a parent-local state rather than flattening the child's states into its own topology.
+[UJG Graph](/ed/graph) addresses a related compositional problem through [`Journey`](/ed/graph#dfn-journey), [`Transition`](/ed/graph#dfn-transition), and [`CompositeState`](/ed/graph#dfn-compositestate). A [`Journey`](/ed/graph#dfn-journey) is a named container for local traversable flow topology. A [`CompositeState`](/ed/graph#dfn-compositestate) is a local vertex, a sibling of [`State`](/ed/graph#dfn-state) rather than a kind of it, that refers to child [`Journey`](/ed/graph#dfn-journey) resources; the parent retains the composite as one parent-local vertex rather than flattening the child's states into its own topology.
 
 Conceptually:
 
@@ -568,7 +568,7 @@ UJG Graph supplies specific interaction meaning through concepts such as:
 | [`Journey`](/ed/graph#dfn-journey) | Named container for local traversable flow topology. |
 | [`State`](/ed/graph#dfn-state) | Discrete local point in the experience. |
 | [`Transition`](/ed/graph#dfn-transition) | Directed local edge between graph vertices. |
-| [`CompositeState`](/ed/graph#dfn-compositestate) | State that refers to a child `Journey`. |
+| [`CompositeState`](/ed/graph#dfn-compositestate) | Local vertex, distinct from `State`, that refers to child `Journey` resources. |
 | [`JourneyExit`](/ed/graph#dfn-journeyexit) | Terminal boundary outcome exported from a journey. |
 | [`OutgoingTransition`](/ed/graph#dfn-outgoingtransition) | Navigation affordance outside ordinary local progression. |
 
@@ -863,7 +863,7 @@ flowchart TD
 | [`Journey`](/ed/graph#dfn-journey) | Named container for local traversable flow topology. |
 | [`JourneyEntry`](/ed/graph#dfn-journeyentry) | Explicit entry contract into a journey. |
 | [`State`](/ed/graph#dfn-state) | Discrete local point in the experience. |
-| [`CompositeState`](/ed/graph#dfn-compositestate) | State that delegates traversal to a child `Journey`. |
+| [`CompositeState`](/ed/graph#dfn-compositestate) | Local vertex, distinct from `State`, that delegates traversal to child `Journey` resources. |
 | [`Transition`](/ed/graph#dfn-transition) | Directed local edge between states or journey exits. |
 | [`JourneyExit`](/ed/graph#dfn-journeyexit) | Terminal journey-local outcome. |
 | [`OutgoingTransition`](/ed/graph#dfn-outgoingtransition) | Navigation affordance leaving local progression and entering a journey through a named entry. |

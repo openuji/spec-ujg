@@ -103,14 +103,14 @@ or synchronization contracts.
 For an `OutgoingTransition`, verify that `toEntryRef` names a JourneyEntry owned by exactly one
 Journey and that the effective destination is that entry's `stateRef`. Treat same-Journey and
 same-State targets as explicit re-entry and never authorize a direct outgoing State reference.
-Offer an entry transition listed on a CompositeState at every State nested inside it, through child
-Journeys at any depth, not only while the CompositeState itself is the active node.
+Offer an entry transition only at occurrences of the State that lists it. While a CompositeState is
+current, offer the entry transitions of the current State in each child Journey, at any depth. Never
+offer one at a State on the basis of nesting alone, and never expect a CompositeState to list one.
 
 For an `InvokingTransition`, apply the same `toEntryRef` checks, but retain the source State
 occurrence and its active composite scope while the invoked Journey runs. Keep them suspended: take
-no Transition from them and do not offer their entry transitions, including those listed by
-CompositeStates that contain the source. States of sibling child Journeys outside the suspended
-scope stay active and keep their own availability. Resume that exact
+no Transition from them and do not offer the source's entry transitions. States of sibling child
+Journeys outside the suspended scope stay active and keep their own availability. Resume that exact
 source occurrence when the invoked Journey reaches one of its own `exitRefs`; do not enter a
 JourneyEntry or take a Transition to get back. Treat the reached exit as the invocation's outcome.
 Cancel the invocation when the invoked Journey is left any other way, including through any

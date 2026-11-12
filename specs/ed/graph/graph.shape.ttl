@@ -636,6 +636,19 @@ ujggraphshape:StateShape a sh:NodeShape ;
     sh:node ujggraphshape:EntryTransitionLikeShape ;
     sh:nodeKind sh:IRI ;
     sh:message "Each entryTransitionRefs value must reference an OutgoingTransition or an InvokingTransition." ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A State must not be listed in the stateRefs of more than one journey." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        ?journeyA ujggraph:stateRefs $this .
+        ?journeyB ujggraph:stateRefs $this .
+        FILTER (?journeyA != ?journeyB)
+      }
+    """ ;
   ] .
 
 ujggraphshape:CompositeStateShape a sh:NodeShape ;
@@ -662,9 +675,8 @@ ujggraphshape:CompositeStateShape a sh:NodeShape ;
 
   sh:property [
     sh:path ujggraph:entryTransitionRefs ;
-    sh:node ujggraphshape:EntryTransitionLikeShape ;
-    sh:nodeKind sh:IRI ;
-    sh:message "Each entryTransitionRefs value must reference an OutgoingTransition or an InvokingTransition." ;
+    sh:maxCount 0 ;
+    sh:message "A CompositeState must not declare entryTransitionRefs. Entry transitions are listed by the States that offer them." ;
   ] ;
 
   sh:property [
@@ -672,6 +684,32 @@ ujggraphshape:CompositeStateShape a sh:NodeShape ;
     sh:class ujggraph:Journey ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A CompositeState must not also be typed State or JourneyExit." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        { $this a ujggraph:State . }
+        UNION
+        { $this a ujggraph:JourneyExit . }
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A CompositeState must not be listed in the stateRefs of more than one journey." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        ?journeyA ujggraph:stateRefs $this .
+        ?journeyB ujggraph:stateRefs $this .
+        FILTER (?journeyA != ?journeyB)
+      }
+    """ ;
   ] .
 
 ujggraphshape:TransitionShape a sh:NodeShape ;
@@ -760,11 +798,13 @@ ujggraphshape:JourneyExitShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A JourneyExit must not also be typed State." ;
+    sh:message "A JourneyExit must not also be typed State or CompositeState." ;
     sh:select """
       SELECT $this
       WHERE {
-        $this a ujggraph:State .
+        { $this a ujggraph:State . }
+        UNION
+        { $this a ujggraph:CompositeState . }
       }
     """ ;
   ] ;

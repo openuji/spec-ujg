@@ -5,16 +5,17 @@ This module defines the vocabulary for intended user flow. It extends [[UJG Core
 ## Terminology
 
 - <dfn>Journey</dfn>: A named container for local traversable user flow topology.
+- <dfn>Local vertex</dfn>: A node of one [=Journey=]'s local topology: a [=State=] or [=CompositeState=] listed in its `stateRefs`, or a [=JourneyExit=] listed in its `exitRefs`. [=Transition|Transitions=] connect local vertices of the same Journey.
 - <dfn>JourneyEntry</dfn>: An explicit entry contract for a [=Journey=].
 - <dfn>JourneyEntryIndex</dfn>: A catalogue of addressable [=JourneyEntry=] contracts that does not define traversal.
-- <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal).
+- <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal). A State is the only [=Local vertex|local vertex=] that offers [=Entry transition|entry transitions=].
 - <dfn>State occurrence</dfn>: A concrete experienced occurrence of a [=State=] during traversal.
-- <dfn>Transition</dfn>: A structural directed edge between local vertices of a [=Journey=].
+- <dfn>Transition</dfn>: A structural directed edge between [=Local vertex|local vertices=] of a [=Journey=].
 - <dfn>Command</dfn>: A stable semantic identity of an intentional invocation in the modeled experience.
-- <dfn>CompositeState</dfn>: A state that contains one or more child [=Journey|Journeys=]. Multiple child Journeys define independent local flows within the same composite scope.
+- <dfn>CompositeState</dfn>: A [=Local vertex|local vertex=] that groups [=Co-present|co-present=] child [=Journey|Journeys=]. It is not a [=State=].
 - <dfn>Composite scope</dfn>: The set of child Journeys referenced by one [=CompositeState=].
-- <dfn>JourneyExit</dfn>: A terminal local graph vertex and exported completion contract declared by a [=Journey=].
-- <dfn>Local vertex</dfn>: A [=State=], [=CompositeState=], or [=JourneyExit=] in the local topology of a [=Journey=]: one of its `stateRefs` or `exitRefs`.
+- <dfn>Co-present</dfn>: Journeys are co-present when the user can perceive and act on each of them at the same time in the same experience frame: the viewport, window, screen, or dialog session that stays in place while its content changes.
+- <dfn>JourneyExit</dfn>: A terminal [=Local vertex|local vertex=] and exported completion contract declared by a [=Journey=].
 - <dfn>OutgoingTransition</dfn>: A navigational affordance that enters a [=Journey=] through a [=JourneyEntry=].
 - <dfn>InvokingTransition</dfn>: An affordance that invokes a [=Journey=] through a [=JourneyEntry=] and resumes the source [=State occurrence=] when that Journey reaches one of its exits.
 - <dfn>Entry transition</dfn>: An [=OutgoingTransition=] or [=InvokingTransition=]: an affordance available at a [=State=] that enters a [=Journey=] through a [=JourneyEntry=].
@@ -23,9 +24,9 @@ This module defines the vocabulary for intended user flow. It extends [[UJG Core
 
 ## State {data-cop-concept="state"}
 
-A [=State=] is the base graph node for a discrete point in an intended user experience, such as a page, screen, modal, or other user-visible step.
+A [=State=] is the graph node for a discrete point in an intended user experience, such as a page, screen, modal, or other user-visible step. It is a leaf of the local topology: it does not contain Journeys. Nested composition is the job of a [=CompositeState=], which is a separate class.
 
-This section defines the base state node. A State also lists the
+This section defines the State node. A State also lists the
 [=Entry transition|entry transitions=] it offers, as described in the subsection below; the
 transition classes themselves are defined in the Transitions section.
 
@@ -65,17 +66,19 @@ A [=State=] lists the [=Entry transition|entry transitions=] it offers in `entry
 Entry transitions are for navigation and invocation options, not for ordinary internal progression
 through a journey.
 
-An entry transition is a node of its own, so several States can list the same one. A footer link
-shown on every page is one [=OutgoingTransition=] listed by each page's State.
+An entry transition is a node of its own, so several States can list the same one. A link offered on
+several pages is one [=OutgoingTransition=] listed by the State of each of those pages.
 
 <spec-statement>
-1. A [=State=], including a [=CompositeState=], **MAY** declare `entryTransitionRefs`.
+1. Only a [=State=] **MAY** declare `entryTransitionRefs`. A [=CompositeState=], a [=Journey=], and
+   every other Graph class **MUST NOT**.
 2. Each `entryTransitionRefs` value **MUST** reference an [=OutgoingTransition=] or an
    [=InvokingTransition=]. One State **MAY** list both.
-3. Each [=State=] that lists an entry transition is an effective source of that transition.
-4. An entry transition listed by a [=CompositeState=] is available at every occurrence of that
-   CompositeState and at every State occurrence nested inside it, through its child Journeys at any
-   nesting depth. The CompositeState remains the effective source.
+3. Each [=State=] that lists an entry transition is an effective source of that transition, at its
+   own occurrences only.
+4. An entry transition is not inherited. It is not available at a State merely because that State is
+   nested in a [=CompositeState=], shares a child Journey with the State that lists it, or is a
+   sibling of it.
 5. Entry transitions are not members of the enclosing [=Journey=]'s `transitionRefs`.
 6. An entry transition's `toEntryRef` remains the same fixed IRI at every State that lists it.
    Consumers **MUST NOT** reinterpret that destination relative to the source state.
@@ -91,24 +94,16 @@ switch—model a separate [=OutgoingTransition=] for each source state and targe
 whose `stateRef` is that state. The entries and transitions are distinct even when the affordances
 have the same label and locale metadata.
 
-List an entry transition on a [=CompositeState=] when it should be available throughout that
-composite occurrence, such as a footer on a page composed of several child Journeys. List it on a
-State inside a child Journey when it should be available only while that State is current.
-
-Consumers **SHOULD** treat entry transitions available at the same State occurrence, whether listed
-by that State or by a containing [=CompositeState=], as one effective edge when they have the same
-transition class, the same `toEntryRef`, and the same `commandRef` or no `commandRef`. Transitions
-that differ in class or `commandRef` are never merged. Entries remain distinct targets even when
-their `stateRef` values are equal.
+A [=CompositeState=] lists no entry transitions. While it is current, the current States of its child
+Journeys offer theirs.
 
 While an [=InvokingTransition=] is in progress, its retained source is suspended, so entry
-transitions available at the source are not offered inside the invoked Journey. A footer is
-available there only when the invoked Journey's own States, or CompositeStates that contain them,
-list it.
+transitions available at the source are not offered inside the invoked Journey. They are available
+there only when the invoked Journey's own States list them.
 
 A State of Journey J that lists an [=InvokingTransition=] into J lets J invoke itself. Each
 activation enters J again and retains the current State occurrence of J, so invocations of J nest.
-For example, the States of a privacy settings Journey normally do not list the footer link that
+For example, the States of a privacy settings Journey normally do not list the entry transition that
 opens the privacy settings.
 
 ```mermaid
@@ -116,7 +111,6 @@ classDiagram
   class State {
     entryTransitionRefs
   }
-  class CompositeState
   class OutgoingTransition {
     toEntryRef
   }
@@ -125,7 +119,6 @@ classDiagram
   }
   class JourneyEntry
 
-  State <|-- CompositeState
   State --> OutgoingTransition : entryTransitionRefs
   State --> InvokingTransition : entryTransitionRefs
   OutgoingTransition --> JourneyEntry : toEntryRef
@@ -176,7 +169,7 @@ Example JSON nodes:
 This is a "Back to home page" navigation affordance, not an internal [=Transition=]. The source
 Journey references the destination entry contract, never the destination State directly.
 
-A footer that mixes navigation and invocation is shown in the [=InvokingTransition=] section.
+An example that mixes navigation and invocation is shown in the [=InvokingTransition=] section.
 
 ---
 
@@ -226,11 +219,12 @@ An entry transition has no `from` property. Its effective source is each [=State
 
 ### Transition {data-cop-concept="transition"}
 
-A [=Transition=] is a structural directed edge between local vertices of a [=Journey=]. It models ordinary progression inside the local topology of a [=Journey=].
+A [=Transition=] is a structural directed edge between [=Local vertex|local vertices=] of a [=Journey=]. It models ordinary progression inside the local topology of a [=Journey=].
 
 A [=Transition=] is not owned by either endpoint state. It is owned by a journey through `transitionRefs`.
 
-A [=Transition=] applies to every concrete occurrence of the [=State=] its `from` value references.
+A [=Transition=] applies to every concrete occurrence of the [=Local vertex|local vertex=] its `from`
+value references.
 The [=Transition=] itself remains one stable Graph node.
 
 The presence of multiple child Journeys in one [=CompositeState=] does not create implicit
@@ -243,14 +237,15 @@ Transitions between them.
 4. When listed in a [=Journey=]'s `transitionRefs`, `from` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`.
 5. When listed in a [=Journey=]'s `transitionRefs`, `to` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`, or a [=JourneyExit=] in that journey's `exitRefs`.
 6. [=Transition=] endpoints **MUST** stay local to the enclosing [=Journey=].
-7. `toEntryRef` **MAY** be used only on parent transitions into [=CompositeState=] nodes, as defined by the boundary mapping rules above.
-8. A [=Transition=] **MUST** remain one Graph node regardless of how many concrete occurrences its endpoint [=State=]s have; per-instance transition properties are outside Graph.
+7. `toEntryRef` **MAY** be used only on parent transitions into [=CompositeState=] nodes, and `fromExitRef` only on parent transitions from them, as defined under [=CompositeState=].
+8. A [=Transition=] **MUST** remain one Graph node regardless of how many concrete occurrences its endpoints have; per-instance transition properties are outside Graph.
 9. A child Journey's [=Transition=] **MUST NOT** connect directly to a [=State=], [=CompositeState=], or [=JourneyExit=] owned only by another child Journey.
 </spec-statement>
 
 ```mermaid
 classDiagram
   class State
+  class CompositeState
   class JourneyExit
   class Command
 
@@ -263,7 +258,9 @@ classDiagram
   }
 
   Transition --> State : from
+  Transition --> CompositeState : from
   Transition --> State : to
+  Transition --> CompositeState : to
   Transition --> JourneyExit : to
   Transition --> Command : commandRef
 ```
@@ -425,13 +422,15 @@ source and destination model as an [=OutgoingTransition=]. The difference is lif
    the source [=State occurrence=], including any active composite scope. The source occurrence is
    not left. While the invocation is in progress, the retained source occurrence, together with any
    composite scope retained with it, is suspended: no [=Transition=] or entry transition is taken
-   from it, whether the entry transition is listed by the source State or by a [=CompositeState=]
-   that contains it. Entry transitions listed by a containing CompositeState remain available only
-   at State occurrences inside it that are not suspended, such as States of a sibling child Journey.
+   from the source occurrence, and no parent Transition is taken from a retained
+   [=CompositeState=]. State occurrences inside that composite scope that are not the source, such
+   as States of a sibling child Journey, are not suspended and keep their own transitions and entry
+   transitions. A parent Transition that a sibling's child exit triggers meanwhile is taken after the
+   invocation completes, and not at all if it is cancelled.
 6. Reaching a [=JourneyExit=] listed in the invoked Journey's own `exitRefs` completes the
    invocation. The retained source occurrence then resumes without entering a [=JourneyEntry=] or
    taking a [=Transition=]. A child [=JourneyExit=] reached inside a [=CompositeState=] of the
-   invoked Journey is not completion; it follows the composite-scope rules.
+   invoked Journey is not completion; it follows the [=CompositeState=] rules.
 7. The reached [=JourneyExit=] is the outcome of the invocation. Graph assigns no per-outcome
    continuation.
 8. An invocation is cancelled, not completed, when the invoked Journey is left in any way other than
@@ -451,9 +450,9 @@ source and destination model as an [=OutgoingTransition=]. The difference is lif
     therefore releases every retained occurrence in the invocation chain.
 11. An [=InvokingTransition=] does not add the invoked Journey to any `subjourneyRefs`. The invoked
     Journey occurrence is not a child of any [=CompositeState=] occurrence, even when the same
-    Journey is listed in some CompositeState's `subjourneyRefs`. The [=JourneyExit=] rules for a
-    composite scope therefore do not apply to its exits, and completion never leaves a
-    CompositeState, neither one that lists the invoked Journey nor one that contains the source.
+    Journey is listed in some CompositeState's `subjourneyRefs`. The [=CompositeState=] rules for
+    child exits therefore do not apply to its exits, and completion never leaves a CompositeState,
+    neither one that lists the invoked Journey nor one that contains the source.
 12. Graph does not define invocation identifiers or association data between source and invoked
     occurrences.
 </spec-statement>
@@ -557,7 +556,7 @@ outcomes, but neither is a destination.
 ]
 ```
 
-A footer shared by several pages can mix both transition classes. "Privacy policy" navigates away
+Several pages can share entry transitions of both classes. "Privacy policy" navigates away
 from the current page. "Adjust privacy settings" invokes the privacy settings Journey from the
 example above and returns to the current page when that Journey exits. Each page's State lists the
 same two transitions; each node's class determines its semantics.
@@ -607,13 +606,6 @@ same two transitions; each node's class determines its semantics.
   }
 ]
 ```
-
-The privacy settings Journey can also be listed in the `subjourneyRefs` of a consent
-[=CompositeState=], so that a consent banner opens the same settings. That does not change the
-footer invocation above. The invoked occurrence is not a child of the consent CompositeState, so
-reaching `settings-saved` completes the invocation and leaves no CompositeState. Only in an
-occurrence entered as the consent CompositeState's child is the same exit an outcome that a parent
-Transition from that CompositeState can react to with `fromExitRef`.
 
 Mapping and Metrics do not yet account for [=InvokingTransition=]. Mapping gives the invoked
 Journey's steps their own local scope, so its exits end no [=CompositeState=] occurrence. Otherwise,
@@ -695,7 +687,7 @@ Example transition associated with a command:
 
 ## Journey {data-cop-concept="journey"}
 
-A [=Journey=] is the local container for intended flow topology. It lists the experiential states that belong to the journey, the terminal exits exported by the journey, and, when present, the transitions that connect those local vertices.
+A [=Journey=] is the local container for intended flow topology. It lists the experiential states that belong to the journey, the terminal exits exported by the journey, and, when present, the transitions that connect those [=Local vertex|local vertices=].
 
 Use [=Journey=] when the modeled object owns local traversal, progression, or structural order. If the model only needs to list known entry points into pages, surfaces, flows, or journeys, use [=JourneyEntryIndex=] instead.
 
@@ -707,9 +699,13 @@ transitions: its entries (`entryRefs`) and its exits (`exitRefs`).
 2. A [=Journey=] **MAY** declare one `defaultEntryRef`; if present, it **MUST** also appear in `entryRefs`.
 3. `entryRefs`, `stateRefs`, `transitionRefs`, and `exitRefs` **MUST** reference nodes of the corresponding Graph classes.
 4. A [=Journey=]'s [=Local vertex|local vertices=] are its `stateRefs` plus its `exitRefs`.
-5. `stateRefs` **MUST** describe local experiential topology, not destinations that are merely reachable through [=OutgoingTransition=] navigation or [=InvokingTransition=] invocation.
+5. `stateRefs` lists the Journey's [=State=] and [=CompositeState=] vertices. It **MUST** describe local experiential topology, not destinations that are merely reachable through [=OutgoingTransition=] navigation or [=InvokingTransition=] invocation.
 6. A [=Journey=] **MUST NOT** declare `entryTransitionRefs`. Entry transitions are listed by the
    States that offer them.
+7. A [=State=] or [=CompositeState=] **MUST NOT** be listed in the `stateRefs` of more than one
+   [=Journey=]. To reuse topology, reuse the Journey: it can be referenced by more than one
+   [=CompositeState=] and entered through [=OutgoingTransition|OutgoingTransitions=] and
+   [=InvokingTransition|InvokingTransitions=].
 </spec-statement>
 
 ```mermaid
@@ -734,6 +730,11 @@ classDiagram
     label
   }
 
+  class CompositeState {
+    id
+    label
+  }
+
   class JourneyExit {
     id
     label
@@ -748,11 +749,15 @@ classDiagram
   Journey --> JourneyEntry : defaultEntryRef
   Journey --> JourneyEntry : entryRefs
   JourneyEntry --> State : stateRef
+  JourneyEntry --> CompositeState : stateRef
   Journey --> State : stateRefs
+  Journey --> CompositeState : stateRefs
   Journey --> JourneyExit : exitRefs
   Journey --> Transition : transitionRefs
   Transition --> State : from
+  Transition --> CompositeState : from
   Transition --> State : to
+  Transition --> CompositeState : to
   Transition --> JourneyExit : to
 ```
 
@@ -915,7 +920,7 @@ A parent journey can use exported exits to distinguish which outcome of a child 
 3. A [=JourneyExit=] **MAY** be the `to` endpoint of a [=Transition=] in the declaring [=Journey=].
 4. A [=JourneyExit=] is terminal: it **MUST NOT** be a `from` endpoint or expose entry transitions.
 5. A [=JourneyExit=] **MUST NOT** model runtime facts, submitted values, analytics facts, or ordinary internal child movement.
-6. A [=JourneyExit=] is not a [=State=]: a node **MUST NOT** be typed both [=JourneyExit=] and [=State=].
+6. A [=JourneyExit=] is neither a [=State=] nor a [=CompositeState=]: a node **MUST NOT** be typed [=JourneyExit=] and also [=State=] or [=CompositeState=].
 </spec-statement>
 
 If a completion point is an actual user-visible screen, page, modal, or step, it should remain a normal [=State=]. A journey can then transition from that state to a [=JourneyExit=] that represents the exported terminal outcome.
@@ -1021,236 +1026,110 @@ The indexed entries are known entry contracts. Their order above does not define
 
 ## CompositeState {data-cop-concept="composition"}
 
-A [=CompositeState=] is a [=State=] that represents nested composition. It references one or more
-child [=Journey=] resources through `subjourneyRefs`, allowing consumers to interpret those Journeys
-as zoomable or nested local graphs.
-
-The parent journey treats the [=CompositeState=] as one parent-local state. The parent journey does
-not list the child Journeys' states directly.
+A [=CompositeState=] groups the child [=Journey|Journeys=] that share one experience frame, such as
+page content beside a sticky header. The parent Journey treats it as one
+[=Local vertex|local vertex=]. It is not a [=State=]: it offers no affordances itself.
 
 <spec-statement>
-1. A [=CompositeState=] **MUST** be a [=State=].
-2. A [=CompositeState=] **MUST** declare at least one `subjourneyRefs` value.
-3. Every `subjourneyRefs` value **MUST** be an IRI that resolves to a [=Journey=].
-4. `subjourneyRefs` is a set. Each resolved child Journey occurs at most once in the set.
-5. A [=CompositeState=] **MUST NOT** list child states directly with `stateRefs`.
-6. The parent [=Journey=] **MUST** treat the [=CompositeState=] as one local vertex regardless of the
-   number of child Journeys.
-7. Every referenced child Journey defines an independent local topology scope.
-8. The order in which `subjourneyRefs` values are serialized **MUST NOT** imply priority, sequence,
-   causality, activation order, or presentation order.
-9. A Consumer **MUST NOT** infer a [=Transition=], dependency, condition, synchronization rule, or
-   completion relationship between child Journeys from their common containment.
-10. Multiple `subjourneyRefs` values represent child Journeys that coexist within the same
-    [=CompositeState=] occurrence: each is independently available without requiring progression
-    through another. While such an occurrence is current, observations belonging to different child
-    Journeys **MAY** overlap or interleave. Child Journeys that are experienced in a defined sequence
-    **MUST NOT** be grouped under one [=CompositeState=]; a Producer **MUST** instead model that
-    sequence as separate States or CompositeStates connected by explicit Transitions within the
-    enclosing Journey.
-11. A child Journey's internal movement does not, by itself, change the current local position of
-    another child Journey.
-12. A [=CompositeState=] with one child Journey defines ordinary nested composition.
-13. A [=CompositeState=] with more than one child Journey defines multi-Journey composition.
-14. Each child Journey **SHOULD** represent one coherent behavioral concern that is independently
-    understandable from its siblings.
-15. Common containment of child Journeys **MUST NOT** by itself imply that they represent different
-    domain entities, related domain entities, or parts of one domain aggregate.
+1. A [=CompositeState=] **MUST** be identified by an IRI, declare exactly one `label`, and declare one
+   or more `subjourneyRefs`, each resolving to a [=Journey=]. It **MAY** declare one or more `tags`.
+2. A [=CompositeState=] **MUST NOT** be typed [=State=] or [=JourneyExit=], and **MUST NOT** declare
+   `stateRefs` or `entryTransitionRefs`.
+3. Its child Journeys **MUST** be [=Co-present|co-present=]. Content the user reaches by moving
+   through other content, such as by scrolling or paging, is a [=State=] reached by a [=Transition=].
+4. The parent [=Journey=] treats the [=CompositeState=] as one [=Local vertex|local vertex=]: it can
+   be a [=Transition=] `from` or `to` and a [=JourneyEntry=] `stateRef`. Child States are never
+   listed by the parent, and nested composition is never flattened.
+5. While a [=CompositeState=] occurrence is current, the user is at the current [=State=] of each
+   child Journey, through nested CompositeStates. Each of those States offers its own
+   [=Entry transition|entry transitions=].
+6. Child Journeys are independent. `subjourneyRefs` is an unordered set. Consumers **MUST NOT** infer
+   order, priority, dependency, synchronization, or joint completion between child Journeys, and
+   movement in one does not move another.
+7. A [=Journey=] **MAY** be a child of more than one [=CompositeState=]. Each reference is a separate
+   child occurrence.
+8. A parent [=Transition=] into a [=CompositeState=] **MAY** select one child entry with `toEntryRef`,
+   owned by exactly one child Journey. It selects nothing for the other child Journeys.
+9. Reaching a child [=JourneyExit=] does not leave the [=CompositeState=]. A parent [=Transition=]
+   whose `from` is the CompositeState and whose `fromExitRef` is that exit is taken when the exit is
+   reached; without one, the CompositeState stays current. Taking any parent Transition from a
+   CompositeState leaves it and all of its child Journeys.
 </spec-statement>
 
 ```mermaid
 classDiagram
-  class State
   class CompositeState {
-    subjourneyRefs 1..*
-  }
-  class Journey {
-    stateRefs
-    transitionRefs
-    exitRefs
-  }
-
-  State <|-- CompositeState
-  Journey --> CompositeState : stateRefs
-  CompositeState --> Journey : subjourneyRefs
-```
-
-Example JSON node:
-
-```json
-{
-  "@type": "CompositeState",
-  "@id": "urn:ujg:state:product-page",
-  "label": "Product page",
-  "subjourneyRefs": [
-    "urn:ujg:journey:product-browsing",
-    "urn:ujg:journey:sticky-cart"
-  ]
-}
-```
-
-The Product browsing and Sticky cart Journeys are separate local topology scopes that coexist: the
-sticky cart stays independently available regardless of how the shopper navigates product content,
-and neither Journey must be entered first or finished before the other. A checkout flow where
-shipping must be completed before payment becomes available is not this pattern — it is a sequence,
-and belongs in separate States connected by explicit Transitions, per item 10 above.
-
-### Nested composition
-
-<spec-statement>
-1. A child Journey **MAY** contain a [=CompositeState=] in its own `stateRefs`.
-2. Composition is interpreted recursively; child Journeys **MUST NOT** be flattened into the parent
-   Journey's local vertex set.
-3. A child [=JourneyExit=] is an outcome of the child Journey occurrence of its directly containing
-   [=CompositeState=] occurrence in the applicable containment path. It does not leave that
-   occurrence by itself.
-4. Leaving a nested [=CompositeState=] does not by itself leave an ancestor [=CompositeState=]. The
-   ancestor is left only through movement that exits that ancestor's own composite scope.
-</spec-statement>
-
-### Composite occurrence isolation
-
-<spec-statement>
-1. Multiple concrete occurrences of the same canonical [=CompositeState=] **MAY** coexist within one
-   active [=Journey=].
-2. Each concrete CompositeState occurrence has a distinct composite scope occurrence for Mapping
-   purposes.
-3. Child observations associated with one CompositeState occurrence **MUST NOT** be used as local
-   predecessors for child observations associated with another occurrence.
-4. Graph does not define occurrence identifiers or occurrence-association data.
-</spec-statement>
-
-### JourneyExit in a composite scope
-
-A [=JourneyExit=] owned by a child Journey of a [=CompositeState=] is an exported outcome of that
-child Journey. A parent [=Transition=] can react to it with `fromExitRef`, as defined in the exit
-boundary rules below. Reaching the exit does not itself leave the CompositeState; the parent
-Transition taken for that outcome does.
-
-These rules apply to a Journey occurrence entered as a child of a [=CompositeState=] occurrence
-through `subjourneyRefs`. What an exit means depends on how the occurrence was entered, not on where
-its Journey is listed: the same Journey can be a child of a CompositeState and also be entered
-through an [=InvokingTransition=]. Exits of a Journey entered through an InvokingTransition are
-covered by the [=InvokingTransition=] rules.
-
-<spec-statement>
-1. Reaching a child [=JourneyExit=] means that this child Journey occurrence has reached one of its
-   exported outcomes. It does not by itself leave the containing [=CompositeState=] occurrence.
-2. The containing [=CompositeState=] occurrence remains current, and its other child Journeys remain
-   in scope, until the occurrence is left, for example by taking a parent [=Transition=] from the
-   CompositeState.
-3. Graph does not define whether the States of a child Journey that has reached an exit remain
-   presented. That is a materialization concern.
-4. Graph **MUST NOT** infer that every child Journey must reach an exit.
-5. Graph **MUST NOT** infer a joint, collective, or all-child completion outcome.
-6. Graph **MUST NOT** infer an ordering among exits belonging to different child Journeys.
-</spec-statement>
-
-Informative pattern:
-
-```text
-Site CompositeState
-  Pages Journey:          Home -> Article
-  Cookie Consent Journey: Banner -> AcceptedExit
-```
-
-`AcceptedExit` is an exported outcome of Cookie Consent. No Transition from Site declares it as
-`fromExitRef`, so reaching it completes Cookie Consent and Site stays current. Pages is unaffected.
-
-```text
-Checkout CompositeState
-  Payment Journey:  Authorizing -> PaymentFailureExit
-  Shipping Journey: Address -> DeliveryOption -> Confirmed
-```
-
-`PaymentFailureExit` leaves Checkout only if a Transition from Checkout declares it as `fromExitRef`;
-that Transition is then taken. Without such a Transition, Payment is complete and Shipping
-continues.
-
-### Boundary Entry and Exit Mapping {data-cop-concept="boundary-mapping"}
-
-When used on a parent [=Transition=], `toEntryRef` and `fromExitRef` describe how a parent-local
-[=CompositeState=] connects to entry and exit contracts belonging to its child Journeys.
-
-These properties are not transition endpoints. The transition's `from` and `to` values remain local to the enclosing journey.
-
-#### Entry boundary
-
-<spec-statement>
-1. A [=Transition=] **MAY** declare at most one `toEntryRef` when its `to` value references a
-   [=CompositeState=].
-2. The `toEntryRef` value **MUST** reference a [=JourneyEntry=] listed in the `entryRefs` of exactly
-   one Journey referenced by the target CompositeState's `subjourneyRefs`.
-3. `toEntryRef` identifies the child entry represented by that parent boundary Transition.
-4. `toEntryRef` applies only to the child Journey that owns the referenced [=JourneyEntry=].
-5. `toEntryRef` **MUST NOT** select, initialize, or imply entries for the CompositeState's other child
-   Journeys.
-6. Entry into a [=CompositeState=] without `toEntryRef` does not select a child Journey or child entry
-   at the parent boundary.
-7. When traversal of a particular child Journey is interpreted without an explicitly selected entry,
-   that child Journey independently uses its `defaultEntryRef`, otherwise a materialization or
-   execution context may select exactly one of its listed entries.
-8. A Consumer **MUST NOT** infer that every child Journey's default entry is selected merely because
-   the containing [=CompositeState=] was entered.
-</spec-statement>
-
-#### Exit boundary
-
-<spec-statement>
-1. A [=Transition=] **MAY** declare at most one `fromExitRef` when its `from` value references a
-   [=CompositeState=].
-2. The `fromExitRef` value **MUST** reference a [=JourneyExit=] listed in the `exitRefs` of exactly
-   one Journey referenced by the source CompositeState's `subjourneyRefs`.
-3. Reaching that child [=JourneyExit=] triggers the Transition: it is the parent continuation for
-   that outcome and is taken then. It **MUST NOT** be taken before that exit is reached. If a
-   Consumer implements [[UJG Conditions]] and the Transition is guarded, it is taken only when
-   eligible; otherwise the [=CompositeState=] occurrence remains current. Taking it leaves the source
-   CompositeState occurrence.
-4. Parent continuation for the child exit may use only a parent [=Transition=] whose `from` is the
-   containing [=CompositeState=] and whose `fromExitRef` is that child exit.
-5. No matching parent Transition means that no parent continuation is inferred, and the
-   [=CompositeState=] occurrence remains current.
-6. More than one parent Transition with the same `from` and `fromExitRef` pair is invalid.
-7. Taking a parent Transition from a [=CompositeState=], whether or not it declares `fromExitRef`,
-   leaves the CompositeState and ends the composite scope for that occurrence.
-8. `fromExitRef` remains singular. It identifies one concrete exported child outcome and **MUST NOT**
-   represent a conjunction, disjunction, set, or synchronization of exits.
-9. While a [=CompositeState=] occurrence is suspended by an [=InvokingTransition=], a child exit
-   reached in a sibling child Journey does not take the parent Transition yet. It is taken after the
-   invocation completes. If the invocation is cancelled, the occurrence is left and the Transition
-   is not taken.
-</spec-statement>
-
-In this parent-boundary use, `toEntryRef` and `fromExitRef` **MUST NOT** replace local `from` or `to`,
-point directly to child States, or create hidden Graph edges.
-
-```mermaid
-classDiagram
-  class CompositeState {
+    id
+    label
+    tags
     subjourneyRefs 1..*
   }
   class Journey {
     entryRefs
+    stateRefs
     exitRefs
   }
   class JourneyEntry
   class JourneyExit
   class Transition {
+    from
     to
     toEntryRef
-    from
     fromExitRef
   }
 
+  Journey --> CompositeState : stateRefs
   CompositeState --> Journey : subjourneyRefs
   Journey --> JourneyEntry : entryRefs
   Journey --> JourneyExit : exitRefs
-  Transition --> CompositeState : to/from
+  Transition --> CompositeState : from/to
   Transition --> JourneyEntry : toEntryRef
   Transition --> JourneyExit : fromExitRef
 ```
 
-Example child entry selection:
+Whether two concerns share a CompositeState depends on co-presence, not on whether one page contains
+both:
+
+| If the user can… | Model it as |
+| --- | --- |
+| act on both in the frame at once | child Journeys of one [=CompositeState=] |
+| reach one by moving through the other, such as by scrolling | States of one [=Journey=] connected by [=Transition|Transitions=] |
+| act on one only after it covers the other, as a modal does | an [=InvokingTransition=] |
+
+A sticky header stays in the viewport while the page content scrolls, so it is a child Journey of
+each page that shows it. The header Journey is declared once, and each page references it:
+
+```json
+[
+  {
+    "@type": "CompositeState",
+    "@id": "urn:ujg:state:home-page",
+    "label": "Home page",
+    "subjourneyRefs": ["urn:ujg:journey:home-content", "urn:ujg:journey:sticky-header"]
+  },
+  {
+    "@type": "CompositeState",
+    "@id": "urn:ujg:state:article-page",
+    "label": "Article page",
+    "subjourneyRefs": ["urn:ujg:journey:article-content", "urn:ujg:journey:sticky-header"]
+  }
+]
+```
+
+A footer is reached by scrolling, so it is a State of the page's content Journey, reached by a
+Transition. Because a State belongs to one Journey, each content Journey declares its own footer
+State; those States can list the same entry transition nodes.
+
+A one-page checkout shows shipping and payment side by side:
+
+```text
+Checkout CompositeState
+  Shipping Journey: Address -> DeliveryOption -> Confirmed
+  Payment Journey:  Authorizing -> PaymentFailureExit
+```
+
+A parent Transition can enter Checkout at a specific shipping entry. That selects nothing for
+Payment:
 
 ```json
 {
@@ -1263,10 +1142,8 @@ Example child entry selection:
 }
 ```
 
-The selected `toEntryRef` applies to the Shipping child Journey. It does not select or initialize
-entries for the Checkout CompositeState's other child Journeys.
-
-Example parent continuation after a child exit:
+A parent Transition can react to the payment failure. Reaching `PaymentFailureExit` takes it and
+leaves Checkout. Without it, Payment is complete and Shipping continues:
 
 ```json
 {
@@ -1325,21 +1202,17 @@ To ensure graph integrity, the following constraints **MUST** be met:
 
 1. Every Graph reference **MUST** resolve within the current scope or imported modules.
 2. References **MUST** resolve to the class expected by the property that uses them.
-3. Local [=Transition=] endpoints **MUST** stay inside the declaring [=Journey=]'s local vertex set.
+3. Local [=Transition=] endpoints **MUST** stay inside the declaring [=Journey=]'s
+   [=Local vertex|local vertices=], also inside child Journeys.
 4. On a [=Transition=], `toEntryRef` and `fromExitRef` **MUST** resolve through one of the child
    Journeys referenced by the relevant [=CompositeState=]'s `subjourneyRefs`. The referenced
    [=JourneyEntry=] or [=JourneyExit=] **MUST** be owned by exactly one such child Journey.
 5. On an [=OutgoingTransition=] or [=InvokingTransition=], `toEntryRef` **MUST** resolve to a
    [=JourneyEntry=] owned by exactly one [=Journey=], and the entry's `stateRef` **MUST** resolve
    inside that Journey's `stateRefs`.
-6. Every `subjourneyRefs` value **MUST** resolve to a [=Journey=].
-7. A `subjourneyRefs` set **MUST** contain at least one Journey.
-8. The same Journey **MUST NOT** occur more than once in the RDF set represented by `subjourneyRefs`.
-9. Child Journey containment **MUST NOT** weaken [=Transition=] endpoint locality.
-10. No edge between child Journeys is inferred from their common [=CompositeState=].
-11. Each [=OutgoingTransition=] and [=InvokingTransition=] **MUST** declare exactly one `toEntryRef`
-    and **MUST NOT** declare `from`, `fromExitRef`, or `to`.
-12. Each `commandRef` **MUST** resolve to a [=Command=].
-13. The [=Journey=] that owns an [=InvokingTransition=]'s `toEntryRef` **MUST** declare at least one
-    `exitRefs` value.
+6. Each [=OutgoingTransition=] and [=InvokingTransition=] **MUST** declare exactly one `toEntryRef`
+   and **MUST NOT** declare `from`, `fromExitRef`, or `to`.
+7. Each `commandRef` **MUST** resolve to a [=Command=].
+8. The [=Journey=] that owns an [=InvokingTransition=]'s `toEntryRef` **MUST** declare at least one
+   `exitRefs` value.
 </spec-statement>

@@ -66,6 +66,13 @@ Use `State` for a stable observable condition.
 Use `CompositeState` only when it exposes one or more child Journeys through `subjourneyRefs`.
 Child states stay in their child Journey and never appear in the parent's `stateRefs`.
 
+Child Journeys of one `CompositeState` are co-present in one experience frame (a viewport, window, or
+active session): the user can act on each without moving through the other's content. A sticky
+header, docked cart, or overlay banner is such a child; reference the same Journey from each page
+composite. Content reached by moving through other content, such as a footer reached by scrolling, is
+a `State` of the journey whose content moves, connected by `Transition`; a modal is an
+`InvokingTransition`. A State and a CompositeState belong to exactly one Journey.
+
 The order of `subjourneyRefs` does not imply traversal, priority, scheduling, synchronization, or
 completion order. Reaching an exit in one child Journey does not complete sibling Journeys.
 
@@ -103,10 +110,9 @@ OutgoingTransition.toEntryRef -> JourneyEntry.stateRef
 Never put `to` on an OutgoingTransition or reference its destination State directly. The entry may
 belong to the source Journey, including same-State re-entry.
 
-An OutgoingTransition has no `from` or `fromExitRef`. Its effective source is each State or
-CompositeState that lists it in `entryTransitionRefs`. Journeys do not declare entry transitions; a
-footer shown on many States is listed on each of them. One listed on a CompositeState is available
-at every State nested inside it, through child Journeys at any depth.
+An OutgoingTransition has no `from` or `fromExitRef`. Its effective source is each State that lists
+it in `entryTransitionRefs`. Only a State declares entry transitions; Journeys and CompositeStates
+do not, and nested States do not inherit them.
 
 A shared transition keeps the same fixed `toEntryRef` at every State that lists it. Share one only
 when the same destination entry is correct everywhere. When the intended destination varies by
@@ -173,8 +179,9 @@ order. Events resolving to Commands are affordance observations and are not Mapp
 Every OutgoingTransition begins a new segment, including same-Journey and same-State re-entry. The
 new segment's `mappedJourneyRef` is the Journey that owns the destination entry, and its first
 `mappedStateRef` equals that entry's `stateRef`. Predecessor lookup crosses the segment boundary
-through Runtime causal order. The OutgoingTransition explains the move when the predecessor State,
-or a CompositeState that contains it, lists it in `entryTransitionRefs`.
+through Runtime causal order. The OutgoingTransition explains the move when a current State lists it
+in `entryTransitionRefs`: the predecessor, or the latest mapped State in each child Journey of a
+CompositeState occurrence that contains it. A CompositeState lists none.
 
 An observed move into another Journey without a matching effective OutgoingTransition also begins a
 new segment; its first step is an unexplained movement.

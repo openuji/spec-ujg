@@ -230,8 +230,10 @@ the SHACL shape.
     composite occurrence; observations from sibling child Journeys may interleave without becoming
     that predecessor. The Transition is relevant when its local `from` and `to` match that predecessor
     and the current mapped state. An [=OutgoingTransition=] is relevant when:
-    - it is listed in the `entryTransitionRefs` of the predecessor State or of a [=CompositeState=]
-      on the predecessor's containment path;
+    - it is listed in the `entryTransitionRefs` of a current State. The predecessor is current, and
+      so is every [=CompositeState=] occurrence that contains it. For each current CompositeState
+      occurrence, the mapped state of the latest earlier MappedStep in each of its child Journey
+      scopes is current as well, at any depth. A CompositeState lists no entry transitions;
     - its `toEntryRef` is owned by the destination segment's `mappedJourneyRef`; and
     - that entry's `stateRef` equals the destination segment's first `mappedStateRef`.
 17. **Composite occurrence end:** A child [=JourneyExit=] does not by itself end the containing
@@ -248,14 +250,15 @@ the SHACL shape.
     `OutgoingTransition` whose `commandRef` references that same Command, if one exists for the
     movement from the predecessor to the current mapped state.
 19. **Invoked Journey scope:** An [=InvokingTransition=] is recognized for a step when it is listed
-    in the `entryTransitionRefs` of the latest earlier mapped State or of a [=CompositeState=] on
-    that State's containment path, and its `toEntryRef` entry has a `stateRef` equal to the step's
-    mapped state. When a relevant Transition from the step's local-scope predecessor (rule 16)
-    also explains the step, that reading wins unless the observed affordance event resolves to the
-    InvokingTransition's `commandRef`. The recognized step, and every following step that resolves
-    to a State of the invoked Journey or to a State nested in its CompositeStates, belongs to the
-    invoked Journey's own local scope. This continues until a step resolves elsewhere: the resumption
-    of the source State occurrence, or a departure from the invoked Journey. That scope has no
+    in the `entryTransitionRefs` of a current State (rule 16, taking the latest earlier mapped State
+    or CompositeState in Runtime causal order as the predecessor), and its `toEntryRef` entry has a
+    `stateRef` equal to the step's mapped state. When a relevant Transition from the step's
+    local-scope predecessor (rule 16) also explains the step, that reading wins unless the observed
+    affordance event resolves to the InvokingTransition's `commandRef`. The recognized step, and
+    every following step that resolves to a State of the invoked Journey or to a State nested in its
+    CompositeStates, belongs to the invoked Journey's own local scope. This continues until a step
+    resolves elsewhere: the resumption of the source State occurrence, or a departure from the
+    invoked Journey. That scope has no
     containing [=CompositeState=] occurrence from the enclosing segment, even if the invoked Journey
     is also listed in some CompositeState's `subjourneyRefs`, so a [=JourneyExit=] listed in the
     invoked Journey's own `exitRefs` is not a child exit of any CompositeState occurrence. Recognition
@@ -447,9 +450,8 @@ against the checkout root journey. The first mapped step is the root event. The 
 record the relevant effective transitions that explain the observed movements.
 
 If a mapped movement is explained by an outgoing transition, `explainedByTransitionRef` points to
-the `OutgoingTransition` resource. A movement explained by an `OutgoingTransition` listed by the
-predecessor State, or by a CompositeState that contains it, is explained by the Graph model and does
-not need a serialized status value.
+the `OutgoingTransition` resource. A movement explained by an `OutgoingTransition` listed by a
+current State (rule 16) is explained by the Graph model and does not need a serialized status value.
 
 ### Affordance Event Example
 

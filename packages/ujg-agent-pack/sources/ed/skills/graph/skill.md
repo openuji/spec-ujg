@@ -50,14 +50,25 @@ Use `CompositeState` only when a parent journey contains or exposes one or more 
 journeys with `subjourneyRefs`. `subjourneyRefs` is a set of child `Journey` IRIs and must contain at
 least one value. Do not use the legacy singular child-journey field in ED JSON-LD.
 
-Multiple child journeys inside one `CompositeState` must coexist in the same composite scope: each
-is independently available without requiring progression through another. Their `subjourneyRefs`
-serialization order does not define traversal order, priority, causality, scheduling,
-synchronization, fork/join, all-children-complete behavior, or hidden graph edges. Observations from
-sibling child journeys may overlap or interleave without changing Graph topology. Do not group child
-journeys that are experienced in a defined sequence (e.g., shipping before payment, step 1 before
-step 2) under one `CompositeState` — model that sequence as separate `State`/`CompositeState` nodes
-connected by `Transition` within the enclosing journey instead.
+`CompositeState` is a local vertex but not a `State`, and must not be typed as one. It needs an IRI
+`@id` and exactly one `label`, and it never declares `stateRefs` or `entryTransitionRefs`. It can be
+listed in `stateRefs`, be a `Transition` endpoint, and be a `JourneyEntry.stateRef` target. While it
+is current, the user is at the current `State` of each child journey, and those States offer the
+entry transitions.
+
+Child journeys must be co-present: the user can perceive and act on each at the same time in the same
+experience frame (a viewport, window, screen, or dialog session). Test: can the user act on both
+without moving through the other? If yes, they are child journeys of one `CompositeState`. If one is
+reached by moving through the other, such as a footer reached by scrolling or a step reached after
+another, it is a `State` reached by a `Transition`. If one covers the other, as a modal does, use an
+`InvokingTransition`. A sticky header or docked cart is a child journey of each page composite that
+shows it; reference the same Journey from each. A State and a CompositeState belong to exactly one
+Journey, so each page's content journey declares its own footer State, and those States can list the
+same entry transition nodes.
+
+Child journeys are independent. `subjourneyRefs` order does not define traversal order, priority,
+causality, scheduling, synchronization, fork/join, all-children-complete behavior, or hidden graph
+edges, and movement in one child journey does not move another.
 
 On a parent `Transition` into a `CompositeState`, use `toEntryRef` only to select a specific child
 `JourneyEntry`. The entry must belong to exactly one child journey referenced by that composite's
@@ -108,24 +119,22 @@ several active States, define a separate OutgoingTransition and matching Journey
 Use `commandRef` on an `OutgoingTransition` only when the outgoing affordance has stable intentional
 invocation identity.
 
-`OutgoingTransition` and `InvokingTransition` are both entry transitions. A State or CompositeState
-lists them, in `entryTransitionRefs`; neither class declares `from`, `fromExitRef`, or
-`entryTransitionRefs`. A Journey never declares them; for a footer or header shown on many States,
-list the same transitions on each of those States. An entry transition listed on a CompositeState
-is available at every State nested inside it, through child Journeys at any depth, so list a footer
-on a composed page once on its CompositeState. List it on a child State only when it is available just there. Two entry
-transitions available at the same State occurrence merge only when class, `toEntryRef`, and
-`commandRef` all match.
+`OutgoingTransition` and `InvokingTransition` are both entry transitions. Only a State lists them,
+in `entryTransitionRefs`; neither class declares `from`, `fromExitRef`, or `entryTransitionRefs`. A
+CompositeState and a Journey never declare them, and an entry transition is never inherited by
+nested States. A State or CompositeState must not be listed in the `stateRefs` of more than one
+Journey. To reuse topology, reuse the Journey: reference it from several CompositeStates'
+`subjourneyRefs` or enter it through an `OutgoingTransition` or `InvokingTransition`.
 
 Use `InvokingTransition` instead of `OutgoingTransition` when the affordance opens another Journey
 and the user returns to the same source State when that Journey exits, such as a settings dialog
-opened from a footer. It has the same shape as an OutgoingTransition: exactly one `toEntryRef`,
+opened from a page. It has the same shape as an OutgoingTransition: exactly one `toEntryRef`,
 optional `commandRef`, no `to`, never in `transitionRefs`, and it attaches through the same
 `entryTransitionRefs` on a State. One State may list both classes.
 The Journey that owns its `toEntryRef` must declare at least one `exitRefs` value. Reaching any of
 that Journey's own exits resumes the source State. While the invocation runs, the source is
-suspended: nothing listed on it, or on a CompositeState that contains it, is offered through it, so a
-footer is not available inside the invoked Journey unless that Journey's own States list it. Leaving
+suspended: nothing listed on it is offered through it, so those entry transitions are not available
+inside the invoked Journey unless that Journey's own States list them. Leaving
 it any other way cancels the invocation without a return, and that includes any OutgoingTransition
 taken inside it, even one that re-enters the same Journey. Cancellation leaves the retained source as
 well, and cancels any enclosing invocation in turn. If the source is left first, the invocation is
