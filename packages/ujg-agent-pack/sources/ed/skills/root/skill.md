@@ -66,12 +66,11 @@ Use `State` for a stable observable condition.
 Use `CompositeState` only when it exposes one or more child Journeys through `subjourneyRefs`.
 Child states stay in their child Journey and never appear in the parent's `stateRefs`.
 
-Child Journeys of one `CompositeState` are co-present in one experience frame (a viewport, window, or
-active session): the user can act on each without moving through the other's content. A sticky
-header, docked cart, or overlay banner is such a child; reference the same Journey from each page
-composite. Content reached by moving through other content, such as a footer reached by scrolling, is
-a `State` of the journey whose content moves, connected by `Transition`; a modal is an
-`InvokingTransition`. A State and a CompositeState belong to exactly one Journey.
+Child Journeys of one `CompositeState` are co-present in one experience frame (a viewport, window,
+screen, or dialog session): the user can act on each at the same time. A CompositeState may have a
+single child Journey, and a Journey may be a child of many CompositeStates, so shared topology, such
+as a sticky header or a site-wide footer Journey, can be declared once and reused. A State and a
+CompositeState belong to exactly one Journey.
 
 The order of `subjourneyRefs` does not imply traversal, priority, scheduling, synchronization, or
 completion order. Reaching an exit in one child Journey does not complete sibling Journeys.
@@ -259,5 +258,6 @@ Before finalizing, ask whether a CompositeState can be a State, a child Journey 
 its parent, an exit can be a local Transition, or an observed sequence is being mistaken for intended
 topology.
 
-If a flatter model preserves the same meaning, use it. If evidence is incomplete, identify what is
+If a flatter model preserves the same meaning, use it. Reusing a shared Journey is a valid reason to
+keep a CompositeState. If evidence is incomplete, identify what is
 known, what is inferred, and what remains unresolved.

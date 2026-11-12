@@ -56,15 +56,14 @@ listed in `stateRefs`, be a `Transition` endpoint, and be a `JourneyEntry.stateR
 is current, the user is at the current `State` of each child journey, and those States offer the
 entry transitions.
 
-Child journeys must be co-present: the user can perceive and act on each at the same time in the same
-experience frame (a viewport, window, screen, or dialog session). Test: can the user act on both
-without moving through the other? If yes, they are child journeys of one `CompositeState`. If one is
-reached by moving through the other, such as a footer reached by scrolling or a step reached after
-another, it is a `State` reached by a `Transition`. If one covers the other, as a modal does, use an
-`InvokingTransition`. A sticky header or docked cart is a child journey of each page composite that
-shows it; reference the same Journey from each. A State and a CompositeState belong to exactly one
-Journey, so each page's content journey declares its own footer State, and those States can list the
-same entry transition nodes.
+Child journeys of one `CompositeState` must be co-present: the user can perceive and act on each at
+the same time in the same experience frame (a viewport, window, screen, or dialog session). That is
+the only condition on grouping; Graph does not prescribe which parts of an experience become States,
+CompositeStates, or Journeys. A `CompositeState` may have a single child journey, and several
+composites may reference the same Journey, so shared topology and the entry transitions its States
+list can be declared once and reused, for example a sticky header beside page content, or a site-wide
+footer Journey referenced by a one-child footer composite on each page. A State and a CompositeState
+belong to exactly one Journey; reuse happens through Journeys.
 
 Child journeys are independent. `subjourneyRefs` order does not define traversal order, priority,
 causality, scheduling, synchronization, fork/join, all-children-complete behavior, or hidden graph

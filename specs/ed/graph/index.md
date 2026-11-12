@@ -66,8 +66,8 @@ A [=State=] lists the [=Entry transition|entry transitions=] it offers in `entry
 Entry transitions are for navigation and invocation options, not for ordinary internal progression
 through a journey.
 
-An entry transition is a node of its own, so several States can list the same one. A link offered on
-several pages is one [=OutgoingTransition=] listed by the State of each of those pages.
+An entry transition is a node of its own, so several States can list the same one, such as a link
+offered on several pages.
 
 <spec-statement>
 1. Only a [=State=] **MAY** declare `entryTransitionRefs`. A [=CompositeState=], a [=Journey=], and
@@ -1035,8 +1035,7 @@ page content beside a sticky header. The parent Journey treats it as one
    or more `subjourneyRefs`, each resolving to a [=Journey=]. It **MAY** declare one or more `tags`.
 2. A [=CompositeState=] **MUST NOT** be typed [=State=] or [=JourneyExit=], and **MUST NOT** declare
    `stateRefs` or `entryTransitionRefs`.
-3. Its child Journeys **MUST** be [=Co-present|co-present=]. Content the user reaches by moving
-   through other content, such as by scrolling or paging, is a [=State=] reached by a [=Transition=].
+3. Its child Journeys **MUST** be [=Co-present|co-present=].
 4. The parent [=Journey=] treats the [=CompositeState=] as one [=Local vertex|local vertex=]: it can
    be a [=Transition=] `from` or `to` and a [=JourneyEntry=] `stateRef`. Child States are never
    listed by the parent, and nested composition is never flattened.
@@ -1087,17 +1086,13 @@ classDiagram
   Transition --> JourneyExit : fromExitRef
 ```
 
-Whether two concerns share a CompositeState depends on co-presence, not on whether one page contains
-both:
+A CompositeState with one child Journey is valid, and several CompositeStates can reference the same
+Journey, so a Journey's topology and the entry transitions its States list can be declared once and
+reused at several points of a graph. Graph does not prescribe which parts of an experience are
+modeled as States, CompositeStates, or Journeys.
 
-| If the user can… | Model it as |
-| --- | --- |
-| act on both in the frame at once | child Journeys of one [=CompositeState=] |
-| reach one by moving through the other, such as by scrolling | States of one [=Journey=] connected by [=Transition|Transitions=] |
-| act on one only after it covers the other, as a modal does | an [=InvokingTransition=] |
-
-A sticky header stays in the viewport while the page content scrolls, so it is a child Journey of
-each page that shows it. The header Journey is declared once, and each page references it:
+A sticky header that stays in the viewport while page content scrolls is co-present with that
+content. Each page can reference the same header Journey:
 
 ```json
 [
@@ -1115,10 +1110,6 @@ each page that shows it. The header Journey is declared once, and each page refe
   }
 ]
 ```
-
-A footer is reached by scrolling, so it is a State of the page's content Journey, reached by a
-Transition. Because a State belongs to one Journey, each content Journey declares its own footer
-State; those States can list the same entry transition nodes.
 
 A one-page checkout shows shipping and payment side by side:
 
