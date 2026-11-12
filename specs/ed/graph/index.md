@@ -180,6 +180,508 @@ A footer that mixes navigation and invocation is shown in the [=InvokingTransiti
 
 ---
 
+
+
+
+## Transitions {data-cop-concept="transitions"}
+
+Graph has three transition classes. A [=Transition=] is ordinary progression inside one
+[=Journey=]. [=OutgoingTransition=] and [=InvokingTransition=] are
+[=Entry transition|entry transitions=]: affordances available at a State that enter a Journey
+through an explicit [=JourneyEntry=]. The two entry transition classes differ only in what happens
+to the source [=State occurrence=].
+
+```mermaid
+flowchart TB
+  subgraph T["Transition"]
+    direction LR
+    T1["State A<br/>not retained"] -->|"progress (from → to)"| T2["State B<br/>same Journey"]
+  end
+
+  subgraph O["OutgoingTransition"]
+    direction LR
+    O1["Source State<br/>not retained"] -->|"navigate (toEntryRef)"| O2["Journey B<br/>entered via JourneyEntry"]
+  end
+
+  subgraph I["InvokingTransition"]
+    direction LR
+    I1["Source State occurrence<br/>retained, suspended"] -->|"invoke (toEntryRef)"| I2["Invoked Journey<br/>entered via JourneyEntry"]
+    I2 -.->|"resume at own JourneyExit"| I1
+  end
+
+  T ~~~ O
+  O ~~~ I
+```
+
+| | [=Transition=] | [=OutgoingTransition=] | [=InvokingTransition=] |
+| --- | --- | --- | --- |
+| Source | Explicit local `from` vertex | State where the affordance is available | State where the affordance is available |
+| Destination | Local `to` vertex | `toEntryRef` entry contract | `toEntryRef` entry contract |
+| Declared through | `transitionRefs` on a [=Journey=] | `entryTransitionRefs` on a [=State=] | `entryTransitionRefs` on a [=State=] |
+| Source State occurrence | Not retained | Not retained | Retained and suspended until the invocation completes or is cancelled |
+| Meaning | Ordinary progression inside one Journey | Leave local progression and enter a Journey through a named entry | Enter a Journey through a named entry, then resume the source when that Journey exits |
+
+An entry transition has no `from` property. Its effective source is each [=State=] that lists it in
+`entryTransitionRefs`. All three classes can reference a [=Command=] with `commandRef`.
+
+### Transition {data-cop-concept="transition"}
+
+A [=Transition=] is a structural directed edge between local vertices of a [=Journey=]. It models ordinary progression inside the local topology of a [=Journey=].
+
+A [=Transition=] is not owned by either endpoint state. It is owned by a journey through `transitionRefs`.
+
+A [=Transition=] applies to every concrete occurrence of the [=State=] its `from` value references.
+The [=Transition=] itself remains one stable Graph node.
+
+The presence of multiple child Journeys in one [=CompositeState=] does not create implicit
+Transitions between them.
+
+<spec-statement>
+1. A [=Transition=] **MUST** be identified by an IRI, declare exactly one `from`, and declare exactly one `to`.
+2. A [=Transition=] **MAY** declare one `label`.
+3. A [=Transition=] **MAY** reference one [=Command=] with `commandRef`.
+4. When listed in a [=Journey=]'s `transitionRefs`, `from` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`.
+5. When listed in a [=Journey=]'s `transitionRefs`, `to` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`, or a [=JourneyExit=] in that journey's `exitRefs`.
+6. [=Transition=] endpoints **MUST** stay local to the enclosing [=Journey=].
+7. `toEntryRef` **MAY** be used only on parent transitions into [=CompositeState=] nodes, as defined by the boundary mapping rules above.
+8. A [=Transition=] **MUST** remain one Graph node regardless of how many concrete occurrences its endpoint [=State=]s have; per-instance transition properties are outside Graph.
+9. A child Journey's [=Transition=] **MUST NOT** connect directly to a [=State=], [=CompositeState=], or [=JourneyExit=] owned only by another child Journey.
+</spec-statement>
+
+```mermaid
+classDiagram
+  class State
+  class JourneyExit
+  class Command
+
+  class Transition {
+    id
+    label
+    from
+    to
+    commandRef
+  }
+
+  Transition --> State : from
+  Transition --> State : to
+  Transition --> JourneyExit : to
+  Transition --> Command : commandRef
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "Transition",
+  "@id": "urn:ujg:transition:search-form-to-results",
+  "label": "Submit search",
+  "from": "urn:ujg:state:search-form",
+  "to": "urn:ujg:state:results",
+  "commandRef": "urn:ujg:command:submit-search"
+}
+```
+
+### OutgoingTransition {data-cop-concept="outgoing-transition"}
+
+An [=OutgoingTransition=] is a navigational affordance that enters a Journey through an explicit
+[=JourneyEntry=]. It does not declare structural progression in the source Journey's local topology.
+
+The destination entry's `stateRef` identifies the first local [=State=] or [=CompositeState=] of the
+destination Journey. Consumers do not bypass the entry contract by linking the outgoing affordance
+directly to that state.
+
+<spec-statement>
+1. An [=OutgoingTransition=] **MUST** be identified by an IRI and **MAY** declare one `label`.
+2. An [=OutgoingTransition=] **MUST** declare exactly one `toEntryRef`.
+3. An [=OutgoingTransition=] **MAY** reference one [=Command=] with `commandRef`.
+4. `toEntryRef` **MUST** reference a [=JourneyEntry=] owned by exactly one [=Journey=].
+5. The destination entry's `stateRef` **MUST** reference a [=State=] or [=CompositeState=] in that
+   owner Journey's `stateRefs`.
+6. The destination entry **MAY** belong to the Journey where the affordance is available. Such a
+   target is explicit Journey re-entry, including when the entry points to the effective source state.
+7. An [=OutgoingTransition=] **MUST NOT** declare `from`, `fromExitRef`, `to`, or
+   `entryTransitionRefs`, target a [=JourneyExit=], appear in `transitionRefs`, or model ordinary
+   internal progression.
+</spec-statement>
+
+A [=JourneyEntryIndex=] may catalogue the destination entry for discovery, but index membership is
+not required for navigation. The entry remains owned by its declaring Journey.
+
+```mermaid
+classDiagram
+  class OutgoingTransition {
+    toEntryRef
+    commandRef
+  }
+  class Journey {
+    entryRefs
+    stateRefs
+  }
+  class JourneyEntry {
+    stateRef
+  }
+  class State
+  class CompositeState
+  class Command
+
+  OutgoingTransition --> JourneyEntry : toEntryRef
+  Journey --> JourneyEntry : entryRefs
+  JourneyEntry --> State : stateRef
+  JourneyEntry --> CompositeState : stateRef
+  OutgoingTransition --> Command : commandRef
+```
+
+Cross-Journey navigation names the destination entry rather than its State:
+
+```json
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:home",
+    "defaultEntryRef": "urn:ujg:entry:home",
+    "entryRefs": ["urn:ujg:entry:home"],
+    "stateRefs": ["urn:ujg:state:home"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:home",
+    "label": "Home entry",
+    "stateRef": "urn:ujg:state:home"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:home",
+    "label": "Home"
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:ujg:ot:go-home",
+    "label": "Home",
+    "toEntryRef": "urn:ujg:entry:home",
+    "commandRef": "urn:ujg:command:go-home"
+  },
+  {
+    "@type": "Command",
+    "@id": "urn:ujg:command:go-home",
+    "label": "Go home"
+  }
+]
+```
+
+The same pattern represents same-state re-entry: the OutgoingTransition targets a JourneyEntry whose
+`stateRef` is the state where the affordance is available. This remains explicit re-entry, not an
+implicit relative target.
+
+```json
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:confirmation",
+    "defaultEntryRef": "urn:ujg:entry:confirmation",
+    "entryRefs": ["urn:ujg:entry:confirmation"],
+    "stateRefs": ["urn:ujg:state:confirmation"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:confirmation",
+    "stateRef": "urn:ujg:state:confirmation"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:confirmation",
+    "label": "Confirmation",
+    "entryTransitionRefs": ["urn:ujg:ot:reenter-confirmation"]
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:ujg:ot:reenter-confirmation",
+    "label": "Re-enter confirmation",
+    "toEntryRef": "urn:ujg:entry:confirmation"
+  }
+]
+```
+
+### InvokingTransition {data-cop-concept="invoking-transition"}
+
+An [=InvokingTransition=] invokes a Journey through an explicit [=JourneyEntry=]. It has the same
+source and destination model as an [=OutgoingTransition=]. The difference is lifecycle: the source
+[=State occurrence=] is retained, and it resumes when the invoked Journey reaches one of its exits.
+
+<spec-statement>
+1. An [=InvokingTransition=] **MUST** be identified by an IRI and **MAY** declare one `label`. It
+   **MUST** declare exactly one `toEntryRef` and **MAY** reference one [=Command=] with
+   `commandRef`. It **MUST NOT** declare `from`, `fromExitRef`, `to`, or `entryTransitionRefs`,
+   target a [=JourneyExit=], appear in `transitionRefs`, model ordinary internal progression, or
+   also be typed [=OutgoingTransition=].
+2. The effective source of an [=InvokingTransition=] is each [=State=] that lists it in
+   `entryTransitionRefs`, exactly as for an [=OutgoingTransition=].
+3. `toEntryRef` **MUST** reference a [=JourneyEntry=] owned by exactly one [=Journey=], and the
+   entry's `stateRef` **MUST** reference a [=State=] or [=CompositeState=] in that owner Journey's
+   `stateRefs`. That Journey is the *invoked Journey*. The invoked Journey **MUST** declare at least
+   one `exitRefs` value.
+4. The invoked Journey **MAY** be the Journey where the affordance is available. Each activation is a
+   separate, nested invocation.
+5. Activating an [=InvokingTransition=] enters the invoked Journey through `toEntryRef` and retains
+   the source [=State occurrence=], including any active composite scope. The source occurrence is
+   not left. While the invocation is in progress, the retained source occurrence, together with any
+   composite scope retained with it, is suspended: no [=Transition=] or entry transition is taken
+   from it, whether the entry transition is listed by the source State or by a [=CompositeState=]
+   that contains it. Entry transitions listed by a containing CompositeState remain available only
+   at State occurrences inside it that are not suspended, such as States of a sibling child Journey.
+6. Reaching a [=JourneyExit=] listed in the invoked Journey's own `exitRefs` completes the
+   invocation. The retained source occurrence then resumes without entering a [=JourneyEntry=] or
+   taking a [=Transition=]. A child [=JourneyExit=] reached inside a [=CompositeState=] of the
+   invoked Journey is not completion; it follows the composite-scope rules.
+7. The reached [=JourneyExit=] is the outcome of the invocation. Graph assigns no per-outcome
+   continuation.
+8. An invocation is cancelled, not completed, when the invoked Journey is left in any way other than
+   reaching one of its own exits. Traversing an [=OutgoingTransition=] from any [=State occurrence=]
+   of the invoked Journey, including one inside its composite scopes, leaves the invoked Journey,
+   even when the destination entry belongs to the invoked Journey itself. Activating an
+   [=InvokingTransition=] from inside the invoked Journey does not leave it.
+9. An invocation is also cancelled when its retained source occurrence is left before the
+   invocation completes, for example because a sibling child Journey in the same composite scope
+   reaches a [=JourneyExit=]. The invoked Journey is then left as well, which cancels any invocation
+   nested inside it.
+10. When an invocation is cancelled, Consumers **MUST NOT** infer a return, and the retained source
+    occurrence **MUST NOT** be resumed. A source occurrence that is still retained is left, including
+    its active composite scope. If that source occurrence is inside a Journey that was itself
+    invoked, that Journey is left as well, which cancels its invocation in turn. Cancellation
+    therefore releases every retained occurrence in the invocation chain.
+11. An [=InvokingTransition=] does not add the invoked Journey to any `subjourneyRefs`. The
+    [=JourneyExit=] rules for a composite scope do not apply to the invoked Journey's exits, and
+    completion never leaves a [=CompositeState=] that contains the source.
+12. Graph does not define invocation identifiers or association data between source and invoked
+    occurrences.
+</spec-statement>
+
+```mermaid
+classDiagram
+  class InvokingTransition {
+    toEntryRef
+    commandRef
+  }
+  class Journey {
+    entryRefs
+    stateRefs
+    exitRefs
+  }
+  class JourneyEntry {
+    stateRef
+  }
+  class JourneyExit
+  class Command
+
+  InvokingTransition --> JourneyEntry : toEntryRef
+  Journey --> JourneyEntry : entryRefs
+  Journey --> JourneyExit : exitRefs
+  InvokingTransition --> Command : commandRef
+```
+
+A privacy settings dialog invoked from an article page. Either exit completes the invocation, and
+the Article State occurrence resumes. `settings-saved` and `settings-dismissed` are distinguishable
+outcomes, but neither is a destination.
+
+```json
+[
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:article",
+    "label": "Article",
+    "entryTransitionRefs": ["urn:ujg:it:adjust-privacy-settings"]
+  },
+  {
+    "@type": "InvokingTransition",
+    "@id": "urn:ujg:it:adjust-privacy-settings",
+    "label": "Adjust privacy settings",
+    "toEntryRef": "urn:ujg:entry:privacy-settings",
+    "commandRef": "urn:ujg:command:adjust-privacy-settings"
+  },
+  {
+    "@type": "Command",
+    "@id": "urn:ujg:command:adjust-privacy-settings",
+    "label": "Adjust privacy settings"
+  },
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:privacy-settings",
+    "defaultEntryRef": "urn:ujg:entry:privacy-settings",
+    "entryRefs": ["urn:ujg:entry:privacy-settings"],
+    "stateRefs": ["urn:ujg:state:privacy-settings"],
+    "transitionRefs": [
+      "urn:ujg:transition:privacy-settings-save",
+      "urn:ujg:transition:privacy-settings-dismiss"
+    ],
+    "exitRefs": [
+      "urn:ujg:exit:settings-saved",
+      "urn:ujg:exit:settings-dismissed"
+    ]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:privacy-settings",
+    "stateRef": "urn:ujg:state:privacy-settings"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:privacy-settings",
+    "label": "Privacy settings"
+  },
+  {
+    "@type": "Transition",
+    "@id": "urn:ujg:transition:privacy-settings-save",
+    "label": "Save",
+    "from": "urn:ujg:state:privacy-settings",
+    "to": "urn:ujg:exit:settings-saved"
+  },
+  {
+    "@type": "Transition",
+    "@id": "urn:ujg:transition:privacy-settings-dismiss",
+    "label": "Back",
+    "from": "urn:ujg:state:privacy-settings",
+    "to": "urn:ujg:exit:settings-dismissed"
+  },
+  {
+    "@type": "JourneyExit",
+    "@id": "urn:ujg:exit:settings-saved",
+    "label": "Settings saved"
+  },
+  {
+    "@type": "JourneyExit",
+    "@id": "urn:ujg:exit:settings-dismissed",
+    "label": "Settings dismissed"
+  }
+]
+```
+
+A footer shared by several pages can mix both transition classes. "Privacy policy" navigates away
+from the current page. "Adjust privacy settings" invokes the privacy settings Journey from the
+example above and returns to the current page when that Journey exits. Each page's State lists the
+same two transitions; each node's class determines its semantics.
+
+```json
+[
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:article",
+    "label": "Article",
+    "entryTransitionRefs": [
+      "urn:ujg:ot:privacy-policy",
+      "urn:ujg:it:adjust-privacy-settings"
+    ]
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:search-results",
+    "label": "Search results",
+    "entryTransitionRefs": [
+      "urn:ujg:ot:privacy-policy",
+      "urn:ujg:it:adjust-privacy-settings"
+    ]
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:ujg:ot:privacy-policy",
+    "label": "Privacy policy",
+    "toEntryRef": "urn:ujg:entry:privacy-policy"
+  },
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:privacy-policy",
+    "defaultEntryRef": "urn:ujg:entry:privacy-policy",
+    "entryRefs": ["urn:ujg:entry:privacy-policy"],
+    "stateRefs": ["urn:ujg:state:privacy-policy"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:privacy-policy",
+    "stateRef": "urn:ujg:state:privacy-policy"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:privacy-policy",
+    "label": "Privacy policy"
+  }
+]
+```
+
+Mapping and Metrics do not yet account for [=InvokingTransition=]. Until they do, Mapping treats
+both the entry into the invoked Journey and the resumption of the source State as unexplained
+movements, so each completed invocation adds two derived jumps, and two to
+`unexplainedMovementCount`, across the execution's JourneyMappings.
+
+---
+
+
+## Command {data-cop-concept="command"}
+
+A [=Command=] identifies the stable semantic identity of an intentional invocation in the modeled
+experience.
+
+A [=Command=] can be referenced by [=Transition=], [=OutgoingTransition=], and
+[=InvokingTransition=] nodes through `commandRef`. Multiple transitions may reference the same [=Command=]. Sharing a `commandRef`
+establishes only common invocation identity. Graph does not assign branching, selection, ordering,
+resolution, execution-result, or effect semantics to that relationship.
+
+A [=Command=] is not a transition endpoint and does not replace [=Transition=],
+[=OutgoingTransition=], or [=InvokingTransition=]. Structural, automatic, expiry-driven, or otherwise non-invoked transitions
+can remain without `commandRef`.
+
+<spec-statement>
+1. A [=Command=] **MUST** be identified by an IRI.
+2. A [=Command=] **MAY** declare one `label` and one or more `tags`.
+3. A [=Command=] **MUST NOT** declare `from`, `to`, branching, condition resolution, effect execution, visual representation, runtime execution, or execution-result semantics.
+4. `commandRef` **MAY** appear on a [=Transition=], [=OutgoingTransition=], or [=InvokingTransition=] and **MUST** reference a [=Command=].
+5. A [=Transition=], [=OutgoingTransition=], or [=InvokingTransition=] **MUST NOT** reference more than one [=Command=].
+6. Absence of `commandRef` makes no claim that the transition represents an intentional invocation.
+</spec-statement>
+
+```mermaid
+classDiagram
+  class Command {
+    id
+    label
+    tags
+  }
+  class Transition {
+    commandRef
+  }
+  class OutgoingTransition {
+    commandRef
+  }
+  class InvokingTransition {
+    commandRef
+  }
+
+  Transition --> Command : commandRef
+  OutgoingTransition --> Command : commandRef
+  InvokingTransition --> Command : commandRef
+```
+
+Example JSON node:
+
+```json
+{
+  "@type": "Command",
+  "@id": "urn:ujg:command:start-registration",
+  "label": "Start registration"
+}
+```
+
+Example transition associated with a command:
+
+```json
+{
+  "@type": "Transition",
+  "@id": "urn:ujg:transition:start-registration",
+  "from": "urn:ujg:state:registration-open",
+  "to": "urn:ujg:state:registration-form",
+  "commandRef": "urn:ujg:command:start-registration"
+}
+```
+
+---
+
 ## Journey {data-cop-concept="journey"}
 
 A [=Journey=] is the local container for intended flow topology. It lists the experiential states that belong to the journey, the terminal exits exported by the journey, and, when present, the transitions that connect those local vertices.
@@ -753,503 +1255,6 @@ Example parent continuation after a child exit:
 
 ---
 
-## Transitions {data-cop-concept="transitions"}
-
-Graph has three transition classes. A [=Transition=] is ordinary progression inside one
-[=Journey=]. [=OutgoingTransition=] and [=InvokingTransition=] are
-[=Entry transition|entry transitions=]: affordances available at a State that enter a Journey
-through an explicit [=JourneyEntry=]. The two entry transition classes differ only in what happens
-to the source [=State occurrence=].
-
-```mermaid
-flowchart TB
-  subgraph T["Transition"]
-    direction LR
-    T1["State A<br/>not retained"] -->|"progress (from → to)"| T2["State B<br/>same Journey"]
-  end
-
-  subgraph O["OutgoingTransition"]
-    direction LR
-    O1["Source State<br/>not retained"] -->|"navigate (toEntryRef)"| O2["Journey B<br/>entered via JourneyEntry"]
-  end
-
-  subgraph I["InvokingTransition"]
-    direction LR
-    I1["Source State occurrence<br/>retained, suspended"] -->|"invoke (toEntryRef)"| I2["Invoked Journey<br/>entered via JourneyEntry"]
-    I2 -.->|"resume at own JourneyExit"| I1
-  end
-
-  T ~~~ O
-  O ~~~ I
-```
-
-| | [=Transition=] | [=OutgoingTransition=] | [=InvokingTransition=] |
-| --- | --- | --- | --- |
-| Source | Explicit local `from` vertex | State where the affordance is available | State where the affordance is available |
-| Destination | Local `to` vertex | `toEntryRef` entry contract | `toEntryRef` entry contract |
-| Declared through | `transitionRefs` on a [=Journey=] | `entryTransitionRefs` on a [=State=] | `entryTransitionRefs` on a [=State=] |
-| Source State occurrence | Not retained | Not retained | Retained and suspended until the invocation completes or is cancelled |
-| Meaning | Ordinary progression inside one Journey | Leave local progression and enter a Journey through a named entry | Enter a Journey through a named entry, then resume the source when that Journey exits |
-
-An entry transition has no `from` property. Its effective source is each [=State=] that lists it in
-`entryTransitionRefs`. All three classes can reference a [=Command=] with `commandRef`.
-
-### Transition {data-cop-concept="transition"}
-
-A [=Transition=] is a structural directed edge between local vertices of a [=Journey=]. It models ordinary progression inside the local topology of a [=Journey=].
-
-A [=Transition=] is not owned by either endpoint state. It is owned by a journey through `transitionRefs`.
-
-A [=Transition=] applies to every concrete occurrence of the [=State=] its `from` value references.
-The [=Transition=] itself remains one stable Graph node.
-
-The presence of multiple child Journeys in one [=CompositeState=] does not create implicit
-Transitions between them.
-
-<spec-statement>
-1. A [=Transition=] **MUST** be identified by an IRI, declare exactly one `from`, and declare exactly one `to`.
-2. A [=Transition=] **MAY** declare one `label`.
-3. A [=Transition=] **MAY** reference one [=Command=] with `commandRef`.
-4. When listed in a [=Journey=]'s `transitionRefs`, `from` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`.
-5. When listed in a [=Journey=]'s `transitionRefs`, `to` **MUST** reference a [=State=] or [=CompositeState=] in that journey's `stateRefs`, or a [=JourneyExit=] in that journey's `exitRefs`.
-6. [=Transition=] endpoints **MUST** stay local to the enclosing [=Journey=].
-7. `toEntryRef` **MAY** be used only on parent transitions into [=CompositeState=] nodes, as defined by the boundary mapping rules above.
-8. A [=Transition=] **MUST** remain one Graph node regardless of how many concrete occurrences its endpoint [=State=]s have; per-instance transition properties are outside Graph.
-9. A child Journey's [=Transition=] **MUST NOT** connect directly to a [=State=], [=CompositeState=], or [=JourneyExit=] owned only by another child Journey.
-</spec-statement>
-
-```mermaid
-classDiagram
-  class State
-  class JourneyExit
-  class Command
-
-  class Transition {
-    id
-    label
-    from
-    to
-    commandRef
-  }
-
-  Transition --> State : from
-  Transition --> State : to
-  Transition --> JourneyExit : to
-  Transition --> Command : commandRef
-```
-
-Example JSON node:
-
-```json
-{
-  "@type": "Transition",
-  "@id": "urn:ujg:transition:search-form-to-results",
-  "label": "Submit search",
-  "from": "urn:ujg:state:search-form",
-  "to": "urn:ujg:state:results",
-  "commandRef": "urn:ujg:command:submit-search"
-}
-```
-
-### OutgoingTransition {data-cop-concept="outgoing-transition"}
-
-An [=OutgoingTransition=] is a navigational affordance that enters a Journey through an explicit
-[=JourneyEntry=]. It does not declare structural progression in the source Journey's local topology.
-
-The destination entry's `stateRef` identifies the first local [=State=] or [=CompositeState=] of the
-destination Journey. Consumers do not bypass the entry contract by linking the outgoing affordance
-directly to that state.
-
-<spec-statement>
-1. An [=OutgoingTransition=] **MUST** be identified by an IRI and **MAY** declare one `label`.
-2. An [=OutgoingTransition=] **MUST** declare exactly one `toEntryRef`.
-3. An [=OutgoingTransition=] **MAY** reference one [=Command=] with `commandRef`.
-4. `toEntryRef` **MUST** reference a [=JourneyEntry=] owned by exactly one [=Journey=].
-5. The destination entry's `stateRef` **MUST** reference a [=State=] or [=CompositeState=] in that
-   owner Journey's `stateRefs`.
-6. The destination entry **MAY** belong to the Journey where the affordance is available. Such a
-   target is explicit Journey re-entry, including when the entry points to the effective source state.
-7. An [=OutgoingTransition=] **MUST NOT** declare `from`, `fromExitRef`, `to`, or
-   `entryTransitionRefs`, target a [=JourneyExit=], appear in `transitionRefs`, or model ordinary
-   internal progression.
-</spec-statement>
-
-A [=JourneyEntryIndex=] may catalogue the destination entry for discovery, but index membership is
-not required for navigation. The entry remains owned by its declaring Journey.
-
-```mermaid
-classDiagram
-  class OutgoingTransition {
-    toEntryRef
-    commandRef
-  }
-  class Journey {
-    entryRefs
-    stateRefs
-  }
-  class JourneyEntry {
-    stateRef
-  }
-  class State
-  class CompositeState
-  class Command
-
-  OutgoingTransition --> JourneyEntry : toEntryRef
-  Journey --> JourneyEntry : entryRefs
-  JourneyEntry --> State : stateRef
-  JourneyEntry --> CompositeState : stateRef
-  OutgoingTransition --> Command : commandRef
-```
-
-Cross-Journey navigation names the destination entry rather than its State:
-
-```json
-[
-  {
-    "@type": "Journey",
-    "@id": "urn:ujg:journey:home",
-    "defaultEntryRef": "urn:ujg:entry:home",
-    "entryRefs": ["urn:ujg:entry:home"],
-    "stateRefs": ["urn:ujg:state:home"]
-  },
-  {
-    "@type": "JourneyEntry",
-    "@id": "urn:ujg:entry:home",
-    "label": "Home entry",
-    "stateRef": "urn:ujg:state:home"
-  },
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:home",
-    "label": "Home"
-  },
-  {
-    "@type": "OutgoingTransition",
-    "@id": "urn:ujg:ot:go-home",
-    "label": "Home",
-    "toEntryRef": "urn:ujg:entry:home",
-    "commandRef": "urn:ujg:command:go-home"
-  },
-  {
-    "@type": "Command",
-    "@id": "urn:ujg:command:go-home",
-    "label": "Go home"
-  }
-]
-```
-
-The same pattern represents same-state re-entry: the OutgoingTransition targets a JourneyEntry whose
-`stateRef` is the state where the affordance is available. This remains explicit re-entry, not an
-implicit relative target.
-
-```json
-[
-  {
-    "@type": "Journey",
-    "@id": "urn:ujg:journey:confirmation",
-    "defaultEntryRef": "urn:ujg:entry:confirmation",
-    "entryRefs": ["urn:ujg:entry:confirmation"],
-    "stateRefs": ["urn:ujg:state:confirmation"]
-  },
-  {
-    "@type": "JourneyEntry",
-    "@id": "urn:ujg:entry:confirmation",
-    "stateRef": "urn:ujg:state:confirmation"
-  },
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:confirmation",
-    "label": "Confirmation",
-    "entryTransitionRefs": ["urn:ujg:ot:reenter-confirmation"]
-  },
-  {
-    "@type": "OutgoingTransition",
-    "@id": "urn:ujg:ot:reenter-confirmation",
-    "label": "Re-enter confirmation",
-    "toEntryRef": "urn:ujg:entry:confirmation"
-  }
-]
-```
-
-### InvokingTransition {data-cop-concept="invoking-transition"}
-
-An [=InvokingTransition=] invokes a Journey through an explicit [=JourneyEntry=]. It has the same
-source and destination model as an [=OutgoingTransition=]. The difference is lifecycle: the source
-[=State occurrence=] is retained, and it resumes when the invoked Journey reaches one of its exits.
-
-<spec-statement>
-1. An [=InvokingTransition=] **MUST** be identified by an IRI and **MAY** declare one `label`. It
-   **MUST** declare exactly one `toEntryRef` and **MAY** reference one [=Command=] with
-   `commandRef`. It **MUST NOT** declare `from`, `fromExitRef`, `to`, or `entryTransitionRefs`,
-   target a [=JourneyExit=], appear in `transitionRefs`, model ordinary internal progression, or
-   also be typed [=OutgoingTransition=].
-2. The effective source of an [=InvokingTransition=] is each [=State=] that lists it in
-   `entryTransitionRefs`, exactly as for an [=OutgoingTransition=].
-3. `toEntryRef` **MUST** reference a [=JourneyEntry=] owned by exactly one [=Journey=], and the
-   entry's `stateRef` **MUST** reference a [=State=] or [=CompositeState=] in that owner Journey's
-   `stateRefs`. That Journey is the *invoked Journey*. The invoked Journey **MUST** declare at least
-   one `exitRefs` value.
-4. The invoked Journey **MAY** be the Journey where the affordance is available. Each activation is a
-   separate, nested invocation.
-5. Activating an [=InvokingTransition=] enters the invoked Journey through `toEntryRef` and retains
-   the source [=State occurrence=], including any active composite scope. The source occurrence is
-   not left. While the invocation is in progress, the retained source occurrence, together with any
-   composite scope retained with it, is suspended: no [=Transition=] or entry transition is taken
-   from it, whether the entry transition is listed by the source State or by a [=CompositeState=]
-   that contains it. Entry transitions listed by a containing CompositeState remain available only
-   at State occurrences inside it that are not suspended, such as States of a sibling child Journey.
-6. Reaching a [=JourneyExit=] listed in the invoked Journey's own `exitRefs` completes the
-   invocation. The retained source occurrence then resumes without entering a [=JourneyEntry=] or
-   taking a [=Transition=]. A child [=JourneyExit=] reached inside a [=CompositeState=] of the
-   invoked Journey is not completion; it follows the composite-scope rules.
-7. The reached [=JourneyExit=] is the outcome of the invocation. Graph assigns no per-outcome
-   continuation.
-8. An invocation is cancelled, not completed, when the invoked Journey is left in any way other than
-   reaching one of its own exits. Traversing an [=OutgoingTransition=] from any [=State occurrence=]
-   of the invoked Journey, including one inside its composite scopes, leaves the invoked Journey,
-   even when the destination entry belongs to the invoked Journey itself. Activating an
-   [=InvokingTransition=] from inside the invoked Journey does not leave it.
-9. An invocation is also cancelled when its retained source occurrence is left before the
-   invocation completes, for example because a sibling child Journey in the same composite scope
-   reaches a [=JourneyExit=]. The invoked Journey is then left as well, which cancels any invocation
-   nested inside it.
-10. When an invocation is cancelled, Consumers **MUST NOT** infer a return, and the retained source
-    occurrence **MUST NOT** be resumed. A source occurrence that is still retained is left, including
-    its active composite scope. If that source occurrence is inside a Journey that was itself
-    invoked, that Journey is left as well, which cancels its invocation in turn. Cancellation
-    therefore releases every retained occurrence in the invocation chain.
-11. An [=InvokingTransition=] does not add the invoked Journey to any `subjourneyRefs`. The
-    [=JourneyExit=] rules for a composite scope do not apply to the invoked Journey's exits, and
-    completion never leaves a [=CompositeState=] that contains the source.
-12. Graph does not define invocation identifiers or association data between source and invoked
-    occurrences.
-</spec-statement>
-
-```mermaid
-classDiagram
-  class InvokingTransition {
-    toEntryRef
-    commandRef
-  }
-  class Journey {
-    entryRefs
-    stateRefs
-    exitRefs
-  }
-  class JourneyEntry {
-    stateRef
-  }
-  class JourneyExit
-  class Command
-
-  InvokingTransition --> JourneyEntry : toEntryRef
-  Journey --> JourneyEntry : entryRefs
-  Journey --> JourneyExit : exitRefs
-  InvokingTransition --> Command : commandRef
-```
-
-A privacy settings dialog invoked from an article page. Either exit completes the invocation, and
-the Article State occurrence resumes. `settings-saved` and `settings-dismissed` are distinguishable
-outcomes, but neither is a destination.
-
-```json
-[
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:article",
-    "label": "Article",
-    "entryTransitionRefs": ["urn:ujg:it:adjust-privacy-settings"]
-  },
-  {
-    "@type": "InvokingTransition",
-    "@id": "urn:ujg:it:adjust-privacy-settings",
-    "label": "Adjust privacy settings",
-    "toEntryRef": "urn:ujg:entry:privacy-settings",
-    "commandRef": "urn:ujg:command:adjust-privacy-settings"
-  },
-  {
-    "@type": "Command",
-    "@id": "urn:ujg:command:adjust-privacy-settings",
-    "label": "Adjust privacy settings"
-  },
-  {
-    "@type": "Journey",
-    "@id": "urn:ujg:journey:privacy-settings",
-    "defaultEntryRef": "urn:ujg:entry:privacy-settings",
-    "entryRefs": ["urn:ujg:entry:privacy-settings"],
-    "stateRefs": ["urn:ujg:state:privacy-settings"],
-    "transitionRefs": [
-      "urn:ujg:transition:privacy-settings-save",
-      "urn:ujg:transition:privacy-settings-dismiss"
-    ],
-    "exitRefs": [
-      "urn:ujg:exit:settings-saved",
-      "urn:ujg:exit:settings-dismissed"
-    ]
-  },
-  {
-    "@type": "JourneyEntry",
-    "@id": "urn:ujg:entry:privacy-settings",
-    "stateRef": "urn:ujg:state:privacy-settings"
-  },
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:privacy-settings",
-    "label": "Privacy settings"
-  },
-  {
-    "@type": "Transition",
-    "@id": "urn:ujg:transition:privacy-settings-save",
-    "label": "Save",
-    "from": "urn:ujg:state:privacy-settings",
-    "to": "urn:ujg:exit:settings-saved"
-  },
-  {
-    "@type": "Transition",
-    "@id": "urn:ujg:transition:privacy-settings-dismiss",
-    "label": "Back",
-    "from": "urn:ujg:state:privacy-settings",
-    "to": "urn:ujg:exit:settings-dismissed"
-  },
-  {
-    "@type": "JourneyExit",
-    "@id": "urn:ujg:exit:settings-saved",
-    "label": "Settings saved"
-  },
-  {
-    "@type": "JourneyExit",
-    "@id": "urn:ujg:exit:settings-dismissed",
-    "label": "Settings dismissed"
-  }
-]
-```
-
-A footer shared by several pages can mix both transition classes. "Privacy policy" navigates away
-from the current page. "Adjust privacy settings" invokes the privacy settings Journey from the
-example above and returns to the current page when that Journey exits. Each page's State lists the
-same two transitions; each node's class determines its semantics.
-
-```json
-[
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:article",
-    "label": "Article",
-    "entryTransitionRefs": [
-      "urn:ujg:ot:privacy-policy",
-      "urn:ujg:it:adjust-privacy-settings"
-    ]
-  },
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:search-results",
-    "label": "Search results",
-    "entryTransitionRefs": [
-      "urn:ujg:ot:privacy-policy",
-      "urn:ujg:it:adjust-privacy-settings"
-    ]
-  },
-  {
-    "@type": "OutgoingTransition",
-    "@id": "urn:ujg:ot:privacy-policy",
-    "label": "Privacy policy",
-    "toEntryRef": "urn:ujg:entry:privacy-policy"
-  },
-  {
-    "@type": "Journey",
-    "@id": "urn:ujg:journey:privacy-policy",
-    "defaultEntryRef": "urn:ujg:entry:privacy-policy",
-    "entryRefs": ["urn:ujg:entry:privacy-policy"],
-    "stateRefs": ["urn:ujg:state:privacy-policy"]
-  },
-  {
-    "@type": "JourneyEntry",
-    "@id": "urn:ujg:entry:privacy-policy",
-    "stateRef": "urn:ujg:state:privacy-policy"
-  },
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:privacy-policy",
-    "label": "Privacy policy"
-  }
-]
-```
-
-Mapping and Metrics do not yet account for [=InvokingTransition=]. Until they do, Mapping treats
-both the entry into the invoked Journey and the resumption of the source State as unexplained
-movements, so each completed invocation adds two derived jumps, and two to
-`unexplainedMovementCount`, across the execution's JourneyMappings.
-
----
-
-## Command {data-cop-concept="command"}
-
-A [=Command=] identifies the stable semantic identity of an intentional invocation in the modeled
-experience.
-
-A [=Command=] can be referenced by [=Transition=], [=OutgoingTransition=], and
-[=InvokingTransition=] nodes through `commandRef`. Multiple transitions may reference the same [=Command=]. Sharing a `commandRef`
-establishes only common invocation identity. Graph does not assign branching, selection, ordering,
-resolution, execution-result, or effect semantics to that relationship.
-
-A [=Command=] is not a transition endpoint and does not replace [=Transition=],
-[=OutgoingTransition=], or [=InvokingTransition=]. Structural, automatic, expiry-driven, or otherwise non-invoked transitions
-can remain without `commandRef`.
-
-<spec-statement>
-1. A [=Command=] **MUST** be identified by an IRI.
-2. A [=Command=] **MAY** declare one `label` and one or more `tags`.
-3. A [=Command=] **MUST NOT** declare `from`, `to`, branching, condition resolution, effect execution, visual representation, runtime execution, or execution-result semantics.
-4. `commandRef` **MAY** appear on a [=Transition=], [=OutgoingTransition=], or [=InvokingTransition=] and **MUST** reference a [=Command=].
-5. A [=Transition=], [=OutgoingTransition=], or [=InvokingTransition=] **MUST NOT** reference more than one [=Command=].
-6. Absence of `commandRef` makes no claim that the transition represents an intentional invocation.
-</spec-statement>
-
-```mermaid
-classDiagram
-  class Command {
-    id
-    label
-    tags
-  }
-  class Transition {
-    commandRef
-  }
-  class OutgoingTransition {
-    commandRef
-  }
-  class InvokingTransition {
-    commandRef
-  }
-
-  Transition --> Command : commandRef
-  OutgoingTransition --> Command : commandRef
-  InvokingTransition --> Command : commandRef
-```
-
-Example JSON node:
-
-```json
-{
-  "@type": "Command",
-  "@id": "urn:ujg:command:start-registration",
-  "label": "Start registration"
-}
-```
-
-Example transition associated with a command:
-
-```json
-{
-  "@type": "Transition",
-  "@id": "urn:ujg:transition:start-registration",
-  "from": "urn:ujg:state:registration-open",
-  "to": "urn:ujg:state:registration-form",
-  "commandRef": "urn:ujg:command:start-registration"
-}
-```
-
----
 
 ## Normative Artifacts
 
