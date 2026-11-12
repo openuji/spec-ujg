@@ -294,15 +294,15 @@ Example JSON node:
 ### AdjacentTransition {data-cop-concept="adjacent-transition"}
 
 An [=AdjacentTransition=] connects two [=Local vertex|local vertices=] of a [=Journey=] that sit
-next to each other in the same experience frame and share a border, such as consecutive sections of
-a scrollable dialog or neighbouring panes. The user can cross that border in either direction, so one
-AdjacentTransition describes movement both ways.
+next to each other in the same experience frame and share a border. The user can cross that border
+in either direction, so one AdjacentTransition describes movement both ways.
 
-`from` and `to` name the vertex before and the vertex after the border in the frame's reading order,
-for example top to bottom. That order does not restrict movement. As with a [=Transition=], crossing
-the border leaves one vertex and makes the other current. An AdjacentTransition therefore models
-parts of a frame that the user moves between. Parts that are [=Co-present|co-present=], which the
-user acts on at the same time, are child Journeys of a [=CompositeState=].
+`from` and `to` name the vertex before and the vertex after the border in the frame's reading order.
+That order does not restrict movement. As with a [=Transition=], crossing the border leaves one
+vertex and makes the other current. Crossing back makes the first vertex current again, so a
+[=State=] offers its [=Entry transition|entry transitions=] again. Parts of a frame that are
+[=Co-present|co-present=], which the user acts on at the same time, are not adjacent vertices: they
+are child Journeys of a [=CompositeState=].
 
 <spec-statement>
 1. An [=AdjacentTransition=] describes movement from its `from` vertex to its `to` vertex and from
@@ -318,11 +318,11 @@ user acts on at the same time, are child Journeys of a [=CompositeState=].
    guard, or effect. The AdjacentTransition already describes that movement.
 </spec-statement>
 
-Use an [=AdjacentTransition=] when the shared border can always be crossed back, as when the user
-scrolls between sections or moves between panes. Use a [=Transition=] when a movement has its own
-[=Command=], guard, effect, or child-entry selection, such as a "Back to top" button that runs a
-scroll command. Both can connect the same two vertices: the AdjacentTransition describes crossing the
-border, and the Transition describes the commanded movement.
+Adjacent vertices occur, for example, as consecutive sections of a scrolling view or as pages of a
+pager that shows one page at a time. Use a [=Transition=] when a movement has its own [=Command=],
+guard, effect, or child-entry selection. Both can connect the same two vertices: the
+AdjacentTransition describes crossing the border, and the Transition describes that particular
+movement.
 
 ```mermaid
 classDiagram
@@ -342,49 +342,15 @@ classDiagram
   AdjacentTransition --> CompositeState : to
 ```
 
-A scrollable settings dialog shows its settings content above the provider controls. Scrolling down
-crosses the border into Provider controls and leaves Settings content. Scrolling back up crosses it
-again: Settings content is current, and its Privacy policy entry transition is offered again. That
-entry transition is the `urn:ujg:ot:privacy-policy` [=OutgoingTransition=] from the second example
-in the [=InvokingTransition=] section below.
+Example JSON node:
 
 ```json
-[
-  {
-    "@type": "Journey",
-    "@id": "urn:ujg:journey:settings-body",
-    "defaultEntryRef": "urn:ujg:entry:settings-body",
-    "entryRefs": ["urn:ujg:entry:settings-body"],
-    "stateRefs": [
-      "urn:ujg:state:settings-content",
-      "urn:ujg:state:provider-controls"
-    ],
-    "transitionRefs": ["urn:ujg:adjacent:settings-content-provider-controls"]
-  },
-  {
-    "@type": "JourneyEntry",
-    "@id": "urn:ujg:entry:settings-body",
-    "stateRef": "urn:ujg:state:settings-content"
-  },
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:settings-content",
-    "label": "Settings content",
-    "entryTransitionRefs": ["urn:ujg:ot:privacy-policy"]
-  },
-  {
-    "@type": "State",
-    "@id": "urn:ujg:state:provider-controls",
-    "label": "Provider controls"
-  },
-  {
-    "@type": "AdjacentTransition",
-    "@id": "urn:ujg:adjacent:settings-content-provider-controls",
-    "label": "Settings content and provider controls",
-    "from": "urn:ujg:state:settings-content",
-    "to": "urn:ujg:state:provider-controls"
-  }
-]
+{
+  "@type": "AdjacentTransition",
+  "@id": "urn:ujg:adjacent:section-1-section-2",
+  "from": "urn:ujg:state:section-1",
+  "to": "urn:ujg:state:section-2"
+}
 ```
 
 ### OutgoingTransition {data-cop-concept="outgoing-transition"}

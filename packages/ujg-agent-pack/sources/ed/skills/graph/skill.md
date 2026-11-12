@@ -109,18 +109,18 @@ stable transition from a concrete occurrence of that state. Do not add transitio
 `perInstance`, `perSourceInstance`, `perTargetInstance`, or `repeatableTransition`.
 
 Use `AdjacentTransition` between two local vertices of the same journey that sit next to each other
-in one experience frame and share a border, such as consecutive sections of a scrollable dialog or
-neighbouring panes. One AdjacentTransition describes crossing that border in both directions. Name
-the vertex before the border `from` and the vertex after it `to`, in reading order, and list it in
-the journey's `transitionRefs`. Both endpoints must be a `State` or `CompositeState` in that
-journey's `stateRefs`, never a `JourneyExit`, and they must differ. It never declares `commandRef`,
-`toEntryRef`, `fromExitRef`, `conditionRef`, or `effectRef`. Model a command-driven, guarded, or
-effectful movement between the same vertices, such as a "Back to top" button, as a separate
-`Transition`; do not add a plain `Transition` that repeats one direction of the adjacency. Adjacent
-vertices are not co-present: only one of them is current, so only its entry transitions are offered.
-Self-check: when a State's entry transitions must stay reachable after the user scrolls or moves to a
-neighbouring region and back, connect the regions with an AdjacentTransition, not a one-way
-Transition.
+in one experience frame and share a border. One AdjacentTransition describes crossing that border in
+both directions. Name the vertex before the border `from` and the vertex after it `to`, in reading
+order, and list it in the journey's `transitionRefs`. Both endpoints must be a `State` or
+`CompositeState` in that journey's `stateRefs`, never a `JourneyExit`, and they must differ. It never
+declares `commandRef`, `toEntryRef`, `fromExitRef`, `conditionRef`, or `effectRef`. Model a movement
+that has its own command, guard, effect, or child-entry selection as a separate `Transition`, even
+between the same vertices; do not add a plain `Transition` that repeats one direction of the
+adjacency. Adjacent vertices are not co-present: only one of them is current at a time. Parts of a
+frame that the user acts on at the same time are child journeys of a `CompositeState`, not adjacent
+vertices.
+Self-check: use an AdjacentTransition only when both vertices belong to one frame, share a border,
+and the user can move between them in either direction without a command, guard, or effect.
 
 Use `OutgoingTransition` for ordinary navigation affordances. Every `OutgoingTransition` must declare
 exactly one `toEntryRef` to a `JourneyEntry` owned by exactly one Journey. Resolve the destination as
