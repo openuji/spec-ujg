@@ -11,12 +11,19 @@ ujggraphshape:StateLikeShape a sh:NodeShape ;
     [ sh:class ujggraph:CompositeState ]
   ) .
 
-ujggraphshape:LocalVertexShape a sh:NodeShape ;
+ujggraphshape:LocalVertexLikeShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
   sh:or (
     [ sh:class ujggraph:State ]
     [ sh:class ujggraph:CompositeState ]
     [ sh:class ujggraph:JourneyExit ]
+  ) .
+
+ujggraphshape:EntryTransitionLikeShape a sh:NodeShape ;
+  sh:nodeKind sh:IRI ;
+  sh:or (
+    [ sh:class ujggraph:OutgoingTransition ]
+    [ sh:class ujggraph:InvokingTransition ]
   ) .
 
 ujggraphshape:CommandShape a sh:NodeShape ;
@@ -37,13 +44,13 @@ ujggraphshape:CommandShape a sh:NodeShape ;
   sh:property [
     sh:path ujggraph:from ;
     sh:maxCount 0 ;
-    sh:message "A Command must not declare from; use commandRef from a Transition or OutgoingTransition." ;
+    sh:message "A Command must not declare from; use commandRef from a Transition, OutgoingTransition, or InvokingTransition." ;
   ] ;
 
   sh:property [
     sh:path ujggraph:to ;
     sh:maxCount 0 ;
-    sh:message "A Command must not declare to; use commandRef from a Transition or OutgoingTransition." ;
+    sh:message "A Command must not declare to; use commandRef from a Transition, OutgoingTransition, or InvokingTransition." ;
   ] ;
 
   sh:property [
@@ -65,9 +72,9 @@ ujggraphshape:CommandShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:path ujggraph:entryTransitionRefs ;
     sh:maxCount 0 ;
-    sh:message "A Command must not declare outgoingTransitionRefs." ;
+    sh:message "A Command must not declare entryTransitionRefs." ;
   ] .
 
 ujggraphshape:JourneyShape a sh:NodeShape ;
@@ -107,9 +114,9 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:outgoingTransitionGroupRefs ;
-    sh:class ujggraph:OutgoingTransitionGroup ;
-    sh:nodeKind sh:IRI ;
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A Journey must not declare entryTransitionRefs. List entry transitions on the States that offer them." ;
   ] ;
 
   sh:property [
@@ -485,6 +492,12 @@ ujggraphshape:JourneyEntryShape a sh:NodeShape ;
     sh:message "A JourneyEntry must not declare subjourneyRefs." ;
   ] ;
 
+  sh:property [
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A JourneyEntry must not declare entryTransitionRefs." ;
+  ] ;
+
   sh:sparql [
     a sh:SPARQLConstraint ;
     sh:message "A JourneyEntry must be listed in the entryRefs of exactly one journey." ;
@@ -549,12 +562,6 @@ ujggraphshape:JourneyEntryIndexShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:outgoingTransitionGroupRefs ;
-    sh:maxCount 0 ;
-    sh:message "A JourneyEntryIndex must not declare outgoingTransitionGroupRefs." ;
-  ] ;
-
-  sh:property [
     sh:path ujggraph:from ;
     sh:maxCount 0 ;
     sh:message "A JourneyEntryIndex must not declare from." ;
@@ -603,9 +610,9 @@ ujggraphshape:JourneyEntryIndexShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:path ujggraph:entryTransitionRefs ;
     sh:maxCount 0 ;
-    sh:message "A JourneyEntryIndex must not declare outgoingTransitionRefs." ;
+    sh:message "A JourneyEntryIndex must not declare entryTransitionRefs." ;
   ] .
 
 ujggraphshape:StateShape a sh:NodeShape ;
@@ -625,9 +632,10 @@ ujggraphshape:StateShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:outgoingTransitionRefs ;
-    sh:class ujggraph:OutgoingTransition ;
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:node ujggraphshape:EntryTransitionLikeShape ;
     sh:nodeKind sh:IRI ;
+    sh:message "Each entryTransitionRefs value must reference an OutgoingTransition or an InvokingTransition." ;
   ] .
 
 ujggraphshape:CompositeStateShape a sh:NodeShape ;
@@ -653,9 +661,10 @@ ujggraphshape:CompositeStateShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:outgoingTransitionRefs ;
-    sh:maxCount 0 ;
-    sh:message "A CompositeState must not declare outgoingTransitionRefs. Use an OutgoingTransitionGroup on the enclosing Journey, or attach outgoingTransitionRefs to concrete States inside a child Journey." ;
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:node ujggraphshape:EntryTransitionLikeShape ;
+    sh:nodeKind sh:IRI ;
+    sh:message "Each entryTransitionRefs value must reference an OutgoingTransition or an InvokingTransition." ;
   ] ;
 
   sh:property [
@@ -680,7 +689,7 @@ ujggraphshape:TransitionShape a sh:NodeShape ;
     sh:path ujggraph:to ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
-    sh:node ujggraphshape:LocalVertexShape ;
+    sh:node ujggraphshape:LocalVertexLikeShape ;
   ] ;
 
   sh:property [
@@ -711,6 +720,12 @@ ujggraphshape:TransitionShape a sh:NodeShape ;
   ] ;
 
   sh:property [
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A Transition must not declare entryTransitionRefs." ;
+  ] ;
+
+  sh:property [
     sh:path ujggraph:subjourneyRefs ;
     sh:maxCount 0 ;
     sh:message "A Transition must not declare subjourneyRefs." ;
@@ -732,9 +747,9 @@ ujggraphshape:JourneyExitShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:outgoingTransitionRefs ;
+    sh:path ujggraph:entryTransitionRefs ;
     sh:maxCount 0 ;
-    sh:message "A JourneyExit must not declare outgoingTransitionRefs." ;
+    sh:message "A JourneyExit must not declare entryTransitionRefs." ;
   ] ;
 
   sh:property [
@@ -794,9 +809,59 @@ ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:toCurrentState ;
+    sh:path ujggraph:toEntryRef ;
+    sh:class ujggraph:JourneyEntry ;
+    sh:node ujggraphshape:JourneyEntryShape ;
+    sh:nodeKind sh:IRI ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:commandRef ;
+    sh:class ujggraph:Command ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:from ;
     sh:maxCount 0 ;
-    sh:message "toCurrentState is not part of the Editor's Draft; target a JourneyEntry with toEntryRef." ;
+    sh:message "An OutgoingTransition must not declare from. Its sources are the States that list it in entryTransitionRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:fromExitRef ;
+    sh:maxCount 0 ;
+    sh:message "An OutgoingTransition must not declare fromExitRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "An OutgoingTransition must not declare entryTransitionRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "An OutgoingTransition must not declare subjourneyRefs." ;
+  ] .
+
+ujggraphshape:InvokingTransitionShape a sh:NodeShape ;
+  sh:targetClass ujggraph:InvokingTransition ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:to ;
+    sh:maxCount 0 ;
+    sh:message "An InvokingTransition must not declare to; target a JourneyEntry with toEntryRef." ;
   ] ;
 
   sh:property [
@@ -822,24 +887,53 @@ ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujggraph:subjourneyRefs ;
+    sh:path ujggraph:from ;
     sh:maxCount 0 ;
-    sh:message "An OutgoingTransition must not declare subjourneyRefs." ;
-  ] .
-
-ujggraphshape:OutgoingTransitionGroupShape a sh:NodeShape ;
-  sh:targetClass ujggraph:OutgoingTransitionGroup ;
-  sh:nodeKind sh:IRI ;
+    sh:message "An InvokingTransition must not declare from. Its sources are the States that list it in entryTransitionRefs." ;
+  ] ;
 
   sh:property [
-    sh:path ujggraph:outgoingTransitionRefs ;
-    sh:class ujggraph:OutgoingTransition ;
-    sh:nodeKind sh:IRI ;
-    sh:minCount 1 ;
+    sh:path ujggraph:fromExitRef ;
+    sh:maxCount 0 ;
+    sh:message "An InvokingTransition must not declare fromExitRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "An InvokingTransition must not declare entryTransitionRefs." ;
   ] ;
 
   sh:property [
     sh:path ujggraph:subjourneyRefs ;
     sh:maxCount 0 ;
-    sh:message "An OutgoingTransitionGroup must not declare subjourneyRefs." ;
+    sh:message "An InvokingTransition must not declare subjourneyRefs." ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An InvokingTransition must not also be typed OutgoingTransition." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        $this a ujggraph:OutgoingTransition .
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "The Journey that owns an InvokingTransition's toEntryRef must declare at least one exitRefs value." ;
+    sh:select """
+      SELECT $this ?entry ?journey
+      WHERE {
+        $this ujggraph:toEntryRef ?entry .
+        ?journey a ujggraph:Journey ;
+                 ujggraph:entryRefs ?entry .
+
+        FILTER (NOT EXISTS {
+          ?journey ujggraph:exitRefs ?exit .
+        })
+      }
+    """ ;
   ] .

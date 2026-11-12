@@ -866,7 +866,7 @@ flowchart TD
 | [`CompositeState`](/ed/graph#dfn-compositestate) | State that delegates traversal to a child `Journey`. |
 | [`Transition`](/ed/graph#dfn-transition) | Directed local edge between states or journey exits. |
 | [`JourneyExit`](/ed/graph#dfn-journeyexit) | Terminal journey-local outcome. |
-| [`OutgoingTransition`](/ed/graph#dfn-outgoingtransition) | Navigation affordance leaving local progression or targeting the current state. |
+| [`OutgoingTransition`](/ed/graph#dfn-outgoingtransition) | Navigation affordance leaving local progression and entering a journey through a named entry. |
 
 A `Journey` owns local traversable topology. A `Transition` represents structural local progression. A `CompositeState` composes a child `Journey`. An `OutgoingTransition` represents an available navigational affordance without making that affordance part of the Journey's structural transition set.
 

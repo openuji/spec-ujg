@@ -8,14 +8,13 @@
     "Journey": "ujggraph:Journey",
     "JourneyEntry": "ujggraph:JourneyEntry",
     "JourneyEntryIndex": "ujggraph:JourneyEntryIndex",
-    "LocalVertex": "ujggraph:LocalVertex",
     "State": "ujggraph:State",
     "CompositeState": "ujggraph:CompositeState",
     "Transition": "ujggraph:Transition",
     "Command": "ujggraph:Command",
     "JourneyExit": "ujggraph:JourneyExit",
     "OutgoingTransition": "ujggraph:OutgoingTransition",
-    "OutgoingTransitionGroup": "ujggraph:OutgoingTransitionGroup",
+    "InvokingTransition": "ujggraph:InvokingTransition",
 
     "label": "ujggraph:label",
     "tags": {
@@ -50,11 +49,6 @@
       "@type": "@id",
       "@container": "@set"
     },
-    "outgoingTransitionGroupRefs": {
-      "@id": "ujggraph:outgoingTransitionGroupRefs",
-      "@type": "@id",
-      "@container": "@set"
-    },
     "from": {
       "@id": "ujggraph:from",
       "@type": "@id"
@@ -80,8 +74,8 @@
       "@type": "@id",
       "@container": "@set"
     },
-    "outgoingTransitionRefs": {
-      "@id": "ujggraph:outgoingTransitionRefs",
+    "entryTransitionRefs": {
+      "@id": "ujggraph:entryTransitionRefs",
       "@type": "@id",
       "@container": "@set"
     }

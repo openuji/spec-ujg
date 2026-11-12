@@ -34,7 +34,7 @@ State / CompositeState / Command
       ├── componentRef
       └── templateRef
              └── slotBindingRefs
-Transition / OutgoingTransition
+Transition / OutgoingTransition / InvokingTransition
           └── commandRef → Command
 any addressable UJG node
           └── l10n:copyRef → l10n:MessageBundle
@@ -178,7 +178,7 @@ If a required visible control has no independently justified Surface identity, k
 
 ### Transition candidates
 Transitions represent progression outcomes, not affordance identity when Command is available.
-A Surface whose `graphNodeRef` targets a Transition or OutgoingTransition is invalid under this model.
+A Surface whose `graphNodeRef` targets a Transition, OutgoingTransition, or InvokingTransition is invalid under this model.
 When correcting such a Surface:
 - retarget it to the justified Command representing the actual invocation; or
 - remove it if no independently visible invocation exists.
@@ -367,7 +367,7 @@ Implementation resolvers MAY map stable IDs to framework Components, Storybook e
 ## Generation procedure
 
 ### 1. Inspect semantics
-Read relevant Journey, State/CompositeState, Transition/OutgoingTransition, JourneyEntry, JourneyExit, Command, Surface, `ConditionalTransitionSet`, and existing Localization nodes/attachments.
+Read relevant Journey, State/CompositeState, Transition/OutgoingTransition/InvokingTransition, JourneyEntry, JourneyExit, Command, Surface, `ConditionalTransitionSet`, and existing Localization nodes/attachments.
 
 ### 2. Resolve invocation identity
 Group Transitions by Command; distinguish multi-outcome invocation, genuine user choices, and structural/autonomous progression. Do not derive Commands from labels alone.

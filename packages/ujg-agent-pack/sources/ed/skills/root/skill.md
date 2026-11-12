@@ -84,10 +84,11 @@ owned by exactly one referenced child Journey. Otherwise child entry selection u
 Journey's `defaultEntryRef` when present or remains unresolved.
 
 Use `Command` only as stable semantic identity for an intentional invocation. A Command does not
-define source, destination, branching, rendering, runtime occurrence, or results. A Transition or
-OutgoingTransition may use `commandRef` when that stable invocation identity is needed.
+define source, destination, branching, rendering, runtime occurrence, or results. A Transition,
+OutgoingTransition, or InvokingTransition may use `commandRef` when that stable invocation identity
+is needed.
 
-### Outgoing navigation
+### Outgoing navigation and invocation
 
 Use `OutgoingTransition` for a navigational affordance that leaves local progression and enters a
 Journey through a named entry. Every OutgoingTransition declares exactly one `toEntryRef` to a
@@ -100,15 +101,23 @@ OutgoingTransition.toEntryRef -> JourneyEntry.stateRef
 Never put `to` on an OutgoingTransition or reference its destination State directly. The entry may
 belong to the source Journey, including same-State re-entry.
 
-An OutgoingTransition has no explicit `from`. Its effective source is the State that references it
-through `outgoingTransitionRefs` or a State where its `OutgoingTransitionGroup` is injected.
+An OutgoingTransition has no `from` or `fromExitRef`. Its effective source is each State or
+CompositeState that lists it in `entryTransitionRefs`. Journeys do not declare entry transitions; a
+footer shown on many States is listed on each of them. One listed on a CompositeState is available
+at every State nested inside it, through child Journeys at any depth.
 
-An OutgoingTransitionGroup injects the same transition and fixed `toEntryRef` at every effective
-source. Use a group only when the same destination entry is correct everywhere. When the intended
-destination varies by source, define source-specific OutgoingTransitions and entries.
+A shared transition keeps the same fixed `toEntryRef` at every State that lists it. Share one only
+when the same destination entry is correct everywhere. When the intended destination varies by
+source, define source-specific OutgoingTransitions and entries.
 
-Do not place OutgoingTransitions in `transitionRefs`, inject them from JourneyExit nodes, or use
-them for ordinary internal progression.
+Do not place OutgoingTransitions in `transitionRefs`, list them on JourneyExit nodes, or use them
+for ordinary internal progression.
+
+When the user should return to the same source State after another Journey exits, use
+`InvokingTransition` instead of OutgoingTransition. It attaches the same way and has the same
+`toEntryRef` rules; the invoked Journey must declare at least one exit. While the invoked Journey
+runs, the source is suspended and offers none of its entry transitions. See the Graph modeling skill
+for completion and cancellation rules.
 
 ## Surface modeling
 
@@ -162,7 +171,8 @@ order. Events resolving to Commands are affordance observations and are not Mapp
 Every OutgoingTransition begins a new segment, including same-Journey and same-State re-entry. The
 new segment's `mappedJourneyRef` is the Journey that owns the destination entry, and its first
 `mappedStateRef` equals that entry's `stateRef`. Predecessor lookup crosses the segment boundary
-through Runtime causal order.
+through Runtime causal order. The OutgoingTransition explains the move when the predecessor State,
+or a CompositeState that contains it, lists it in `entryTransitionRefs`.
 
 An observed move into another Journey without a matching effective OutgoingTransition also begins a
 new segment; its first step is an unexplained movement.
@@ -227,7 +237,7 @@ Before returning, check:
 - Transition endpoints remain local.
 - Parent-to-child entry and exit references preserve CompositeState boundaries.
 - Every OutgoingTransition has exactly one valid `toEntryRef`; none has `to`.
-- Grouped outgoing navigation uses a destination entry valid from every effective source.
+- Outgoing navigation shared by several States uses a destination entry valid from each of them.
 - Surface references only State, CompositeState, or Command.
 - Runtime events resolve through SurfaceInstance and form one causal chain per execution.
 - JourneyMappings are non-overlapping Journey-local segments.

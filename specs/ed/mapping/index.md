@@ -230,8 +230,8 @@ the SHACL shape.
     composite occurrence; observations from sibling child Journeys may interleave without becoming
     that predecessor. The Transition is relevant when its local `from` and `to` match that predecessor
     and the current mapped state. An [=OutgoingTransition=] is relevant when:
-    - it is available directly from the predecessor State or through an OutgoingTransitionGroup on
-      the predecessor's local Journey;
+    - it is listed in the `entryTransitionRefs` of the predecessor State or of a [=CompositeState=]
+      on the predecessor's containment path;
     - its `toEntryRef` is owned by the destination segment's `mappedJourneyRef`; and
     - that entry's `stateRef` equals the destination segment's first `mappedStateRef`.
 17. **Child exit occurrence:** A child [=JourneyExit=] reached in a local child journey scope ends that
@@ -243,15 +243,12 @@ the SHACL shape.
     `Command`, `explainedByTransitionRef` SHOULD identify a relevant `Transition` or
     `OutgoingTransition` whose `commandRef` references that same Command, if one exists for the
     movement from the predecessor to the current mapped state.
-19. **Outgoing group availability:** Consumers use
-    `OutgoingTransitionGroup.outgoingTransitionRefs` only to determine child outgoing-transition
-    availability; an OutgoingTransitionGroup itself is not surfaced.
-20. **Condition eligibility:** If a consumer implements [[UJG Conditions]], a guarded transition
+19. **Condition eligibility:** If a consumer implements [[UJG Conditions]], a guarded transition
     only explains a mapped step when the transition is eligible under Condition semantics.
-21. **Jump derivation:** A non-root mapped step is a jump when no relevant effective transition
+20. **Jump derivation:** A non-root mapped step is a jump when no relevant effective transition
     explains the observed movement. This includes the first step of an unexplained destination
     segment. A jump is a derived processing result, not serialized Mapping vocabulary.
-22. **No intent assumption:** A derived jump reports that the observed movement is not explained by
+21. **No intent assumption:** A derived jump reports that the observed movement is not explained by
     the mapped graph. It does not by itself decide whether the movement is legitimate or erroneous.
 
 ## Step Occurrence and Phase Start {data-cop-concept="step-occurrence"}
@@ -432,10 +429,10 @@ This example states that the causal event chain for `urn:ujg:execution:12345` ha
 against the checkout root journey. The first mapped step is the root event. The later mapped steps
 record the relevant effective transitions that explain the observed movements.
 
-If a mapped movement is explained by a reusable outgoing transition, `explainedByTransitionRef`
-points to the `OutgoingTransition` resource. A movement explained by an effective
-`OutgoingTransition` from the mapped journey's `OutgoingTransitionGroup` is explained by the Graph
-model and does not need a serialized status value.
+If a mapped movement is explained by an outgoing transition, `explainedByTransitionRef` points to
+the `OutgoingTransition` resource. A movement explained by an `OutgoingTransition` listed by the
+predecessor State, or by a CompositeState that contains it, is explained by the Graph model and does
+not need a serialized status value.
 
 ### Affordance Event Example
 
@@ -455,8 +452,7 @@ model and does not need a serialized status value.
       "defaultEntryRef": "urn:entry:checkout",
       "entryRefs": ["urn:entry:checkout"],
       "stateRefs": ["urn:state:cart", "urn:state:payment"],
-      "transitionRefs": ["urn:transition:cart-to-payment"],
-      "outgoingTransitionGroupRefs": ["urn:outgoing-group:global-nav"]
+      "transitionRefs": ["urn:transition:cart-to-payment"]
     },
     {
       "@type": "JourneyEntry",
@@ -466,12 +462,14 @@ model and does not need a serialized status value.
     {
       "@type": "State",
       "@id": "urn:state:cart",
-      "label": "Cart"
+      "label": "Cart",
+      "entryTransitionRefs": ["urn:outgoing:help"]
     },
     {
       "@type": "State",
       "@id": "urn:state:payment",
-      "label": "Payment"
+      "label": "Payment",
+      "entryTransitionRefs": ["urn:outgoing:help"]
     },
     {
       "@type": "Journey",
@@ -513,11 +511,6 @@ model and does not need a serialized status value.
       "@type": "Command",
       "@id": "urn:command:help-action",
       "label": "Open help"
-    },
-    {
-      "@type": "OutgoingTransitionGroup",
-      "@id": "urn:outgoing-group:global-nav",
-      "outgoingTransitionRefs": ["urn:outgoing:help"]
     },
     {
       "@type": "Surface",
@@ -654,8 +647,8 @@ model and does not need a serialized status value.
 separate `MappedStep` records because their surfaces resolve to commands. The second and third
 mapped steps point back to those immediate predecessor events. Opening help ends the checkout
 segment and starts a help segment in the same Runtime execution. The first help step resolves to
-`urn:entry:help`'s `stateRef` and is explained by the outgoing transition available through
-`urn:outgoing-group:global-nav`; the group itself has no surface.
+`urn:entry:help`'s `stateRef` and is explained by `urn:outgoing:help`, which both the Cart and
+Payment States list in `entryTransitionRefs`.
 
 The same segmentation rule applies in these boundary cases:
 

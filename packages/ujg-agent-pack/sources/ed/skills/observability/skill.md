@@ -164,7 +164,7 @@ Observability has no direct dependency on Runtime. Runtime events do not need to
 Do not model automation commands, screenshots, API probes, timestamps, execution order, payloads, or click facts as Observability terms. Use Runtime for observed events and private extensions for adapter details.
 
 For invocation modality profile references, model the Graph topology with Graph, attach
-`commandRef` from the relevant `Transition` or `OutgoingTransition` to a `Command`, attach a
+`commandRef` from the relevant `Transition`, `OutgoingTransition`, or `InvokingTransition` to a `Command`, attach a
 `Surface` to that `Command`, bind recognition with `ObservationBinding`, and put input-modality
 profile references on the referenced `ObservationEvent`.
 
