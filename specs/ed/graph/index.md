@@ -761,6 +761,28 @@ Graph has three transition classes. A [=Transition=] is ordinary progression ins
 through an explicit [=JourneyEntry=]. The two entry transition classes differ only in what happens
 to the source [=State occurrence=].
 
+```mermaid
+flowchart TB
+  subgraph T["Transition"]
+    direction LR
+    T1["State A<br/>not retained"] -->|"progress (from → to)"| T2["State B<br/>same Journey"]
+  end
+
+  subgraph O["OutgoingTransition"]
+    direction LR
+    O1["Source State<br/>not retained"] -->|"navigate (toEntryRef)"| O2["Journey B<br/>entered via JourneyEntry"]
+  end
+
+  subgraph I["InvokingTransition"]
+    direction LR
+    I1["Source State occurrence<br/>retained, suspended"] -->|"invoke (toEntryRef)"| I2["Invoked Journey<br/>entered via JourneyEntry"]
+    I2 -.->|"resume at own JourneyExit"| I1
+  end
+
+  T ~~~ O
+  O ~~~ I
+```
+
 | | [=Transition=] | [=OutgoingTransition=] | [=InvokingTransition=] |
 | --- | --- | --- | --- |
 | Source | Explicit local `from` vertex | State where the affordance is available | State where the affordance is available |
