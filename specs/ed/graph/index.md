@@ -313,8 +313,9 @@ user acts on at the same time, are child Journeys of a [=CompositeState=].
 3. Moving across an [=AdjacentTransition=] into a [=CompositeState=] selects no child entry, as for a
    [=Transition=] without `toEntryRef`. Moving across it out of a [=CompositeState=] leaves the
    CompositeState and all of its child Journeys.
-4. Producers **SHOULD NOT** also declare a [=Transition=] without `commandRef` between the same two
-   vertices, in either direction. The AdjacentTransition already describes that movement.
+4. Producers **SHOULD NOT** also declare a [=Transition=] between the same two vertices, in either
+   direction, that adds nothing to the adjacency: no [=Command=], child entry or exit selection,
+   guard, or effect. The AdjacentTransition already describes that movement.
 </spec-statement>
 
 Use an [=AdjacentTransition=] when the shared border can always be crossed back, as when the user
@@ -343,8 +344,9 @@ classDiagram
 
 A scrollable settings dialog shows its settings content above the provider controls. Scrolling down
 crosses the border into Provider controls and leaves Settings content. Scrolling back up crosses it
-again: Settings content is current, and its Privacy policy entry transition, defined in the
-[=InvokingTransition=] section, is offered again.
+again: Settings content is current, and its Privacy policy entry transition is offered again. That
+entry transition is the `urn:ujg:ot:privacy-policy` [=OutgoingTransition=] from the second example
+in the [=InvokingTransition=] section below.
 
 ```json
 [
@@ -529,8 +531,8 @@ source and destination model as an [=OutgoingTransition=]. The difference is lif
    the source [=State occurrence=], including any active composite scope. The source occurrence is
    not left. While the invocation is in progress, the retained source occurrence, together with any
    composite scope retained with it, is suspended: no [=Transition=], [=AdjacentTransition=], or
-   entry transition is taken from the source occurrence, and no parent Transition is taken from a retained
-   [=CompositeState=]. State occurrences inside that composite scope that are not the source, such
+   entry transition is taken from the source occurrence, and no parent Transition or
+   AdjacentTransition is taken from a retained [=CompositeState=]. State occurrences inside that composite scope that are not the source, such
    as States of a sibling child Journey, are not suspended and keep their own transitions and entry
    transitions. A parent Transition that a sibling's child exit triggers meanwhile is taken after the
    invocation completes, and not at all if it is cancelled.
@@ -877,8 +879,10 @@ classDiagram
   Transition --> State : to
   Transition --> CompositeState : to
   Transition --> JourneyExit : to
-  AdjacentTransition --> State : from/to
-  AdjacentTransition --> CompositeState : from/to
+  AdjacentTransition --> State : from
+  AdjacentTransition --> CompositeState : from
+  AdjacentTransition --> State : to
+  AdjacentTransition --> CompositeState : to
 ```
 
 Example JSON node:

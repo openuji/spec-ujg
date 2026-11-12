@@ -252,7 +252,9 @@ the SHACL shape.
 18. **Observed affordance evidence:** When `observedAffordanceEventRef` is present and resolves to a
     `Command`, `explainedByTransitionRef` SHOULD identify a relevant `Transition` or
     `OutgoingTransition` whose `commandRef` references that same Command, if one exists for the
-    movement from the predecessor to the current mapped state.
+    movement from the predecessor to the current mapped state. Otherwise, when a relevant
+    [=AdjacentTransition=] explains the movement, `explainedByTransitionRef` SHOULD identify that
+    AdjacentTransition.
 19. **Invoked Journey scope:** An [=InvokingTransition=] is recognized for a step when it is listed
     in the `entryTransitionRefs` of a current State (rule 16, taking the latest earlier mapped State
     or CompositeState in Runtime causal order as the predecessor), and its `toEntryRef` entry has a

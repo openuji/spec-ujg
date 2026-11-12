@@ -150,8 +150,7 @@ the SHACL shape.
    `OutgoingTransition`.
 3. **Resource boundary:** `producedRefs` and `consumedRefs` MUST point to concrete resources that
    are subclasses of [=EffectResource=]. They MUST NOT be used to create hidden Graph traversal.
-4. **Command and adjacency separation:** `effectRef` MUST NOT appear on `Command` or
-   `AdjacentTransition`.
+4. **Command separation:** `effectRef` MUST NOT appear on `Command`.
 5. **Resource-owned metadata:** Metadata about a produced or consumed resource belongs on the
    referenced resource node. For example, artifact touchpoint metadata belongs on `Artifact`, not
    on `Effect`.

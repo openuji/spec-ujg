@@ -136,7 +136,8 @@ for completion and cancellation rules.
 ## Surface modeling
 
 Use `Surface` for a human-facing materialization of exactly one Graph `State`, `CompositeState`, or
-`Command` through `graphNodeRef`. Do not point `graphNodeRef` at Transition or OutgoingTransition.
+`Command` through `graphNodeRef`. Do not point `graphNodeRef` at Transition, AdjacentTransition,
+OutgoingTransition, or InvokingTransition.
 
 Use `SurfaceInstance` for one concrete occurrence of a Surface. Each SurfaceInstance has exactly
 one `surfaceRef` and derives Graph meaning through:
@@ -177,7 +178,9 @@ have several non-overlapping JourneyMappings.
 
 Use `MappedStep` for a state-observation RuntimeEvent. It has one `mappedEventRef`, one
 `mappedStateRef`, and may identify the immediately preceding affordance event and the effective
-Transition or OutgoingTransition that explains the movement.
+Transition, AdjacentTransition, or OutgoingTransition that explains the movement. When a commanded
+Transition and an AdjacentTransition connect the same States, the commanded Transition explains the
+movement only when its Command event is observed; otherwise the AdjacentTransition does.
 
 Order mapped steps through their Runtime events' causal chain, never by `mappedStepRef` or JSON
 order. Events resolving to Commands are affordance observations and are not MappedSteps.

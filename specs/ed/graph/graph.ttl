@@ -139,7 +139,8 @@ ujggraph:from a owl:ObjectProperty ;
       ujggraph:State
       ujggraph:CompositeState
     )
-  ] .
+  ] ;
+  rdfs:comment "References the source local vertex of a Transition, or the vertex before the shared border of an AdjacentTransition." .
 
 ujggraph:to a owl:ObjectProperty ;
   rdfs:domain [
@@ -149,7 +150,6 @@ ujggraph:to a owl:ObjectProperty ;
       ujggraph:AdjacentTransition
     )
   ] ;
-  rdfs:comment "References the destination local vertex of a Transition, or the vertex after the shared border of an AdjacentTransition. An AdjacentTransition's to value is never a JourneyExit." ;
   rdfs:range [
     a owl:Class ;
     owl:unionOf (
@@ -157,7 +157,8 @@ ujggraph:to a owl:ObjectProperty ;
       ujggraph:CompositeState
       ujggraph:JourneyExit
     )
-  ] .
+  ] ;
+  rdfs:comment "References the destination local vertex of a Transition, or the vertex after the shared border of an AdjacentTransition. An AdjacentTransition's to value is never a JourneyExit." .
 
 ujggraph:fromExitRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:Transition ;

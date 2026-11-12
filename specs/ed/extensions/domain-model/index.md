@@ -77,6 +77,7 @@ source of one-to-one domain objects.
 | Effect  | MUST be realizable when its transition occurs |
 | Entry   | MUST provide sufficient context for its target journey state |
 | Transition | connects these behavioral obligations |
+| AdjacentTransition | adds no behavioral obligation: crossing it in either direction needs no condition and produces no effect |
 
 This relationship does not require each UJG element to have a corresponding Domain Model element.
 

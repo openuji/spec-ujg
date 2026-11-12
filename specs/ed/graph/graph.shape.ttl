@@ -856,7 +856,7 @@ ujggraphshape:AdjacentTransitionDuplicateShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A Transition without commandRef connects the same two vertices as this AdjacentTransition and duplicates one direction of the adjacency." ;
+    sh:message "A Transition without commandRef, toEntryRef, or fromExitRef connects the same two vertices as this AdjacentTransition. Unless it carries a guard or an effect, it duplicates one direction of the adjacency." ;
     sh:select """
       SELECT $this ?transition
       WHERE {
@@ -874,6 +874,8 @@ ujggraphshape:AdjacentTransitionDuplicateShape a sh:NodeShape ;
         }
         FILTER (?transition != $this)
         FILTER (NOT EXISTS { ?transition ujggraph:commandRef ?command . })
+        FILTER (NOT EXISTS { ?transition ujggraph:toEntryRef ?entry . })
+        FILTER (NOT EXISTS { ?transition ujggraph:fromExitRef ?exit . })
       }
     """ ;
   ] .

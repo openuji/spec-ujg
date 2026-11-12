@@ -89,6 +89,11 @@ Treat these as conformance failures unless explicitly authorized and documented:
 - Returning a generic error that hides materially different domain outcomes.
 - Adding a new route, transition, state, or effect that changes domain behavior without corresponding UJG support.
 
+An `AdjacentTransition` adds no behavioral obligation. Allow movement across it in both directions,
+and do not attach a domain-changing operation, validation, or effect to crossing it. A
+command-driven movement between the same States is a separate `Transition` and follows its own
+rules.
+
 ## Entry and Continuation Authority
 
 For every non-default `JourneyEntry`, `JourneyExit`, parent-boundary `toEntryRef`, and outgoing
@@ -109,7 +114,7 @@ offer one at a State on the basis of nesting alone, and never expect a Composite
 
 For an `InvokingTransition`, apply the same `toEntryRef` checks, but retain the source State
 occurrence and its active composite scope while the invoked Journey runs. Keep them suspended: take
-no Transition from them and do not offer the source's entry transitions. States of sibling child
+no Transition or AdjacentTransition from them and do not offer the source's entry transitions. States of sibling child
 Journeys outside the suspended scope stay active and keep their own availability. Resume that exact
 source occurrence when the invoked Journey reaches one of its own `exitRefs`; do not enter a
 JourneyEntry or take a Transition to get back. Treat the reached exit as the invocation's outcome.
