@@ -111,7 +111,7 @@ Mapping-derived metrics use these primary attachment points:
 | [=MappedStep=] | One interpreted state-observation runtime event | boolean per-step observations such as whether the step is root, explained, or unexplained |
 | [=Journey=] | Aggregate over mappings resolved to this root traversable journey | `executionCount`, `stepCount`, `unexplainedMovementRate`, `stateVisitCount`, `transitionTraversalCount` |
 | [=State=] or [=CompositeState=] | Aggregate over mapped steps resolving to this state | `stateVisitCount`, `boundaryEntryCount`, `boundaryExitCount` |
-| [=Transition=] or [=OutgoingTransition=] | Aggregate over explained movements | `transitionTraversalCount`, `outgoingTraversalCount` |
+| [=Transition=], [=AdjacentTransition=], or [=OutgoingTransition=] | Aggregate over explained movements | `transitionTraversalCount`, `outgoingTraversalCount` |
 
 For Mapping-derived metrics, the Runtime event chain defines order over mapped state steps. The
 serialized order of `mappedStepRef` is not significant, and affordance-only Runtime events referenced
@@ -155,7 +155,7 @@ The following metric keys are core for this draft.
 | `unexplainedMovementCount` | `count` | [=JourneyMapping=], [=Journey=] | Number of non-root mapped steps for which Mapping derives a jump. |
 | `unexplainedMovementRate` | `ratio` | [=JourneyMapping=], [=Journey=] | `unexplainedMovementCount / movementCount`. |
 | `stateVisitCount` | `count` | [=State=], [=CompositeState=], [=Journey=] | Number of mapped steps resolving to the subject state. |
-| `transitionTraversalCount` | `count` | [=Transition=], [=Journey=] | Number of explained movements whose effective transition is the subject transition. |
+| `transitionTraversalCount` | `count` | [=Transition=], [=AdjacentTransition=], [=Journey=] | Number of explained movements whose effective transition is the subject transition. For an [=AdjacentTransition=], movements in both directions are counted. |
 | `outgoingTraversalCount` | `count` | [=OutgoingTransition=], [=Journey=] | Number of explained movements whose effective transition is the subject outgoing transition. |
 | `boundaryEntryCount` | `count` | [=CompositeState=], [=Journey=] | Number of mapped movements that enter the subject boundary. |
 | `boundaryExitCount` | `count` | [=CompositeState=], [=Journey=] | Number of mapped movements that exit the subject boundary. |

@@ -178,7 +178,7 @@ If a required visible control has no independently justified Surface identity, k
 
 ### Transition candidates
 Transitions represent progression outcomes, not affordance identity when Command is available.
-A Surface whose `graphNodeRef` targets a Transition, OutgoingTransition, or InvokingTransition is invalid under this model.
+A Surface whose `graphNodeRef` targets a Transition, AdjacentTransition, OutgoingTransition, or InvokingTransition is invalid under this model.
 When correcting such a Surface:
 - retarget it to the justified Command representing the actual invocation; or
 - remove it if no independently visible invocation exists.

@@ -93,6 +93,10 @@ The module introduces real JSON-LD terms and RDF edges for conditional branching
 
 A `Condition` **MUST NOT** reference a target state directly.
 
+Crossing a border that two states share through an `AdjacentTransition` is always possible, so it
+carries no condition. A guarded movement between the same states is a Graph `Transition` with
+`conditionRef`.
+
 A `ConditionalTransitionSet` **MUST NOT** reference a source state directly. Its effective source state is
 derived from the common `from` value of all referenced transitions.
 
@@ -159,7 +163,7 @@ The rules below define the remaining module semantics beyond the structural cons
 the SHACL shape.
 
 1. **Graph preservation:** A condition **MUST NOT** create an implicit edge. Every possible movement
-   between states **MUST** be represented by a Graph `Transition`.
+   between states **MUST** be represented by a Graph `Transition` or `AdjacentTransition`.
 2. **Transition guard semantics:** A transition with `conditionRef` is eligible only when the
    referenced condition is satisfied by the implementation's domain/runtime context.
 3. **Branch semantics:** A `ConditionalTransitionSet` groups guarded transitions that form one branch point. In

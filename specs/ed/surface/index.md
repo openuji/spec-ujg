@@ -158,8 +158,8 @@ or rendering behavior. Those details come from Graph semantics and runtime or ap
 4. A [=Surface=] **MUST NOT** change Graph traversal or assert that its Graph node occurred.
 5. A [=Surface=] **MUST NOT** define occurrence multiplicity, instance keys, data sources,
    collection iteration, or rendering behavior.
-6. A [=Surface=] **MUST NOT** reference a [=Transition=], [=OutgoingTransition=], or
-   [=InvokingTransition=] through `graphNodeRef`.
+6. A [=Surface=] **MUST NOT** reference a [=Transition=], [=AdjacentTransition=],
+   [=OutgoingTransition=], or [=InvokingTransition=] through `graphNodeRef`.
 </spec-statement>
 
 ```mermaid

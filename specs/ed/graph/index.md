@@ -5,12 +5,13 @@ This module defines the vocabulary for intended user flow. It extends [[UJG Core
 ## Terminology
 
 - <dfn>Journey</dfn>: A named container for local traversable user flow topology.
-- <dfn>Local vertex</dfn>: A node of one [=Journey=]'s local topology: a [=State=] or [=CompositeState=] listed in its `stateRefs`, or a [=JourneyExit=] listed in its `exitRefs`. [=Transition|Transitions=] connect local vertices of the same Journey.
+- <dfn>Local vertex</dfn>: A node of one [=Journey=]'s local topology: a [=State=] or [=CompositeState=] listed in its `stateRefs`, or a [=JourneyExit=] listed in its `exitRefs`. [=Transition|Transitions=] and [=AdjacentTransition|AdjacentTransitions=] connect local vertices of the same Journey.
 - <dfn>JourneyEntry</dfn>: An explicit entry contract for a [=Journey=].
 - <dfn>JourneyEntryIndex</dfn>: A catalogue of addressable [=JourneyEntry=] contracts that does not define traversal.
 - <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal). A State is the only [=Local vertex|local vertex=] that offers [=Entry transition|entry transitions=].
 - <dfn>State occurrence</dfn>: A concrete experienced occurrence of a [=State=] during traversal.
 - <dfn>Transition</dfn>: A structural directed edge between [=Local vertex|local vertices=] of a [=Journey=].
+- <dfn>AdjacentTransition</dfn>: A structural edge between two [=Local vertex|local vertices=] of a [=Journey=] that sit next to each other in the same experience frame and share a border. The user can cross that border in either direction.
 - <dfn>Command</dfn>: A stable semantic identity of an intentional invocation in the modeled experience.
 - <dfn>CompositeState</dfn>: A [=Local vertex|local vertex=] that groups [=Co-present|co-present=] child [=Journey|Journeys=]. It is not a [=State=].
 - <dfn>Composite scope</dfn>: The set of child Journeys referenced by one [=CompositeState=].
@@ -178,8 +179,9 @@ An example that mixes navigation and invocation is shown in the [=InvokingTransi
 
 ## Transitions {data-cop-concept="transitions"}
 
-Graph has three transition classes. A [=Transition=] is ordinary progression inside one
-[=Journey=]. [=OutgoingTransition=] and [=InvokingTransition=] are
+Graph has four transition classes. A [=Transition=] is ordinary directed progression inside one
+[=Journey=]. An [=AdjacentTransition=] connects two vertices of one Journey that share a border,
+and the user can cross it in either direction. [=OutgoingTransition=] and [=InvokingTransition=] are
 [=Entry transition|entry transitions=]: affordances available at a State that enter a Journey
 through an explicit [=JourneyEntry=]. The two entry transition classes differ only in what happens
 to the source [=State occurrence=].
@@ -189,6 +191,11 @@ flowchart TB
   subgraph T["Transition"]
     direction LR
     T1["State A<br/>not retained"] -->|"progress (from → to)"| T2["State B<br/>same Journey"]
+  end
+
+  subgraph A["AdjacentTransition"]
+    direction LR
+    A1["State A<br/>not retained"] <-->|"cross shared border (from ↔ to)"| A2["State B<br/>same frame"]
   end
 
   subgraph O["OutgoingTransition"]
@@ -202,20 +209,22 @@ flowchart TB
     I2 -.->|"resume at own JourneyExit"| I1
   end
 
-  T ~~~ O
+  T ~~~ A
+  A ~~~ O
   O ~~~ I
 ```
 
-| | [=Transition=] | [=OutgoingTransition=] | [=InvokingTransition=] |
-| --- | --- | --- | --- |
-| Source | Explicit local `from` vertex | State where the affordance is available | State where the affordance is available |
-| Destination | Local `to` vertex | `toEntryRef` entry contract | `toEntryRef` entry contract |
-| Declared through | `transitionRefs` on a [=Journey=] | `entryTransitionRefs` on a [=State=] | `entryTransitionRefs` on a [=State=] |
-| Source State occurrence | Not retained | Not retained | Retained and suspended until the invocation completes or is cancelled |
-| Meaning | Ordinary progression inside one Journey | Leave local progression and enter a Journey through a named entry | Enter a Journey through a named entry, then resume the source when that Journey exits |
+| | [=Transition=] | [=AdjacentTransition=] | [=OutgoingTransition=] | [=InvokingTransition=] |
+| --- | --- | --- | --- | --- |
+| Source | Explicit local `from` vertex | Either local vertex, `from` or `to` | State where the affordance is available | State where the affordance is available |
+| Destination | Local `to` vertex | The other local vertex | `toEntryRef` entry contract | `toEntryRef` entry contract |
+| Declared through | `transitionRefs` on a [=Journey=] | `transitionRefs` on a [=Journey=] | `entryTransitionRefs` on a [=State=] | `entryTransitionRefs` on a [=State=] |
+| Source State occurrence | Not retained | Not retained | Not retained | Retained and suspended until the invocation completes or is cancelled |
+| Meaning | Ordinary progression inside one Journey | Cross a border that two vertices share in one experience frame, in either direction | Leave local progression and enter a Journey through a named entry | Enter a Journey through a named entry, then resume the source when that Journey exits |
 
 An entry transition has no `from` property. Its effective source is each [=State=] that lists it in
-`entryTransitionRefs`. All three classes can reference a [=Command=] with `commandRef`.
+`entryTransitionRefs`. [=Transition=], [=OutgoingTransition=], and [=InvokingTransition=] can
+reference a [=Command=] with `commandRef`. An [=AdjacentTransition=] cannot.
 
 ### Transition {data-cop-concept="transition"}
 
@@ -226,6 +235,10 @@ A [=Transition=] is not owned by either endpoint state. It is owned by a journey
 A [=Transition=] applies to every concrete occurrence of the [=Local vertex|local vertex=] its `from`
 value references.
 The [=Transition=] itself remains one stable Graph node.
+
+A [=Transition=] describes movement in one direction only. Movement back to its `from` vertex is
+another Transition, unless the two vertices share a border, in which case one
+[=AdjacentTransition=] describes both directions.
 
 The presence of multiple child Journeys in one [=CompositeState=] does not create implicit
 Transitions between them.
@@ -276,6 +289,100 @@ Example JSON node:
   "to": "urn:ujg:state:results",
   "commandRef": "urn:ujg:command:submit-search"
 }
+```
+
+### AdjacentTransition {data-cop-concept="adjacent-transition"}
+
+An [=AdjacentTransition=] connects two [=Local vertex|local vertices=] of a [=Journey=] that sit
+next to each other in the same experience frame and share a border, such as consecutive sections of
+a scrollable dialog or neighbouring panes. The user can cross that border in either direction, so one
+AdjacentTransition describes movement both ways.
+
+`from` and `to` name the vertex before and the vertex after the border in the frame's reading order,
+for example top to bottom. That order does not restrict movement. As with a [=Transition=], crossing
+the border leaves one vertex and makes the other current. An AdjacentTransition therefore models
+parts of a frame that the user moves between. Parts that are [=Co-present|co-present=], which the
+user acts on at the same time, are child Journeys of a [=CompositeState=].
+
+<spec-statement>
+1. An [=AdjacentTransition=] describes movement from its `from` vertex to its `to` vertex and from
+   its `to` vertex to its `from` vertex. Each movement leaves the vertex it starts from, as taking a
+   [=Transition=] does.
+2. An [=AdjacentTransition=] **MUST** remain one Graph node regardless of the direction of movement
+   and of how many concrete occurrences its endpoints have.
+3. Moving across an [=AdjacentTransition=] into a [=CompositeState=] selects no child entry, as for a
+   [=Transition=] without `toEntryRef`. Moving across it out of a [=CompositeState=] leaves the
+   CompositeState and all of its child Journeys.
+4. Producers **SHOULD NOT** also declare a [=Transition=] without `commandRef` between the same two
+   vertices, in either direction. The AdjacentTransition already describes that movement.
+</spec-statement>
+
+Use an [=AdjacentTransition=] when the shared border can always be crossed back, as when the user
+scrolls between sections or moves between panes. Use a [=Transition=] when a movement has its own
+[=Command=], guard, effect, or child-entry selection, such as a "Back to top" button that runs a
+scroll command. Both can connect the same two vertices: the AdjacentTransition describes crossing the
+border, and the Transition describes the commanded movement.
+
+```mermaid
+classDiagram
+  class State
+  class CompositeState
+
+  class AdjacentTransition {
+    id
+    label
+    from
+    to
+  }
+
+  AdjacentTransition --> State : from
+  AdjacentTransition --> CompositeState : from
+  AdjacentTransition --> State : to
+  AdjacentTransition --> CompositeState : to
+```
+
+A scrollable settings dialog shows its settings content above the provider controls. Scrolling down
+crosses the border into Provider controls and leaves Settings content. Scrolling back up crosses it
+again: Settings content is current, and its Privacy policy entry transition, defined in the
+[=InvokingTransition=] section, is offered again.
+
+```json
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:settings-body",
+    "defaultEntryRef": "urn:ujg:entry:settings-body",
+    "entryRefs": ["urn:ujg:entry:settings-body"],
+    "stateRefs": [
+      "urn:ujg:state:settings-content",
+      "urn:ujg:state:provider-controls"
+    ],
+    "transitionRefs": ["urn:ujg:adjacent:settings-content-provider-controls"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:settings-body",
+    "stateRef": "urn:ujg:state:settings-content"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:settings-content",
+    "label": "Settings content",
+    "entryTransitionRefs": ["urn:ujg:ot:privacy-policy"]
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:provider-controls",
+    "label": "Provider controls"
+  },
+  {
+    "@type": "AdjacentTransition",
+    "@id": "urn:ujg:adjacent:settings-content-provider-controls",
+    "label": "Settings content and provider controls",
+    "from": "urn:ujg:state:settings-content",
+    "to": "urn:ujg:state:provider-controls"
+  }
+]
 ```
 
 ### OutgoingTransition {data-cop-concept="outgoing-transition"}
@@ -421,8 +528,8 @@ source and destination model as an [=OutgoingTransition=]. The difference is lif
 5. Activating an [=InvokingTransition=] enters the invoked Journey through `toEntryRef` and retains
    the source [=State occurrence=], including any active composite scope. The source occurrence is
    not left. While the invocation is in progress, the retained source occurrence, together with any
-   composite scope retained with it, is suspended: no [=Transition=] or entry transition is taken
-   from the source occurrence, and no parent Transition is taken from a retained
+   composite scope retained with it, is suspended: no [=Transition=], [=AdjacentTransition=], or
+   entry transition is taken from the source occurrence, and no parent Transition is taken from a retained
    [=CompositeState=]. State occurrences inside that composite scope that are not the source, such
    as States of a sibling child Journey, are not suspended and keep their own transitions and entry
    transitions. A parent Transition that a sibling's child exit triggers meanwhile is taken after the
@@ -630,6 +737,10 @@ A [=Command=] is not a transition endpoint and does not replace [=Transition=],
 [=OutgoingTransition=], or [=InvokingTransition=]. Structural, automatic, expiry-driven, or otherwise non-invoked transitions
 can remain without `commandRef`.
 
+An [=AdjacentTransition=] never references a [=Command=]: crossing a shared border is not an
+intentional invocation. A commanded movement between the same two vertices is a separate
+[=Transition=] with `commandRef`.
+
 <spec-statement>
 1. A [=Command=] **MUST** be identified by an IRI.
 2. A [=Command=] **MAY** declare one `label` and one or more `tags`.
@@ -697,7 +808,7 @@ transitions: its entries (`entryRefs`) and its exits (`exitRefs`).
 <spec-statement>
 1. A [=Journey=] **MUST** be identified by an IRI and declare at least one `entryRefs` value and one `stateRefs` value.
 2. A [=Journey=] **MAY** declare one `defaultEntryRef`; if present, it **MUST** also appear in `entryRefs`.
-3. `entryRefs`, `stateRefs`, `transitionRefs`, and `exitRefs` **MUST** reference nodes of the corresponding Graph classes.
+3. `entryRefs`, `stateRefs`, `transitionRefs`, and `exitRefs` **MUST** reference nodes of the corresponding Graph classes. `transitionRefs` values are [=Transition|Transitions=] or [=AdjacentTransition|AdjacentTransitions=].
 4. A [=Journey=]'s [=Local vertex|local vertices=] are its `stateRefs` plus its `exitRefs`.
 5. `stateRefs` lists the Journey's [=State=] and [=CompositeState=] vertices. It **MUST** describe local experiential topology, not destinations that are merely reachable through [=OutgoingTransition=] navigation or [=InvokingTransition=] invocation.
 6. A [=Journey=] **MUST NOT** declare `entryTransitionRefs`. Entry transitions are listed by the
@@ -746,6 +857,12 @@ classDiagram
     to
   }
 
+  class AdjacentTransition {
+    id
+    from
+    to
+  }
+
   Journey --> JourneyEntry : defaultEntryRef
   Journey --> JourneyEntry : entryRefs
   JourneyEntry --> State : stateRef
@@ -754,11 +871,14 @@ classDiagram
   Journey --> CompositeState : stateRefs
   Journey --> JourneyExit : exitRefs
   Journey --> Transition : transitionRefs
+  Journey --> AdjacentTransition : transitionRefs
   Transition --> State : from
   Transition --> CompositeState : from
   Transition --> State : to
   Transition --> CompositeState : to
   Transition --> JourneyExit : to
+  AdjacentTransition --> State : from/to
+  AdjacentTransition --> CompositeState : from/to
 ```
 
 Example JSON node:
@@ -863,7 +983,7 @@ A [=JourneyEntry=] is an explicit entry contract for a [=Journey=]. It identifie
 1. A [=JourneyEntry=] **MUST** be identified by an IRI and declare exactly one `stateRef`.
 2. `stateRef` **MUST** reference a [=State=] or [=CompositeState=] listed in the declaring [=Journey=]'s `stateRefs`.
 3. A [=JourneyEntry=] **MUST** be listed in exactly one [=Journey=]'s `entryRefs`.
-4. A [=JourneyEntry=] **MUST NOT** be used as a [=Transition=] endpoint.
+4. A [=JourneyEntry=] **MUST NOT** be used as a [=Transition=] or [=AdjacentTransition=] endpoint.
 5. A [=JourneyEntry=] **MAY** declare one `label` and one or more `tags`.
 </spec-statement>
 
@@ -1037,7 +1157,7 @@ page content beside a sticky header. The parent Journey treats it as one
    `stateRefs` or `entryTransitionRefs`.
 3. Its child Journeys **MUST** be [=Co-present|co-present=].
 4. The parent [=Journey=] treats the [=CompositeState=] as one [=Local vertex|local vertex=]: it can
-   be a [=Transition=] `from` or `to` and a [=JourneyEntry=] `stateRef`. Child States are never
+   be a [=Transition=] or [=AdjacentTransition=] `from` or `to` and a [=JourneyEntry=] `stateRef`. Child States are never
    listed by the parent, and nested composition is never flattened.
 5. While a [=CompositeState=] occurrence is current, the user is at the current [=State=] of each
    child Journey, through nested CompositeStates. Each of those States offers its own
@@ -1052,7 +1172,8 @@ page content beside a sticky header. The parent Journey treats it as one
 9. Reaching a child [=JourneyExit=] does not leave the [=CompositeState=]. A parent [=Transition=]
    whose `from` is the CompositeState and whose `fromExitRef` is that exit is taken when the exit is
    reached; without one, the CompositeState stays current. Taking any parent Transition from a
-   CompositeState leaves it and all of its child Journeys.
+   CompositeState, or crossing a parent [=AdjacentTransition=] out of it, leaves it and all of its
+   child Journeys.
 </spec-statement>
 
 ```mermaid
@@ -1164,7 +1285,7 @@ context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`, which preserves Gr
 
 ### Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `State`, `CompositeState`, `Transition`, `Command`, `JourneyExit`, `OutgoingTransition`, `InvokingTransition`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, and `entryTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `State`, `CompositeState`, `Transition`, `AdjacentTransition`, `Command`, `JourneyExit`, `OutgoingTransition`, `InvokingTransition`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, and `entryTransitionRefs`.
 
 :::include ./graph.ttl :::
 
@@ -1193,7 +1314,7 @@ To ensure graph integrity, the following constraints **MUST** be met:
 
 1. Every Graph reference **MUST** resolve within the current scope or imported modules.
 2. References **MUST** resolve to the class expected by the property that uses them.
-3. Local [=Transition=] endpoints **MUST** stay inside the declaring [=Journey=]'s
+3. Local [=Transition=] and [=AdjacentTransition=] endpoints **MUST** stay inside the declaring [=Journey=]'s
    [=Local vertex|local vertices=], also inside child Journeys.
 4. On a [=Transition=], `toEntryRef` and `fromExitRef` **MUST** resolve through one of the child
    Journeys referenced by the relevant [=CompositeState=]'s `subjourneyRefs`. The referenced

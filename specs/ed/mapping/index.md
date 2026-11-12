@@ -108,6 +108,7 @@ classDiagram
   class State
   class CompositeState
   class Transition
+  class AdjacentTransition
   class OutgoingTransition
   class MappedStep {
     id
@@ -121,6 +122,7 @@ classDiagram
   MappedStep --> State : mappedStateRef
   MappedStep --> CompositeState : mappedStateRef
   MappedStep --> Transition : explainedByTransitionRef
+  MappedStep --> AdjacentTransition : explainedByTransitionRef
   MappedStep --> OutgoingTransition : explainedByTransitionRef
 ```
 
@@ -152,8 +154,8 @@ Each `MappedStep` links:
 - `mapping:observedAffordanceEventRef`, when present, to the immediately preceding Runtime
   `RuntimeEvent` whose surface resolves to an observed affordance [=Command=].
 - `mapping:mappedStateRef` to the resolved Graph `State` or `CompositeState`.
-- `mapping:explainedByTransitionRef`, when present, to the effective `Transition` or
-  `OutgoingTransition` that explains the movement.
+- `mapping:explainedByTransitionRef`, when present, to the effective `Transition`,
+  `AdjacentTransition`, or `OutgoingTransition` that explains the movement.
 
 Runtime events whose surfaces resolve to [=Command=] are affordance events. They remain in the
 Runtime causal chain but are not serialized as separate `MappedStep` records. When an affordance
@@ -225,11 +227,12 @@ the SHACL shape.
     reference that predecessor with `observedAffordanceEventRef`. `observedAffordanceEventRef` MUST
     NOT reference any event other than that immediate predecessor.
 16. **Transition lookup:** A non-root MappedStep is explained when `explainedByTransitionRef` points
-    to one relevant effective transition. For a Graph `Transition`, the local predecessor is the
-    latest earlier MappedStep in Runtime causal order in the same local Journey scope and containing
-    composite occurrence; observations from sibling child Journeys may interleave without becoming
-    that predecessor. The Transition is relevant when its local `from` and `to` match that predecessor
-    and the current mapped state. An [=OutgoingTransition=] is relevant when:
+    to one relevant effective transition. For a Graph `Transition` or [=AdjacentTransition=], the
+    local predecessor is the latest earlier MappedStep in Runtime causal order in the same local
+    Journey scope and containing composite occurrence; observations from sibling child Journeys may
+    interleave without becoming that predecessor. A Transition is relevant when its local `from` and `to` match that predecessor
+    and the current mapped state. An AdjacentTransition is relevant when its `from` and `to` match
+    them in either order. An [=OutgoingTransition=] is relevant when:
     - it is listed in the `entryTransitionRefs` of a current State. The predecessor is current, and
       so is every [=CompositeState=] occurrence that contains it. For each current CompositeState
       occurrence, the mapped state of the latest earlier MappedStep in each of its child Journey
@@ -238,8 +241,9 @@ the SHACL shape.
     - that entry's `stateRef` equals the destination segment's first `mappedStateRef`.
 17. **Composite occurrence end:** A child [=JourneyExit=] does not by itself end the containing
     [=CompositeState=] occurrence for Mapping, and observations from sibling child Journeys stay in
-    scope after it. The occurrence ends when a parent [=Transition=] from the CompositeState explains
-    the movement out of it, or when an observation first resolves outside its containment. Steps of
+    scope after it. The occurrence ends when a parent [=Transition=] from the CompositeState, or a
+    parent [=AdjacentTransition=] with the CompositeState as one endpoint, explains the movement out
+    of it, or when an observation first resolves outside its containment. Steps of
     an invoked Journey (rule 19) whose invocation started inside the occurrence are not outside it:
     the occurrence is retained while the invocation runs and continues when the source resumes. Later
     observations from any child Journey of the ended occurrence require a later occurrence of the
@@ -252,9 +256,9 @@ the SHACL shape.
 19. **Invoked Journey scope:** An [=InvokingTransition=] is recognized for a step when it is listed
     in the `entryTransitionRefs` of a current State (rule 16, taking the latest earlier mapped State
     or CompositeState in Runtime causal order as the predecessor), and its `toEntryRef` entry has a
-    `stateRef` equal to the step's mapped state. When a relevant Transition from the step's
-    local-scope predecessor (rule 16) also explains the step, that reading wins unless the observed
-    affordance event resolves to the InvokingTransition's `commandRef`. The recognized step, and
+    `stateRef` equal to the step's mapped state. When a relevant Transition or AdjacentTransition
+    from the step's local-scope predecessor (rule 16) also explains the step, that reading wins unless
+    the observed affordance event resolves to the InvokingTransition's `commandRef`. The recognized step, and
     every following step that resolves to a State of the invoked Journey or to a State nested in its
     CompositeStates, belongs to the invoked Journey's own local scope. This continues until a step
     resolves elsewhere: the resumption of the source State occurrence, or a departure from the

@@ -53,5 +53,5 @@ ujgmapping:explainedByTransitionRef a owl:ObjectProperty ;
   rdfs:domain ujgmapping:MappedStep ;
   rdfs:range [
     a owl:Class ;
-    owl:unionOf ( ujggraph:Transition ujggraph:OutgoingTransition )
+    owl:unionOf ( ujggraph:Transition ujggraph:AdjacentTransition ujggraph:OutgoingTransition )
   ] .

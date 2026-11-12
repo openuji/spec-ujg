@@ -103,8 +103,12 @@ ujggraphshape:JourneyShape a sh:NodeShape ;
 
   sh:property [
     sh:path ujggraph:transitionRefs ;
-    sh:class ujggraph:Transition ;
     sh:nodeKind sh:IRI ;
+    sh:or (
+      [ sh:class ujggraph:Transition ]
+      [ sh:class ujggraph:AdjacentTransition ]
+    ) ;
+    sh:message "Each transitionRefs value must reference a Transition or an AdjacentTransition." ;
   ] ;
 
   sh:property [
@@ -523,7 +527,7 @@ ujggraphshape:JourneyEntryShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A JourneyEntry must not be used as the from or to value of a Transition." ;
+    sh:message "A JourneyEntry must not be used as the from or to value of a Transition or AdjacentTransition." ;
     sh:select """
       SELECT $this ?transition
       WHERE {
@@ -769,6 +773,111 @@ ujggraphshape:TransitionShape a sh:NodeShape ;
     sh:message "A Transition must not declare subjourneyRefs." ;
   ] .
 
+ujggraphshape:AdjacentTransitionShape a sh:NodeShape ;
+  sh:targetClass ujggraph:AdjacentTransition ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:from ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:node ujggraphshape:StateLikeShape ;
+    sh:message "An AdjacentTransition must declare exactly one from value that references a State or CompositeState." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:to ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:node ujggraphshape:StateLikeShape ;
+    sh:message "An AdjacentTransition must declare exactly one to value that references a State or CompositeState, never a JourneyExit." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:from ;
+    sh:disjoint ujggraph:to ;
+    sh:message "An AdjacentTransition must connect two different vertices; from and to must differ." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:commandRef ;
+    sh:maxCount 0 ;
+    sh:message "An AdjacentTransition must not declare commandRef. Model a command-driven movement as a Transition with commandRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:toEntryRef ;
+    sh:maxCount 0 ;
+    sh:message "An AdjacentTransition must not declare toEntryRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:fromExitRef ;
+    sh:maxCount 0 ;
+    sh:message "An AdjacentTransition must not declare fromExitRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "An AdjacentTransition must not declare entryTransitionRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "An AdjacentTransition must not declare subjourneyRefs." ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An AdjacentTransition must not also be typed Transition, OutgoingTransition, or InvokingTransition." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        { $this a ujggraph:Transition . }
+        UNION
+        { $this a ujggraph:OutgoingTransition . }
+        UNION
+        { $this a ujggraph:InvokingTransition . }
+      }
+    """ ;
+  ] .
+
+ujggraphshape:AdjacentTransitionDuplicateShape a sh:NodeShape ;
+  sh:targetClass ujggraph:AdjacentTransition ;
+  sh:severity sh:Warning ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A Transition without commandRef connects the same two vertices as this AdjacentTransition and duplicates one direction of the adjacency." ;
+    sh:select """
+      SELECT $this ?transition
+      WHERE {
+        $this ujggraph:from ?a ;
+              ujggraph:to ?b .
+        ?transition a ujggraph:Transition .
+        {
+          ?transition ujggraph:from ?a ;
+                      ujggraph:to ?b .
+        }
+        UNION
+        {
+          ?transition ujggraph:from ?b ;
+                      ujggraph:to ?a .
+        }
+        FILTER (?transition != $this)
+        FILTER (NOT EXISTS { ?transition ujggraph:commandRef ?command . })
+      }
+    """ ;
+  ] .
+
 ujggraphshape:JourneyExitShape a sh:NodeShape ;
   sh:targetClass ujggraph:JourneyExit ;
   sh:nodeKind sh:IRI ;
@@ -829,7 +938,7 @@ ujggraphshape:JourneyExitShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A JourneyExit must not be used as the from value of a Transition." ;
+    sh:message "A JourneyExit must not be used as the from value of a Transition or AdjacentTransition." ;
     sh:select """
       SELECT $this ?transition
       WHERE {

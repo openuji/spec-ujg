@@ -15,6 +15,7 @@ ujgmappingshape:TransitionLikeShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
   sh:or (
     [ sh:class ujggraph:Transition ]
+    [ sh:class ujggraph:AdjacentTransition ]
     [ sh:class ujggraph:OutgoingTransition ]
   ) .
 

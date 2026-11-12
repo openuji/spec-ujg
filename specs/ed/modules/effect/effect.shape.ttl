@@ -40,6 +40,14 @@ ujgeffectshape:EffectReferenceHostShape a sh:NodeShape ;
   sh:class ujgeffect:Effect ;
   sh:nodeKind sh:IRI .
 
+ujgeffectshape:AdjacentTransitionNoEffectShape a sh:NodeShape ;
+  sh:targetClass ujggraph:AdjacentTransition ;
+  sh:property [
+    sh:path ujgeffect:effectRef ;
+    sh:maxCount 0 ;
+    sh:message "An AdjacentTransition must not declare effectRef; attach effects to Transition or OutgoingTransition." ;
+  ] .
+
 ujgeffectshape:CommandNoEffectShape a sh:NodeShape ;
   sh:targetClass ujggraph:Command ;
   sh:property [

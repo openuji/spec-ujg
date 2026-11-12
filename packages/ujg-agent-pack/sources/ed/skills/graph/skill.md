@@ -20,6 +20,7 @@ Focus on intended topology:
 - `State`
 - `CompositeState`
 - `Transition`
+- `AdjacentTransition`
 - `Command`
 - `JourneyExit`
 - `OutgoingTransition`
@@ -52,7 +53,8 @@ least one value. Do not use the legacy singular child-journey field in ED JSON-L
 
 `CompositeState` is a local vertex but not a `State`, and must not be typed as one. It needs an IRI
 `@id` and exactly one `label`, and it never declares `stateRefs` or `entryTransitionRefs`. It can be
-listed in `stateRefs`, be a `Transition` endpoint, and be a `JourneyEntry.stateRef` target. While it
+listed in `stateRefs`, be a `Transition` or `AdjacentTransition` endpoint, and be a
+`JourneyEntry.stateRef` target. While it
 is current, the user is at the current `State` of each child journey, and those States offer the
 entry transitions.
 
@@ -105,6 +107,20 @@ selection, ordering, or resolution semantics.
 When a transition's `from` references a `State` with multiple concrete occurrences, traverse the one
 stable transition from a concrete occurrence of that state. Do not add transition properties such as
 `perInstance`, `perSourceInstance`, `perTargetInstance`, or `repeatableTransition`.
+
+Use `AdjacentTransition` between two local vertices of the same journey that sit next to each other
+in one experience frame and share a border, such as consecutive sections of a scrollable dialog or
+neighbouring panes. One AdjacentTransition describes crossing that border in both directions. Name
+the vertex before the border `from` and the vertex after it `to`, in reading order, and list it in
+the journey's `transitionRefs`. Both endpoints must be a `State` or `CompositeState` in that
+journey's `stateRefs`, never a `JourneyExit`, and they must differ. It never declares `commandRef`,
+`toEntryRef`, `fromExitRef`, `conditionRef`, or `effectRef`. Model a command-driven, guarded, or
+effectful movement between the same vertices, such as a "Back to top" button, as a separate
+`Transition`; do not add a plain `Transition` that repeats one direction of the adjacency. Adjacent
+vertices are not co-present: only one of them is current, so only its entry transitions are offered.
+Self-check: when a State's entry transitions must stay reachable after the user scrolls or moves to a
+neighbouring region and back, connect the regions with an AdjacentTransition, not a one-way
+Transition.
 
 Use `OutgoingTransition` for ordinary navigation affordances. Every `OutgoingTransition` must declare
 exactly one `toEntryRef` to a `JourneyEntry` owned by exactly one Journey. Resolve the destination as

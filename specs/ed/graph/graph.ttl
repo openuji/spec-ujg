@@ -39,6 +39,12 @@ ujggraph:CompositeState a owl:Class ;
 ujggraph:Transition a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
+ujggraph:AdjacentTransition a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujggraph:Transition, ujggraph:OutgoingTransition, ujggraph:InvokingTransition ;
+  rdfs:label "Adjacent Transition" ;
+  rdfs:comment "A structural edge between two local vertices of a Journey that sit next to each other in the same experience frame and share a border. It describes movement across that border in both directions. It is not a Transition." .
+
 ujggraph:Command a owl:Class ;
   rdfs:subClassOf ujg:Node ;
   rdfs:label "Command" ;
@@ -104,7 +110,14 @@ ujggraph:stateRefs a owl:ObjectProperty ;
 
 ujggraph:transitionRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
-  rdfs:range ujggraph:Transition .
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:Transition
+      ujggraph:AdjacentTransition
+    )
+  ] ;
+  rdfs:comment "References the local Transition and AdjacentTransition nodes of a Journey." .
 
 ujggraph:exitRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
@@ -113,7 +126,13 @@ ujggraph:exitRefs a owl:ObjectProperty ;
   rdfs:comment "References the terminal exported local vertices declared by a journey." .
 
 ujggraph:from a owl:ObjectProperty ;
-  rdfs:domain ujggraph:Transition ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:Transition
+      ujggraph:AdjacentTransition
+    )
+  ] ;
   rdfs:range [
     a owl:Class ;
     owl:unionOf (
@@ -123,6 +142,14 @@ ujggraph:from a owl:ObjectProperty ;
   ] .
 
 ujggraph:to a owl:ObjectProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:Transition
+      ujggraph:AdjacentTransition
+    )
+  ] ;
+  rdfs:comment "References the destination local vertex of a Transition, or the vertex after the shared border of an AdjacentTransition. An AdjacentTransition's to value is never a JourneyExit." ;
   rdfs:range [
     a owl:Class ;
     owl:unionOf (

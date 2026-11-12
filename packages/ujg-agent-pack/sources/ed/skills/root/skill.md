@@ -87,6 +87,13 @@ Use `Transition` for local progression. Its `from` must be in the owner Journey'
 `to` must be in that Journey's `stateRefs` or `exitRefs`. Never use a JourneyEntry or JourneyExit as
 `from`.
 
+Use `AdjacentTransition` when two States or CompositeStates of the same Journey sit next to each
+other in one experience frame and share a border, such as sections of a scrollable dialog. It is
+listed in `transitionRefs` and describes movement across the border in both directions, with `from`
+before the border and `to` after it in reading order. It never declares `commandRef`, `toEntryRef`,
+`fromExitRef`, `conditionRef`, or `effectRef`, and never targets a JourneyExit. A command-driven
+movement between the same vertices stays a separate Transition with `commandRef`.
+
 On a parent Transition whose `to` is a CompositeState, `toEntryRef` may select one JourneyEntry
 owned by exactly one referenced child Journey. Otherwise child entry selection uses that child
 Journey's `defaultEntryRef` when present or remains unresolved.

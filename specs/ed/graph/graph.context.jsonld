@@ -11,6 +11,7 @@
     "State": "ujggraph:State",
     "CompositeState": "ujggraph:CompositeState",
     "Transition": "ujggraph:Transition",
+    "AdjacentTransition": "ujggraph:AdjacentTransition",
     "Command": "ujggraph:Command",
     "JourneyExit": "ujggraph:JourneyExit",
     "OutgoingTransition": "ujggraph:OutgoingTransition",
