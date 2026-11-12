@@ -440,17 +440,20 @@ source and destination model as an [=OutgoingTransition=]. The difference is lif
    even when the destination entry belongs to the invoked Journey itself. Activating an
    [=InvokingTransition=] from inside the invoked Journey does not leave it.
 9. An invocation is also cancelled when its retained source occurrence is left before the
-   invocation completes, for example because a sibling child Journey in the same composite scope
-   reaches a [=JourneyExit=]. The invoked Journey is then left as well, which cancels any invocation
-   nested inside it.
+   invocation completes, for example because an [=OutgoingTransition=] is taken from a State of a
+   sibling child Journey, which is not suspended. The invoked Journey is then left as well, which
+   cancels any invocation nested inside it. A sibling child Journey reaching a [=JourneyExit=] does
+   not leave the source.
 10. When an invocation is cancelled, Consumers **MUST NOT** infer a return, and the retained source
     occurrence **MUST NOT** be resumed. A source occurrence that is still retained is left, including
     its active composite scope. If that source occurrence is inside a Journey that was itself
     invoked, that Journey is left as well, which cancels its invocation in turn. Cancellation
     therefore releases every retained occurrence in the invocation chain.
-11. An [=InvokingTransition=] does not add the invoked Journey to any `subjourneyRefs`. The
-    [=JourneyExit=] rules for a composite scope do not apply to the invoked Journey's exits, and
-    completion never leaves a [=CompositeState=] that contains the source.
+11. An [=InvokingTransition=] does not add the invoked Journey to any `subjourneyRefs`. The invoked
+    Journey occurrence is not a child of any [=CompositeState=] occurrence, even when the same
+    Journey is listed in some CompositeState's `subjourneyRefs`. The [=JourneyExit=] rules for a
+    composite scope therefore do not apply to its exits, and completion never leaves a
+    CompositeState, neither one that lists the invoked Journey nor one that contains the source.
 12. Graph does not define invocation identifiers or association data between source and invoked
     occurrences.
 </spec-statement>
@@ -605,10 +608,18 @@ same two transitions; each node's class determines its semantics.
 ]
 ```
 
-Mapping and Metrics do not yet account for [=InvokingTransition=]. Until they do, Mapping treats
-both the entry into the invoked Journey and the resumption of the source State as unexplained
-movements, so each completed invocation adds two derived jumps, and two to
-`unexplainedMovementCount`, across the execution's JourneyMappings.
+The privacy settings Journey can also be listed in the `subjourneyRefs` of a consent
+[=CompositeState=], so that a consent banner opens the same settings. That does not change the
+footer invocation above. The invoked occurrence is not a child of the consent CompositeState, so
+reaching `settings-saved` completes the invocation and leaves no CompositeState. Only in an
+occurrence entered as the consent CompositeState's child is the same exit an outcome that a parent
+Transition from that CompositeState can react to with `fromExitRef`.
+
+Mapping and Metrics do not yet account for [=InvokingTransition=]. Mapping gives the invoked
+Journey's steps their own local scope, so its exits end no [=CompositeState=] occurrence. Otherwise,
+until they do, Mapping treats both the entry into the invoked Journey and the resumption of the
+source State as unexplained movements, so each completed invocation adds two derived jumps, and two
+to `unexplainedMovementCount`, across the execution's JourneyMappings.
 
 ---
 
@@ -1090,8 +1101,9 @@ and belongs in separate States connected by explicit Transitions, per item 10 ab
 1. A child Journey **MAY** contain a [=CompositeState=] in its own `stateRefs`.
 2. Composition is interpreted recursively; child Journeys **MUST NOT** be flattened into the parent
    Journey's local vertex set.
-3. A child [=JourneyExit=] leaves the directly containing [=CompositeState=] occurrence in the
-   applicable containment path.
+3. A child [=JourneyExit=] is an outcome of the child Journey occurrence of its directly containing
+   [=CompositeState=] occurrence in the applicable containment path. It does not leave that
+   occurrence by itself.
 4. Leaving a nested [=CompositeState=] does not by itself leave an ancestor [=CompositeState=]. The
    ancestor is left only through movement that exits that ancestor's own composite scope.
 </spec-statement>
@@ -1110,44 +1122,50 @@ and belongs in separate States connected by explicit Transitions, per item 10 ab
 
 ### JourneyExit in a composite scope
 
-A [=JourneyExit=] owned by any child Journey of a [=CompositeState=] is an exported exit from that
-CompositeState.
+A [=JourneyExit=] owned by a child Journey of a [=CompositeState=] is an exported outcome of that
+child Journey. A parent [=Transition=] can react to it with `fromExitRef`, as defined in the exit
+boundary rules below. Reaching the exit does not itself leave the CompositeState; the parent
+Transition taken for that outcome does.
 
-These rules apply to child Journeys referenced through `subjourneyRefs`. Exits of a Journey entered
-through an [=InvokingTransition=] are covered by the [=InvokingTransition=] rules.
+These rules apply to a Journey occurrence entered as a child of a [=CompositeState=] occurrence
+through `subjourneyRefs`. What an exit means depends on how the occurrence was entered, not on where
+its Journey is listed: the same Journey can be a child of a CompositeState and also be entered
+through an [=InvokingTransition=]. Exits of a Journey entered through an InvokingTransition are
+covered by the [=InvokingTransition=] rules.
 
 <spec-statement>
-1. Reaching a child [=JourneyExit=] means that the containing [=CompositeState=] occurrence has been
-   left.
-2. Once the [=CompositeState=] has been left, none of its child Journeys remains in scope for that
-   occurrence.
-3. A child Journey's [=JourneyExit=] **MUST NOT** mean only that the child has locally completed while
-   the containing [=CompositeState=] remains current.
-4. A locally complete point that does not leave the containing [=CompositeState=] **MUST** be modeled
-   as a [=State=], not as a [=JourneyExit=].
-5. Graph **MUST NOT** infer that every child Journey must reach an exit.
-6. Graph **MUST NOT** infer a joint, collective, or all-child completion outcome.
-7. Graph **MUST NOT** infer an ordering among exits belonging to different child Journeys.
+1. Reaching a child [=JourneyExit=] means that this child Journey occurrence has reached one of its
+   exported outcomes. It does not by itself leave the containing [=CompositeState=] occurrence.
+2. The containing [=CompositeState=] occurrence remains current, and its other child Journeys remain
+   in scope, until the occurrence is left, for example by taking a parent [=Transition=] from the
+   CompositeState.
+3. Graph does not define whether the States of a child Journey that has reached an exit remain
+   presented. That is a materialization concern.
+4. Graph **MUST NOT** infer that every child Journey must reach an exit.
+5. Graph **MUST NOT** infer a joint, collective, or all-child completion outcome.
+6. Graph **MUST NOT** infer an ordering among exits belonging to different child Journeys.
 </spec-statement>
 
 Informative pattern:
 
 ```text
-Payment Journey:
-  Authorizing -> Authorized
-
-Shipping Journey:
-  Address -> DeliveryOption -> Confirmed
+Site CompositeState
+  Pages Journey:          Home -> Article
+  Cookie Consent Journey: Banner -> AcceptedExit
 ```
 
-`Authorized` is a State when Payment may remain locally complete while Shipping continues.
+`AcceptedExit` is an exported outcome of Cookie Consent. No Transition from Site declares it as
+`fromExitRef`, so reaching it completes Cookie Consent and Site stays current. Pages is unaffected.
 
 ```text
-Payment Journey:
-  Authorizing -> PaymentFailureExit
+Checkout CompositeState
+  Payment Journey:  Authorizing -> PaymentFailureExit
+  Shipping Journey: Address -> DeliveryOption -> Confirmed
 ```
 
-`PaymentFailureExit` leaves the containing Checkout CompositeState.
+`PaymentFailureExit` leaves Checkout only if a Transition from Checkout declares it as `fromExitRef`;
+that Transition is then taken. Without such a Transition, Payment is complete and Shipping
+continues.
 
 ### Boundary Entry and Exit Mapping {data-cop-concept="boundary-mapping"}
 
@@ -1183,16 +1201,24 @@ These properties are not transition endpoints. The transition's `from` and `to` 
    [=CompositeState=].
 2. The `fromExitRef` value **MUST** reference a [=JourneyExit=] listed in the `exitRefs` of exactly
    one Journey referenced by the source CompositeState's `subjourneyRefs`.
-3. Reaching that child [=JourneyExit=] means that the source [=CompositeState=] occurrence has been
-   left.
+3. Reaching that child [=JourneyExit=] triggers the Transition: it is the parent continuation for
+   that outcome and is taken then. It **MUST NOT** be taken before that exit is reached. If a
+   Consumer implements [[UJG Conditions]] and the Transition is guarded, it is taken only when
+   eligible; otherwise the [=CompositeState=] occurrence remains current. Taking it leaves the source
+   CompositeState occurrence.
 4. Parent continuation for the child exit may use only a parent [=Transition=] whose `from` is the
    containing [=CompositeState=] and whose `fromExitRef` is that child exit.
-5. No matching parent Transition means that no parent continuation is inferred.
+5. No matching parent Transition means that no parent continuation is inferred, and the
+   [=CompositeState=] occurrence remains current.
 6. More than one parent Transition with the same `from` and `fromExitRef` pair is invalid.
 7. Taking a parent Transition from a [=CompositeState=], whether or not it declares `fromExitRef`,
    leaves the CompositeState and ends the composite scope for that occurrence.
 8. `fromExitRef` remains singular. It identifies one concrete exported child outcome and **MUST NOT**
    represent a conjunction, disjunction, set, or synchronization of exits.
+9. While a [=CompositeState=] occurrence is suspended by an [=InvokingTransition=], a child exit
+   reached in a sibling child Journey does not take the parent Transition yet. It is taken after the
+   invocation completes. If the invocation is cancelled, the occurrence is left and the Transition
+   is not taken.
 </spec-statement>
 
 In this parent-boundary use, `toEntryRef` and `fromExitRef` **MUST NOT** replace local `from` or `to`,

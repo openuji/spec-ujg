@@ -69,9 +69,11 @@ Child states stay in their child Journey and never appear in the parent's `state
 The order of `subjourneyRefs` does not imply traversal, priority, scheduling, synchronization, or
 completion order. Reaching an exit in one child Journey does not complete sibling Journeys.
 
-Use `JourneyExit` for a terminal child outcome that an enclosing Journey genuinely handles. A child
-transitions directly to its own exit. A parent continuation from the corresponding CompositeState
-uses one `fromExitRef` owned by exactly one referenced child Journey.
+Use `JourneyExit` for a terminal outcome that a Journey exports to an enclosing composite or to an
+invoker. A parent reaction is optional; an exit no parent reacts to is valid, and a child exit does
+not leave its CompositeState by itself. A child transitions directly to its own exit. A parent
+continuation from the corresponding CompositeState uses one `fromExitRef` owned by exactly one
+referenced child Journey.
 
 ### Local transitions and commands
 

@@ -208,7 +208,7 @@ the SHACL shape.
     root journey. If the mapped state is listed in a child journey reached through a containing
     [=CompositeState=]'s `subjourneyRefs`, the local scope is that child journey for that containing
     composite occurrence. A mapped [=CompositeState=] belongs to the parent journey scope that lists
-    it in `stateRefs`.
+    it in `stateRefs`. Steps of an invoked Journey are scoped by rule 19 instead.
 12. **Composite occurrence scope:** When the same [=CompositeState=] occurs more than once in the
     Runtime chain, Consumers MUST treat each occurrence as a separate containing scope for child
     journey predecessor lookup. Mapping does not serialize occurrence identifiers.
@@ -234,21 +234,38 @@ the SHACL shape.
       on the predecessor's containment path;
     - its `toEntryRef` is owned by the destination segment's `mappedJourneyRef`; and
     - that entry's `stateRef` equals the destination segment's first `mappedStateRef`.
-17. **Child exit occurrence:** A child [=JourneyExit=] reached in a local child journey scope ends that
-    containing [=CompositeState=] occurrence for Mapping. Later observations from any child Journey in
-    the ended composite scope require a later occurrence of the containing composite or are out-of-scope
-    movement under existing Mapping rules. A child exit does not imply simultaneous, joint, or all-child
-    completion for sibling child journeys.
+17. **Composite occurrence end:** A child [=JourneyExit=] does not by itself end the containing
+    [=CompositeState=] occurrence for Mapping, and observations from sibling child Journeys stay in
+    scope after it. The occurrence ends when a parent [=Transition=] from the CompositeState explains
+    the movement out of it, or when an observation first resolves outside its containment. Steps of
+    an invoked Journey (rule 19) whose invocation started inside the occurrence are not outside it:
+    the occurrence is retained while the invocation runs and continues when the source resumes. Later
+    observations from any child Journey of the ended occurrence require a later occurrence of the
+    containing composite or are out-of-scope movement under existing Mapping rules. A child exit does
+    not imply simultaneous, joint, or all-child completion for sibling child journeys.
 18. **Observed affordance evidence:** When `observedAffordanceEventRef` is present and resolves to a
     `Command`, `explainedByTransitionRef` SHOULD identify a relevant `Transition` or
     `OutgoingTransition` whose `commandRef` references that same Command, if one exists for the
     movement from the predecessor to the current mapped state.
-19. **Condition eligibility:** If a consumer implements [[UJG Conditions]], a guarded transition
+19. **Invoked Journey scope:** An [=InvokingTransition=] is recognized for a step when it is listed
+    in the `entryTransitionRefs` of the latest earlier mapped State or of a [=CompositeState=] on
+    that State's containment path, and its `toEntryRef` entry has a `stateRef` equal to the step's
+    mapped state. When a relevant Transition from the step's local-scope predecessor (rule 16)
+    also explains the step, that reading wins unless the observed affordance event resolves to the
+    InvokingTransition's `commandRef`. The recognized step, and every following step that resolves
+    to a State of the invoked Journey or to a State nested in its CompositeStates, belongs to the
+    invoked Journey's own local scope. This continues until a step resolves elsewhere: the resumption
+    of the source State occurrence, or a departure from the invoked Journey. That scope has no
+    containing [=CompositeState=] occurrence from the enclosing segment, even if the invoked Journey
+    is also listed in some CompositeState's `subjourneyRefs`, so a [=JourneyExit=] listed in the
+    invoked Journey's own `exitRefs` is not a child exit of any CompositeState occurrence. Recognition
+    only scopes steps; it does not make the entry or the resumption an explained movement.
+20. **Condition eligibility:** If a consumer implements [[UJG Conditions]], a guarded transition
     only explains a mapped step when the transition is eligible under Condition semantics.
-20. **Jump derivation:** A non-root mapped step is a jump when no relevant effective transition
+21. **Jump derivation:** A non-root mapped step is a jump when no relevant effective transition
     explains the observed movement. This includes the first step of an unexplained destination
     segment. A jump is a derived processing result, not serialized Mapping vocabulary.
-21. **No intent assumption:** A derived jump reports that the observed movement is not explained by
+22. **No intent assumption:** A derived jump reports that the observed movement is not explained by
     the mapped graph. It does not by itself decide whether the movement is legitimate or erroneous.
 
 ## Step Occurrence and Phase Start {data-cop-concept="step-occurrence"}

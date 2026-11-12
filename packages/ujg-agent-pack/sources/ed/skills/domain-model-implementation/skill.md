@@ -117,14 +117,21 @@ Cancel the invocation when the invoked Journey is left any other way, including 
 `OutgoingTransition` taken inside it, even one that re-enters the same Journey. On cancellation,
 never resume the source: leave it with its composite scope, and if it sits inside another invoked
 Journey, leave that Journey and cancel its invocation too, up the chain. If the source occurrence is
-left first, for example because a sibling child Journey in its composite scope reaches an exit,
-cancel the invocation and leave the invoked Journey together with any invocation nested inside it.
+left first, cancel the invocation and leave the invoked Journey together with any invocation nested
+inside it. A sibling child Journey reaching an exit does not leave the source.
 Nested invocations each resume their own source. Never resume a reconstructed copy of a source
 occurrence.
 
-When a child `JourneyExit` is reached, treat it as leaving that containing `CompositeState`
-occurrence. Do not treat it as completing sibling child journeys or as collective composite
-completion unless the UJG explicitly models such behavior elsewhere.
+When a child `JourneyExit` is reached, treat it as an outcome of that child Journey, not as leaving
+the containing `CompositeState`. Keep the composite and its sibling child journeys active until the
+occurrence is left. Normally that is a parent `Transition` whose `fromExitRef` is that exit: take it
+when the exit is reached, never before, and only if its guard allows. An `OutgoingTransition` taken
+from inside the composite, or a cancelled invocation, also leaves it. If the composite is suspended
+by an invocation, defer that parent Transition until the invocation completes, and drop it if the
+invocation is cancelled. An occurrence entered through an `InvokingTransition` is not a composite
+child, even when the same Journey is listed in some `subjourneyRefs`; its exit completes the
+invocation. Do not treat a child exit as completing sibling child journeys or as collective
+composite completion unless the UJG explicitly models such behavior elsewhere.
 
 If an API accepts a UJG entry, exit, transition, or continuation identifier from a caller, treat it as untrusted unless the implementation proves it was derived from a valid prior modeled transition.
 

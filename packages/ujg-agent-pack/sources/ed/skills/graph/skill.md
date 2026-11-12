@@ -67,12 +67,22 @@ a set of entries. Otherwise child entry selection uses the relevant child journe
 materialization or execution context. Do not infer a child entry from `entryRefs` ordering or
 `subjourneyRefs` ordering.
 
-Use `JourneyExit` and `fromExitRef` only for exported child outcomes that a parent genuinely reacts
-to. Model the child outcome as a direct terminal `JourneyExit`, not as a pseudo-state. A child
-`JourneyExit` leaves the containing `CompositeState` occurrence; it does not complete sibling child
-journeys, synchronize them, or imply collective composite completion. The `fromExitRef` value must
-belong to exactly one child journey referenced by the source composite's `subjourneyRefs` and remains
-singular.
+Use `JourneyExit` for a terminal outcome that a Journey exports to an enclosing composite or to an
+invoker. A parent reaction is optional: an exit that no parent reacts to is valid. Use `fromExitRef`
+only where a parent reacts to a specific outcome. Model the outcome as a direct terminal
+`JourneyExit`, not as a pseudo-state.
+
+A child `JourneyExit` does not leave the containing `CompositeState` occurrence by itself. The
+composite stays current, and sibling child journeys stay in scope, until the occurrence is left,
+normally by a parent `Transition` whose `fromExitRef` is that exit. Reaching the exit takes that
+Transition, and it is never taken before the exit is reached. With no such Transition the child is
+simply complete, so a consent or banner journey can end while the page journey beside it continues.
+A child exit does not complete sibling child journeys, synchronize them, or imply collective
+composite completion. An occurrence of the same Journey entered through an `InvokingTransition` is
+not a composite child; its exits complete the invocation.
+
+The `fromExitRef` value must belong to exactly one child journey referenced by the source
+composite's `subjourneyRefs` and remains singular.
 
 Use `Transition` between local vertices. `from` must be in the enclosing journey's `stateRefs`; `to` must be in the enclosing journey's `stateRefs` or `exitRefs`. Never use `JourneyExit` as `from`.
 Do not create transitions between child journeys unless both endpoints are local vertices of the same
@@ -116,17 +126,20 @@ The Journey that owns its `toEntryRef` must declare at least one `exitRefs` valu
 that Journey's own exits resumes the source State. While the invocation runs, the source is
 suspended: nothing listed on it, or on a CompositeState that contains it, is offered through it, so a
 footer is not available inside the invoked Journey unless that Journey's own States list it. Leaving
-it any other way cancels the invocation
-without a return, and that includes any OutgoingTransition taken inside it, even one that re-enters
-the same Journey. Cancellation leaves the retained source as well, and cancels any enclosing
-invocation in turn. If the source is left first, for example because a sibling child Journey in its
-composite scope reaches an exit, the invocation is cancelled too. So a link inside an invoked Journey
-never returns to the source; if the user must come back after following it, model a separate
-InvokingTransition for that link. Never add the invoked Journey to `subjourneyRefs`, never model the return as a
-Transition or OutgoingTransition back to the source, and never type one node as both classes. Do
-not list an InvokingTransition on States of the Journey it invokes unless nested self-invocation is
-intended. Mapping does not yet explain invocations, so do not add
-`explainedByTransitionRef` values pointing at an InvokingTransition.
+it any other way cancels the invocation without a return, and that includes any OutgoingTransition
+taken inside it, even one that re-enters the same Journey. Cancellation leaves the retained source as
+well, and cancels any enclosing invocation in turn. If the source is left first, the invocation is
+cancelled too; a sibling child Journey reaching an exit does not leave the source. So a link inside
+an invoked Journey never returns to the source; if the user must come back after following it,
+model a separate InvokingTransition for that link.
+
+Never add the invoked Journey to `subjourneyRefs` to express the invocation. The same Journey may be
+a composite child for a separate reason, such as a consent CompositeState that opens the same
+settings; invoked occurrences are still not its children. Never model the return as a Transition or
+OutgoingTransition back to the source, and never type one node as both classes. Do not list an
+InvokingTransition on States of the Journey it invokes unless nested self-invocation is intended.
+Mapping does not yet explain invocations, so do not add `explainedByTransitionRef` values pointing at
+an InvokingTransition.
 
 ## Cross-skill awareness
 
