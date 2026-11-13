@@ -60,14 +60,15 @@ listed in `stateRefs`, be a `Transition` or `AdjacentTransition` endpoint, and b
 is current, the user is at the current `State` of each child journey, and those States offer the
 entry transitions.
 
-Child journeys of one `CompositeState` must be co-present and independent: the user can perceive and
-act on each at the same time in the same experience frame (a viewport, window, screen, or dialog
-session), and a movement in one never moves another. Co-presence alone is not enough: parts that are
-co-present but not independent belong to one journey. A `CompositeState` may have a single child
-journey, and several composites may reference the same Journey, so shared topology and the entry
-transitions its States list can be declared once and reused, for example a sticky header beside page content, or a site-wide
-footer Journey referenced by a one-child footer composite on each page. A State and a CompositeState
-belong to exactly one Journey; reuse happens through Journeys.
+When a `CompositeState` nests several child journeys, they must be co-present and independent: the
+user can perceive and act on each at the same time in the same experience frame (a viewport,
+window, screen, or dialog session), and a movement in one never moves another. Co-presence alone is
+not enough: parts that are co-present but not independent belong to one journey. A `CompositeState`
+may have a single child journey, and several composites may reference the same Journey, so shared
+topology and the entry transitions its States list can be declared once and reused, for example a
+sticky header beside page content, or a site-wide footer Journey referenced by a one-child footer
+composite on each page. A State and a CompositeState belong to exactly one Journey; reuse happens
+through Journeys.
 
 `subjourneyRefs` order does not define traversal order, priority, causality, scheduling,
 synchronization, fork/join, all-children-complete behavior, or hidden graph edges.

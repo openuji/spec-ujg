@@ -13,7 +13,7 @@ This module defines the vocabulary for intended user flow. It extends [[UJG Core
 - <dfn>Transition</dfn>: A structural directed edge between [=Local vertex|local vertices=] of a [=Journey=].
 - <dfn>AdjacentTransition</dfn>: A structural edge between two [=Local vertex|local vertices=] of a [=Journey=], or between two [=Collection member|members=] of a [=StateCollection=], that sit next to each other in the same experience frame and share a border. The user can cross that border in either direction.
 - <dfn>Command</dfn>: A stable semantic identity of an intentional invocation in the modeled experience.
-- <dfn>CompositeState</dfn>: A [=Local vertex|local vertex=] that nests one or more child [=Journey|Journeys=] in its parent Journey. Its child Journeys are [=Co-present|co-present=] and independent. It is not a [=State=].
+- <dfn>CompositeState</dfn>: A [=Local vertex|local vertex=] that nests one or more child [=Journey|Journeys=] in its parent Journey. It is not a [=State=].
 - <dfn>Composite scope</dfn>: The set of child Journeys referenced by one [=CompositeState=].
 - <dfn>Co-present</dfn>: Journeys are co-present when the user can perceive and act on each of them at the same time in the same experience frame: the viewport, window, screen, or dialog session that stays in place while its content changes.
 - <dfn>JourneyExit</dfn>: A terminal [=Local vertex|local vertex=] and exported completion contract declared by a [=Journey=].
@@ -1423,8 +1423,9 @@ header. It is not a [=State=]: it offers no affordances itself.
    or more `subjourneyRefs`, each resolving to a [=Journey=]. It **MAY** declare one or more `tags`.
 2. A [=CompositeState=] **MUST NOT** be typed [=State=] or [=JourneyExit=], and **MUST NOT** declare
    `stateRefs` or `entryTransitionRefs`.
-3. Its child Journeys **MUST** be [=Co-present|co-present=] and independent: a movement in one never
-   moves another. Parts that are co-present but not independent belong to one Journey.
+3. When a [=CompositeState=] nests several child Journeys, they **MUST** be [=Co-present|co-present=]
+   and independent: a movement in one never moves another. Parts that are co-present but not
+   independent belong to one Journey.
 4. The parent [=Journey=] treats the [=CompositeState=] as one [=Local vertex|local vertex=]: it can
    be a [=Transition=] or [=AdjacentTransition=] `from` or `to` and a [=JourneyEntry=] `stateRef`. Child States are never
    listed by the parent, and nested composition is never flattened.
