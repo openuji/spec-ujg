@@ -976,7 +976,7 @@ ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
   sh:property [
     sh:path ujggraph:to ;
     sh:maxCount 0 ;
-    sh:message "An OutgoingTransition must not declare to; target a JourneyEntry with toEntryRef." ;
+    sh:message "An OutgoingTransition must not declare to; target a JourneyEntry with toEntryRef or select one through entrySelectorRef." ;
   ] ;
 
   sh:property [
@@ -984,8 +984,34 @@ ujggraphshape:OutgoingTransitionShape a sh:NodeShape ;
     sh:class ujggraph:JourneyEntry ;
     sh:node ujggraphshape:JourneyEntryShape ;
     sh:nodeKind sh:IRI ;
-    sh:minCount 1 ;
     sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:entrySelectorRef ;
+    sh:class ujggraph:EntrySelector ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An OutgoingTransition must declare exactly one of toEntryRef or entrySelectorRef." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        FILTER (
+          (
+            EXISTS { $this ujggraph:toEntryRef ?entry . }
+            && EXISTS { $this ujggraph:entrySelectorRef ?selector . }
+          )
+          || (
+            NOT EXISTS { $this ujggraph:toEntryRef ?entry . }
+            && NOT EXISTS { $this ujggraph:entrySelectorRef ?selector . }
+          )
+        )
+      }
+    """ ;
   ] ;
 
   sh:property [
@@ -1032,7 +1058,7 @@ ujggraphshape:InvokingTransitionShape a sh:NodeShape ;
   sh:property [
     sh:path ujggraph:to ;
     sh:maxCount 0 ;
-    sh:message "An InvokingTransition must not declare to; target a JourneyEntry with toEntryRef." ;
+    sh:message "An InvokingTransition must not declare to; target a JourneyEntry with toEntryRef or select one through entrySelectorRef." ;
   ] ;
 
   sh:property [
@@ -1040,8 +1066,34 @@ ujggraphshape:InvokingTransitionShape a sh:NodeShape ;
     sh:class ujggraph:JourneyEntry ;
     sh:node ujggraphshape:JourneyEntryShape ;
     sh:nodeKind sh:IRI ;
-    sh:minCount 1 ;
     sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:entrySelectorRef ;
+    sh:class ujggraph:EntrySelector ;
+    sh:nodeKind sh:IRI ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An InvokingTransition must declare exactly one of toEntryRef or entrySelectorRef." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        FILTER (
+          (
+            EXISTS { $this ujggraph:toEntryRef ?entry . }
+            && EXISTS { $this ujggraph:entrySelectorRef ?selector . }
+          )
+          || (
+            NOT EXISTS { $this ujggraph:toEntryRef ?entry . }
+            && NOT EXISTS { $this ujggraph:entrySelectorRef ?selector . }
+          )
+        )
+      }
+    """ ;
   ] ;
 
   sh:property [
@@ -1101,6 +1153,22 @@ ujggraphshape:InvokingTransitionShape a sh:NodeShape ;
         $this ujggraph:toEntryRef ?entry .
         ?journey a ujggraph:Journey ;
                  ujggraph:entryRefs ?entry .
+
+        FILTER (NOT EXISTS {
+          ?journey ujggraph:exitRefs ?exit .
+        })
+      }
+    """ ;
+  ];
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "Each candidate Journey of an InvokingTransition's EntrySelector must declare at least one exitRefs value." ;
+    sh:select """
+      SELECT $this ?selector ?journey
+      WHERE {
+        $this ujggraph:entrySelectorRef ?selector .
+        ?selector ujggraph:candidateJourneyRefs ?journey .
 
         FILTER (NOT EXISTS {
           ?journey ujggraph:exitRefs ?exit .
@@ -1434,3 +1502,149 @@ ujggraphshape:MemberTransitionRefsSubjectShape a sh:NodeShape ;
   sh:targetSubjectsOf ujggraph:memberTransitionRefs ;
   sh:class ujggraph:StateCollection ;
   sh:message "Only a StateCollection declares memberTransitionRefs." .
+
+ujggraphshape:EntrySelectorShape a sh:NodeShape ;
+  sh:targetClass ujggraph:EntrySelector ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:candidateJourneyRefs ;
+    sh:class ujggraph:Journey ;
+    sh:nodeKind sh:IRI ;
+    sh:message "Each candidateJourneyRefs value must reference a Journey." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:from ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare from." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:to ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare to." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:toEntryRef ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare toEntryRef; it names no entry." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:fromExitRef ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare fromExitRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:commandRef ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare commandRef; declare it on the entry transition that references the selector." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare entryTransitionRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare subjourneyRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:transitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare transitionRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:stateRefs ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare stateRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:stateRef ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare stateRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:entryRefs ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare entryRefs; list candidate Journeys in candidateJourneyRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:exitRefs ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare exitRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:defaultEntryRef ;
+    sh:maxCount 0 ;
+    sh:message "An EntrySelector must not declare defaultEntryRef." ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An EntrySelector must not also be typed Journey, JourneyEntry, JourneyEntryIndex, State, CompositeState, Transition, AdjacentTransition, OutgoingTransition, InvokingTransition, Command, JourneyExit, or StateCollection." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        { $this a ujggraph:Journey . }
+        UNION
+        { $this a ujggraph:JourneyEntry . }
+        UNION
+        { $this a ujggraph:JourneyEntryIndex . }
+        UNION
+        { $this a ujggraph:State . }
+        UNION
+        { $this a ujggraph:CompositeState . }
+        UNION
+        { $this a ujggraph:Transition . }
+        UNION
+        { $this a ujggraph:AdjacentTransition . }
+        UNION
+        { $this a ujggraph:OutgoingTransition . }
+        UNION
+        { $this a ujggraph:InvokingTransition . }
+        UNION
+        { $this a ujggraph:Command . }
+        UNION
+        { $this a ujggraph:JourneyExit . }
+        UNION
+        { $this a ujggraph:StateCollection . }
+      }
+    """ ;
+  ] .
+
+ujggraphshape:EntrySelectorRefSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujggraph:entrySelectorRef ;
+  sh:or (
+    [ sh:class ujggraph:OutgoingTransition ]
+    [ sh:class ujggraph:InvokingTransition ]
+  ) ;
+  sh:message "Only an OutgoingTransition or InvokingTransition declares entrySelectorRef." .
+
+ujggraphshape:CandidateJourneyRefsSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujggraph:candidateJourneyRefs ;
+  sh:class ujggraph:EntrySelector ;
+  sh:message "Only an EntrySelector declares candidateJourneyRefs." .

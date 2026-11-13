@@ -147,7 +147,9 @@ Do not use `copyRef` to define traversal, visibility, routing, state identity, c
 
 Use Graph `OutgoingTransition` for locale switch affordances.
 
-Every locale-switch OutgoingTransition uses `toEntryRef` to select an explicit `JourneyEntry`.
+Every locale-switch OutgoingTransition uses `toEntryRef` to select an explicit `JourneyEntry`,
+never `entrySelectorRef`: its destination is either the same entry wherever it is taken or depends
+on the source State, which calls for source-specific transitions, not an `EntrySelector`.
 `l10n:targetLocaleRef` declares requested-locale metadata and never infers the Graph destination.
 
 If the locale switch preserves whichever of several States is active, use one state-scoped

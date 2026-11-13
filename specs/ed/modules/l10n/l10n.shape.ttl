@@ -107,4 +107,19 @@ ujgl10nshape:OutgoingTransitionLocaleShape a sh:NodeShape ;
     sh:class ujgl10n:Locale ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An OutgoingTransition with targetLocaleRef must target its destination entry with toEntryRef, not select it through entrySelectorRef." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        $this ujgl10n:targetLocaleRef ?locale .
+
+        FILTER (NOT EXISTS {
+          $this ujggraph:toEntryRef ?entry .
+        })
+      }
+    """ ;
   ] .

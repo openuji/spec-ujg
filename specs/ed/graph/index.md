@@ -19,7 +19,8 @@ This module defines the vocabulary for intended user flow. It extends [[UJG Core
 - <dfn>JourneyExit</dfn>: A terminal [=Local vertex|local vertex=] and exported completion contract declared by a [=Journey=].
 - <dfn>OutgoingTransition</dfn>: A navigational affordance that enters a [=Journey=] through a [=JourneyEntry=].
 - <dfn>InvokingTransition</dfn>: An affordance that invokes a [=Journey=] through a [=JourneyEntry=] and resumes the source [=State occurrence=] when that Journey reaches one of its exits.
-- <dfn>Entry transition</dfn>: An [=OutgoingTransition=] or [=InvokingTransition=]: an affordance available at a [=State=] that enters a [=Journey=] through a [=JourneyEntry=].
+- <dfn>Entry transition</dfn>: An [=OutgoingTransition=] or [=InvokingTransition=]: an affordance available at a [=State=] that enters a [=Journey=] through a [=JourneyEntry=], named in the Graph or selected when the transition is taken.
+- <dfn>EntrySelector</dfn>: A Graph node that lets an [=Entry transition|entry transition=] enter a [=JourneyEntry=] selected each time the transition is taken, instead of one named in the Graph.
 - <dfn>StateCollection</dfn>: A Graph node that lets one [=State=] or [=CompositeState=], its *member State*, stand for several similar parts of an experience, its [=Collection member|members=].
 - <dfn>Collection member</dfn>: One of the parts of an experience that a [=StateCollection=]'s member State stands for, such as one row of a list.
 - <dfn>Member transition</dfn>: A [=Transition=] or [=AdjacentTransition=] listed in a [=StateCollection=]'s `memberTransitionRefs`. It moves the user from one [=Collection member|member=] to another member of the same collection.
@@ -87,8 +88,9 @@ offered on several pages.
    nested in a [=CompositeState=], shares a child Journey with the State that lists it, or is a
    sibling of it.
 5. Entry transitions are not members of the enclosing [=Journey=]'s `transitionRefs`.
-6. An entry transition's `toEntryRef` remains the same fixed IRI at every State that lists it.
-   Consumers **MUST NOT** reinterpret that destination relative to the source state.
+6. An entry transition's destination, its fixed `toEntryRef` or its [=EntrySelector=], is the same
+   at every State that lists it. Consumers **MUST NOT** reinterpret that destination relative to
+   the source state.
 7. When the intended destination entry varies with the source, Producers **MUST** use
    source-specific [=OutgoingTransition|OutgoingTransitions=] or
    [=InvokingTransition|InvokingTransitions=] instead of one shared transition.
@@ -120,16 +122,21 @@ classDiagram
   }
   class OutgoingTransition {
     toEntryRef
+    entrySelectorRef
   }
   class InvokingTransition {
     toEntryRef
+    entrySelectorRef
   }
   class JourneyEntry
+  class EntrySelector
 
   State --> OutgoingTransition : entryTransitionRefs
   State --> InvokingTransition : entryTransitionRefs
   OutgoingTransition --> JourneyEntry : toEntryRef
   InvokingTransition --> JourneyEntry : toEntryRef
+  OutgoingTransition --> EntrySelector : entrySelectorRef
+  InvokingTransition --> EntrySelector : entrySelectorRef
 ```
 
 Example JSON nodes:
@@ -223,10 +230,10 @@ flowchart TB
 | | [=Transition=] | [=AdjacentTransition=] | [=OutgoingTransition=] | [=InvokingTransition=] |
 | --- | --- | --- | --- | --- |
 | Source | Explicit local `from` vertex | Either local vertex, `from` or `to` | State where the affordance is available | State where the affordance is available |
-| Destination | Local `to` vertex, or another member for a [=Member transition|member transition=] | The other local vertex, or a neighboring member for a member transition | `toEntryRef` entry contract | `toEntryRef` entry contract |
+| Destination | Local `to` vertex, or another member for a [=Member transition|member transition=] | The other local vertex, or a neighboring member for a member transition | `toEntryRef` entry contract, or an entry selected through an [=EntrySelector=] | `toEntryRef` entry contract, or an entry selected through an [=EntrySelector=] |
 | Declared through | `transitionRefs` on a [=Journey=], or `memberTransitionRefs` on a [=StateCollection=] | `transitionRefs` on a [=Journey=], or `memberTransitionRefs` on a [=StateCollection=] | `entryTransitionRefs` on a [=State=] | `entryTransitionRefs` on a [=State=] |
 | Source State occurrence | Not retained | Not retained | Not retained | Retained and suspended until the invocation completes or is cancelled |
-| Meaning | Ordinary progression inside one Journey | Cross a border that two vertices share in one experience frame, in either direction | Leave local progression and enter a Journey through a named entry | Enter a Journey through a named entry, then resume the source when that Journey exits |
+| Meaning | Ordinary progression inside one Journey | Cross a border that two vertices share in one experience frame, in either direction | Leave local progression and enter a Journey through an entry contract | Enter a Journey through an entry contract, then resume the source when that Journey exits |
 
 An entry transition has no `from` property. Its effective source is each [=State=] that lists it in
 `entryTransitionRefs`. [=Transition=], [=OutgoingTransition=], and [=InvokingTransition=] can
@@ -377,9 +384,11 @@ directly to that state.
 
 <spec-statement>
 1. An [=OutgoingTransition=] **MUST** be identified by an IRI and **MAY** declare one `label`.
-2. An [=OutgoingTransition=] **MUST** declare exactly one `toEntryRef`.
+2. An [=OutgoingTransition=]'s destination entry is either fixed by `toEntryRef` or selected when
+   the transition is taken, through the [=EntrySelector=] that `entrySelectorRef` references.
 3. An [=OutgoingTransition=] **MAY** reference one [=Command=] with `commandRef`.
-4. `toEntryRef` **MUST** reference a [=JourneyEntry=] owned by exactly one [=Journey=].
+4. The destination entry, fixed or selected, **MUST** be a [=JourneyEntry=] owned by exactly one
+   [=Journey=].
 5. The destination entry's `stateRef` **MUST** reference a [=State=] or [=CompositeState=] in that
    owner Journey's `stateRefs`.
 6. The destination entry **MAY** belong to the Journey where the affordance is available. Such a
@@ -396,6 +405,7 @@ not required for navigation. The entry remains owned by its declaring Journey.
 classDiagram
   class OutgoingTransition {
     toEntryRef
+    entrySelectorRef
     commandRef
   }
   class Journey {
@@ -405,11 +415,13 @@ classDiagram
   class JourneyEntry {
     stateRef
   }
+  class EntrySelector
   class State
   class CompositeState
   class Command
 
   OutgoingTransition --> JourneyEntry : toEntryRef
+  OutgoingTransition --> EntrySelector : entrySelectorRef
   Journey --> JourneyEntry : entryRefs
   JourneyEntry --> State : stateRef
   JourneyEntry --> CompositeState : stateRef
@@ -494,19 +506,21 @@ source and destination model as an [=OutgoingTransition=]. The difference is lif
 
 <spec-statement>
 1. An [=InvokingTransition=] **MUST** be identified by an IRI and **MAY** declare one `label`. It
-   **MUST** declare exactly one `toEntryRef` and **MAY** reference one [=Command=] with
-   `commandRef`. It **MUST NOT** declare `from`, `fromExitRef`, `to`, or `entryTransitionRefs`,
+   names its destination entry as an [=OutgoingTransition=] does, fixed by `toEntryRef` or selected
+   through an [=EntrySelector=], and **MAY** reference one [=Command=] with `commandRef`. It
+   **MUST NOT** declare `from`, `fromExitRef`, `to`, or `entryTransitionRefs`,
    target a [=JourneyExit=], appear in `transitionRefs`, model ordinary internal progression, or
    also be typed [=OutgoingTransition=].
 2. The effective source of an [=InvokingTransition=] is each [=State=] that lists it in
    `entryTransitionRefs`, exactly as for an [=OutgoingTransition=].
-3. `toEntryRef` **MUST** reference a [=JourneyEntry=] owned by exactly one [=Journey=], and the
-   entry's `stateRef` **MUST** reference a [=State=] or [=CompositeState=] in that owner Journey's
-   `stateRefs`. That Journey is the *invoked Journey*. The invoked Journey **MUST** declare at least
-   one `exitRefs` value.
+3. The destination entry, fixed or selected, **MUST** be a [=JourneyEntry=] owned by exactly one
+   [=Journey=], and the entry's `stateRef` **MUST** reference a [=State=] or [=CompositeState=] in
+   that owner Journey's `stateRefs`. That Journey is the *invoked Journey*. With an
+   [=EntrySelector=], each activation has its own invoked Journey. The invoked Journey **MUST**
+   declare at least one `exitRefs` value.
 4. The invoked Journey **MAY** be the Journey where the affordance is available. Each activation is a
    separate, nested invocation.
-5. Activating an [=InvokingTransition=] enters the invoked Journey through `toEntryRef` and retains
+5. Activating an [=InvokingTransition=] enters the invoked Journey through its destination entry and retains
    the source [=State occurrence=], including any active composite scope. The source occurrence is
    not left. While the invocation is in progress, the retained source occurrence, together with any
    composite scope retained with it, is suspended: no [=Transition=], [=AdjacentTransition=], or
@@ -549,6 +563,7 @@ source and destination model as an [=OutgoingTransition=]. The difference is lif
 classDiagram
   class InvokingTransition {
     toEntryRef
+    entrySelectorRef
     commandRef
   }
   class Journey {
@@ -559,10 +574,12 @@ classDiagram
   class JourneyEntry {
     stateRef
   }
+  class EntrySelector
   class JourneyExit
   class Command
 
   InvokingTransition --> JourneyEntry : toEntryRef
+  InvokingTransition --> EntrySelector : entrySelectorRef
   Journey --> JourneyEntry : entryRefs
   Journey --> JourneyExit : exitRefs
   InvokingTransition --> Command : commandRef
@@ -700,6 +717,118 @@ Journey's steps their own local scope, so its exits end no [=CompositeState=] oc
 until they do, Mapping treats both the entry into the invoked Journey and the resumption of the
 source State as unexplained movements, so each completed invocation adds two derived jumps, and two
 to `unexplainedMovementCount`, across the execution's JourneyMappings.
+
+---
+
+
+## EntrySelector {data-cop-concept="entry-selector"}
+
+An [=EntrySelector=] lets one [=Entry transition|entry transition=] lead to a different entry each
+time it is taken, such as an "Open" link on every row of a list where one row opens an article and
+the next a topic page. The link is modeled once, and so is whether it navigates or invokes. Which
+[=JourneyEntry=] it enters comes from the row, or more generally from the occurrence of the State
+where the user takes it, and the Graph does not name it.
+
+The transition references the selector with `entrySelectorRef` instead of naming an entry with
+`toEntryRef`. The selector can list the Journeys that the entry may belong to in
+`candidateJourneyRefs`. When the rows are the [=Collection member|members=] of a
+[=StateCollection=], each member can open a different entry.
+
+| The destination entry… | Model |
+| --- | --- |
+| is the same at every occurrence, and only the content shown there differs | `toEntryRef` |
+| depends on which State lists the affordance | One entry transition per source State, as described under State-scoped entry transitions |
+| differs between occurrences of the same State, such as between the members of a StateCollection | `entrySelectorRef` |
+
+<spec-statement>
+1. An entry transition that references an [=EntrySelector=] enters a [=JourneyEntry=] that Graph
+   does not name. The entry is known only when the transition is taken, and it can differ between
+   occurrences of the State that lists the transition.
+2. When the selection resolves, the transition enters exactly one JourneyEntry, and the movement
+   is the one its class defines. An [=OutgoingTransition=] leaves the source [=State occurrence=]. An
+   [=InvokingTransition=] retains it, and the Journey that owns the selected entry is the invoked
+   Journey of that activation.
+3. When the selector declares `candidateJourneyRefs`, the selected entry belongs to one of those
+   Journeys. Without candidates, it can belong to any Journey, including one defined in a document
+   that becomes available only when the transition is taken.
+4. When the selection resolves to no JourneyEntry, the transition enters no Journey, and Consumers
+   **MUST NOT** infer traversal from it. An invocation cannot select an entry whose Journey declares
+   no exits, because reaching one of those exits is what resumes the source.
+5. Selecting an entry adds no State, Transition, or JourneyEntry to the Graph. The selection does
+   not depend on which State lists the transition: when the destination does, Producers use
+   source-specific entry transitions, as described under State-scoped entry transitions.
+6. Graph does not define how candidate entries are produced, listed, ranked, or loaded, or how an
+   occurrence resolves to an entry.
+7. Producers **SHOULD** use `toEntryRef` when every occurrence enters the same entry. Producers
+   **SHOULD** declare `candidateJourneyRefs` when the possible Journeys are known: the candidates
+   state where the user can go, and they let Consumers tell an explained movement from drift.
+</spec-statement>
+
+The candidates belong to the selector, not to the transitions that reference it. When an
+[=InvokingTransition=] references a selector, every candidate Journey declares exits, also when
+OutgoingTransitions share that selector.
+
+```mermaid
+classDiagram
+  class OutgoingTransition {
+    entrySelectorRef
+    commandRef
+  }
+  class InvokingTransition {
+    entrySelectorRef
+    commandRef
+  }
+  class EntrySelector {
+    id
+    label
+    candidateJourneyRefs
+  }
+  class Journey {
+    entryRefs
+  }
+  class JourneyEntry
+
+  OutgoingTransition --> EntrySelector : entrySelectorRef
+  InvokingTransition --> EntrySelector : entrySelectorRef
+  EntrySelector --> Journey : candidateJourneyRefs
+  Journey --> JourneyEntry : entryRefs
+```
+
+In the example below, each item of a list offers "Open item". Which entry it opens comes with the
+item: an entry of the Article Journey or of the Topic Journey. The candidate Journeys are declared
+elsewhere.
+
+```json
+[
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:list-item",
+    "label": "List item",
+    "entryTransitionRefs": ["urn:ujg:ot:open-item"]
+  },
+  {
+    "@type": "OutgoingTransition",
+    "@id": "urn:ujg:ot:open-item",
+    "label": "Open item",
+    "entrySelectorRef": "urn:ujg:selector:item-destination",
+    "commandRef": "urn:ujg:command:open-item"
+  },
+  {
+    "@type": "Command",
+    "@id": "urn:ujg:command:open-item",
+    "label": "Open item"
+  },
+  {
+    "@type": "EntrySelector",
+    "@id": "urn:ujg:selector:item-destination",
+    "label": "Item destination",
+    "candidateJourneyRefs": [
+      "urn:ujg:journey:article",
+      "urn:ujg:journey:topic"
+    ]
+  }
+]
+```
 
 ---
 
@@ -1304,12 +1433,14 @@ its own child Journeys.
    ordered, added, removed, loaded, or presented.
 9. Producers **SHOULD** declare a [=StateCollection=] when one State or CompositeState stands for
    several parts that the user moves between, instead of declaring one State per part. Parts that
-   behave differently are different States. Producers **SHOULD NOT** add a member Transition that
-   adds nothing to a member AdjacentTransition of the same collection: no Command, child entry or
-   exit selection, guard, or effect.
+   behave differently are different States. Parts that offer the same affordances behave the same,
+   even when one of those affordances enters a different entry at each part. Producers **SHOULD
+   NOT** add a member Transition that adds nothing to a member AdjacentTransition of the same
+   collection: no Command, child entry or exit selection, guard, or effect.
 </spec-statement>
 
 An [=Entry transition|entry transition=] that the member State lists is offered at each member.
+With an [=EntrySelector=], the entry it enters can differ from member to member.
 
 ```mermaid
 classDiagram
@@ -1422,7 +1553,7 @@ context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`, which preserves Gr
 
 ### Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `State`, `CompositeState`, `Transition`, `AdjacentTransition`, `Command`, `JourneyExit`, `OutgoingTransition`, `InvokingTransition`, `StateCollection`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, `entryTransitionRefs`, `memberStateRef`, and `memberTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `State`, `CompositeState`, `Transition`, `AdjacentTransition`, `Command`, `JourneyExit`, `OutgoingTransition`, `InvokingTransition`, `StateCollection`, `EntrySelector`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, `entryTransitionRefs`, `memberStateRef`, `memberTransitionRefs`, `entrySelectorRef`, and `candidateJourneyRefs`.
 
 :::include ./graph.ttl :::
 
@@ -1456,14 +1587,20 @@ To ensure graph integrity, the following constraints **MUST** be met:
 4. On a [=Transition=], `toEntryRef` and `fromExitRef` **MUST** resolve through one of the child
    Journeys referenced by the relevant [=CompositeState=]'s `subjourneyRefs`. The referenced
    [=JourneyEntry=] or [=JourneyExit=] **MUST** be owned by exactly one such child Journey.
-5. On an [=OutgoingTransition=] or [=InvokingTransition=], `toEntryRef` **MUST** resolve to a
-   [=JourneyEntry=] owned by exactly one [=Journey=], and the entry's `stateRef` **MUST** resolve
-   inside that Journey's `stateRefs`.
-6. Each [=OutgoingTransition=] and [=InvokingTransition=] **MUST** declare exactly one `toEntryRef`
-   and **MUST NOT** declare `from`, `fromExitRef`, or `to`.
+5. On an [=OutgoingTransition=] or [=InvokingTransition=], the destination entry, `toEntryRef` or
+   the entry selected through its [=EntrySelector=], **MUST** resolve to a [=JourneyEntry=] owned
+   by exactly one [=Journey=], and the entry's `stateRef` **MUST** resolve inside that Journey's
+   `stateRefs`.
+6. Each [=OutgoingTransition=] and [=InvokingTransition=] **MUST** declare its destination and
+   **MUST NOT** declare `from`, `fromExitRef`, or `to`.
 7. Each `commandRef` **MUST** resolve to a [=Command=].
-8. The [=Journey=] that owns an [=InvokingTransition=]'s `toEntryRef` **MUST** declare at least one
-   `exitRefs` value.
+8. The [=Journey=] that owns an [=InvokingTransition=]'s destination entry **MUST** declare at least
+   one `exitRefs` value. When the entry is selected, every candidate Journey of its
+   [=EntrySelector=] **MUST** declare one as well.
 9. A [=StateCollection=] **MUST** be listed in the same [=UJGDocument=] as its member State, so that
    every Consumer that resolves the member State also finds the collection.
+10. An entry selected through an [=EntrySelector=] is not a reference of the authored Graph: it
+    **MAY** be outside the current scope and imported modules until the transition is taken, and it
+    **MUST** then resolve as rules 5 and 8 require. When it does not, the transition enters no
+    Journey, and the Graph remains valid.
 </spec-statement>

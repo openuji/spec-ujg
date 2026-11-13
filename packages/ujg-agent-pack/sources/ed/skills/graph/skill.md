@@ -26,6 +26,7 @@ Focus on intended topology:
 - `OutgoingTransition`
 - `InvokingTransition`
 - `StateCollection`
+- `EntrySelector`
 
 Keep runtime observations, selectors, typed values, timestamps, payloads, and analytics outside Graph.
 
@@ -125,7 +126,8 @@ part has its own steps, use a CompositeState member State: each member then has
 its own child Journey occurrences, and a member Transition may use `toEntryRef` or `fromExitRef` of
 those child Journeys. Do not encode order, item keys, data, or presentation in the collection.
 Self-check: use a collection only when one State or CompositeState describes every part; a part
-that needs its own description is its own State or Journey.
+that needs its own description is its own State or Journey. A part that differs only in which entry
+one of its entry transitions enters is still a member; give that transition an `EntrySelector`.
 
 Use `AdjacentTransition` between two local vertices of the same journey that sit next to each other
 in one experience frame and share a border. One AdjacentTransition describes crossing that border in
@@ -143,17 +145,39 @@ vertices.
 Self-check: use an AdjacentTransition only when both vertices belong to one frame, share a border,
 and the user can move between them in either direction without a command, guard, or effect.
 
-Use `OutgoingTransition` for ordinary navigation affordances. Every `OutgoingTransition` must declare
-exactly one `toEntryRef` to a `JourneyEntry` owned by exactly one Journey. Resolve the destination as
-`toEntryRef -> JourneyEntry.stateRef`; never put `to` on an OutgoingTransition or reference a
-destination State directly. The entry may belong to the source Journey, including when it points to
-the same State; that is explicit Journey re-entry rather than an implicit current-state target.
-Several States may list the same OutgoingTransition; it keeps the same fixed `toEntryRef` at every
-one of them. Never reinterpret that target relative to the source. Share a transition only when the
+Use `OutgoingTransition` for ordinary navigation affordances. Every `OutgoingTransition` declares
+exactly one destination: `toEntryRef` to a `JourneyEntry` owned by exactly one Journey, or
+`entrySelectorRef` when the entry is selected each time it is taken (see below). Resolve a fixed
+destination as `toEntryRef -> JourneyEntry.stateRef`; never put `to` on an OutgoingTransition or
+reference a destination State directly. The entry may belong to the source Journey, including when
+it points to the same State; that is explicit Journey re-entry rather than an implicit current-state
+target. Several States may list the same OutgoingTransition; it keeps the same destination, its
+fixed `toEntryRef` or its `EntrySelector`, at every one of them. Never reinterpret that target
+relative to the source. Share a transition only when the
 fixed destination entry is correct from each State; when the destination must preserve one of
 several active States, define a separate OutgoingTransition and matching JourneyEntry for each State.
 Use `commandRef` on an `OutgoingTransition` only when the outgoing affordance has stable intentional
 invocation identity.
+
+Use `entrySelectorRef` instead of `toEntryRef` when the entry an `OutgoingTransition` or
+`InvokingTransition` enters differs between occurrences of the State that lists it, for example
+between the members of a `StateCollection` whose rows open different pages. The transition
+references an `EntrySelector`; the Graph never names the selected entry, which is known only when the
+transition is taken. Decide by where the destination varies:
+- the same entry at every occurrence, with only the shown content differing: `toEntryRef`;
+- a different entry depending on which State lists the affordance: separate source-specific entry
+  transitions, never a selector;
+- a different entry between occurrences of the same State: `entrySelectorRef`.
+List the possible destination Journeys in the selector's `candidateJourneyRefs` whenever they are
+known; it is optional, and without it any Journey's entry may be selected, but candidates keep
+Mapping able to report drift. Candidates belong to the selector: when an `InvokingTransition`
+references it, every candidate Journey must declare `exitRefs`, and a selected entry whose Journey
+has no exits cannot be invoked. A selection that resolves to no `JourneyEntry` enters nothing; never
+treat an arbitrary address as an entry. The selector adds no States, Transitions, or entries, carries
+no `commandRef` (put it on the transition), and does not encode how candidates are listed, ranked,
+or loaded. A locale switch with `targetLocaleRef` always uses `toEntryRef`.
+Self-check: use a selector only when the destination entry differs between occurrences of the same
+State; if every occurrence enters the same entry, keep `toEntryRef`.
 
 `OutgoingTransition` and `InvokingTransition` are both entry transitions. Only a State lists them,
 in `entryTransitionRefs`; neither class declares `from`, `fromExitRef`, or `entryTransitionRefs`. A
@@ -164,11 +188,11 @@ Journey. To reuse topology, reuse the Journey: reference it from several Composi
 
 Use `InvokingTransition` instead of `OutgoingTransition` when the affordance opens another Journey
 and the user returns to the same source State when that Journey exits, such as a settings dialog
-opened from a page. It has the same shape as an OutgoingTransition: exactly one `toEntryRef`,
-optional `commandRef`, no `to`, never in `transitionRefs`, and it attaches through the same
-`entryTransitionRefs` on a State. One State may list both classes.
-The Journey that owns its `toEntryRef` must declare at least one `exitRefs` value. Reaching any of
-that Journey's own exits resumes the source State. While the invocation runs, the source is
+opened from a page. It has the same shape as an OutgoingTransition: exactly one destination,
+`toEntryRef` or `entrySelectorRef`, optional `commandRef`, no `to`, never in `transitionRefs`, and
+it attaches through the same `entryTransitionRefs` on a State. One State may list both classes.
+The Journey that owns its destination entry must declare at least one `exitRefs` value. Reaching any
+of that Journey's own exits resumes the source State. While the invocation runs, the source is
 suspended: nothing listed on it is offered through it, so those entry transitions are not available
 inside the invoked Journey unless that Journey's own States list them. Leaving
 it any other way cancels the invocation without a return, and that includes any OutgoingTransition
