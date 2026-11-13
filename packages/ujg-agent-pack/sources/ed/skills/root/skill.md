@@ -94,6 +94,16 @@ reading order. It never declares `commandRef`, `toEntryRef`, `fromExitRef`, `con
 `effectRef`, and never targets a JourneyExit. A movement between the same vertices that has its own
 command, guard, effect, or child-entry selection stays a separate Transition.
 
+Use `StateCollection` when one State or CompositeState, named by `memberStateRef`, defines several
+distinct parts that the user moves between, such as list rows or cards. List the moves between members in `memberTransitionRefs`: an AdjacentTransition for
+crossing to a neighboring member, or a Transition, typically with `commandRef`, for a move such as
+"Next item". These member transitions have the member State as both `from` and `to` and are never
+in `transitionRefs`; this is the only case where an AdjacentTransition's `from` and `to` are equal.
+Like any Transition, a member transition leaves the member it starts from and enters another; the
+Graph never names either member. A self-loop Transition in `transitionRefs` leaves and re-enters the
+member where it is taken. Declare at most
+one collection per member State, in the same document, and never one State per part.
+
 On a parent Transition whose `to` is a CompositeState, `toEntryRef` may select one JourneyEntry
 owned by exactly one referenced child Journey. Otherwise child entry selection uses that child
 Journey's `defaultEntryRef` when present or remains unresolved.
@@ -197,6 +207,11 @@ new segment; its first step is an unexplained movement.
 
 Within a segment, ordinary Transition explanations remain local to the owning Journey. Do not infer
 Graph edges from observation order alone.
+
+When consecutive steps in one local scope both resolve to the member State of a `StateCollection`,
+the same `surfaceInstanceRef` means the same member, which only a self-loop Transition in
+`transitionRefs` explains; different SurfaceInstances mean a move between members, which only a
+member transition explains. Mapping does not serialize member identity.
 
 ## Metrics semantics
 

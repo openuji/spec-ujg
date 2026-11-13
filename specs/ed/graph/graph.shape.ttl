@@ -793,10 +793,21 @@ ujggraphshape:AdjacentTransitionShape a sh:NodeShape ;
     sh:message "An AdjacentTransition must declare exactly one to value that references a State or CompositeState, never a JourneyExit." ;
   ] ;
 
-  sh:property [
-    sh:path ujggraph:from ;
-    sh:disjoint ujggraph:to ;
-    sh:message "An AdjacentTransition must connect two different vertices; from and to must differ." ;
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "An AdjacentTransition must connect two different vertices; from and to must differ unless a StateCollection lists it in memberTransitionRefs, where both are the member State." ;
+    sh:select """
+      SELECT $this ?vertex
+      WHERE {
+        $this ujggraph:from ?vertex ;
+              ujggraph:to ?vertex .
+
+        FILTER (NOT EXISTS {
+          ?collection a ujggraph:StateCollection ;
+                      ujggraph:memberTransitionRefs $this .
+        })
+      }
+    """ ;
   ] ;
 
   sh:property [
@@ -856,7 +867,7 @@ ujggraphshape:AdjacentTransitionDuplicateShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A Transition without commandRef, toEntryRef, or fromExitRef connects the same two vertices as this AdjacentTransition. Unless it carries a guard or an effect, it duplicates one direction of the adjacency." ;
+    sh:message "A Transition without commandRef, toEntryRef, or fromExitRef connects the same two vertices as this AdjacentTransition, or moves between the same StateCollection's members. Unless it carries a guard or an effect, it duplicates one direction of the adjacency." ;
     sh:select """
       SELECT $this ?transition
       WHERE {
@@ -876,6 +887,15 @@ ujggraphshape:AdjacentTransitionDuplicateShape a sh:NodeShape ;
         FILTER (NOT EXISTS { ?transition ujggraph:commandRef ?command . })
         FILTER (NOT EXISTS { ?transition ujggraph:toEntryRef ?entry . })
         FILTER (NOT EXISTS { ?transition ujggraph:fromExitRef ?exit . })
+        FILTER (
+          EXISTS {
+            ?collection ujggraph:memberTransitionRefs $this, ?transition .
+          }
+          || (
+            NOT EXISTS { ?collectionA ujggraph:memberTransitionRefs $this . }
+            && NOT EXISTS { ?collectionB ujggraph:memberTransitionRefs ?transition . }
+          )
+        )
       }
     """ ;
   ] .
@@ -1088,3 +1108,329 @@ ujggraphshape:InvokingTransitionShape a sh:NodeShape ;
       }
     """ ;
   ] .
+
+ujggraphshape:StateCollectionShape a sh:NodeShape ;
+  sh:targetClass ujggraph:StateCollection ;
+  sh:nodeKind sh:IRI ;
+
+  sh:property [
+    sh:path ujggraph:memberStateRef ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:node ujggraphshape:StateLikeShape ;
+    sh:message "A StateCollection must declare exactly one memberStateRef that references a State or CompositeState." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:memberTransitionRefs ;
+    sh:minCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:or (
+      [ sh:class ujggraph:Transition ]
+      [ sh:class ujggraph:AdjacentTransition ]
+    ) ;
+    sh:message "A StateCollection must declare at least one memberTransitionRefs value, and each must reference a Transition or an AdjacentTransition." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:label ;
+    sh:datatype xsd:string ;
+    sh:maxCount 1 ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:tags ;
+    sh:datatype xsd:string ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:from ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare from." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:to ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare to." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:toEntryRef ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare toEntryRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:fromExitRef ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare fromExitRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:commandRef ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare commandRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:entryTransitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare entryTransitionRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:subjourneyRefs ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare subjourneyRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:transitionRefs ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare transitionRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:stateRefs ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare stateRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:stateRef ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare stateRef." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:entryRefs ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare entryRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:exitRefs ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare exitRefs." ;
+  ] ;
+
+  sh:property [
+    sh:path ujggraph:defaultEntryRef ;
+    sh:maxCount 0 ;
+    sh:message "A StateCollection must not declare defaultEntryRef." ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A StateCollection must not also be typed Journey, JourneyEntry, JourneyEntryIndex, State, CompositeState, Transition, AdjacentTransition, OutgoingTransition, InvokingTransition, Command, or JourneyExit." ;
+    sh:select """
+      SELECT $this
+      WHERE {
+        { $this a ujggraph:Journey . }
+        UNION
+        { $this a ujggraph:JourneyEntry . }
+        UNION
+        { $this a ujggraph:JourneyEntryIndex . }
+        UNION
+        { $this a ujggraph:State . }
+        UNION
+        { $this a ujggraph:CompositeState . }
+        UNION
+        { $this a ujggraph:Transition . }
+        UNION
+        { $this a ujggraph:AdjacentTransition . }
+        UNION
+        { $this a ujggraph:OutgoingTransition . }
+        UNION
+        { $this a ujggraph:InvokingTransition . }
+        UNION
+        { $this a ujggraph:Command . }
+        UNION
+        { $this a ujggraph:JourneyExit . }
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "The member State of a StateCollection must be listed in the stateRefs of a Journey." ;
+    sh:select """
+      SELECT $this ?state
+      WHERE {
+        $this ujggraph:memberStateRef ?state .
+
+        FILTER (NOT EXISTS {
+          ?journey ujggraph:stateRefs ?state .
+        })
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A State or CompositeState must not be the member State of more than one StateCollection." ;
+    sh:select """
+      SELECT $this ?state ?otherCollection
+      WHERE {
+        $this ujggraph:memberStateRef ?state .
+        ?otherCollection a ujggraph:StateCollection ;
+                         ujggraph:memberStateRef ?state .
+        FILTER (?otherCollection != $this)
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "Each member transition of a StateCollection must have the member State as both its from and its to value." ;
+    sh:select """
+      SELECT $this ?transition
+      WHERE {
+        $this ujggraph:memberStateRef ?state ;
+              ujggraph:memberTransitionRefs ?transition .
+
+        FILTER (
+          NOT EXISTS { ?transition ujggraph:from ?state . }
+          || NOT EXISTS { ?transition ujggraph:to ?state . }
+          || EXISTS {
+            ?transition ujggraph:from ?from .
+            FILTER (?from != ?state)
+          }
+          || EXISTS {
+            ?transition ujggraph:to ?to .
+            FILTER (?to != ?state)
+          }
+        )
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A member transition must not also be listed in a Journey's transitionRefs." ;
+    sh:select """
+      SELECT $this ?transition ?journey
+      WHERE {
+        $this ujggraph:memberTransitionRefs ?transition .
+        ?journey ujggraph:transitionRefs ?transition .
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A member transition must not be listed in the memberTransitionRefs of more than one StateCollection." ;
+    sh:select """
+      SELECT $this ?transition ?otherCollection
+      WHERE {
+        $this ujggraph:memberTransitionRefs ?transition .
+        ?otherCollection a ujggraph:StateCollection ;
+                         ujggraph:memberTransitionRefs ?transition .
+        FILTER (?otherCollection != $this)
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A member transition with toEntryRef or fromExitRef requires a CompositeState member State." ;
+    sh:select """
+      SELECT $this ?transition ?state
+      WHERE {
+        $this ujggraph:memberStateRef ?state ;
+              ujggraph:memberTransitionRefs ?transition .
+        { ?transition ujggraph:toEntryRef ?boundary . }
+        UNION
+        { ?transition ujggraph:fromExitRef ?boundary . }
+
+        FILTER (NOT EXISTS {
+          ?state a ujggraph:CompositeState .
+        })
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "The toEntryRef of a member transition must be listed in the entryRefs of exactly one Journey referenced by the member State's subjourneyRefs." ;
+    sh:select """
+      SELECT $this ?transition ?entry
+      WHERE {
+        $this ujggraph:memberStateRef ?state ;
+              ujggraph:memberTransitionRefs ?transition .
+        ?state a ujggraph:CompositeState .
+        ?transition ujggraph:toEntryRef ?entry .
+
+        FILTER (
+          NOT EXISTS {
+            ?state ujggraph:subjourneyRefs ?childJourney .
+            ?childJourney ujggraph:entryRefs ?entry .
+          }
+          || EXISTS {
+            ?state ujggraph:subjourneyRefs ?childJourneyA, ?childJourneyB .
+            ?childJourneyA ujggraph:entryRefs ?entry .
+            ?childJourneyB ujggraph:entryRefs ?entry .
+            FILTER (?childJourneyA != ?childJourneyB)
+          }
+        )
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "The fromExitRef of a member transition must be listed in the exitRefs of exactly one Journey referenced by the member State's subjourneyRefs." ;
+    sh:select """
+      SELECT $this ?transition ?exit
+      WHERE {
+        $this ujggraph:memberStateRef ?state ;
+              ujggraph:memberTransitionRefs ?transition .
+        ?state a ujggraph:CompositeState .
+        ?transition ujggraph:fromExitRef ?exit .
+
+        FILTER (
+          NOT EXISTS {
+            ?state ujggraph:subjourneyRefs ?childJourney .
+            ?childJourney ujggraph:exitRefs ?exit .
+          }
+          || EXISTS {
+            ?state ujggraph:subjourneyRefs ?childJourneyA, ?childJourneyB .
+            ?childJourneyA ujggraph:exitRefs ?exit .
+            ?childJourneyB ujggraph:exitRefs ?exit .
+            FILTER (?childJourneyA != ?childJourneyB)
+          }
+        )
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A member transition with fromExitRef must not share its member State and fromExitRef value with another member transition or with a transition in a Journey's transitionRefs." ;
+    sh:select """
+      SELECT $this ?transition ?otherTransition ?exit
+      WHERE {
+        $this ujggraph:memberStateRef ?state ;
+              ujggraph:memberTransitionRefs ?transition .
+        ?transition ujggraph:fromExitRef ?exit .
+        ?otherTransition ujggraph:from ?state ;
+                         ujggraph:fromExitRef ?exit .
+        FILTER (?otherTransition != ?transition)
+        FILTER (
+          EXISTS { $this ujggraph:memberTransitionRefs ?otherTransition . }
+          || EXISTS { ?journey ujggraph:transitionRefs ?otherTransition . }
+        )
+      }
+    """ ;
+  ] .
+
+ujggraphshape:MemberStateRefSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujggraph:memberStateRef ;
+  sh:class ujggraph:StateCollection ;
+  sh:message "Only a StateCollection declares memberStateRef." .
+
+ujggraphshape:MemberTransitionRefsSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujggraph:memberTransitionRefs ;
+  sh:class ujggraph:StateCollection ;
+  sh:message "Only a StateCollection declares memberTransitionRefs." .

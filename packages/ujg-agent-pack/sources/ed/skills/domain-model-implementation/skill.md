@@ -94,6 +94,11 @@ and do not attach a domain-changing operation, validation, or effect to crossing
 command-driven movement between the same States is a separate `Transition` and follows its own
 rules.
 
+For a `StateCollection`, realize an action at one member for that member only. Do not fan a member
+action out to other members unless a declared Effect requires it. A member transition's target member
+is bound at runtime, not fixed by the UJG; implement it as moving to some other member of the same
+collection within the same Journey occurrence.
+
 ## Entry and Continuation Authority
 
 For every non-default `JourneyEntry`, `JourneyExit`, parent-boundary `toEntryRef`, and outgoing

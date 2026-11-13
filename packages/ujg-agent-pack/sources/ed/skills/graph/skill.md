@@ -25,6 +25,7 @@ Focus on intended topology:
 - `JourneyExit`
 - `OutgoingTransition`
 - `InvokingTransition`
+- `StateCollection`
 
 Keep runtime observations, selectors, typed values, timestamps, payloads, and analytics outside Graph.
 
@@ -108,11 +109,31 @@ When a transition's `from` references a `State` with multiple concrete occurrenc
 stable transition from a concrete occurrence of that state. Do not add transition properties such as
 `perInstance`, `perSourceInstance`, `perTargetInstance`, or `repeatableTransition`.
 
+Use `StateCollection` when one `State` or `CompositeState` stands for many similar parts that the
+user moves between, such as rows, cards, or slides. Every member offers what the member State offers.
+Do not declare one State per part. `memberStateRef` names that State or CompositeState, the member State; it must be in a
+Journey's `stateRefs`, and it has at most one collection, declared in the same document.
+`memberTransitionRefs` lists one or more member transitions that move from one member to another:
+an `AdjacentTransition` for crossing the border to a neighboring member, or a `Transition`, typically
+with `commandRef`, for a move such as "Next item". Each member transition has the member State as
+both `from` and `to`, is listed only by the collection, and is never in a Journey's
+`transitionRefs`. Like any Transition, it leaves the member it starts from and enters another
+member; the user moves between members only this way. The Graph
+never names either member; Mapping binds them from the observed SurfaceInstances. A self-loop
+Transition on the member State in `transitionRefs` leaves and re-enters the member where it is taken. Taking a Transition from the member State to another vertex leaves the collection. When each
+part has its own steps, use a CompositeState member State: each member then has
+its own child Journey occurrences, and a member Transition may use `toEntryRef` or `fromExitRef` of
+those child Journeys. Do not encode order, item keys, data, or presentation in the collection.
+Self-check: use a collection only when one State or CompositeState describes every part; a part
+that needs its own description is its own State or Journey.
+
 Use `AdjacentTransition` between two local vertices of the same journey that sit next to each other
 in one experience frame and share a border. One AdjacentTransition describes crossing that border in
 both directions. Name the vertex before the border `from` and the vertex after it `to`, in reading
 order, and list it in the journey's `transitionRefs`. Both endpoints must be a `State` or
-`CompositeState` in that journey's `stateRefs`, never a `JourneyExit`, and they must differ. It never
+`CompositeState` in that journey's `stateRefs`, never a `JourneyExit`, and they must differ. The one
+exception is a member AdjacentTransition between neighboring members of a `StateCollection`: the
+collection lists it in `memberTransitionRefs`, and both endpoints are its member State. It never
 declares `commandRef`, `toEntryRef`, `fromExitRef`, `conditionRef`, or `effectRef`. Model a movement
 that has its own command, guard, effect, or child-entry selection as a separate `Transition`, even
 between the same vertices; do not add a plain `Transition` that repeats one direction of the

@@ -120,7 +120,8 @@ does not define where those values come from, how they are queried, whether they
 they map to domain properties.
 
 For a [=State=] or [=CompositeState=], the [=DataBinding=] describes one concrete surface occurrence
-regardless of how many concrete occurrences exist. This module does not define collection sources,
+regardless of how many concrete occurrences exist. For the member State of a [=StateCollection=],
+that surface occurrence is one [=Collection member|member=]. This module does not define collection sources,
 queries, iteration, pagination, occurrence counts, entity enumeration, loading behavior, or rendering
 behavior.
 

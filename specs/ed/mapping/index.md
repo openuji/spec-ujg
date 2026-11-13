@@ -232,7 +232,13 @@ the SHACL shape.
     Journey scope and containing composite occurrence; observations from sibling child Journeys may
     interleave without becoming that predecessor. A Transition is relevant when its local `from` and `to` match that predecessor
     and the current mapped state. An AdjacentTransition is relevant when its `from` and `to` match
-    them in either order. An [=OutgoingTransition=] is relevant when:
+    them in either order. A [=Member transition|member transition=] of a [=StateCollection=] whose
+    member State is in the local Journey scope is an effective transition of that scope. When the
+    predecessor and the current mapped state are both that member State, the two steps are at the
+    same [=Collection member|member=] if their events reference the same `surfaceInstanceRef`, and
+    at different members otherwise. A member transition is relevant only to steps at different
+    members, and a Transition from the member State to itself in a Journey's `transitionRefs` only
+    to steps at the same member. An [=OutgoingTransition=] is relevant when:
     - it is listed in the `entryTransitionRefs` of a current State. The predecessor is current, and
       so is every [=CompositeState=] occurrence that contains it. For each current CompositeState
       occurrence, the mapped state of the latest earlier MappedStep in each of its child Journey
@@ -243,7 +249,9 @@ the SHACL shape.
     [=CompositeState=] occurrence for Mapping, and observations from sibling child Journeys stay in
     scope after it. The occurrence ends when a parent [=Transition=] from the CompositeState, or a
     parent [=AdjacentTransition=] with the CompositeState as one endpoint, explains the movement out
-    of it, or when an observation first resolves outside its containment. Steps of
+    of it, or when an observation first resolves outside its containment. This includes a member
+    transition whose member State is the CompositeState: it ends the occurrence of the member it
+    leaves, and rule 12 treats the member it enters as a new occurrence. Steps of
     an invoked Journey (rule 19) whose invocation started inside the occurrence are not outside it:
     the occurrence is retained while the invocation runs and continues when the source resumes. Later
     observations from any child Journey of the ended occurrence require a later occurrence of the
@@ -276,6 +284,11 @@ the SHACL shape.
     segment. A jump is a derived processing result, not serialized Mapping vocabulary.
 22. **No intent assumption:** A derived jump reports that the observed movement is not explained by
     the mapped graph. It does not by itself decide whether the movement is legitimate or erroneous.
+
+Mapping binds the members that a member transition connects from the observed SurfaceInstances and
+does not serialize member identity. When the member State is a [=CompositeState=], Mapping sees a
+move between members only when the Runtime chain observes the CompositeState itself; observations of
+its child States alone do not show which member they belong to.
 
 ## Step Occurrence and Phase Start {data-cop-concept="step-occurrence"}
 

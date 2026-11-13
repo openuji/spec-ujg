@@ -11,7 +11,7 @@ This module defines the vocabulary for intended user flow. It extends [[UJG Core
 - <dfn>State</dfn>: A discrete node in the experience (e.g., a screen, modal). A State is the only [=Local vertex|local vertex=] that offers [=Entry transition|entry transitions=].
 - <dfn>State occurrence</dfn>: A concrete experienced occurrence of a [=State=] during traversal.
 - <dfn>Transition</dfn>: A structural directed edge between [=Local vertex|local vertices=] of a [=Journey=].
-- <dfn>AdjacentTransition</dfn>: A structural edge between two [=Local vertex|local vertices=] of a [=Journey=] that sit next to each other in the same experience frame and share a border. The user can cross that border in either direction.
+- <dfn>AdjacentTransition</dfn>: A structural edge between two [=Local vertex|local vertices=] of a [=Journey=], or between two [=Collection member|members=] of a [=StateCollection=], that sit next to each other in the same experience frame and share a border. The user can cross that border in either direction.
 - <dfn>Command</dfn>: A stable semantic identity of an intentional invocation in the modeled experience.
 - <dfn>CompositeState</dfn>: A [=Local vertex|local vertex=] that groups [=Co-present|co-present=] child [=Journey|Journeys=]. It is not a [=State=].
 - <dfn>Composite scope</dfn>: The set of child Journeys referenced by one [=CompositeState=].
@@ -20,6 +20,9 @@ This module defines the vocabulary for intended user flow. It extends [[UJG Core
 - <dfn>OutgoingTransition</dfn>: A navigational affordance that enters a [=Journey=] through a [=JourneyEntry=].
 - <dfn>InvokingTransition</dfn>: An affordance that invokes a [=Journey=] through a [=JourneyEntry=] and resumes the source [=State occurrence=] when that Journey reaches one of its exits.
 - <dfn>Entry transition</dfn>: An [=OutgoingTransition=] or [=InvokingTransition=]: an affordance available at a [=State=] that enters a [=Journey=] through a [=JourneyEntry=].
+- <dfn>StateCollection</dfn>: A Graph node that lets one [=State=] or [=CompositeState=], its *member State*, stand for several similar parts of an experience, its [=Collection member|members=].
+- <dfn>Collection member</dfn>: One of the parts of an experience that a [=StateCollection=]'s member State stands for, such as one row of a list.
+- <dfn>Member transition</dfn>: A [=Transition=] or [=AdjacentTransition=] listed in a [=StateCollection=]'s `memberTransitionRefs`. It moves the user from one [=Collection member|member=] to another member of the same collection.
 
 ---
 
@@ -38,6 +41,9 @@ transition classes themselves are defined in the Transitions section.
 4. Multiple concrete occurrences of the same [=State=] **MAY** exist within an active [=Journey=];
    Graph does not define occurrence identity, cardinality, lifecycle, or materialization.
 </spec-statement>
+
+When one State stands for many similar parts of an experience, such as the rows of a list, a
+[=StateCollection=] declares those parts as its members.
 
 ```mermaid
 classDiagram
@@ -217,8 +223,8 @@ flowchart TB
 | | [=Transition=] | [=AdjacentTransition=] | [=OutgoingTransition=] | [=InvokingTransition=] |
 | --- | --- | --- | --- | --- |
 | Source | Explicit local `from` vertex | Either local vertex, `from` or `to` | State where the affordance is available | State where the affordance is available |
-| Destination | Local `to` vertex | The other local vertex | `toEntryRef` entry contract | `toEntryRef` entry contract |
-| Declared through | `transitionRefs` on a [=Journey=] | `transitionRefs` on a [=Journey=] | `entryTransitionRefs` on a [=State=] | `entryTransitionRefs` on a [=State=] |
+| Destination | Local `to` vertex, or another member for a [=Member transition|member transition=] | The other local vertex, or a neighboring member for a member transition | `toEntryRef` entry contract | `toEntryRef` entry contract |
+| Declared through | `transitionRefs` on a [=Journey=], or `memberTransitionRefs` on a [=StateCollection=] | `transitionRefs` on a [=Journey=], or `memberTransitionRefs` on a [=StateCollection=] | `entryTransitionRefs` on a [=State=] | `entryTransitionRefs` on a [=State=] |
 | Source State occurrence | Not retained | Not retained | Not retained | Retained and suspended until the invocation completes or is cancelled |
 | Meaning | Ordinary progression inside one Journey | Cross a border that two vertices share in one experience frame, in either direction | Leave local progression and enter a Journey through a named entry | Enter a Journey through a named entry, then resume the source when that Journey exits |
 
@@ -230,7 +236,7 @@ reference a [=Command=] with `commandRef`. An [=AdjacentTransition=] cannot.
 
 A [=Transition=] is a structural directed edge between [=Local vertex|local vertices=] of a [=Journey=]. It models ordinary progression inside the local topology of a [=Journey=].
 
-A [=Transition=] is not owned by either endpoint state. It is owned by a journey through `transitionRefs`.
+A [=Transition=] is not owned by either endpoint state. It is owned by a journey through `transitionRefs`, or, as a [=Member transition|member transition=], by a [=StateCollection=] through `memberTransitionRefs`.
 
 A [=Transition=] applies to every concrete occurrence of the [=Local vertex|local vertex=] its `from`
 value references.
@@ -304,6 +310,11 @@ vertex and makes the other current. Crossing back makes the first vertex current
 [=Co-present|co-present=], which the user acts on at the same time, are not adjacent vertices: they
 are child Journeys of a [=CompositeState=].
 
+A [=Member transition|member=] AdjacentTransition connects neighboring
+[=Collection member|members=] of a [=StateCollection=]. Its `from` and `to` are both the member
+State, and which neighbor it reaches is known only when the user crosses the border. Crossing it
+leaves one member and enters the other.
+
 <spec-statement>
 1. An [=AdjacentTransition=] describes movement from its `from` vertex to its `to` vertex and from
    its `to` vertex to its `from` vertex. Each movement leaves the vertex it starts from, as taking a
@@ -315,7 +326,9 @@ are child Journeys of a [=CompositeState=].
    CompositeState and all of its child Journeys.
 4. Producers **SHOULD NOT** also declare a [=Transition=] between the same two vertices, in either
    direction, that adds nothing to the adjacency: no [=Command=], child entry or exit selection,
-   guard, or effect. The AdjacentTransition already describes that movement.
+   guard, or effect. The AdjacentTransition already describes that movement. For a
+   [=Member transition|member=] AdjacentTransition, this applies to the member Transitions of the
+   same collection, not to a Transition from the member State to itself that a Journey lists.
 </spec-statement>
 
 Adjacent vertices occur, for example, as consecutive sections of a scrolling view or as pages of a
@@ -766,7 +779,7 @@ Example transition associated with a command:
 
 ## Journey {data-cop-concept="journey"}
 
-A [=Journey=] is the local container for intended flow topology. It lists the experiential states that belong to the journey, the terminal exits exported by the journey, and, when present, the transitions that connect those [=Local vertex|local vertices=].
+A [=Journey=] is the local container for intended flow topology. It lists the experiential states that belong to the journey, the terminal exits exported by the journey, and, when present, the transitions that connect those [=Local vertex|local vertices=]. [=Member transition|Member transitions=] are listed by their [=StateCollection=] instead.
 
 Use [=Journey=] when the modeled object owns local traversal, progression, or structural order. If the model only needs to list known entry points into pages, surfaces, flows, or journeys, use [=JourneyEntryIndex=] instead.
 
@@ -1241,6 +1254,160 @@ leaves Checkout. Without it, Payment is complete and Shipping continues:
 ---
 
 
+## StateCollection {data-cop-concept="state-collection"}
+
+A [=StateCollection=] lets one State stand for many similar parts of an experience, such as the rows
+of a list, the cards of a feed, or the slides of a carousel. Each part is a
+[=Collection member|member=]. The State, called the member State, is modeled once, and every member
+offers what it offers. The collection also lists the [=Member transition|member transitions=]: the
+ways the user gets from one member to another, such as scrolling to the next card or pressing
+"Next". Which member the user reaches is not part of the Graph.
+
+When each part has steps of its own, the member State is a [=CompositeState=], so each member gets
+its own child Journeys.
+
+| The repeated parts… | Model |
+| --- | --- |
+| behave the same and have no steps of their own | A [=StateCollection=] whose member State is a [=State=] |
+| behave the same, and each has steps of its own | A [=StateCollection=] whose member State is a [=CompositeState=] |
+| behave differently | Separate [=State|States=] or Journeys |
+
+<spec-statement>
+1. A [=StateCollection=] lets its member State, a [=State=] or [=CompositeState=], stand for several
+   distinct parts of an experience: its [=Collection member|members=]. Every member offers what the
+   member State offers. Being at a member is an occurrence of the member State.
+2. Members are independent. Taking a transition at one member does not take it at another. A
+   [=Transition=] from the member State to itself that the [=Journey=] lists leaves and re-enters
+   the member where it is taken. Other members change only through a declared effect.
+3. A [=Member transition|member transition=] leaves the member it starts from and enters another
+   member of the same collection, as any transition leaves its `from` vertex and enters its `to`
+   vertex. Graph names neither member: both are known only when the movement happens.
+   - A member [=AdjacentTransition=] crosses the border between neighboring members, in either
+     direction.
+   - A member [=Transition=] describes a move that has its own [=Command=], guard, or effect. When
+     the member State is a [=CompositeState=], a child exit of the member it leaves can trigger it
+     through `fromExitRef`, and it can select a child entry of the member it enters through
+     `toEntryRef`, as a parent Transition of a CompositeState does.
+4. The user moves from one member to another only through member transitions. Membership alone
+   implies no order, neighbors, progression, synchronization, or priority among members.
+5. Entering the member State from another vertex enters one of its members, and Graph does not
+   name which. Leaving the member State for another vertex leaves the collection. An
+   [=InvokingTransition=] activated at a member retains that member, and completion resumes it.
+6. Members belong to one occurrence of the [=Journey=] that owns the member State. A member
+   transition stays inside that Journey occurrence and inside every [=CompositeState=] occurrence
+   that contains that Journey occurrence. Each occurrence of the Journey, for example as the child
+   of different CompositeStates or as an invoked Journey, has its own members.
+7. When the member State is a [=CompositeState=], each member has its own child Journey occurrences.
+   A member transition leaves the child Journeys of the member it leaves and enters the member it
+   moves to, as any Transition from and into a CompositeState does.
+8. Graph does not define how many members exist or which they are, nor how members are told apart,
+   ordered, added, removed, loaded, or presented.
+9. Producers **SHOULD** declare a [=StateCollection=] when one State or CompositeState stands for
+   several parts that the user moves between, instead of declaring one State per part. Parts that
+   behave differently are different States. Producers **SHOULD NOT** add a member Transition that
+   adds nothing to a member AdjacentTransition of the same collection: no Command, child entry or
+   exit selection, guard, or effect.
+</spec-statement>
+
+An [=Entry transition|entry transition=] that the member State lists is offered at each member.
+
+```mermaid
+classDiagram
+  class StateCollection {
+    id
+    label
+    memberStateRef
+    memberTransitionRefs
+  }
+  class Journey {
+    stateRefs
+  }
+  class State
+  class CompositeState
+  class Transition
+  class AdjacentTransition
+
+  StateCollection --> State : memberStateRef
+  StateCollection --> CompositeState : memberStateRef
+  StateCollection --> Transition : memberTransitionRefs
+  StateCollection --> AdjacentTransition : memberTransitionRefs
+  Journey --> State : stateRefs
+  Journey --> CompositeState : stateRefs
+```
+
+In the example below, "Toggle item" acts at the member where it is taken and stays there. Crossing
+the border to a neighboring member, or invoking "Next item", moves to another member; neither names
+which one.
+
+```json
+[
+  {
+    "@type": "Journey",
+    "@id": "urn:ujg:journey:item-list",
+    "label": "Item list",
+    "defaultEntryRef": "urn:ujg:entry:item-list",
+    "entryRefs": ["urn:ujg:entry:item-list"],
+    "stateRefs": ["urn:ujg:state:list-item"],
+    "transitionRefs": ["urn:ujg:transition:list-item-toggle"]
+  },
+  {
+    "@type": "JourneyEntry",
+    "@id": "urn:ujg:entry:item-list",
+    "stateRef": "urn:ujg:state:list-item"
+  },
+  {
+    "@type": "State",
+    "@id": "urn:ujg:state:list-item",
+    "label": "List item"
+  },
+  {
+    "@type": "Transition",
+    "@id": "urn:ujg:transition:list-item-toggle",
+    "label": "Toggle item",
+    "from": "urn:ujg:state:list-item",
+    "to": "urn:ujg:state:list-item",
+    "commandRef": "urn:ujg:command:toggle-item"
+  },
+  {
+    "@type": "StateCollection",
+    "@id": "urn:ujg:collection:list-items",
+    "label": "List items",
+    "memberStateRef": "urn:ujg:state:list-item",
+    "memberTransitionRefs": [
+      "urn:ujg:adjacent:list-item-neighbors",
+      "urn:ujg:transition:list-item-next"
+    ]
+  },
+  {
+    "@type": "AdjacentTransition",
+    "@id": "urn:ujg:adjacent:list-item-neighbors",
+    "from": "urn:ujg:state:list-item",
+    "to": "urn:ujg:state:list-item"
+  },
+  {
+    "@type": "Transition",
+    "@id": "urn:ujg:transition:list-item-next",
+    "label": "Next item",
+    "from": "urn:ujg:state:list-item",
+    "to": "urn:ujg:state:list-item",
+    "commandRef": "urn:ujg:command:next-item"
+  },
+  {
+    "@type": "Command",
+    "@id": "urn:ujg:command:toggle-item",
+    "label": "Toggle item"
+  },
+  {
+    "@type": "Command",
+    "@id": "urn:ujg:command:next-item",
+    "label": "Next item"
+  }
+]
+```
+
+---
+
+
 ## Normative Artifacts
 
 This module is published through the following artifacts:
@@ -1255,7 +1422,7 @@ context `https://ujg.specs.openuji.org/ed/ns/context.jsonld`, which preserves Gr
 
 ### Ontology {data-cop-concept="ontology"}
 
-The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `State`, `CompositeState`, `Transition`, `AdjacentTransition`, `Command`, `JourneyExit`, `OutgoingTransition`, `InvokingTransition`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, and `entryTransitionRefs`.
+The normative Graph ontology is defined below and is published at `https://ujg.specs.openuji.org/ed/ns/graph`. It is the authoritative structural definition for Graph classes and properties, including `Journey`, `JourneyEntry`, `JourneyEntryIndex`, `State`, `CompositeState`, `Transition`, `AdjacentTransition`, `Command`, `JourneyExit`, `OutgoingTransition`, `InvokingTransition`, `StateCollection`, `defaultEntryRef`, `entryRefs`, `stateRef`, `exitRefs`, `toEntryRef`, `fromExitRef`, `commandRef`, `subjourneyRefs`, `entryTransitionRefs`, `memberStateRef`, and `memberTransitionRefs`.
 
 :::include ./graph.ttl :::
 
@@ -1297,4 +1464,6 @@ To ensure graph integrity, the following constraints **MUST** be met:
 7. Each `commandRef` **MUST** resolve to a [=Command=].
 8. The [=Journey=] that owns an [=InvokingTransition=]'s `toEntryRef` **MUST** declare at least one
    `exitRefs` value.
+9. A [=StateCollection=] **MUST** be listed in the same [=UJGDocument=] as its member State, so that
+   every Consumer that resolves the member State also finds the collection.
 </spec-statement>
