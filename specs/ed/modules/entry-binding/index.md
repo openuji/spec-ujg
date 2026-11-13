@@ -52,6 +52,10 @@ If an `EntryBinding` references a [=JourneyEntry=] whose `stateRef` points to a
 [=CompositeState=], the binding selects only that outer entry. It does not select an entry of the
 composite state's child [=Journey=].
 
+When an entry transition selects its entry through an [=EntrySelector=], an `EntryBinding` value is
+one way a materialization context can resolve what was selected to a [=JourneyEntry=]. A value that
+no `EntryBinding` declares selects no entry.
+
 ## Normative Artifacts
 
 This module is published through the following artifacts:

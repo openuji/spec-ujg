@@ -16,6 +16,8 @@
     "JourneyExit": "ujggraph:JourneyExit",
     "OutgoingTransition": "ujggraph:OutgoingTransition",
     "InvokingTransition": "ujggraph:InvokingTransition",
+    "StateCollection": "ujggraph:StateCollection",
+    "EntrySelector": "ujggraph:EntrySelector",
 
     "label": "ujggraph:label",
     "tags": {
@@ -77,6 +79,24 @@
     },
     "entryTransitionRefs": {
       "@id": "ujggraph:entryTransitionRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "memberStateRef": {
+      "@id": "ujggraph:memberStateRef",
+      "@type": "@id"
+    },
+    "memberTransitionRefs": {
+      "@id": "ujggraph:memberTransitionRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "entrySelectorRef": {
+      "@id": "ujggraph:entrySelectorRef",
+      "@type": "@id"
+    },
+    "candidateJourneyRefs": {
+      "@id": "ujggraph:candidateJourneyRefs",
       "@type": "@id",
       "@container": "@set"
     }

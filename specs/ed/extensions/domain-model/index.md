@@ -78,6 +78,8 @@ source of one-to-one domain objects.
 | Entry   | MUST provide sufficient context for its target journey state |
 | Transition | connects these behavioral obligations |
 | AdjacentTransition | adds no behavioral obligation: crossing it in either direction needs no condition and produces no effect |
+| StateCollection | MUST realize an action at one member for that member only; other members change only through a declared Effect |
+| EntrySelector | MUST be resolvable when its transition is taken: the occurrence identifies exactly one entry, within its candidate Journeys when they are declared |
 
 This relationship does not require each UJG element to have a corresponding Domain Model element.
 

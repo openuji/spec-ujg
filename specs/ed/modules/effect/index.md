@@ -146,8 +146,8 @@ the SHACL shape.
 1. **Declaration only:** Effect describes that a transition edge has an associated side effect; it
    does not define how that effect is invoked.
 2. **Graph preservation:** `effectRef` MUST NOT create a hidden edge or change the local `from`/`to`
-   semantics of a host `Transition`, or the `toEntryRef` destination semantics of a host
-   `OutgoingTransition`.
+   semantics of a host `Transition`, or the destination semantics of a host `OutgoingTransition`,
+   whether its entry is fixed by `toEntryRef` or selected through `entrySelectorRef`.
 3. **Resource boundary:** `producedRefs` and `consumedRefs` MUST point to concrete resources that
    are subclasses of [=EffectResource=]. They MUST NOT be used to create hidden Graph traversal.
 4. **Command separation:** `effectRef` MUST NOT appear on `Command`.

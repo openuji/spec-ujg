@@ -196,7 +196,8 @@ the SHACL shape.
    starts a new segment, including re-entry into the same Journey or the same State.
 8. **Outgoing destination segment:** For an explained outgoing traversal, the destination segment's
    `mappedJourneyRef` MUST identify the unique Journey that owns the OutgoingTransition's
-   `toEntryRef`. The segment's first `mappedStateRef` MUST equal that JourneyEntry's `stateRef`.
+   destination entry, as rule 16 determines it. The segment's first `mappedStateRef` MUST equal that
+   JourneyEntry's `stateRef`.
 9. **Cross-segment predecessor:** For the first MappedStep of a segment entered through an
    OutgoingTransition, the movement predecessor is the latest earlier mapped State or CompositeState
    in Runtime causal order, even though it belongs to the preceding segment. Intervening Command
@@ -232,18 +233,30 @@ the SHACL shape.
     Journey scope and containing composite occurrence; observations from sibling child Journeys may
     interleave without becoming that predecessor. A Transition is relevant when its local `from` and `to` match that predecessor
     and the current mapped state. An AdjacentTransition is relevant when its `from` and `to` match
-    them in either order. An [=OutgoingTransition=] is relevant when:
+    them in either order. A [=Member transition|member transition=] of a [=StateCollection=] whose
+    member State is in the local Journey scope is an effective transition of that scope. When the
+    predecessor and the current mapped state are both that member State, the two steps are at the
+    same [=Collection member|member=] if their events reference the same `surfaceInstanceRef`, and
+    at different members otherwise. A member transition is relevant only to steps at different
+    members, and a Transition from the member State to itself in a Journey's `transitionRefs` only
+    to steps at the same member. An [=OutgoingTransition=] is relevant when:
     - it is listed in the `entryTransitionRefs` of a current State. The predecessor is current, and
       so is every [=CompositeState=] occurrence that contains it. For each current CompositeState
       occurrence, the mapped state of the latest earlier MappedStep in each of its child Journey
       scopes is current as well, at any depth. A CompositeState lists no entry transitions;
-    - its `toEntryRef` is owned by the destination segment's `mappedJourneyRef`; and
+    - its destination entry is owned by the destination segment's `mappedJourneyRef`; and
     - that entry's `stateRef` equals the destination segment's first `mappedStateRef`.
+
+    The destination entry is the OutgoingTransition's `toEntryRef`. For an OutgoingTransition that
+    references an [=EntrySelector=], it is any JourneyEntry owned by a Journey the selector admits:
+    one of its `candidateJourneyRefs`, or any Journey when it declares none.
 17. **Composite occurrence end:** A child [=JourneyExit=] does not by itself end the containing
     [=CompositeState=] occurrence for Mapping, and observations from sibling child Journeys stay in
     scope after it. The occurrence ends when a parent [=Transition=] from the CompositeState, or a
     parent [=AdjacentTransition=] with the CompositeState as one endpoint, explains the movement out
-    of it, or when an observation first resolves outside its containment. Steps of
+    of it, or when an observation first resolves outside its containment. This includes a member
+    transition whose member State is the CompositeState: it ends the occurrence of the member it
+    leaves, and rule 12 treats the member it enters as a new occurrence. Steps of
     an invoked Journey (rule 19) whose invocation started inside the occurrence are not outside it:
     the occurrence is retained while the invocation runs and continues when the source resumes. Later
     observations from any child Journey of the ended occurrence require a later occurrence of the
@@ -254,11 +267,14 @@ the SHACL shape.
     `OutgoingTransition` whose `commandRef` references that same Command, if one exists for the
     movement from the predecessor to the current mapped state. Otherwise, when a relevant
     [=AdjacentTransition=] explains the movement, `explainedByTransitionRef` SHOULD identify that
-    AdjacentTransition.
+    AdjacentTransition. A relevant OutgoingTransition that references an [=EntrySelector=] yields to
+    every other relevant transition, including a member transition, unless the observed affordance
+    event resolves to its `commandRef`.
 19. **Invoked Journey scope:** An [=InvokingTransition=] is recognized for a step when it is listed
     in the `entryTransitionRefs` of a current State (rule 16, taking the latest earlier mapped State
-    or CompositeState in Runtime causal order as the predecessor), and its `toEntryRef` entry has a
-    `stateRef` equal to the step's mapped state. When a relevant Transition or AdjacentTransition
+    or CompositeState in Runtime causal order as the predecessor), and its destination entry has a
+    `stateRef` equal to the step's mapped state. The destination entry is its `toEntryRef`, or an
+    entry its [=EntrySelector=] admits, as in rule 16. When a relevant Transition or AdjacentTransition
     from the step's local-scope predecessor (rule 16) also explains the step, that reading wins unless
     the observed affordance event resolves to the InvokingTransition's `commandRef`. The recognized step, and
     every following step that resolves to a State of the invoked Journey or to a State nested in its
@@ -276,6 +292,17 @@ the SHACL shape.
     segment. A jump is a derived processing result, not serialized Mapping vocabulary.
 22. **No intent assumption:** A derived jump reports that the observed movement is not explained by
     the mapped graph. It does not by itself decide whether the movement is legitimate or erroneous.
+
+Mapping binds the members that a member transition connects from the observed SurfaceInstances and
+does not serialize member identity. When the member State is a [=CompositeState=], Mapping sees a
+move between members only when the Runtime chain observes the CompositeState itself; observations of
+its child States alone do not show which member they belong to.
+
+Mapping does not serialize the entry that an [=EntrySelector=] selected: it is the entry that rule
+16 matched, owned by the destination segment's `mappedJourneyRef`. A selector without
+`candidateJourneyRefs` admits every Journey, so an OutgoingTransition that references it explains
+any movement into an entry State from the States that list it. Candidates keep other movements
+visible as jumps.
 
 ## Step Occurrence and Phase Start {data-cop-concept="step-occurrence"}
 

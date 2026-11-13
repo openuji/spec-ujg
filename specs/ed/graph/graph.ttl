@@ -43,7 +43,7 @@ ujggraph:AdjacentTransition a owl:Class ;
   rdfs:subClassOf ujg:Node ;
   owl:disjointWith ujggraph:Transition, ujggraph:OutgoingTransition, ujggraph:InvokingTransition ;
   rdfs:label "Adjacent Transition" ;
-  rdfs:comment "A structural edge between two local vertices of a Journey that sit next to each other in the same experience frame and share a border. It describes movement across that border in both directions. It is not a Transition." .
+  rdfs:comment "A structural edge between two local vertices of a Journey, or between two neighboring members of a StateCollection, that sit next to each other in the same experience frame and share a border. It describes movement across that border in both directions. It is not a Transition." .
 
 ujggraph:Command a owl:Class ;
   rdfs:subClassOf ujg:Node ;
@@ -64,6 +64,18 @@ ujggraph:InvokingTransition a owl:Class ;
   owl:disjointWith ujggraph:OutgoingTransition ;
   rdfs:label "Invoking Transition" ;
   rdfs:comment "An affordance that invokes a Journey through a JourneyEntry and resumes the source State occurrence when that Journey reaches one of its exits." .
+
+ujggraph:StateCollection a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujggraph:Journey, ujggraph:JourneyEntry, ujggraph:JourneyEntryIndex, ujggraph:State, ujggraph:CompositeState, ujggraph:Transition, ujggraph:AdjacentTransition, ujggraph:OutgoingTransition, ujggraph:InvokingTransition, ujggraph:Command, ujggraph:JourneyExit ;
+  rdfs:label "State Collection" ;
+  rdfs:comment "Lets one State or CompositeState, its member State, stand for several similar parts of an experience, its members. It lists the member transitions that move the user from one member to another. It is not a local vertex and names no member." .
+
+ujggraph:EntrySelector a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujggraph:Journey, ujggraph:JourneyEntry, ujggraph:JourneyEntryIndex, ujggraph:State, ujggraph:CompositeState, ujggraph:Transition, ujggraph:AdjacentTransition, ujggraph:OutgoingTransition, ujggraph:InvokingTransition, ujggraph:Command, ujggraph:JourneyExit, ujggraph:StateCollection ;
+  rdfs:label "Entry Selector" ;
+  rdfs:comment "States that the JourneyEntry an OutgoingTransition or InvokingTransition enters is selected each time the transition is taken, not named in the Graph. It can list the candidate Journeys the selected entry belongs to. It names no entry." .
 
 ### Properties
 
@@ -117,7 +129,7 @@ ujggraph:transitionRefs a owl:ObjectProperty ;
       ujggraph:AdjacentTransition
     )
   ] ;
-  rdfs:comment "References the local Transition and AdjacentTransition nodes of a Journey." .
+  rdfs:comment "References the local Transition and AdjacentTransition nodes of a Journey. Member transitions are listed by StateCollection memberTransitionRefs instead." .
 
 ujggraph:exitRefs a owl:ObjectProperty ;
   rdfs:domain ujggraph:Journey ;
@@ -140,7 +152,7 @@ ujggraph:from a owl:ObjectProperty ;
       ujggraph:CompositeState
     )
   ] ;
-  rdfs:comment "References the source local vertex of a Transition, or the vertex before the shared border of an AdjacentTransition." .
+  rdfs:comment "References the source local vertex of a Transition, or the vertex before the shared border of an AdjacentTransition. On a member transition of a StateCollection, it is the member State." .
 
 ujggraph:to a owl:ObjectProperty ;
   rdfs:domain [
@@ -158,7 +170,7 @@ ujggraph:to a owl:ObjectProperty ;
       ujggraph:JourneyExit
     )
   ] ;
-  rdfs:comment "References the destination local vertex of a Transition, or the vertex after the shared border of an AdjacentTransition. An AdjacentTransition's to value is never a JourneyExit." .
+  rdfs:comment "References the destination local vertex of a Transition, or the vertex after the shared border of an AdjacentTransition. An AdjacentTransition's to value is never a JourneyExit. On a member transition of a StateCollection, it is the member State." .
 
 ujggraph:fromExitRef a owl:ObjectProperty ;
   rdfs:domain ujggraph:Transition ;
@@ -177,7 +189,7 @@ ujggraph:toEntryRef a owl:ObjectProperty ;
   ] ;
   rdfs:range ujggraph:JourneyEntry ;
   rdfs:label "to entry ref" ;
-  rdfs:comment "Selects a JourneyEntry. On a Transition, it refines entry into one child Journey of the CompositeState used as to. On an OutgoingTransition, it identifies the destination Journey entry contract. On an InvokingTransition, it identifies the entry contract of the invoked Journey." .
+  rdfs:comment "Selects a JourneyEntry. On a Transition, it refines entry into one child Journey of the CompositeState used as to. On an OutgoingTransition, it identifies the fixed destination Journey entry contract. On an InvokingTransition, it identifies the fixed entry contract of the invoked Journey. An OutgoingTransition or InvokingTransition whose entry is selected when it is taken uses entrySelectorRef instead." .
 
 ujggraph:commandRef a owl:ObjectProperty ;
   rdfs:range ujggraph:Command ;
@@ -201,3 +213,45 @@ ujggraph:entryTransitionRefs a owl:ObjectProperty ;
   ] ;
   rdfs:label "entry transition refs" ;
   rdfs:comment "References the entry transitions (OutgoingTransition or InvokingTransition nodes) available at a State. Only a State declares it. The listed transitions are available at occurrences of that State only: they are not inherited by States nested in a CompositeState, and a CompositeState does not declare them." .
+
+ujggraph:memberStateRef a owl:ObjectProperty ;
+  rdfs:domain ujggraph:StateCollection ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:State
+      ujggraph:CompositeState
+    )
+  ] ;
+  rdfs:label "member state ref" ;
+  rdfs:comment "References the State or CompositeState that every member of a StateCollection is an occurrence of." .
+
+ujggraph:memberTransitionRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:StateCollection ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:Transition
+      ujggraph:AdjacentTransition
+    )
+  ] ;
+  rdfs:label "member transition refs" ;
+  rdfs:comment "References the Transition and AdjacentTransition nodes that move from one member of a StateCollection to another member. Their from and to values are the member State. A member transition leaves the member it starts from and enters another member; neither member is named in the Graph. They are not listed in any Journey's transitionRefs." .
+
+ujggraph:entrySelectorRef a owl:ObjectProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:OutgoingTransition
+      ujggraph:InvokingTransition
+    )
+  ] ;
+  rdfs:range ujggraph:EntrySelector ;
+  rdfs:label "entry selector ref" ;
+  rdfs:comment "References the EntrySelector of an OutgoingTransition or InvokingTransition whose destination entry is selected each time the transition is taken. It is the alternative to toEntryRef." .
+
+ujggraph:candidateJourneyRefs a owl:ObjectProperty ;
+  rdfs:domain ujggraph:EntrySelector ;
+  rdfs:range ujggraph:Journey ;
+  rdfs:label "candidate journey refs" ;
+  rdfs:comment "References the Journeys that an entry selected through an EntrySelector can belong to. Without it, the selected entry can belong to any Journey." .

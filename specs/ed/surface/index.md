@@ -150,6 +150,8 @@ boundaries. A different color, framework, or renderer does not by itself make a 
 When Graph traversal creates multiple concrete occurrences, the corresponding Surface can also
 appear more than once. Surface does not define occurrence counts, instance keys, collection data,
 or rendering behavior. Those details come from Graph semantics and runtime or application data.
+A [=StateCollection=] is such Graph semantics; its members are told apart by their SurfaceInstances
+(see [=SurfaceInstance=]).
 
 <spec-statement>
 1. A [=Surface=] **MUST** have an IRI and exactly one `graphNodeRef`.
@@ -198,6 +200,9 @@ occurred.
 2. `surfaceRef` **MUST** identify a [=Surface=].
 3. A [=SurfaceInstance=] **MUST NOT** declare Graph-node identity directly; its Graph meaning is
    found through the referenced Surface.
+4. Each [=Collection member|member=] of a [=StateCollection=] **MUST** be observed through its own
+   SurfaceInstance, and every observation of that member **MUST** use the same one. Mapping tells
+   members apart only by their SurfaceInstances.
 </spec-statement>
 
 ```mermaid

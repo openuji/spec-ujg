@@ -147,6 +147,8 @@ Use `SurfaceInstanceResolver` when the same stable `Surface` can appear in repea
 
 A resolver must not point to concrete `SurfaceInstance` nodes and must not require one binding per repeated occurrence.
 
+For the member State of a Graph `StateCollection`, use a resolver key that distinguishes members, so each member gets its own SurfaceInstance and keeps it while it exists. Mapping tells members apart by that SurfaceInstance.
+
 ## Custom locators
 
 Use `CustomLocator` when interoperable accessible-object recognition is not enough.
