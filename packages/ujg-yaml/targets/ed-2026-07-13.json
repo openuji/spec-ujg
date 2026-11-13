@@ -1,0 +1,302 @@
+{
+  "id": "ed-2026-07-13",
+  "kind": "ed",
+  "label": "Editor's Draft 2026-07-13",
+  "publicUrl": "https://ujg.specs.openuji.org/ed",
+  "source": {
+    "headCommit": "e795559ebea8a9f57e7d6d212ccb9fdd11e825d4",
+    "headDate": "2026-07-13T13:00:39+02:00",
+    "headSubject": "Merge pull request #15 from openuji/feature/surface-core",
+    "edContentCommit": "a6a73ca56c25b48457c620af158acc6f68ac1f09",
+    "edContentDate": "2026-07-13T12:52:11+02:00"
+  },
+  "contextOrder": [
+    "core",
+    "graph",
+    "surface",
+    "runtime",
+    "mapping",
+    "action",
+    "artifact",
+    "distributedJourney",
+    "condition",
+    "routing",
+    "designSystem",
+    "l10n",
+    "observability",
+    "experienceAnnotation",
+    "stateData"
+  ],
+  "modules": {
+    "core": {
+      "moduleId": "core",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/core/core.context.jsonld",
+          "hash": "sha256:c9c560f264ce95a506ed91802e749c7d417ed34728351840aebfae40c7733e3b"
+        },
+        "shape": {
+          "path": "specs/ed/core/core.shape.ttl",
+          "hash": "sha256:7dccb70ce37bc20a2c4687d9407db0ef4e64f4c207686fa9d22251bb03376611"
+        },
+        "ontology": {
+          "path": "specs/ed/core/core.ttl",
+          "hash": "sha256:0d600641ac1b4fbe5c30a9a154945b0b91488ca23f741fc3355e4f02a7a7f686"
+        }
+      }
+    },
+    "graph": {
+      "moduleId": "graph",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/graph/graph.context.jsonld",
+          "hash": "sha256:c4a7198fa4ef6d7e9e835e82dd7f5ca3b8e7f565dad5833d157625c0dfb8a0c4"
+        },
+        "shape": {
+          "path": "specs/ed/graph/graph.shape.ttl",
+          "hash": "sha256:c4354a238747e8c9c53d57c320f7a17292d1814a2ff48f1cf31bc5884b0222ed"
+        },
+        "ontology": {
+          "path": "specs/ed/graph/graph.ttl",
+          "hash": "sha256:9d5d9166ce3eaef4a96c043af9463e96fb12edf92937bb1633a6c391ab00e655"
+        }
+      }
+    },
+    "surface": {
+      "moduleId": "surface",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/surface/surface.context.jsonld",
+          "hash": "sha256:84e2964c55d18c0242dcafb974f2a2c52258c964be3671e011bdb53dd88d7fd4"
+        },
+        "shape": {
+          "path": "specs/ed/surface/surface.shape.ttl",
+          "hash": "sha256:60582dff0640d37f80e081e0b3eb023602821e2a8b0a378acacd396b06917ca9"
+        },
+        "ontology": {
+          "path": "specs/ed/surface/surface.ttl",
+          "hash": "sha256:ab8849676f0e378f2a7dfe8b34aee83ace6949799b93e675510f6860293bd28f"
+        }
+      }
+    },
+    "action": {
+      "moduleId": "modules/action",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/action.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/action/action.context.jsonld",
+          "hash": "sha256:daf8a5ea6cf3602d980ec62648d7e51d1fc8147551f826f787b658dd7a2145b4"
+        },
+        "shape": {
+          "path": "specs/ed/modules/action/action.shape.ttl",
+          "hash": "sha256:54f5f0f8b2b58386f0ecb196620fdac2c8b98360bdf43194bc8c56ae1e19021d"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/action/action.ttl",
+          "hash": "sha256:be71cefcb4044d9f6ac82ec30620b5dd28bd55dae9d808802006fb03b4291c0a"
+        }
+      }
+    },
+    "artifact": {
+      "moduleId": "modules/artifact",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/artifact.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/artifact/artifact.context.jsonld",
+          "hash": "sha256:dcdbc3f77c9c4bd23f22a3b865e412705b831bca0f3f346144fc436b5544f09a"
+        },
+        "shape": {
+          "path": "specs/ed/modules/artifact/artifact.shape.ttl",
+          "hash": "sha256:927373c5a01af37d44f06f776695102d575cf17c883dff2ebeb470aefecdc0ee"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/artifact/artifact.ttl",
+          "hash": "sha256:adc9d6a74bad67d7ba44b75a47fa857df58f950afcebc4e4b4a8698c35e9d581"
+        }
+      }
+    },
+    "distributedJourney": {
+      "moduleId": "modules/distributed-journey",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/distributed-journey.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/distributed-journey/distributed-journey.context.jsonld",
+          "hash": "sha256:406e807bca61bb57e5ffc484a196ee06ff8f1ee39e925d11668c4b619c0b722a"
+        },
+        "shape": {
+          "path": "specs/ed/modules/distributed-journey/distributed-journey.shape.ttl",
+          "hash": "sha256:dcb4b6cbeca0fc337ed063af52541c96587c14d4dae2bb2dd0cc3d1b5389066b"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/distributed-journey/distributed-journey.ttl",
+          "hash": "sha256:79275d603cd6739c6f64f5ed2e2c9c5f8949621940d0b8129a9fef4e84e0c798"
+        }
+      }
+    },
+    "l10n": {
+      "moduleId": "modules/l10n",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/l10n/l10n.context.jsonld",
+          "hash": "sha256:c91b83268f1277fc51e3ce1dbd74d909ce1af6cad5237acb1e3bd8b8f9b608d2"
+        },
+        "shape": {
+          "path": "specs/ed/modules/l10n/l10n.shape.ttl",
+          "hash": "sha256:a32504d280e43c7f4567d18c709f8a96da3f7834acecff862f0e3c617a445eba"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/l10n/l10n.ttl",
+          "hash": "sha256:289c3eb4a4791e8f6961fe2c179e9735c20767c22055522e8b81800098aede9c"
+        }
+      }
+    },
+    "observability": {
+      "moduleId": "modules/observability",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/observability/observability.context.jsonld",
+          "hash": "sha256:10c123e8057dd455b492a60df8ba56369cc6782c4232856cd14426fc231a546b"
+        },
+        "shape": {
+          "path": "specs/ed/modules/observability/observability.shape.ttl",
+          "hash": "sha256:3d5eb3b941e41fa8670318a74b673b6e9855614350a5b1f6fc30a20c7e98643f"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/observability/observability.ttl",
+          "hash": "sha256:51751761af286066f747d208cc35a55a5c37a2ce356097c314db0584e96219ff"
+        }
+      }
+    },
+    "runtime": {
+      "moduleId": "runtime",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/runtime.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/runtime/runtime.context.jsonld",
+          "hash": "sha256:4e52855fad3cf4722dc00d555520a445cbb240c655117e2532b62f72868ea438"
+        },
+        "shape": {
+          "path": "specs/ed/runtime/runtime.shape.ttl",
+          "hash": "sha256:88cfea86d2e43ab13f708f29c2deed3fd13241fe7875d1b79d254245891ab2e9"
+        },
+        "ontology": {
+          "path": "specs/ed/runtime/runtime.ttl",
+          "hash": "sha256:e3cf150e9c8f7e365afdc6a3d7eeb80d93d17ab2f1c4f589791a0144017a4992"
+        }
+      }
+    },
+    "mapping": {
+      "moduleId": "mapping",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/mapping.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/mapping/mapping.context.jsonld",
+          "hash": "sha256:aed6286a0b0a9da31b1e2d4b71870c6c2bd80f02c54d68c592561f2014ad09a3"
+        },
+        "shape": {
+          "path": "specs/ed/mapping/mapping.shape.ttl",
+          "hash": "sha256:c7f2b3e605b13901a8aff9613c7a872f057230717e669099813b3aafce3c92ee"
+        },
+        "ontology": {
+          "path": "specs/ed/mapping/mapping.ttl",
+          "hash": "sha256:b03175d4eef29870049a1f50b64b8a4dbca7504e05a154d2374eaae1ea55ea8c"
+        }
+      }
+    },
+    "condition": {
+      "moduleId": "modules/condition",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/condition/condition.context.jsonld",
+          "hash": "sha256:db219d5cdcef0231575307c6cf31ecc5b59d2e49614e7dede652a9e481d4d62c"
+        },
+        "shape": {
+          "path": "specs/ed/modules/condition/condition.shape.ttl",
+          "hash": "sha256:d5437cbc5e6d3bf9ed9d049bc8165574a791f62f9c5f36d7e11c0001d4a387cf"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/condition/condition.ttl",
+          "hash": "sha256:3931d479f356643821498435c5694a77ac0aadeea72978e62521ba6b29c72bb8"
+        }
+      }
+    },
+    "routing": {
+      "moduleId": "modules/routing",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/routing.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/routing/routing.context.jsonld",
+          "hash": "sha256:e3db2488bdae5036c32dd9a0159c826ae9bd1024832a883b7c6175b7fd2619f8"
+        },
+        "shape": {
+          "path": "specs/ed/modules/routing/routing.shape.ttl",
+          "hash": "sha256:70d0a466e075d0aed933082acc5473773bc471099a18272a1bfc4570dca1ed40"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/routing/routing.ttl",
+          "hash": "sha256:3d3cefec8dee3a0a9a6776db624ab5e582e28da09395ca0f621f92348c2fcb8c"
+        }
+      }
+    },
+    "designSystem": {
+      "moduleId": "modules/design-system",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/design-system/design-system.context.jsonld",
+          "hash": "sha256:13df11a7b04e504140de8d1a60b43dadcc686e8d3e7211a3e5e41610d0b7386a"
+        },
+        "shape": {
+          "path": "specs/ed/modules/design-system/design-system.shape.ttl",
+          "hash": "sha256:4e3fce060cc011c476ccf95cb68eaad407b8c4218aeea50a5cfd81036fbf65f8"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/design-system/design-system.ttl",
+          "hash": "sha256:99d6c1eed040f3972333543f5081aa0e39cfb52cb6cb8bd88c251de532b08d81"
+        }
+      }
+    },
+    "experienceAnnotation": {
+      "moduleId": "modules/experience-annotation",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/experience-annotation.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/experience-annotation/experience-annotation.context.jsonld",
+          "hash": "sha256:92e0ce1aebcbf5f170e0e7faeec139eb182ef0b7134087380cebc0be8daa46c9"
+        },
+        "shape": {
+          "path": "specs/ed/modules/experience-annotation/experience-annotation.shape.ttl",
+          "hash": "sha256:b9ce04e5f20064808bc2626c27ca2f03590fbfc9c942460bab45dd406d557dfa"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/experience-annotation/experience-annotation.ttl",
+          "hash": "sha256:21d5e2ab447248486e269925c8c44e1a95b2d3083ceb58c77cc2926743d1b7c6"
+        }
+      }
+    },
+    "stateData": {
+      "moduleId": "modules/state-data",
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/state-data.context.jsonld",
+      "artifacts": {
+        "context": {
+          "path": "specs/ed/modules/state-data/state-data.context.jsonld",
+          "hash": "sha256:f916db2732131c3455a0680f499248e37d0d2fbccd7380af3d93474bc6d63f25"
+        },
+        "shape": {
+          "path": "specs/ed/modules/state-data/state-data.shape.ttl",
+          "hash": "sha256:5c6c7b7daf6d6368148ec172f200f151ec829802cc43c2b7d2ef6021f23ec14a"
+        },
+        "ontology": {
+          "path": "specs/ed/modules/state-data/state-data.ttl",
+          "hash": "sha256:13e4516f17377356a9de8c64b04d37437a9e7347defa44833667e3577c7ad432"
+        }
+      }
+    }
+  }
+}

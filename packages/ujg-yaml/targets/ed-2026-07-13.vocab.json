@@ -1,0 +1,2006 @@
+{
+  "classes": {
+    "AccessibleFeature": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#AccessibleFeature",
+      "module": "observability"
+    },
+    "AccessibleLocator": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#AccessibleLocator",
+      "module": "observability"
+    },
+    "AccessibleRelation": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#AccessibleRelation",
+      "module": "observability"
+    },
+    "Action": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/action#Action",
+      "module": "action"
+    },
+    "Actor": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#Actor",
+      "module": "graph"
+    },
+    "Artifact": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/artifact#Artifact",
+      "module": "artifact"
+    },
+    "Component": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#Component",
+      "module": "designSystem"
+    },
+    "CompositeState": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#CompositeState",
+      "module": "graph"
+    },
+    "Condition": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/condition#Condition",
+      "module": "condition"
+    },
+    "ConditionSet": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/condition#ConditionSet",
+      "module": "condition"
+    },
+    "CustomLocator": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#CustomLocator",
+      "module": "observability"
+    },
+    "DesignSystem": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#DesignSystem",
+      "module": "designSystem"
+    },
+    "DistributedArtifact": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/distributed-journey#DistributedArtifact",
+      "module": "distributedJourney"
+    },
+    "ExperienceStep": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#ExperienceStep",
+      "module": "surface"
+    },
+    "Journey": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#Journey",
+      "module": "graph"
+    },
+    "JourneyEntry": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#JourneyEntry",
+      "module": "graph"
+    },
+    "JourneyEntryIndex": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#JourneyEntryIndex",
+      "module": "graph"
+    },
+    "JourneyExecution": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#JourneyExecution",
+      "module": "runtime"
+    },
+    "JourneyExit": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#JourneyExit",
+      "module": "graph"
+    },
+    "JourneyMapping": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#JourneyMapping",
+      "module": "mapping"
+    },
+    "LocalVertex": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#LocalVertex",
+      "module": "graph"
+    },
+    "MappedStep": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#MappedStep",
+      "module": "mapping"
+    },
+    "MessageBundle": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#MessageBundle",
+      "module": "l10n"
+    },
+    "Node": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/core#Node",
+      "module": "core"
+    },
+    "ObservationBinding": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#ObservationBinding",
+      "module": "observability"
+    },
+    "ObservationEvent": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#ObservationEvent",
+      "module": "observability"
+    },
+    "OutgoingTransition": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#OutgoingTransition",
+      "module": "graph"
+    },
+    "OutgoingTransitionGroup": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#OutgoingTransitionGroup",
+      "module": "graph"
+    },
+    "PainPoint": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/experience-annotation#PainPoint",
+      "module": "experienceAnnotation"
+    },
+    "Phase": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#Phase",
+      "module": "surface"
+    },
+    "Route": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/routing#Route",
+      "module": "routing"
+    },
+    "RuntimeEvent": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#RuntimeEvent",
+      "module": "runtime"
+    },
+    "Slot": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#Slot",
+      "module": "designSystem"
+    },
+    "SlotBinding": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#SlotBinding",
+      "module": "designSystem"
+    },
+    "State": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#State",
+      "module": "graph"
+    },
+    "StateData": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/state-data#StateData",
+      "module": "stateData"
+    },
+    "Surface": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#Surface",
+      "module": "surface"
+    },
+    "SurfaceInstance": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#SurfaceInstance",
+      "module": "surface"
+    },
+    "SurfaceInstanceResolver": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#SurfaceInstanceResolver",
+      "module": "observability"
+    },
+    "SurfaceRealization": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#SurfaceRealization",
+      "module": "designSystem"
+    },
+    "Template": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#Template",
+      "module": "designSystem"
+    },
+    "TokenSource": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#TokenSource",
+      "module": "designSystem"
+    },
+    "Touchpoint": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#Touchpoint",
+      "module": "surface"
+    },
+    "Transition": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#Transition",
+      "module": "graph"
+    },
+    "UJGDocument": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/core#UJGDocument",
+      "module": "core"
+    }
+  },
+  "contextOrder": [
+    "core",
+    "graph",
+    "surface",
+    "runtime",
+    "mapping",
+    "action",
+    "artifact",
+    "distributedJourney",
+    "condition",
+    "routing",
+    "designSystem",
+    "l10n",
+    "observability",
+    "experienceAnnotation",
+    "stateData"
+  ],
+  "generatedFrom": {
+    "artifactHashes": {
+      "specs/ed/core/core.context.jsonld": "sha256:c9c560f264ce95a506ed91802e749c7d417ed34728351840aebfae40c7733e3b",
+      "specs/ed/core/core.shape.ttl": "sha256:7dccb70ce37bc20a2c4687d9407db0ef4e64f4c207686fa9d22251bb03376611",
+      "specs/ed/core/core.ttl": "sha256:0d600641ac1b4fbe5c30a9a154945b0b91488ca23f741fc3355e4f02a7a7f686",
+      "specs/ed/graph/graph.context.jsonld": "sha256:c4a7198fa4ef6d7e9e835e82dd7f5ca3b8e7f565dad5833d157625c0dfb8a0c4",
+      "specs/ed/graph/graph.shape.ttl": "sha256:c4354a238747e8c9c53d57c320f7a17292d1814a2ff48f1cf31bc5884b0222ed",
+      "specs/ed/graph/graph.ttl": "sha256:9d5d9166ce3eaef4a96c043af9463e96fb12edf92937bb1633a6c391ab00e655",
+      "specs/ed/mapping/mapping.context.jsonld": "sha256:aed6286a0b0a9da31b1e2d4b71870c6c2bd80f02c54d68c592561f2014ad09a3",
+      "specs/ed/mapping/mapping.shape.ttl": "sha256:c7f2b3e605b13901a8aff9613c7a872f057230717e669099813b3aafce3c92ee",
+      "specs/ed/mapping/mapping.ttl": "sha256:b03175d4eef29870049a1f50b64b8a4dbca7504e05a154d2374eaae1ea55ea8c",
+      "specs/ed/modules/action/action.context.jsonld": "sha256:daf8a5ea6cf3602d980ec62648d7e51d1fc8147551f826f787b658dd7a2145b4",
+      "specs/ed/modules/action/action.shape.ttl": "sha256:54f5f0f8b2b58386f0ecb196620fdac2c8b98360bdf43194bc8c56ae1e19021d",
+      "specs/ed/modules/action/action.ttl": "sha256:be71cefcb4044d9f6ac82ec30620b5dd28bd55dae9d808802006fb03b4291c0a",
+      "specs/ed/modules/artifact/artifact.context.jsonld": "sha256:dcdbc3f77c9c4bd23f22a3b865e412705b831bca0f3f346144fc436b5544f09a",
+      "specs/ed/modules/artifact/artifact.shape.ttl": "sha256:927373c5a01af37d44f06f776695102d575cf17c883dff2ebeb470aefecdc0ee",
+      "specs/ed/modules/artifact/artifact.ttl": "sha256:adc9d6a74bad67d7ba44b75a47fa857df58f950afcebc4e4b4a8698c35e9d581",
+      "specs/ed/modules/condition/condition.context.jsonld": "sha256:db219d5cdcef0231575307c6cf31ecc5b59d2e49614e7dede652a9e481d4d62c",
+      "specs/ed/modules/condition/condition.shape.ttl": "sha256:d5437cbc5e6d3bf9ed9d049bc8165574a791f62f9c5f36d7e11c0001d4a387cf",
+      "specs/ed/modules/condition/condition.ttl": "sha256:3931d479f356643821498435c5694a77ac0aadeea72978e62521ba6b29c72bb8",
+      "specs/ed/modules/design-system/design-system.context.jsonld": "sha256:13df11a7b04e504140de8d1a60b43dadcc686e8d3e7211a3e5e41610d0b7386a",
+      "specs/ed/modules/design-system/design-system.shape.ttl": "sha256:4e3fce060cc011c476ccf95cb68eaad407b8c4218aeea50a5cfd81036fbf65f8",
+      "specs/ed/modules/design-system/design-system.ttl": "sha256:99d6c1eed040f3972333543f5081aa0e39cfb52cb6cb8bd88c251de532b08d81",
+      "specs/ed/modules/distributed-journey/distributed-journey.context.jsonld": "sha256:406e807bca61bb57e5ffc484a196ee06ff8f1ee39e925d11668c4b619c0b722a",
+      "specs/ed/modules/distributed-journey/distributed-journey.shape.ttl": "sha256:dcb4b6cbeca0fc337ed063af52541c96587c14d4dae2bb2dd0cc3d1b5389066b",
+      "specs/ed/modules/distributed-journey/distributed-journey.ttl": "sha256:79275d603cd6739c6f64f5ed2e2c9c5f8949621940d0b8129a9fef4e84e0c798",
+      "specs/ed/modules/experience-annotation/experience-annotation.context.jsonld": "sha256:92e0ce1aebcbf5f170e0e7faeec139eb182ef0b7134087380cebc0be8daa46c9",
+      "specs/ed/modules/experience-annotation/experience-annotation.shape.ttl": "sha256:b9ce04e5f20064808bc2626c27ca2f03590fbfc9c942460bab45dd406d557dfa",
+      "specs/ed/modules/experience-annotation/experience-annotation.ttl": "sha256:21d5e2ab447248486e269925c8c44e1a95b2d3083ceb58c77cc2926743d1b7c6",
+      "specs/ed/modules/l10n/l10n.context.jsonld": "sha256:c91b83268f1277fc51e3ce1dbd74d909ce1af6cad5237acb1e3bd8b8f9b608d2",
+      "specs/ed/modules/l10n/l10n.shape.ttl": "sha256:a32504d280e43c7f4567d18c709f8a96da3f7834acecff862f0e3c617a445eba",
+      "specs/ed/modules/l10n/l10n.ttl": "sha256:289c3eb4a4791e8f6961fe2c179e9735c20767c22055522e8b81800098aede9c",
+      "specs/ed/modules/observability/observability.context.jsonld": "sha256:10c123e8057dd455b492a60df8ba56369cc6782c4232856cd14426fc231a546b",
+      "specs/ed/modules/observability/observability.shape.ttl": "sha256:3d5eb3b941e41fa8670318a74b673b6e9855614350a5b1f6fc30a20c7e98643f",
+      "specs/ed/modules/observability/observability.ttl": "sha256:51751761af286066f747d208cc35a55a5c37a2ce356097c314db0584e96219ff",
+      "specs/ed/modules/routing/routing.context.jsonld": "sha256:e3db2488bdae5036c32dd9a0159c826ae9bd1024832a883b7c6175b7fd2619f8",
+      "specs/ed/modules/routing/routing.shape.ttl": "sha256:70d0a466e075d0aed933082acc5473773bc471099a18272a1bfc4570dca1ed40",
+      "specs/ed/modules/routing/routing.ttl": "sha256:3d3cefec8dee3a0a9a6776db624ab5e582e28da09395ca0f621f92348c2fcb8c",
+      "specs/ed/modules/state-data/state-data.context.jsonld": "sha256:f916db2732131c3455a0680f499248e37d0d2fbccd7380af3d93474bc6d63f25",
+      "specs/ed/modules/state-data/state-data.shape.ttl": "sha256:5c6c7b7daf6d6368148ec172f200f151ec829802cc43c2b7d2ef6021f23ec14a",
+      "specs/ed/modules/state-data/state-data.ttl": "sha256:13e4516f17377356a9de8c64b04d37437a9e7347defa44833667e3577c7ad432",
+      "specs/ed/runtime/runtime.context.jsonld": "sha256:4e52855fad3cf4722dc00d555520a445cbb240c655117e2532b62f72868ea438",
+      "specs/ed/runtime/runtime.shape.ttl": "sha256:88cfea86d2e43ab13f708f29c2deed3fd13241fe7875d1b79d254245891ab2e9",
+      "specs/ed/runtime/runtime.ttl": "sha256:e3cf150e9c8f7e365afdc6a3d7eeb80d93d17ab2f1c4f589791a0144017a4992",
+      "specs/ed/surface/surface.context.jsonld": "sha256:84e2964c55d18c0242dcafb974f2a2c52258c964be3671e011bdb53dd88d7fd4",
+      "specs/ed/surface/surface.shape.ttl": "sha256:60582dff0640d37f80e081e0b3eb023602821e2a8b0a378acacd396b06917ca9",
+      "specs/ed/surface/surface.ttl": "sha256:ab8849676f0e378f2a7dfe8b34aee83ace6949799b93e675510f6860293bd28f"
+    },
+    "targetSource": {
+      "edContentCommit": "a6a73ca56c25b48457c620af158acc6f68ac1f09",
+      "edContentDate": "2026-07-13T12:52:11+02:00",
+      "headCommit": "e795559ebea8a9f57e7d6d212ccb9fdd11e825d4",
+      "headDate": "2026-07-13T13:00:39+02:00",
+      "headSubject": "Merge pull request #15 from openuji/feature/surface-core"
+    }
+  },
+  "modules": {
+    "action": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/action.context.jsonld",
+      "dependencies": [
+        "core",
+        "graph"
+      ]
+    },
+    "artifact": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/artifact.context.jsonld",
+      "dependencies": [
+        "core"
+      ]
+    },
+    "condition": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld",
+      "dependencies": [
+        "core",
+        "graph"
+      ]
+    },
+    "core": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
+      "dependencies": []
+    },
+    "designSystem": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld",
+      "dependencies": [
+        "core",
+        "surface"
+      ]
+    },
+    "distributedJourney": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/distributed-journey.context.jsonld",
+      "dependencies": [
+        "artifact",
+        "surface"
+      ]
+    },
+    "experienceAnnotation": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/experience-annotation.context.jsonld",
+      "dependencies": [
+        "core",
+        "surface"
+      ]
+    },
+    "graph": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
+      "dependencies": [
+        "core"
+      ]
+    },
+    "l10n": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld",
+      "dependencies": [
+        "core",
+        "graph"
+      ]
+    },
+    "mapping": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/mapping.context.jsonld",
+      "dependencies": [
+        "core",
+        "graph",
+        "runtime"
+      ]
+    },
+    "observability": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld",
+      "dependencies": [
+        "core",
+        "l10n",
+        "surface"
+      ]
+    },
+    "routing": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/routing.context.jsonld",
+      "dependencies": [
+        "core"
+      ]
+    },
+    "runtime": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/runtime.context.jsonld",
+      "dependencies": [
+        "core",
+        "surface"
+      ]
+    },
+    "stateData": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/state-data.context.jsonld",
+      "dependencies": [
+        "core",
+        "graph"
+      ]
+    },
+    "surface": {
+      "contextUrl": "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
+      "dependencies": [
+        "core",
+        "graph"
+      ]
+    }
+  },
+  "properties": {
+    "accessibleDescriptionRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleDescriptionRef",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": false
+    },
+    "accessibleFeatureName": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleFeatureName",
+      "kind": "datatype",
+      "module": "observability",
+      "reference": false,
+      "set": false
+    },
+    "accessibleFeatureRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleFeatureRefs",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": true
+    },
+    "accessibleFeatureValue": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleFeatureValue",
+      "kind": "datatype",
+      "module": "observability",
+      "reference": false,
+      "set": false
+    },
+    "accessibleNameRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleNameRef",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": false
+    },
+    "accessibleRelationRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleRelationRefs",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": true
+    },
+    "accessibleRelationType": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleRelationType",
+      "kind": "datatype",
+      "module": "observability",
+      "reference": false,
+      "set": false
+    },
+    "actionRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/action#actionRef",
+      "kind": "object",
+      "module": "action",
+      "reference": true,
+      "set": false
+    },
+    "channel": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#channel",
+      "kind": "datatype",
+      "module": "surface",
+      "reference": false,
+      "set": false
+    },
+    "componentRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#componentRef",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": false
+    },
+    "componentRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#componentRefs",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": true
+    },
+    "conditionRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/condition#conditionRef",
+      "kind": "object",
+      "module": "condition",
+      "reference": true,
+      "set": false
+    },
+    "conditionTransitionRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/condition#conditionTransitionRefs",
+      "kind": "object",
+      "module": "condition",
+      "reference": true,
+      "set": true
+    },
+    "consumedArtifactRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/artifact#consumedArtifactRefs",
+      "kind": "object",
+      "module": "artifact",
+      "reference": true,
+      "set": true
+    },
+    "contextLocatorRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#contextLocatorRefs",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": true
+    },
+    "copyRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#copyRef",
+      "kind": "object",
+      "module": "l10n",
+      "reference": true,
+      "set": false
+    },
+    "deepLink": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/routing#deepLink",
+      "kind": "datatype",
+      "module": "routing",
+      "reference": false,
+      "set": false
+    },
+    "defaultEntryRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#defaultEntryRef",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": false
+    },
+    "defaultLocale": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#defaultLocale",
+      "kind": "datatype",
+      "module": "l10n",
+      "reference": false,
+      "set": false
+    },
+    "description": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/experience-annotation#description",
+      "kind": "datatype",
+      "module": "experienceAnnotation",
+      "reference": false,
+      "set": false
+    },
+    "entryRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#entryRefs",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": true
+    },
+    "executionId": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#executionId",
+      "kind": "object",
+      "module": "runtime",
+      "reference": true,
+      "set": false
+    },
+    "exitRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#exitRefs",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": true
+    },
+    "experienceRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/experience-annotation#experienceRefs",
+      "kind": "object",
+      "module": "experienceAnnotation",
+      "reference": true,
+      "set": true
+    },
+    "explainedByTransitionRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#explainedByTransitionRef",
+      "kind": "object",
+      "module": "mapping",
+      "reference": true,
+      "set": false
+    },
+    "extensions": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/core#extensions",
+      "kind": "datatype",
+      "module": "core",
+      "reference": false,
+      "set": false,
+      "type": "@json"
+    },
+    "fallbackLocales": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#fallbackLocales",
+      "kind": "datatype",
+      "module": "l10n",
+      "reference": false,
+      "set": true
+    },
+    "fallbackNodeRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/routing#fallbackNodeRef",
+      "kind": "object",
+      "module": "routing",
+      "reference": true,
+      "set": false
+    },
+    "from": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#from",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": false
+    },
+    "fromExitRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#fromExitRef",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": false
+    },
+    "graphNodeRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#graphNodeRef",
+      "kind": "object",
+      "module": "surface",
+      "reference": true,
+      "set": false
+    },
+    "guards": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/routing#guards",
+      "kind": "datatype",
+      "module": "routing",
+      "reference": false,
+      "set": true
+    },
+    "imports": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/core#documentImports",
+      "kind": "object",
+      "module": "core",
+      "reference": true,
+      "set": true
+    },
+    "instanceKeyFeatureRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#instanceKeyFeatureRef",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": false
+    },
+    "l10n:targetLocale": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#targetLocale",
+      "kind": "datatype",
+      "module": "l10n",
+      "reference": false,
+      "set": false,
+      "type": "http://www.w3.org/2001/XMLSchema#language"
+    },
+    "label": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#label",
+      "kind": "datatype",
+      "module": "graph",
+      "reference": false,
+      "set": false
+    },
+    "locales": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#locales",
+      "kind": "datatype",
+      "module": "l10n",
+      "reference": false,
+      "set": false,
+      "type": "@json"
+    },
+    "locatorRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#locatorRefs",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": true
+    },
+    "mappedEventRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedEventRef",
+      "kind": "object",
+      "module": "mapping",
+      "reference": true,
+      "set": false
+    },
+    "mappedJourneyRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedJourneyRef",
+      "kind": "object",
+      "module": "mapping",
+      "reference": true,
+      "set": false
+    },
+    "mappedRuntimeRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedRuntimeRef",
+      "kind": "object",
+      "module": "mapping",
+      "reference": true,
+      "set": false
+    },
+    "mappedStateRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedStateRef",
+      "kind": "object",
+      "module": "mapping",
+      "reference": true,
+      "set": false
+    },
+    "mappedStepRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedStepRef",
+      "kind": "object",
+      "module": "mapping",
+      "reference": true,
+      "set": true
+    },
+    "messageKey": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#messageKey",
+      "kind": "datatype",
+      "module": "l10n",
+      "reference": false,
+      "set": false
+    },
+    "namespace": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#namespace",
+      "kind": "datatype",
+      "module": "l10n",
+      "reference": false,
+      "set": false
+    },
+    "nodes": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/core#documentNodes",
+      "kind": "object",
+      "module": "core",
+      "reference": false,
+      "set": true
+    },
+    "observationEventRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#observationEventRef",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": false
+    },
+    "observedAffordanceEventRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#observedAffordanceEventRef",
+      "kind": "object",
+      "module": "mapping",
+      "reference": true,
+      "set": false
+    },
+    "observeSurfaceRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#observeSurfaceRef",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": false
+    },
+    "order": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#order",
+      "kind": "datatype",
+      "module": "surface",
+      "reference": false,
+      "set": false
+    },
+    "origin": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#origin",
+      "kind": "object",
+      "module": "surface",
+      "reference": true,
+      "set": false
+    },
+    "outgoingTransitionGroupRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#outgoingTransitionGroupRefs",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": true
+    },
+    "outgoingTransitionRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#outgoingTransitionRefs",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": true
+    },
+    "params": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/routing#params",
+      "kind": "datatype",
+      "module": "routing",
+      "reference": false,
+      "set": false,
+      "type": "@json"
+    },
+    "path": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/routing#path",
+      "kind": "datatype",
+      "module": "routing",
+      "reference": false,
+      "set": false
+    },
+    "payload": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#payload",
+      "kind": "datatype",
+      "module": "runtime",
+      "reference": false,
+      "set": false,
+      "type": "@json"
+    },
+    "phaseRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#phaseRef",
+      "kind": "object",
+      "module": "surface",
+      "reference": true,
+      "set": false
+    },
+    "previousId": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#previousId",
+      "kind": "object",
+      "module": "runtime",
+      "reference": true,
+      "set": false
+    },
+    "producedArtifactRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/artifact#producedArtifactRefs",
+      "kind": "object",
+      "module": "artifact",
+      "reference": true,
+      "set": true
+    },
+    "role": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#role",
+      "kind": "datatype",
+      "module": "observability",
+      "reference": false,
+      "set": false
+    },
+    "routeName": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/routing#routeName",
+      "kind": "datatype",
+      "module": "routing",
+      "reference": false,
+      "set": false
+    },
+    "routeRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/routing#routeRef",
+      "kind": "object",
+      "module": "routing",
+      "reference": true,
+      "set": false
+    },
+    "rtl": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#rtl",
+      "kind": "datatype",
+      "module": "l10n",
+      "reference": false,
+      "set": false
+    },
+    "severity": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/experience-annotation#severity",
+      "kind": "datatype",
+      "module": "experienceAnnotation",
+      "reference": false,
+      "set": false,
+      "type": "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    "slotBindingRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#slotBindingRefs",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": true
+    },
+    "slotRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#slotRef",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": false
+    },
+    "slotRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#slotRefs",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": true
+    },
+    "sourceTouchpointRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/distributed-journey#sourceTouchpointRef",
+      "kind": "object",
+      "module": "distributedJourney",
+      "reference": true,
+      "set": false
+    },
+    "stateDataRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/state-data#stateDataRef",
+      "kind": "object",
+      "module": "stateData",
+      "reference": true,
+      "set": false
+    },
+    "stateRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#stateRef",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": false
+    },
+    "stateRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#stateRefs",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": true
+    },
+    "subjectActorRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#subjectActorRef",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": false
+    },
+    "subjourneyId": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#subjourneyId",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": false
+    },
+    "surfaceInstanceRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#surfaceInstanceRef",
+      "kind": "object",
+      "module": "runtime",
+      "reference": true,
+      "set": false
+    },
+    "surfaceInstanceResolverRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#surfaceInstanceResolverRef",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": false
+    },
+    "surfaceRealizationRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#surfaceRealizationRefs",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": true
+    },
+    "surfaceRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#surfaceRef",
+      "kind": "object",
+      "module": "surface",
+      "reference": true,
+      "set": false
+    },
+    "surfaceRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#surfaceRefs",
+      "kind": "object",
+      "module": "surface",
+      "reference": true,
+      "set": true
+    },
+    "tags": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#tags",
+      "kind": "datatype",
+      "module": "graph",
+      "reference": false,
+      "set": true
+    },
+    "targetComponentRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#targetComponentRef",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": false
+    },
+    "targetLocale": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#targetLocale",
+      "kind": "datatype",
+      "module": "l10n",
+      "reference": false,
+      "set": false,
+      "type": "http://www.w3.org/2001/XMLSchema#language"
+    },
+    "targetLocatorRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#targetLocatorRef",
+      "kind": "object",
+      "module": "observability",
+      "reference": true,
+      "set": false
+    },
+    "targetSurfaceRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#targetSurfaceRef",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": false
+    },
+    "targetTouchpointRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/distributed-journey#targetTouchpointRefs",
+      "kind": "object",
+      "module": "distributedJourney",
+      "reference": true,
+      "set": true
+    },
+    "templateRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#templateRef",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": false
+    },
+    "templateRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#templateRefs",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": true
+    },
+    "to": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#to",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": false
+    },
+    "toCurrentState": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#toCurrentState",
+      "kind": "datatype",
+      "module": "graph",
+      "reference": false,
+      "set": false,
+      "type": "http://www.w3.org/2001/XMLSchema#boolean"
+    },
+    "toEntryRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#toEntryRef",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": false
+    },
+    "tokenSourceRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#tokenSourceRefs",
+      "kind": "object",
+      "module": "designSystem",
+      "reference": true,
+      "set": true
+    },
+    "touchpointRef": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#touchpointRef",
+      "kind": "object",
+      "module": "surface",
+      "reference": true,
+      "set": false
+    },
+    "transitionRefs": {
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#transitionRefs",
+      "kind": "object",
+      "module": "graph",
+      "reference": true,
+      "set": true
+    }
+  },
+  "propertyShapes": {
+    "accessibleDescriptionRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/l10n#MessageBundle",
+        "maxCount": 1,
+        "module": "observability",
+        "nodeKind": "IRI"
+      },
+      {
+        "minCount": 1,
+        "module": "observability"
+      }
+    ],
+    "accessibleFeatureName": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "observability"
+      }
+    ],
+    "accessibleFeatureRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/observability#AccessibleFeature",
+        "module": "observability",
+        "nodeKind": "IRI"
+      },
+      {
+        "minCount": 1,
+        "module": "observability"
+      }
+    ],
+    "accessibleFeatureValue": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "observability"
+      }
+    ],
+    "accessibleNameRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/l10n#MessageBundle",
+        "maxCount": 1,
+        "module": "observability",
+        "nodeKind": "IRI"
+      },
+      {
+        "minCount": 1,
+        "module": "observability"
+      }
+    ],
+    "accessibleRelationRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/observability#AccessibleRelation",
+        "module": "observability",
+        "nodeKind": "IRI"
+      },
+      {
+        "minCount": 1,
+        "module": "observability"
+      }
+    ],
+    "accessibleRelationType": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "observability"
+      }
+    ],
+    "actionRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/action#Action",
+        "maxCount": 1,
+        "module": "action",
+        "nodeKind": "IRI"
+      }
+    ],
+    "channel": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "surface"
+      }
+    ],
+    "componentRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#Component",
+        "maxCount": 1,
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "componentRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#Component",
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "conditionRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/condition#Condition",
+        "maxCount": 1,
+        "module": "condition",
+        "nodeKind": "IRI"
+      }
+    ],
+    "conditionTransitionRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#Transition",
+        "minCount": 2,
+        "module": "condition",
+        "nodeKind": "IRI"
+      }
+    ],
+    "consumedArtifactRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/artifact#Artifact",
+        "module": "artifact",
+        "nodeKind": "IRI"
+      }
+    ],
+    "contextLocatorRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/observability#AccessibleLocator",
+        "module": "observability",
+        "nodeKind": "IRI"
+      },
+      {
+        "minCount": 1,
+        "module": "observability"
+      }
+    ],
+    "copyRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/l10n#MessageBundle",
+        "maxCount": 1,
+        "module": "l10n",
+        "nodeKind": "IRI"
+      }
+    ],
+    "deepLink": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "routing"
+      }
+    ],
+    "defaultEntryRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#JourneyEntry",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      }
+    ],
+    "defaultLocale": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "l10n"
+      }
+    ],
+    "description": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "experienceAnnotation"
+      }
+    ],
+    "entryRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#JourneyEntry",
+        "minCount": 1,
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      }
+    ],
+    "executionId": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/runtime#JourneyExecution",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "runtime",
+        "nodeKind": "IRI"
+      }
+    ],
+    "exitRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#JourneyExit",
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      }
+    ],
+    "experienceRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#ExperienceStep",
+        "minCount": 1,
+        "module": "experienceAnnotation",
+        "nodeKind": "IRI"
+      }
+    ],
+    "explainedByTransitionRef": [
+      {
+        "maxCount": 1,
+        "module": "mapping",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/mapping.shape#TransitionLikeShape"
+      }
+    ],
+    "extensions": [
+      {
+        "datatype": "http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "observability"
+      },
+      {
+        "datatype": "http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON",
+        "maxCount": 1,
+        "module": "core"
+      },
+      {
+        "maxCount": 0,
+        "module": "core"
+      }
+    ],
+    "fallbackLocales": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "module": "l10n"
+      }
+    ],
+    "fallbackNodeRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/core#Node",
+        "maxCount": 1,
+        "module": "routing",
+        "nodeKind": "IRI"
+      }
+    ],
+    "from": [
+      {
+        "maxCount": 0,
+        "module": "graph"
+      },
+      {
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "graph",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/graph.shape#StateLikeShape"
+      }
+    ],
+    "fromExitRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#JourneyExit",
+        "maxCount": 1,
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      }
+    ],
+    "graphNodeRef": [
+      {
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "surface",
+        "nodeKind": "IRI",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/surface.shape#GraphNodeRefTargetShape"
+      }
+    ],
+    "guards": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "module": "routing"
+      }
+    ],
+    "imports": [
+      {
+        "minCount": 0,
+        "module": "core",
+        "nodeKind": "IRI"
+      }
+    ],
+    "instanceKeyFeatureRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/observability#AccessibleFeature",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "observability",
+        "nodeKind": "IRI"
+      }
+    ],
+    "l10n:targetLocale": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#language",
+        "maxCount": 1,
+        "module": "l10n"
+      }
+    ],
+    "label": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "surface"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "graph"
+      }
+    ],
+    "locales": [
+      {
+        "datatype": "http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON",
+        "maxCount": 1,
+        "module": "l10n"
+      }
+    ],
+    "locatorRefs": [
+      {
+        "minCount": 1,
+        "module": "observability",
+        "nodeKind": "IRI",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/observability.shape#LocatorShape"
+      }
+    ],
+    "mappedEventRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/runtime#RuntimeEvent",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "mapping",
+        "nodeKind": "IRI"
+      }
+    ],
+    "mappedJourneyRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#Journey",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "mapping",
+        "nodeKind": "IRI"
+      }
+    ],
+    "mappedRuntimeRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/runtime#JourneyExecution",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "mapping",
+        "nodeKind": "IRI"
+      }
+    ],
+    "mappedStateRef": [
+      {
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "mapping",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/mapping.shape#StateLikeShape"
+      }
+    ],
+    "mappedStepRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/mapping#MappedStep",
+        "minCount": 1,
+        "module": "mapping",
+        "nodeKind": "IRI"
+      }
+    ],
+    "messageKey": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "l10n"
+      }
+    ],
+    "namespace": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "l10n"
+      }
+    ],
+    "nodes": [
+      {
+        "minCount": 0,
+        "module": "core",
+        "nodeKind": "IRI"
+      }
+    ],
+    "observationEventRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/observability#ObservationEvent",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "observability",
+        "nodeKind": "IRI"
+      }
+    ],
+    "observedAffordanceEventRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/runtime#RuntimeEvent",
+        "maxCount": 1,
+        "module": "mapping",
+        "nodeKind": "IRI"
+      }
+    ],
+    "observeSurfaceRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Surface",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "observability",
+        "nodeKind": "IRI"
+      }
+    ],
+    "order": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+        "maxCount": 1,
+        "module": "surface"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+        "maxCount": 1,
+        "module": "surface"
+      }
+    ],
+    "origin": [
+      {
+        "maxCount": 1,
+        "module": "surface",
+        "nodeKind": "IRI"
+      }
+    ],
+    "outgoingTransitionGroupRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#OutgoingTransitionGroup",
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      }
+    ],
+    "outgoingTransitionRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#OutgoingTransition",
+        "minCount": 1,
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#OutgoingTransition",
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      }
+    ],
+    "params": [
+      {
+        "datatype": "http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON",
+        "maxCount": 1,
+        "module": "routing"
+      }
+    ],
+    "path": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "routing"
+      }
+    ],
+    "payload": [
+      {
+        "datatype": "http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON",
+        "maxCount": 1,
+        "module": "runtime"
+      }
+    ],
+    "phaseRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Phase",
+        "maxCount": 1,
+        "module": "surface",
+        "nodeKind": "IRI"
+      }
+    ],
+    "previousId": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/runtime#RuntimeEvent",
+        "maxCount": 1,
+        "module": "runtime",
+        "nodeKind": "IRI"
+      }
+    ],
+    "producedArtifactRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/artifact#Artifact",
+        "module": "artifact",
+        "nodeKind": "IRI"
+      }
+    ],
+    "role": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "module": "observability"
+      },
+      {
+        "minCount": 1,
+        "module": "observability"
+      }
+    ],
+    "routeName": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "routing"
+      }
+    ],
+    "routeRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/routing#Route",
+        "maxCount": 1,
+        "module": "routing",
+        "nodeKind": "IRI"
+      }
+    ],
+    "rtl": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#boolean",
+        "maxCount": 1,
+        "module": "l10n"
+      }
+    ],
+    "severity": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+        "maxCount": 1,
+        "module": "experienceAnnotation"
+      }
+    ],
+    "slotBindingRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#SlotBinding",
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "slotRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#Slot",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "slotRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#Slot",
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "sourceTouchpointRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Touchpoint",
+        "maxCount": 1,
+        "module": "distributedJourney",
+        "nodeKind": "IRI"
+      },
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Touchpoint",
+        "maxCount": 1,
+        "module": "distributedJourney",
+        "nodeKind": "IRI"
+      }
+    ],
+    "stateDataRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/state-data#StateData",
+        "maxCount": 1,
+        "module": "stateData",
+        "nodeKind": "IRI"
+      }
+    ],
+    "stateRef": [
+      {
+        "maxCount": 0,
+        "module": "graph"
+      },
+      {
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "graph",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/graph.shape#StateLikeShape"
+      }
+    ],
+    "stateRefs": [
+      {
+        "maxCount": 0,
+        "module": "graph"
+      },
+      {
+        "minCount": 1,
+        "module": "graph",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/graph.shape#IndexStateShape"
+      },
+      {
+        "minCount": 1,
+        "module": "graph",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/graph.shape#StateLikeShape"
+      }
+    ],
+    "subjectActorRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#Actor",
+        "maxCount": 1,
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#Actor",
+        "maxCount": 1,
+        "module": "graph",
+        "nodeKind": "IRI"
+      }
+    ],
+    "subjourneyId": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#Journey",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      }
+    ],
+    "surfaceInstanceRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#SurfaceInstance",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "runtime",
+        "nodeKind": "IRI"
+      }
+    ],
+    "surfaceInstanceResolverRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/observability#SurfaceInstanceResolver",
+        "maxCount": 1,
+        "module": "observability",
+        "nodeKind": "IRI"
+      }
+    ],
+    "surfaceRealizationRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#SurfaceRealization",
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "surfaceRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Surface",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      },
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Surface",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "surface",
+        "nodeKind": "IRI"
+      }
+    ],
+    "surfaceRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Surface",
+        "minCount": 1,
+        "module": "surface",
+        "nodeKind": "IRI"
+      }
+    ],
+    "tags": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "module": "graph"
+      },
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
+        "module": "graph"
+      }
+    ],
+    "targetComponentRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#Component",
+        "maxCount": 1,
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "targetLocatorRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/observability#AccessibleLocator",
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "observability",
+        "nodeKind": "IRI"
+      }
+    ],
+    "targetSurfaceRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Surface",
+        "maxCount": 1,
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "targetTouchpointRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Touchpoint",
+        "module": "distributedJourney",
+        "nodeKind": "IRI"
+      },
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Touchpoint",
+        "module": "distributedJourney",
+        "nodeKind": "IRI"
+      }
+    ],
+    "templateRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#Template",
+        "maxCount": 1,
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "templateRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#Template",
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "to": [
+      {
+        "maxCount": 0,
+        "module": "graph"
+      },
+      {
+        "maxCount": 1,
+        "minCount": 1,
+        "module": "graph",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/graph.shape#LocalVertexShape"
+      },
+      {
+        "maxCount": 1,
+        "module": "graph",
+        "nodeShape": "https://ujg.specs.openuji.org/ed/ns/graph.shape#OutgoingTargetShape"
+      }
+    ],
+    "toCurrentState": [
+      {
+        "datatype": "http://www.w3.org/2001/XMLSchema#boolean",
+        "maxCount": 1,
+        "module": "graph"
+      }
+    ],
+    "toEntryRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#JourneyEntry",
+        "maxCount": 1,
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      }
+    ],
+    "tokenSourceRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/design-system#TokenSource",
+        "module": "designSystem",
+        "nodeKind": "IRI"
+      }
+    ],
+    "touchpointRef": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/surface#Touchpoint",
+        "maxCount": 1,
+        "module": "surface",
+        "nodeKind": "IRI"
+      }
+    ],
+    "transitionRefs": [
+      {
+        "classIri": "https://ujg.specs.openuji.org/ed/ns/graph#Transition",
+        "module": "graph",
+        "nodeKind": "IRI"
+      },
+      {
+        "maxCount": 0,
+        "module": "graph"
+      }
+    ]
+  },
+  "referenceProperties": [
+    "accessibleDescriptionRef",
+    "accessibleFeatureRefs",
+    "accessibleNameRef",
+    "accessibleRelationRefs",
+    "actionRef",
+    "componentRef",
+    "componentRefs",
+    "conditionRef",
+    "conditionTransitionRefs",
+    "consumedArtifactRefs",
+    "contextLocatorRefs",
+    "copyRef",
+    "defaultEntryRef",
+    "entryRefs",
+    "executionId",
+    "exitRefs",
+    "experienceRefs",
+    "explainedByTransitionRef",
+    "fallbackNodeRef",
+    "from",
+    "fromExitRef",
+    "graphNodeRef",
+    "imports",
+    "instanceKeyFeatureRef",
+    "locatorRefs",
+    "mappedEventRef",
+    "mappedJourneyRef",
+    "mappedRuntimeRef",
+    "mappedStateRef",
+    "mappedStepRef",
+    "observationEventRef",
+    "observeSurfaceRef",
+    "observedAffordanceEventRef",
+    "origin",
+    "outgoingTransitionGroupRefs",
+    "outgoingTransitionRefs",
+    "phaseRef",
+    "previousId",
+    "producedArtifactRefs",
+    "routeRef",
+    "slotBindingRefs",
+    "slotRef",
+    "slotRefs",
+    "sourceTouchpointRef",
+    "stateDataRef",
+    "stateRef",
+    "stateRefs",
+    "subjectActorRef",
+    "subjourneyId",
+    "surfaceInstanceRef",
+    "surfaceInstanceResolverRef",
+    "surfaceRealizationRefs",
+    "surfaceRef",
+    "surfaceRefs",
+    "targetComponentRef",
+    "targetLocatorRef",
+    "targetSurfaceRef",
+    "targetTouchpointRefs",
+    "templateRef",
+    "templateRefs",
+    "to",
+    "toEntryRef",
+    "tokenSourceRefs",
+    "touchpointRef",
+    "transitionRefs"
+  ],
+  "setProperties": [
+    "accessibleFeatureRefs",
+    "accessibleRelationRefs",
+    "componentRefs",
+    "conditionTransitionRefs",
+    "consumedArtifactRefs",
+    "contextLocatorRefs",
+    "entryRefs",
+    "exitRefs",
+    "experienceRefs",
+    "fallbackLocales",
+    "guards",
+    "imports",
+    "locatorRefs",
+    "mappedStepRef",
+    "nodes",
+    "outgoingTransitionGroupRefs",
+    "outgoingTransitionRefs",
+    "producedArtifactRefs",
+    "slotBindingRefs",
+    "slotRefs",
+    "stateRefs",
+    "surfaceRealizationRefs",
+    "surfaceRefs",
+    "tags",
+    "targetTouchpointRefs",
+    "templateRefs",
+    "tokenSourceRefs",
+    "transitionRefs"
+  ],
+  "targetId": "ed-2026-07-13"
+}
