@@ -63,13 +63,16 @@ Journey's `stateRefs`. A JourneyEntry is an entry contract, not a local transiti
 
 Use `State` for a stable observable condition.
 
-Use `CompositeState` only when it exposes one or more child Journeys through `subjourneyRefs`.
+Use `CompositeState` to nest Journeys: a step of the parent Journey that is itself a Journey,
+exposed through `subjourneyRefs`.
 Child states stay in their child Journey and never appear in the parent's `stateRefs`.
 
 Child Journeys of one `CompositeState` are co-present in one experience frame (a viewport, window,
-screen, or dialog session): the user can act on each at the same time. A CompositeState may have a
-single child Journey, and a Journey may be a child of many CompositeStates, so shared topology, such
-as a sticky header or a site-wide footer Journey, can be declared once and reused. A State and a
+screen, or dialog session) and independent: the user can act on each at the same time, and a
+movement in one never moves another. Parts that are co-present but not independent belong to one
+Journey. A CompositeState may have a single child Journey, and a Journey may be a child of many
+CompositeStates, so shared topology, such as a sticky header or a site-wide footer Journey, can be
+declared once and reused. A State and a
 CompositeState belong to exactly one Journey.
 
 The order of `subjourneyRefs` does not imply traversal, priority, scheduling, synchronization, or
@@ -280,6 +283,7 @@ Before returning, check:
 - Journey entries and states have unique, valid ownership.
 - Transition endpoints remain local.
 - Parent-to-child entry and exit references preserve CompositeState boundaries.
+- CompositeState child Journeys are independent, not only co-present.
 - Every OutgoingTransition has exactly one destination, a valid `toEntryRef` or an
   `entrySelectorRef`; none has `to`.
 - Outgoing navigation shared by several States uses a destination entry valid from each of them.
@@ -296,5 +300,5 @@ its parent, an exit can be a local Transition, or an observed sequence is being 
 topology.
 
 If a flatter model preserves the same meaning, use it. Reusing a shared Journey is a valid reason to
-keep a CompositeState. If evidence is incomplete, identify what is
+keep a CompositeState whose child Journeys are independent. If evidence is incomplete, identify what is
 known, what is inferred, and what remains unresolved.

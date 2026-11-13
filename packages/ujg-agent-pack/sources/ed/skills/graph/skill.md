@@ -49,8 +49,8 @@ experience. A `Command` is not a transition endpoint, does not replace `Transiti
 `OutgoingTransition`, and does not define source state, destination state, branching, condition
 resolution, effect execution, visual representation, runtime execution, or execution results.
 
-Use `CompositeState` only when a parent journey contains or exposes one or more nested child
-journeys with `subjourneyRefs`. `subjourneyRefs` is a set of child `Journey` IRIs and must contain at
+Use `CompositeState` to nest journeys: a step of a parent journey that is itself a journey, with its
+own steps, entries, and exits. `subjourneyRefs` is a set of child `Journey` IRIs and must contain at
 least one value. Do not use the legacy singular child-journey field in ED JSON-LD.
 
 `CompositeState` is a local vertex but not a `State`, and must not be typed as one. It needs an IRI
@@ -60,18 +60,17 @@ listed in `stateRefs`, be a `Transition` or `AdjacentTransition` endpoint, and b
 is current, the user is at the current `State` of each child journey, and those States offer the
 entry transitions.
 
-Child journeys of one `CompositeState` must be co-present: the user can perceive and act on each at
-the same time in the same experience frame (a viewport, window, screen, or dialog session). That is
-the only condition on grouping; Graph does not prescribe which parts of an experience become States,
-CompositeStates, or Journeys. A `CompositeState` may have a single child journey, and several
-composites may reference the same Journey, so shared topology and the entry transitions its States
-list can be declared once and reused, for example a sticky header beside page content, or a site-wide
+Child journeys of one `CompositeState` must be co-present and independent: the user can perceive and
+act on each at the same time in the same experience frame (a viewport, window, screen, or dialog
+session), and a movement in one never moves another. Co-presence alone is not enough: parts that are
+co-present but not independent belong to one journey. A `CompositeState` may have a single child
+journey, and several composites may reference the same Journey, so shared topology and the entry
+transitions its States list can be declared once and reused, for example a sticky header beside page content, or a site-wide
 footer Journey referenced by a one-child footer composite on each page. A State and a CompositeState
 belong to exactly one Journey; reuse happens through Journeys.
 
-Child journeys are independent. `subjourneyRefs` order does not define traversal order, priority,
-causality, scheduling, synchronization, fork/join, all-children-complete behavior, or hidden graph
-edges, and movement in one child journey does not move another.
+`subjourneyRefs` order does not define traversal order, priority, causality, scheduling,
+synchronization, fork/join, all-children-complete behavior, or hidden graph edges.
 
 On a parent `Transition` into a `CompositeState`, use `toEntryRef` only to select a specific child
 `JourneyEntry`. The entry must belong to exactly one child journey referenced by that composite's
@@ -139,9 +138,7 @@ collection lists it in `memberTransitionRefs`, and both endpoints are its member
 declares `commandRef`, `toEntryRef`, `fromExitRef`, `conditionRef`, or `effectRef`. Model a movement
 that has its own command, guard, effect, or child-entry selection as a separate `Transition`, even
 between the same vertices; do not add a plain `Transition` that repeats one direction of the
-adjacency. Adjacent vertices are not co-present: only one of them is current at a time. Parts of a
-frame that the user acts on at the same time are child journeys of a `CompositeState`, not adjacent
-vertices.
+adjacency. Adjacent vertices are not co-present: only one of them is current at a time.
 Self-check: use an AdjacentTransition only when both vertices belong to one frame, share a border,
 and the user can move between them in either direction without a command, guard, or effect.
 
