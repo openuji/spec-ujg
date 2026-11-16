@@ -37,9 +37,11 @@ Generated outputs are not committed. `pnpm agent-pack:generate` writes them to t
 - `build/codex/<skill-name>/references/{skill-tree.json,related-skills.md,package-state.json}`
 - `build/claude/<skill-name>/SKILL.md`
 - `build/claude/<skill-name>/references/{skill-tree.json,related-skills.md,package-state.json}`
+- `build/antigravity/<skill-name>/SKILL.md`
+- `build/antigravity/<skill-name>/references/{skill-tree.json,related-skills.md,package-state.json}`
 - `build/manifest.json`
 
-Codex and Claude skills are built from the same source and share the same `SKILL.md` frontmatter (`name`, `description`) and body. Claude skills do not include the Codex-only `agents/openai.yaml`.
+Codex, Claude, and Antigravity skills are built from the same source and share the same `SKILL.md` frontmatter (`name`, `description`) and body. Claude and Antigravity skills do not include the Codex-only `agents/openai.yaml`.
 
 `build/` is disposable: `generate`, `install`, and `pack` wipe and regenerate it from `sources/`, `agent-pack.config.json`, and the spec tree. Never edit it; edit the sources instead.
 
@@ -49,7 +51,7 @@ The generator reads spec `config.json` files from each target spec tree. It uses
 
 For example, `modules/design-system` depends on `graph` and `surface`, so the generated design-system skill knows it should consult graph-related guidance when topology or traversal is involved.
 
-Each generated Codex and Claude skill includes lightweight references:
+Each generated Codex, Claude, and Antigravity skill includes lightweight references:
 
 - `references/skill-tree.json`: machine-readable target, skill, and module dependency graph.
 - `references/related-skills.md`: human-readable sibling-skill summary.
@@ -69,6 +71,7 @@ pnpm agent-pack:test
 pnpm agent-pack:pack
 pnpm agent-pack:install:codex -- --target ed
 pnpm agent-pack:install:claude -- --target ed
+pnpm agent-pack:install:antigravity -- --target ed
 ```
 
 Package-local equivalents:
@@ -81,6 +84,7 @@ pnpm --filter @openuji/ujg-agent-pack run review:accept -- --target ed --skill r
 pnpm --filter @openuji/ujg-agent-pack run review:check
 pnpm --filter @openuji/ujg-agent-pack run check
 pnpm --filter @openuji/ujg-agent-pack run test:install
+pnpm --filter @openuji/ujg-agent-pack run install:antigravity -- --target ed
 ```
 
 ## Review Routine
@@ -169,7 +173,24 @@ pnpm agent-pack:install:claude -- --target ed --project /path/to/repo
 
 Claude install follows the same rules as Codex install. It is target-level only, replaces the current skills for that target, and removes managed skills for that target that no longer exist, without touching unrelated skills.
 
-Every generated Codex and Claude skill includes `references/package-state.json`, which records the package id/version, target id, skill key/name, source hash, spec hash, config hash, and artifact hash.
+### Antigravity
+
+`pnpm agent-pack:install:antigravity -- --target <id>` installs generated Antigravity skills for one target into the user skill directory:
+
+```text
+${ANTIGRAVITY_CONFIG_DIR:-${GEMINI_CONFIG_DIR:-$HOME/.gemini/config}}/skills/<skill-name>
+```
+
+Pass `--project <dir>` to install into a project's skill directory instead:
+
+```sh
+pnpm agent-pack:install:antigravity -- --target ed --project /path/to/repo
+# -> /path/to/repo/.agents/skills/<skill-name>
+```
+
+Antigravity install follows the same rules as Codex and Claude install. It is target-level only, replaces the current skills for that target, and removes managed skills for that target that no longer exist, without touching unrelated skills.
+
+Every generated Codex, Claude, and Antigravity skill includes `references/package-state.json`, which records the package id/version, target id, skill key/name, source hash, spec hash, config hash, and artifact hash.
 
 ## Files To Edit
 

@@ -13,6 +13,7 @@
     "agent-pack:review:accept": "pnpm --filter @openuji/ujg-agent-pack run review:accept",
     "agent-pack:install:codex": "pnpm --filter @openuji/ujg-agent-pack run install:codex",
     "agent-pack:install:claude": "pnpm --filter @openuji/ujg-agent-pack run install:claude",
+    "agent-pack:install:antigravity": "pnpm --filter @openuji/ujg-agent-pack run install:antigravity",
     "agent-pack:test": "pnpm --filter @openuji/ujg-agent-pack run test:install",
     "agent-pack:pack": "pnpm --filter @openuji/ujg-agent-pack run pack:artifact",
     "tr-snapshots:freeze": "node scripts/freeze-tr-snapshots.js",

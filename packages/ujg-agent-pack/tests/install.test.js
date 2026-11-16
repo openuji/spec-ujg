@@ -24,6 +24,12 @@ const formats = {
     generatedDir: 'claude',
     manifestHash: 'claudeArtifactHash',
   },
+  antigravity: {
+    label: 'Antigravity',
+    envVar: 'ANTIGRAVITY_CONFIG_DIR',
+    generatedDir: 'antigravity',
+    manifestHash: 'antigravityArtifactHash',
+  },
 };
 
 function readJson(path) {
@@ -226,6 +232,27 @@ test('claude: generated skills omit Codex-only openai.yaml', () => {
     for (const item of target.skills) {
       assert.equal(existsSync(join(buildRoot, 'claude', item.name, 'SKILL.md')), true);
       assert.equal(existsSync(join(buildRoot, 'claude', item.name, 'agents', 'openai.yaml')), false);
+    }
+  }
+});
+
+test('antigravity: project install writes into <project>/.agents/skills', (t) => {
+  const home = tempHome(t, 'antigravity');
+  const project = tempHome(t, 'antigravity-project');
+
+  runAgentPack(['install', 'antigravity', '--target', 'ed', '--project', project], formats.antigravity, home);
+
+  for (const item of targetSkills('ed')) {
+    assertInstalled(join(project, '.agents', 'skills'), item.name);
+    assertNotInstalled(join(home, 'skills'), item.name);
+  }
+});
+
+test('antigravity: generated skills omit Codex-only openai.yaml', () => {
+  for (const target of manifest().targets) {
+    for (const item of target.skills) {
+      assert.equal(existsSync(join(buildRoot, 'antigravity', item.name, 'SKILL.md')), true);
+      assert.equal(existsSync(join(buildRoot, 'antigravity', item.name, 'agents', 'openai.yaml')), false);
     }
   }
 });

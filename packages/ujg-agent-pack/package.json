@@ -22,6 +22,7 @@
     "test:install": "node --test tests/install.test.js",
     "pack:artifact": "node scripts/agent-pack.js pack",
     "install:codex": "node scripts/agent-pack.js install codex",
-    "install:claude": "node scripts/agent-pack.js install claude"
+    "install:claude": "node scripts/agent-pack.js install claude",
+    "install:antigravity": "node scripts/agent-pack.js install antigravity"
   }
 }

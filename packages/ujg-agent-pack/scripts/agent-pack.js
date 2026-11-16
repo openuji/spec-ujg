@@ -590,6 +590,22 @@ const FORMATS = {
         ? join(resolve(options.project), '.claude', 'skills')
         : join(process.env.CLAUDE_CONFIG_DIR || join(homeDir(), '.claude'), 'skills'),
   },
+  antigravity: {
+    key: 'antigravity',
+    label: 'Antigravity',
+    dir: 'antigravity',
+    extraArtifacts: () => [],
+    allowProject: true,
+    skillsRoot: (options) =>
+      options.project
+        ? join(resolve(options.project), '.agents', 'skills')
+        : join(
+            process.env.ANTIGRAVITY_CONFIG_DIR ||
+              process.env.GEMINI_CONFIG_DIR ||
+              join(homeDir(), '.gemini', 'config'),
+            'skills'
+          ),
+  },
 };
 
 function artifactContents(format, context, skill) {
@@ -668,6 +684,7 @@ function buildManifest(contexts, outputs) {
         specHash: specHash(context, skill),
         artifactHash: artifactHash(artifactContents(FORMATS.codex, context, skill)),
         claudeArtifactHash: artifactHash(artifactContents(FORMATS.claude, context, skill)),
+        antigravityArtifactHash: artifactHash(artifactContents(FORMATS.antigravity, context, skill)),
       })),
     })),
     generatedFiles: [...outputs.keys()].map((path) => rel(path, BUILD_DIR)).sort(),
@@ -1127,6 +1144,7 @@ function printUsage() {
   ujg-agent-pack review accept [--target <id>] [--skill <key>]
   ujg-agent-pack install codex --target <id>
   ujg-agent-pack install claude --target <id> [--project <dir>]
+  ujg-agent-pack install antigravity --target <id> [--project <dir>]
   ujg-agent-pack pack`);
 }
 
