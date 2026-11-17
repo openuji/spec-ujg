@@ -117,6 +117,15 @@ importers:
 
   packages/ujg-agent-pack: {}
 
+  packages/ujg-yaml:
+    dependencies:
+      n3:
+        specifier: ^2.1.1
+        version: 2.1.1
+      yaml:
+        specifier: ^2.8.1
+        version: 2.8.2
+
 packages:
 
   '@antfu/install-pkg@1.1.0':
@@ -2956,6 +2965,10 @@ packages:
 
   n3@1.26.0:
     resolution: {integrity: sha512-SQknS0ua90rN+3RHuk8BeIqeYyqIH/+ecViZxX08jR4j6MugqWRjtONl3uANG/crWXnOM2WIqBJtjIhVYFha+w==}
+    engines: {node: '>=12.0'}
+
+  n3@2.1.1:
+    resolution: {integrity: sha512-kqg8ers6Lc+uAmHeS+ycd3b8mC4x8wr8V8Fi6+w7l4hX6b0KZ5bT05Tf49qM2mujwaqZT3+08zcgtXgfxivbVQ==}
     engines: {node: '>=12.0'}
 
   nano-spawn@2.0.0:
@@ -6995,6 +7008,11 @@ snapshots:
   ms@2.1.3: {}
 
   n3@1.26.0:
+    dependencies:
+      buffer: 6.0.3
+      readable-stream: 4.7.0
+
+  n3@2.1.1:
     dependencies:
       buffer: 6.0.3
       readable-stream: 4.7.0
