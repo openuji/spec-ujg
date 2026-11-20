@@ -25,6 +25,9 @@ Operability names kinds of moves, such as "next item", not keys. A [=Platform ad
 each step with the gestures of its platform and input modality, for example ArrowRight in a web tab
 list or the right button of a TV remote [[WAI-ARIA-APG]].
 
+This version covers moving between objects, activating them, and shortcuts. Entering or selecting
+text, or changing a value, as part of a transition is outside this version.
+
 ## Terminology
 
 - <dfn>TransitionMaterialization</dfn>: One way to perform one Graph transition through one input
@@ -44,6 +47,8 @@ list or the right button of a TV remote [[WAI-ARIA-APG]].
 - <dfn>Platform adapter</dfn>: The part of a consumer that performs materialization steps with the
   gestures of one platform and input modality, such as a [=Synthetic Runner=] that drives a browser
   by keyboard.
+- <dfn>Performable materialization</dfn>: A [=TransitionMaterialization=] whose every step can be
+  performed without guessing a detail it leaves out.
 
 ## TransitionMaterialization {data-cop-concept="transition-materialization"}
 
@@ -92,12 +97,8 @@ to materialize.
    into that [=JourneyExit=].
 </spec-statement>
 
-A materialization also shows whether a requirement is met. An [=ObservationBinding=] observes a
-[=Surface=] whose `graphNodeRef` is a [=Command=], and it references an [=ObservationEvent=]. When that
-event requires an [=InputModalityProfile=] that lists exactly one modality, a consumer can check the
-requirement by performing a materialization through that modality of a transition whose `commandRef`
-is that Command. Each required profile is checked on its own, as Observability evaluates profiles
-independently. Profiles that list several modalities are outside this version.
+How a materialization is performed and checked is described in the Performing a Materialization
+section.
 
 ```mermaid
 classDiagram
@@ -168,20 +169,21 @@ how the steps are ordered; the order of the `materializationStepRefs` values mea
    takes the transition, as in a tab list whose selection follows focus.
 4. An [=ActivationStep=] activates the object the user is at: the focused object for a keyboard, or
    the object pointed at for a pointer.
-5. A [=ShortcutStep=] performs the shortcut that an object exposes. It acts on that object without
+5. An ActivationStep does not say which of the platform's activation gestures the user uses, such
+   as Enter or Space on a web button. Gestures that do different things, such as toggling a checkbox
+   and submitting its form, take different transitions.
+6. A [=ShortcutStep=] performs the shortcut that an object exposes. It acts on that object without
    the user reaching it first.
-6. When a step names an object with `stepLocatorRef`, the user is at that object after a MoveStep,
-   and acts on that object with an ActivationStep or a ShortcutStep. Consumers can check this
-   through the accessibility API, for example through the focused state of the object.
-7. A consumer that performs a materialization **MUST NOT** place focus on an object
-   programmatically. The steps describe what the user does, and placing focus for them would hide a
-   defect that the steps are meant to reveal.
-8. Operability defines no keys, buttons, or gestures. A [=Platform adapter=] performs each step with
+7. When a step names an object with `stepLocatorRef`, the object it reaches or acts on matches that
+   locator.
+8. A MoveStep with a [=MoveKind=] reaches the object that its kind designates, such as the next item
+   in the order the platform presents. Its locator describes that object; it does not choose it.
+9. Operability defines no keys, buttons, or gestures. A [=Platform adapter=] performs each step with
    the gestures that its platform and input modality use for it.
-9. The gesture of a ShortcutStep is the shortcut that the accessibility API exposes for the object
-   its `stepLocatorRef` names, such as `aria-keyshortcuts` on the web [[WAI-ARIA-1.2]]. When the
-   shortcut is not exposed there, Producers **MAY** describe it as a private adapter hint in Core
-   `extensions`.
+10. The gesture of a ShortcutStep is the shortcut that the accessibility API exposes for the object
+    its `stepLocatorRef` names, such as `aria-keyshortcuts` on the web [[WAI-ARIA-1.2]]. When the
+    shortcut is not exposed there, Producers **MAY** describe it as a private adapter hint in Core
+    `extensions`.
 </spec-statement>
 
 ```mermaid
@@ -274,7 +276,8 @@ Producers can reference them without serializing them.
 1. A [=MoveKind=] names a focus move independently of any key or gesture.
 2. "Next", "previous", "first", and "last" follow the order in which the platform presents the stops
    or items when the step happens. Operability declares no order of its own.
-3. A [=MoveStep=] without a MoveKind leaves the kind of move undescribed.
+3. A [=MoveStep=] without a MoveKind leaves the kind of move undescribed. It documents the step, but
+   a materialization that contains it is not [=Performable materialization|performable=].
 4. Producers **MAY** define other MoveKinds.
 </spec-statement>
 
@@ -306,6 +309,57 @@ classDiagram
     id
   }
 ```
+
+## Performing a Materialization {data-cop-concept="performing-materializations"}
+
+A [=Synthetic Runner=] can perform a materialization to check that a transition works through an
+input modality. It performs each step with its [=Platform adapter=] and checks along the way that
+the user is where the steps say. This section says what such a runner must do. Which
+materializations a runner performs, and how it reports results, is up to the runner; it can name a
+materialization by its IRI.
+
+A materialization can leave details out and still describe a way of acting, which is enough to
+document it. To perform it, a runner needs every step to be determined. A materialization is
+[=Performable materialization|performable=] when:
+
+- every [=MoveStep=] names its [=MoveKind=]. A locator alone would leave the runner searching for
+  the object, which is guessing;
+- every [=ActivationStep=] through a pointer names its object with `stepLocatorRef`, because a
+  pointer has to point somewhere. Through a keyboard, an ActivationStep acts on the focused object;
+- every [=ShortcutStep=] names an object that exposes its shortcut through the accessibility API, or
+  carries a private adapter hint in Core `extensions`.
+
+Without `materializationStartLocatorRef`, the steps start wherever the user is when the runner
+begins them.
+
+<spec-statement>
+1. Before the first step, a [=Synthetic Runner=] that performs a materialization **MUST** check that
+   the user is at the object `materializationStartLocatorRef` names, when it names one.
+2. After each [=MoveStep=] that names an object, the runner **MUST** check that the user is at an
+   object that matches the step's locator and that the step's [=MoveKind=] designates. With a
+   keyboard, the user is at the object that has focus.
+3. Before each [=ActivationStep=] that names an object, the runner **MUST** check that the user is at
+   an object that matches the step's locator.
+4. When a check fails, the materialization has failed, even if the transition happens afterwards.
+5. The runner **MUST NOT** place focus on an object programmatically. The steps describe what the
+   user does, and placing focus for them would hide a defect that the steps are meant to reveal.
+6. The runner **MUST NOT** fill in a detail that a step leaves out. It does not perform a
+   materialization that is not [=Performable materialization|performable=].
+7. Performing an ActivationStep with one activation gesture shows nothing about the platform's other
+   activation gestures. When a check needs a particular gesture, the gesture comes from a private
+   adapter hint in Core `extensions` or from the runner's own configuration.
+8. Each materialization is its own claim that its steps take the transition. Performing one shows
+   that it works; it shows nothing about the others, even those through the same modality.
+</spec-statement>
+
+A materialization also shows whether an Observability requirement is met. An [=ObservationBinding=]
+observes a [=Surface=] whose `graphNodeRef` is a [=Command=], and it references an
+[=ObservationEvent=]. When that event requires an [=InputModalityProfile=] that lists exactly one
+modality, a runner can check the requirement by performing one materialization through that modality
+of a transition whose `commandRef` is that Command. One materialization that works is enough for
+that requirement; checking that every materialization of the transition works means performing each
+of them. Each required profile is checked on its own, as Observability evaluates profiles
+independently. Profiles that list several modalities are outside this version.
 
 ## Normative Artifacts
 
@@ -363,7 +417,9 @@ materializations:
 - By pointer, the user activates the Drafts tab.
 - By shortcut, the user performs the shortcut that the Drafts tab exposes.
 
-The example does not name where the keyboard steps start.
+The example does not name where the keyboard steps start. All three materializations are
+[=Performable materialization|performable=]: every MoveStep names its kind, the pointer step names
+the Drafts tab, and the shortcut step names the tab that exposes the shortcut.
 
 ```json
 {
