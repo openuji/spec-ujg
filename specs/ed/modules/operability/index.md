@@ -7,17 +7,19 @@ Take two States with a Transition between them: "Home selected" and "Drafts sele
 "Select Drafts". With a pointer, the user clicks the Drafts tab. With a keyboard, the user moves focus
 over a few buttons in between, reaches the Drafts tab, and activates it. With a shortcut, the user
 presses the keys that the Drafts tab offers as its shortcut. All three perform the same Transition.
-Each one is a [=TransitionMaterialization=], and the buttons passed on the way are its
-[=Materialization step|steps=].
+Each one is a [=TransitionMaterialization=]. Each move past a button on the way is one of its
+[=Materialization step|steps=], and so is the final activation.
 
-Operability depends on [[UJG Graph]] for the transitions it describes and on [[UJG Observability]] for
-input modalities and for the locators that name the objects a step reaches. Observability is a
-second-level module, so Operability is a third-level module. Graph does not depend on Operability: a
-transition without a materialization is complete.
+Operability depends on [[UJG Graph]] for the transitions it describes, on [[UJG Surface]] for the
+Surfaces of the Commands that steps act on, and on [[UJG Observability]] for input modalities and for
+the locators that name the objects a step reaches. Observability is a second-level module, so
+Operability is a third-level module. Graph does not depend on Operability: a transition without a
+materialization is complete.
 
-[[UJG Surface]] gives Graph nodes a visible materialization. A TransitionMaterialization describes how
-a transition is performed, which a [=Surface=] cannot express because a Surface never references a
-transition.
+Surface gives Graph nodes a visible materialization. A TransitionMaterialization describes how a
+transition is performed. Operability references Graph transitions directly because no lower-level
+module covers them: a [=Surface=] never references a transition, and Observability attaches only to
+Surfaces.
 
 Operability names kinds of moves, such as "next item", not keys. A [=Platform adapter=] performs
 each step with the gestures of its platform and input modality, for example ArrowRight in a web tab
@@ -62,6 +64,11 @@ State in which the steps are performed. Without it, the steps apply at every Sta
 transition. In the same way, a transition that leaves a [=CompositeState=] is performed in one of
 the States nested in it, and `materializationSourceStateRef` can name that State.
 
+Some transitions are not performed by a user action. A [=Transition=] with `fromExitRef` is taken
+when a child Journey of its CompositeState reaches that [=JourneyExit=]. The user's steps lead to the
+exit, so they belong to the child Journey's Transition into the exit, and that Transition is the one
+to materialize.
+
 <spec-statement>
 1. A [=TransitionMaterialization=] describes one way to take its transition through its input
    modality: the user performs its steps one after another, and the last step takes the transition.
@@ -77,15 +84,20 @@ the States nested in it, and `materializationSourceStateRef` can name that State
 6. One materialization of a [=Member transition|member transition=] serves every
    [=Collection member|member=] of its [=StateCollection=]. Its locators name the kind of object, and
    the concrete object is known only when the step happens.
-7. When the materialized transition has a `commandRef`, the object that its [=ActivationStep=] or
-   [=ShortcutStep=] acts on **SHOULD** be one that an [=ObservationBinding=] recognizes for a
-   [=Surface=] of that [=Command=]. A transition without a Command can still be materialized.
+7. When the materialized transition has a `commandRef`, the object that its last step reaches or
+   acts on **SHOULD** be one that an [=ObservationBinding=] recognizes for a [=Surface=] of that
+   [=Command=]. A transition without a Command can still be materialized.
+8. A [=Transition=] with `fromExitRef` has no materialization, because reaching the child exit takes
+   it, not a user action. The steps that lead to the exit materialize the child Journey's Transition
+   into that [=JourneyExit=].
 </spec-statement>
 
-A materialization also shows whether a requirement is met. An [=ObservationEvent=] that requires an
-[=InputModalityProfile=] listing only `observability:keyboard` can be checked by performing a keyboard
-materialization of the transition whose Command the event's binding observes. Profiles that list
-several modalities are outside this version.
+A materialization also shows whether a requirement is met. An [=ObservationBinding=] observes a
+[=Surface=] whose `graphNodeRef` is a [=Command=], and it references an [=ObservationEvent=]. When that
+event requires an [=InputModalityProfile=] that lists exactly one modality, a consumer can check the
+requirement by performing a materialization through that modality of a transition whose `commandRef`
+is that Command. Each required profile is checked on its own, as Observability evaluates profiles
+independently. Profiles that list several modalities are outside this version.
 
 ```mermaid
 classDiagram
@@ -114,9 +126,9 @@ classDiagram
   TransitionMaterialization --> OutgoingTransition : materializationTransitionRef
   TransitionMaterialization --> InvokingTransition : materializationTransitionRef
   TransitionMaterialization --> InputModality : materializationModalityRef
-  TransitionMaterialization --> "1..*" MoveStep : materializationStepRefs
-  TransitionMaterialization --> "1..*" ActivationStep : materializationStepRefs
-  TransitionMaterialization --> "1..*" ShortcutStep : materializationStepRefs
+  TransitionMaterialization --> "0..*" MoveStep : materializationStepRefs
+  TransitionMaterialization --> "0..*" ActivationStep : materializationStepRefs
+  TransitionMaterialization --> "0..*" ShortcutStep : materializationStepRefs
   TransitionMaterialization --> AccessibleLocator : materializationStartLocatorRef
   TransitionMaterialization --> State : materializationSourceStateRef
   TransitionMaterialization --> MaterializationDirection : materializationDirectionRef
@@ -196,8 +208,24 @@ classDiagram
   MoveStep --> AccessibleLocator : stepLocatorRef
   ActivationStep --> AccessibleLocator : stepLocatorRef
   ShortcutStep --> AccessibleLocator : stepLocatorRef
-  ActivationStep --> MoveStep : stepPreviousRef
+```
+
+Any step can follow any step:
+
+```mermaid
+classDiagram
+  class MoveStep
+  class ActivationStep
+  class ShortcutStep
   MoveStep --> MoveStep : stepPreviousRef
+  MoveStep --> ActivationStep : stepPreviousRef
+  MoveStep --> ShortcutStep : stepPreviousRef
+  ActivationStep --> MoveStep : stepPreviousRef
+  ActivationStep --> ActivationStep : stepPreviousRef
+  ActivationStep --> ShortcutStep : stepPreviousRef
+  ShortcutStep --> MoveStep : stepPreviousRef
+  ShortcutStep --> ActivationStep : stepPreviousRef
+  ShortcutStep --> ShortcutStep : stepPreviousRef
 ```
 
 Example JSON nodes:
@@ -267,7 +295,9 @@ materialization performs one of them, and `materializationDirectionRef` says whi
    [=Member transition|member=] AdjacentTransition, it moves to the neighboring member after the
    border.
 2. `operability:backward` moves the other way.
-3. Each direction can have its own materializations, which are alternatives for that direction.
+3. An AdjacentTransition has exactly these two movements, so these are the only two
+   [=MaterializationDirection|MaterializationDirections=].
+4. Each direction can have its own materializations, which are alternatives for that direction.
 </spec-statement>
 
 ```mermaid
@@ -539,8 +569,12 @@ The example does not name where the keyboard steps start.
 }
 ```
 
-Both the keyboard and the pointer materialization satisfy the requirement that the activation event
-declares, because each one performs the transition whose Command the binding observes.
+The binding observes the Surface of the "Select Drafts" Command, and its activation event requires
+two profiles. Each profile is checked on its own:
+
+- The keyboard profile can be checked with `urn:materialization:select-drafts:keyboard`, or with
+  `urn:materialization:select-drafts:shortcut`, which also uses the keyboard.
+- The pointer profile can be checked with `urn:materialization:select-drafts:pointer`.
 
 ### Selection Follows Focus Example
 
@@ -549,14 +583,35 @@ Drafts then passes through Inbox, which is a State of its own. The Graph has two
 "Select Inbox" from Home and "Select Drafts" from Inbox, and each one gets a keyboard materialization
 whose last step is a MoveStep. The second one starts at the Inbox tab.
 
-The Home → Drafts transition from the previous example keeps its pointer and shortcut
-materializations. It has no keyboard materialization in this tab list, because a keyboard user
-cannot reach Drafts from Home without passing Inbox.
+The Home → Drafts transition keeps its pointer and shortcut materializations from the previous
+example. It has no keyboard materialization in this tab list: a keyboard user cannot reach Drafts
+from Home without passing Inbox, so those steps would pass through another State.
 
-The nodes below extend the previous example.
+To turn the previous example into this one:
+
+- remove `urn:materialization:select-drafts:keyboard` and its five steps;
+- replace the `urn:journey:mail` node with the one below, which lists the new State and Transitions;
+- add the other nodes below.
 
 ```json
 [
+  {
+    "@type": "Journey",
+    "@id": "urn:journey:mail",
+    "label": "Mail",
+    "defaultEntryRef": "urn:entry:mail",
+    "entryRefs": ["urn:entry:mail"],
+    "stateRefs": [
+      "urn:state:home-selected",
+      "urn:state:inbox-selected",
+      "urn:state:drafts-selected"
+    ],
+    "transitionRefs": [
+      "urn:transition:select-drafts",
+      "urn:transition:select-inbox",
+      "urn:transition:select-drafts-from-inbox"
+    ]
+  },
   {
     "@type": "State",
     "@id": "urn:state:inbox-selected",

@@ -42,8 +42,12 @@ ujgoperability:MoveKind a owl:Class ;
 
 ujgoperability:MaterializationDirection a owl:Class ;
   rdfs:subClassOf ujg:Node ;
+  owl:equivalentClass [
+    a owl:Class ;
+    owl:oneOf ( ujgoperability:forward ujgoperability:backward )
+  ] ;
   rdfs:label "Materialization Direction" ;
-  rdfs:comment "Which of the two movements of an AdjacentTransition a TransitionMaterialization performs." .
+  rdfs:comment "Which of the two movements of an AdjacentTransition a TransitionMaterialization performs. An AdjacentTransition has exactly two movements, so forward and backward are the only directions." .
 
 ### Standard individuals
 
@@ -93,7 +97,7 @@ ujgoperability:materializationTransitionRef a owl:ObjectProperty ;
     )
   ] ;
   rdfs:label "materialization transition ref" ;
-  rdfs:comment "References the Graph transition that a TransitionMaterialization performs." .
+  rdfs:comment "References the Graph transition that a TransitionMaterialization performs. A Transition with fromExitRef is taken when the child exit is reached, not by a user action, so it is never materialized." .
 
 ujgoperability:materializationModalityRef a owl:ObjectProperty ;
   rdfs:domain ujgoperability:TransitionMaterialization ;

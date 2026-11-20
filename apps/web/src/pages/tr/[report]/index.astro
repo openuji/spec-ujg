@@ -48,7 +48,13 @@ const familySections: Array<{
     id: 'second-level-optional-modules',
     title: 'Second-Level Optional Modules',
     description: 'Optional modules captured in this report through another optional module.',
-    documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) > 1),
+    documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) === 2),
+  },
+  {
+    id: 'third-level-optional-modules',
+    title: 'Third-Level Optional Modules',
+    description: 'Optional modules captured in this report through a second-level optional module.',
+    documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) === 3),
   },
   {
     id: 'document-extensions',

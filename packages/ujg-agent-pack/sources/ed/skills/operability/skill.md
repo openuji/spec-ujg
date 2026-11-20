@@ -101,7 +101,9 @@ Do not use ordered arrays for steps. Do not name concrete keys such as `Tab`, `A
 
 A `TransitionMaterialization` must reference exactly one transition with `materializationTransitionRef`, exactly one `InputModality` with `materializationModalityRef`, and at least one step with `materializationStepRefs`.
 
-Use `observability:keyboard` or `observability:pointer` for `materializationModalityRef` where they apply. A shortcut materialization uses the keyboard modality and a single `ShortcutStep`.
+Use `observability:keyboard` or `observability:pointer` for `materializationModalityRef` where they apply. A keyboard shortcut is often modeled as a keyboard materialization whose only step is a `ShortcutStep`, but the spec requires neither: a `ShortcutStep` can appear anywhere in a chain.
+
+Do not materialize a `Transition` that declares `fromExitRef`. Reaching the child exit takes it, not a user action. Materialize the child Journey's `Transition` into that exit instead.
 
 Several materializations of one transition are alternatives.
 
@@ -109,7 +111,7 @@ Use `materializationStartLocatorRef` to name the object the user is at before th
 
 Use `materializationSourceStateRef` only when the transition does not determine the State where the steps happen: for an entry transition, name a State that lists it in `entryTransitionRefs`; for a transition that leaves a `CompositeState`, name a State nested in it.
 
-Use `materializationDirectionRef` exactly when the transition is an `AdjacentTransition`. `operability:forward` moves from `from` to `to`; `operability:backward` moves the other way.
+Use `materializationDirectionRef` exactly when the transition is an `AdjacentTransition`. `operability:forward` moves from `from` to `to`; `operability:backward` moves the other way. These are the only two directions; do not define others.
 
 ## Steps
 
@@ -129,7 +131,9 @@ Buttons passed on the way are steps, not Graph States or transitions. When the u
 
 Operability does not change Graph traversal, Graph validity, Observability recognition, or `requiredInputModalityProfileRefs`.
 
-When the transition has a `commandRef`, make the object of its `ActivationStep` or `ShortcutStep` one that an `ObservationBinding` recognizes for a `Surface` of that `Command`.
+When the transition has a `commandRef`, make the object that its last step reaches or acts on one that an `ObservationBinding` recognizes for a `Surface` of that `Command`.
+
+To check an `ObservationEvent` requirement, evaluate each required `InputModalityProfile` on its own: a profile that lists exactly one modality is met by a materialization through that modality of a transition whose `commandRef` is the Command of the observed Surface. A binding observes a `Surface`, not a `Command`, and the binding references its event.
 
 Put concrete shortcut keys that are not exposed through the accessibility API in private Core `extensions`, never in Operability terms.
 
@@ -142,7 +146,8 @@ Put concrete shortcut keys that are not exposed through the accessibility API in
 * Are steps ordered only through `stepPreviousRef`, with exactly one first step and no cycle?
 * Does every step belong to exactly one materialization?
 * Is `stepMoveKindRef` used only on `MoveStep`?
-* Is `materializationDirectionRef` present exactly for `AdjacentTransition` materializations?
+* Is `materializationDirectionRef` present exactly for `AdjacentTransition` materializations, with `operability:forward` or `operability:backward` only?
+* Did I avoid materializing a `Transition` that declares `fromExitRef`?
 * Is `materializationSourceStateRef` used only for entry transitions or transitions that leave a `CompositeState`?
 * Did I avoid concrete keys, gestures, and ordered arrays?
 * Do step locators reference Observability locators, with names through `MessageMeta`?
