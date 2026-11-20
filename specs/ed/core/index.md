@@ -28,6 +28,8 @@ The Core module consists of:
   so more specialized modules can build on it.
 - <dfn>Second-level UJG module</dfn>: An optional module that depends on at least one first-level UJG
   module to describe a more specialized capability.
+- <dfn>Third-level UJG module</dfn>: An optional module that depends on at least one second-level UJG
+  module to build on that module's vocabulary.
 
 ## Node {data-cop-concept="node"}
 
@@ -149,6 +151,10 @@ A composed context is expressed as a JSON-LD `@context` array in which the Core 
 <spec-statement>A [=second-level UJG module=] **MUST** depend on at least one [=first-level UJG module=] and **MAY** also depend on [=main spec family=] modules.</spec-statement>
 
 <spec-statement>A [=second-level UJG module=] **MUST NOT** attach specialized domain semantics directly to Core or Graph nodes when an appropriate first-level bridge module exists for that domain.</spec-statement>
+
+<spec-statement>A [=third-level UJG module=] **MUST** depend on at least one [=second-level UJG module=] and **MAY** also depend on [=first-level UJG module|first-level UJG modules=] and [=main spec family=] modules.</spec-statement>
+
+<spec-statement>A [=third-level UJG module=] **MUST NOT** attach specialized domain semantics directly to Core or Graph nodes when an appropriate lower-level optional module exists for that domain.</spec-statement>
 
 <spec-statement>Module references **MUST NOT** create hidden graph traversal, runtime ordering, mapping conformance, or profile requirements unless those semantics are explicitly defined by the module that owns the references.</spec-statement>
 

@@ -1,0 +1,184 @@
+@prefix ujg: <https://ujg.specs.openuji.org/ed/ns/core#> .
+@prefix ujggraph: <https://ujg.specs.openuji.org/ed/ns/graph#> .
+@prefix ujgobservability: <https://ujg.specs.openuji.org/ed/ns/observability#> .
+@prefix ujgoperability: <https://ujg.specs.openuji.org/ed/ns/operability#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://ujg.specs.openuji.org/ed/ns/operability#> a owl:Ontology ;
+  rdfs:label "UJG Operability Editor's Draft Vocabulary"@en ;
+  dct:description "UJG Operability ontology declaration" .
+
+### Classes
+
+ujgoperability:TransitionMaterialization a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Transition Materialization" ;
+  rdfs:comment "One way to perform one Graph transition through one input modality, described as materialization steps. Several materializations of the same transition are alternatives. A TransitionMaterialization does not change the transition." .
+
+ujgoperability:MoveStep a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujgoperability:ActivationStep, ujgoperability:ShortcutStep ;
+  rdfs:label "Move Step" ;
+  rdfs:comment "A materialization step in which the user moves to another object, such as the next button. Only the last step of a materialization takes the materialized transition." .
+
+ujgoperability:ActivationStep a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujgoperability:MoveStep, ujgoperability:ShortcutStep ;
+  rdfs:label "Activation Step" ;
+  rdfs:comment "A materialization step in which the user activates the object they are at: the focused object, or the object pointed at." .
+
+ujgoperability:ShortcutStep a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujgoperability:MoveStep, ujgoperability:ActivationStep ;
+  rdfs:label "Shortcut Step" ;
+  rdfs:comment "A materialization step in which the user performs the shortcut that an object exposes. It acts on that object without the user reaching it first." .
+
+ujgoperability:MoveKind a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Move Kind" ;
+  rdfs:comment "A platform-neutral kind of focus move. A platform adapter performs it with the gestures of its platform and input modality." .
+
+ujgoperability:MaterializationDirection a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  rdfs:label "Materialization Direction" ;
+  rdfs:comment "Which of the two movements of an AdjacentTransition a TransitionMaterialization performs." .
+
+### Standard individuals
+
+ujgoperability:nextStop a owl:NamedIndividual, ujgoperability:MoveKind ;
+  rdfs:label "Next stop"@en ;
+  rdfs:comment "Moves focus to the next stop of sequential focus navigation."@en .
+
+ujgoperability:previousStop a owl:NamedIndividual, ujgoperability:MoveKind ;
+  rdfs:label "Previous stop"@en ;
+  rdfs:comment "Moves focus to the previous stop of sequential focus navigation."@en .
+
+ujgoperability:nextItem a owl:NamedIndividual, ujgoperability:MoveKind ;
+  rdfs:label "Next item"@en ;
+  rdfs:comment "Moves focus to the next item inside a composite widget, such as the next tab of a tab list."@en .
+
+ujgoperability:previousItem a owl:NamedIndividual, ujgoperability:MoveKind ;
+  rdfs:label "Previous item"@en ;
+  rdfs:comment "Moves focus to the previous item inside a composite widget."@en .
+
+ujgoperability:firstItem a owl:NamedIndividual, ujgoperability:MoveKind ;
+  rdfs:label "First item"@en ;
+  rdfs:comment "Moves focus to the first item inside a composite widget."@en .
+
+ujgoperability:lastItem a owl:NamedIndividual, ujgoperability:MoveKind ;
+  rdfs:label "Last item"@en ;
+  rdfs:comment "Moves focus to the last item inside a composite widget."@en .
+
+ujgoperability:forward a owl:NamedIndividual, ujgoperability:MaterializationDirection ;
+  rdfs:label "Forward"@en ;
+  rdfs:comment "Moves from the AdjacentTransition's from vertex to its to vertex. For a member AdjacentTransition, moves to the neighboring member after the border."@en .
+
+ujgoperability:backward a owl:NamedIndividual, ujgoperability:MaterializationDirection ;
+  rdfs:label "Backward"@en ;
+  rdfs:comment "Moves from the AdjacentTransition's to vertex to its from vertex. For a member AdjacentTransition, moves to the neighboring member before the border."@en .
+
+### Properties
+
+ujgoperability:materializationTransitionRef a owl:ObjectProperty ;
+  rdfs:domain ujgoperability:TransitionMaterialization ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujggraph:Transition
+      ujggraph:AdjacentTransition
+      ujggraph:OutgoingTransition
+      ujggraph:InvokingTransition
+    )
+  ] ;
+  rdfs:label "materialization transition ref" ;
+  rdfs:comment "References the Graph transition that a TransitionMaterialization performs." .
+
+ujgoperability:materializationModalityRef a owl:ObjectProperty ;
+  rdfs:domain ujgoperability:TransitionMaterialization ;
+  rdfs:range ujgobservability:InputModality ;
+  rdfs:label "materialization modality ref" ;
+  rdfs:comment "References the input modality through which a TransitionMaterialization performs its transition." .
+
+ujgoperability:materializationStepRefs a owl:ObjectProperty ;
+  rdfs:domain ujgoperability:TransitionMaterialization ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujgoperability:MoveStep
+      ujgoperability:ActivationStep
+      ujgoperability:ShortcutStep
+    )
+  ] ;
+  rdfs:label "materialization step refs" ;
+  rdfs:comment "References the materialization steps of a TransitionMaterialization. The values form a set; step order comes from stepPreviousRef." .
+
+ujgoperability:materializationStartLocatorRef a owl:ObjectProperty ;
+  rdfs:domain ujgoperability:TransitionMaterialization ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujgobservability:AccessibleLocator
+      ujgobservability:CustomLocator
+    )
+  ] ;
+  rdfs:label "materialization start locator ref" ;
+  rdfs:comment "References a locator for the object the user is at before the first step." .
+
+ujgoperability:materializationSourceStateRef a owl:ObjectProperty ;
+  rdfs:domain ujgoperability:TransitionMaterialization ;
+  rdfs:range ujggraph:State ;
+  rdfs:label "materialization source state ref" ;
+  rdfs:comment "References the State in which the steps are performed when the transition does not determine it: a State that lists the materialized entry transition, or a State nested in the CompositeState that the materialized transition leaves." .
+
+ujgoperability:materializationDirectionRef a owl:ObjectProperty ;
+  rdfs:domain ujgoperability:TransitionMaterialization ;
+  rdfs:range ujgoperability:MaterializationDirection ;
+  rdfs:label "materialization direction ref" ;
+  rdfs:comment "References which of the two movements of the materialized AdjacentTransition a TransitionMaterialization performs." .
+
+ujgoperability:stepPreviousRef a owl:ObjectProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujgoperability:MoveStep
+      ujgoperability:ActivationStep
+      ujgoperability:ShortcutStep
+    )
+  ] ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujgoperability:MoveStep
+      ujgoperability:ActivationStep
+      ujgoperability:ShortcutStep
+    )
+  ] ;
+  rdfs:label "step previous ref" ;
+  rdfs:comment "References the materialization step that a step follows. The first step of a materialization follows no step." .
+
+ujgoperability:stepLocatorRef a owl:ObjectProperty ;
+  rdfs:domain [
+    a owl:Class ;
+    owl:unionOf (
+      ujgoperability:MoveStep
+      ujgoperability:ActivationStep
+      ujgoperability:ShortcutStep
+    )
+  ] ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujgobservability:AccessibleLocator
+      ujgobservability:CustomLocator
+    )
+  ] ;
+  rdfs:label "step locator ref" ;
+  rdfs:comment "References a locator for the object that a materialization step reaches or acts on." .
+
+ujgoperability:stepMoveKindRef a owl:ObjectProperty ;
+  rdfs:domain ujgoperability:MoveStep ;
+  rdfs:range ujgoperability:MoveKind ;
+  rdfs:label "step move kind ref" ;
+  rdfs:comment "References the kind of focus move that a MoveStep performs." .

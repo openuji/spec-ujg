@@ -1,0 +1,53 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujgoperability": "https://ujg.specs.openuji.org/ed/ns/operability#",
+    "operability": "https://ujg.specs.openuji.org/ed/ns/operability#",
+
+    "TransitionMaterialization": "ujgoperability:TransitionMaterialization",
+    "MoveStep": "ujgoperability:MoveStep",
+    "ActivationStep": "ujgoperability:ActivationStep",
+    "ShortcutStep": "ujgoperability:ShortcutStep",
+    "MoveKind": "ujgoperability:MoveKind",
+    "MaterializationDirection": "ujgoperability:MaterializationDirection",
+
+    "materializationTransitionRef": {
+      "@id": "ujgoperability:materializationTransitionRef",
+      "@type": "@id"
+    },
+    "materializationModalityRef": {
+      "@id": "ujgoperability:materializationModalityRef",
+      "@type": "@id"
+    },
+    "materializationStepRefs": {
+      "@id": "ujgoperability:materializationStepRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "materializationStartLocatorRef": {
+      "@id": "ujgoperability:materializationStartLocatorRef",
+      "@type": "@id"
+    },
+    "materializationSourceStateRef": {
+      "@id": "ujgoperability:materializationSourceStateRef",
+      "@type": "@id"
+    },
+    "materializationDirectionRef": {
+      "@id": "ujgoperability:materializationDirectionRef",
+      "@type": "@id"
+    },
+    "stepPreviousRef": {
+      "@id": "ujgoperability:stepPreviousRef",
+      "@type": "@id"
+    },
+    "stepLocatorRef": {
+      "@id": "ujgoperability:stepLocatorRef",
+      "@type": "@id"
+    },
+    "stepMoveKindRef": {
+      "@id": "ujgoperability:stepMoveKindRef",
+      "@type": "@id"
+    }
+  }
+}

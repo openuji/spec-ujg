@@ -34,7 +34,14 @@ const familySections: Array<{
     title: 'Second-Level Optional Modules',
     description:
       'Optional modules that depend on one or more first-level optional modules, plus any needed main spec family modules.',
-    documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) > 1),
+    documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) === 2),
+  },
+  {
+    id: 'third-level-optional-modules',
+    title: 'Third-Level Optional Modules',
+    description:
+      'Optional modules that depend on one or more second-level optional modules and build on their vocabulary, plus any needed first-level or main spec family modules.',
+    documents: moduleDocuments.filter((doc) => getDocumentModuleLevel(doc) === 3),
   },
   {
     id: 'document-extensions',
