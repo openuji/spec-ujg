@@ -25,7 +25,8 @@ Operability names kinds of moves, such as "next item", not keys. A [=Platform ad
 each step with the gestures of its platform and input modality, for example ArrowRight in a web tab
 list or the right button of a TV remote [[WAI-ARIA-APG]].
 
-This version covers moving between objects, activating them, and shortcuts. Entering or selecting
+This version covers moving focus or the pointer between objects, moving the view by a page,
+activating objects, and shortcuts. Entering or selecting
 text, or changing a value, as part of a transition is outside this version.
 
 ## Terminology
@@ -35,18 +36,20 @@ text, or changing a value, as part of a transition is outside this version.
 - <dfn>Materialization step</dfn>: One action of the user within a [=TransitionMaterialization=]: a
   [=MoveStep=], an [=ActivationStep=], or a [=ShortcutStep=].
 - <dfn>MoveStep</dfn>: A materialization step in which the user moves to another object, such as the
-  next button.
-- <dfn>ActivationStep</dfn>: A materialization step in which the user activates the object they are
-  at.
+  next button, or moves the view by a page.
+- <dfn>ActivationStep</dfn>: A materialization step in which the user performs the default action of
+  the object they are at.
 - <dfn>ShortcutStep</dfn>: A materialization step in which the user performs the shortcut that an
   object exposes.
-- <dfn>MoveKind</dfn>: A platform-neutral kind of focus move, such as moving to the next item of a
-  tab list.
+- <dfn>FocusMoveKind</dfn>: A platform-neutral kind of focus move, such as moving to the next item of
+  a tab list.
+- <dfn>MoveKind</dfn>: A platform-neutral kind of move that does not move focus, such as moving the
+  pointer onto an object or moving the view by a page.
 - <dfn>MaterializationDirection</dfn>: Which of the two movements of an [=AdjacentTransition=] a
   TransitionMaterialization performs.
-- <dfn>Platform adapter</dfn>: The part of a consumer that performs materialization steps with the
-  gestures of one platform and input modality, such as a [=Synthetic Runner=] that drives a browser
-  by keyboard.
+- <dfn>Platform adapter</dfn>: The part of a consumer, such as a [=Synthetic Runner=], that turns
+  materialization steps into the gestures of one platform and input modality, for example key
+  presses in a browser.
 - <dfn>Performable materialization</dfn>: A [=TransitionMaterialization=] whose every step can be
   performed without guessing a detail it leaves out.
 
@@ -92,9 +95,6 @@ to materialize.
 7. When the materialized transition has a `commandRef`, the object that its last step reaches or
    acts on **SHOULD** be one that an [=ObservationBinding=] recognizes for a [=Surface=] of that
    [=Command=]. A transition without a Command can still be materialized.
-8. A [=Transition=] with `fromExitRef` has no materialization, because reaching the child exit takes
-   it, not a user action. The steps that lead to the exit materialize the child Journey's Transition
-   into that [=JourneyExit=].
 </spec-statement>
 
 How a materialization is performed and checked is described in the Performing a Materialization
@@ -108,6 +108,7 @@ classDiagram
   class InvokingTransition
   class InputModality
   class AccessibleLocator
+  class CustomLocator
   class State
   class MaterializationDirection
   class MoveStep
@@ -131,6 +132,7 @@ classDiagram
   TransitionMaterialization --> "0..*" ActivationStep : materializationStepRefs
   TransitionMaterialization --> "0..*" ShortcutStep : materializationStepRefs
   TransitionMaterialization --> AccessibleLocator : materializationStartLocatorRef
+  TransitionMaterialization --> CustomLocator : materializationStartLocatorRef
   TransitionMaterialization --> State : materializationSourceStateRef
   TransitionMaterialization --> MaterializationDirection : materializationDirectionRef
 ```
@@ -143,15 +145,19 @@ Example JSON node:
   "@id": "urn:ujg:materialization:select-drafts:pointer",
   "materializationTransitionRef": "urn:ujg:transition:select-drafts",
   "materializationModalityRef": "observability:pointer",
-  "materializationStepRefs": ["urn:ujg:step:select-drafts:pointer:1"]
+  "materializationStepRefs": [
+    "urn:ujg:step:select-drafts:pointer:1",
+    "urn:ujg:step:select-drafts:pointer:2"
+  ]
 }
 ```
 
 ## Materialization steps {data-cop-concept="materialization-steps"}
 
 A materialization has three kinds of steps. A [=MoveStep=] covers each button or other object the
-user passes on the way. An [=ActivationStep=] activates the object the user is at. A [=ShortcutStep=]
-performs the shortcut that an object exposes.
+user passes or points at on the way, and each page the view moves by. An [=ActivationStep=]
+activates the object the user is at. A [=ShortcutStep=] performs the shortcut that an object
+exposes.
 
 Each step can name the object it reaches or acts on with `stepLocatorRef`. This detail is optional: a
 step without a locator still counts as one step of the path. The number of steps describes how much
@@ -165,19 +171,22 @@ how the steps are ordered; the order of the `materializationStepRefs` values mea
    follows no step comes first, and the materialized transition happens when the last step is
    performed.
 2. The order of `materializationStepRefs` values **MUST NOT** define step order.
-3. A [=MoveStep=] moves the user to another object. It is the last step only when the move itself
-   takes the transition, as in a tab list whose selection follows focus.
-4. An [=ActivationStep=] activates the object the user is at: the focused object for a keyboard, or
-   the object pointed at for a pointer.
-5. An ActivationStep does not say which of the platform's activation gestures the user uses, such
-   as Enter or Space on a web button. Gestures that do different things, such as toggling a checkbox
-   and submitting its form, take different transitions.
+3. A [=MoveStep=] moves the user to another object, or moves the view by a page. It is the last step
+   only when the move itself takes the transition, as in a tab list whose selection follows focus.
+4. An [=ActivationStep=] performs the default action of the object the user is at: the focused
+   object for a keyboard, or the object pointed at for a pointer.
+5. Every activation gesture of the platform performs an ActivationStep, such as Enter or Space on a
+   web button, so the step does not say which one the user uses. A gesture that does something else, such as Enter submitting the
+   form around a focused checkbox, is not an activation of that object. It is a [=ShortcutStep=] on
+   the object it acts on, such as the form's submit button.
 6. A [=ShortcutStep=] performs the shortcut that an object exposes. It acts on that object without
    the user reaching it first.
 7. When a step names an object with `stepLocatorRef`, the object it reaches or acts on matches that
    locator.
-8. A MoveStep with a [=MoveKind=] reaches the object that its kind designates, such as the next item
-   in the order the platform presents. Its locator describes that object; it does not choose it.
+8. A MoveStep reaches what its kind designates: for a [=FocusMoveKind=], an object such as the next
+   item in the order the platform presents; for `operability:pointAt`, the object its locator
+   names; for a page move, the page that comes into view. Except with `operability:pointAt`, the
+   locator describes what the step reaches; it does not choose it.
 9. Operability defines no keys, buttons, or gestures. A [=Platform adapter=] performs each step with
    the gestures that its platform and input modality use for it.
 10. The gesture of a ShortcutStep is the shortcut that the accessibility API exposes for the object
@@ -188,8 +197,10 @@ how the steps are ordered; the order of the `materializationStepRefs` values mea
 
 ```mermaid
 classDiagram
+  class FocusMoveKind
   class MoveKind
   class AccessibleLocator
+  class CustomLocator
   class MoveStep {
     id
     stepMoveKindRef
@@ -206,10 +217,14 @@ classDiagram
     stepLocatorRef
     stepPreviousRef
   }
+  MoveStep --> FocusMoveKind : stepMoveKindRef
   MoveStep --> MoveKind : stepMoveKindRef
   MoveStep --> AccessibleLocator : stepLocatorRef
   ActivationStep --> AccessibleLocator : stepLocatorRef
   ShortcutStep --> AccessibleLocator : stepLocatorRef
+  MoveStep --> CustomLocator : stepLocatorRef
+  ActivationStep --> CustomLocator : stepLocatorRef
+  ShortcutStep --> CustomLocator : stepLocatorRef
 ```
 
 Any step can follow any step:
@@ -249,13 +264,14 @@ Example JSON nodes:
 ]
 ```
 
-## MoveKind {data-cop-concept="move-kind"}
+## FocusMoveKind and MoveKind {data-cop-concept="move-kind"}
 
-A [=MoveKind=] tells a [=Platform adapter=] which focus move a [=MoveStep=] performs, without naming
-a key. This module defines six standard kinds in two groups.
+A [=MoveStep=] names the kind of move it performs, without naming a key or gesture. There are two
+kinds of moves. A [=FocusMoveKind=] moves focus, as a keyboard does. A [=MoveKind=] moves something
+other than focus: the pointer, or the view.
 
-The first group moves between the stops of sequential focus navigation, which a desktop keyboard
-performs with Tab and Shift+Tab:
+This module defines six standard focus moves in two groups. The first group moves between the stops
+of sequential focus navigation, which a desktop keyboard performs with Tab and Shift+Tab:
 
 - `operability:nextStop`
 - `operability:previousStop`
@@ -268,21 +284,36 @@ which a desktop keyboard performs with the arrow keys, Home, and End [[WAI-ARIA-
 - `operability:firstItem`
 - `operability:lastItem`
 
-The keys named here only illustrate what an adapter does; they are not part of the vocabulary. The
-standard kinds are declared as [=MoveKind=] resources by the normative Operability ontology, so
-Producers can reference them without serializing them.
+It also defines three standard moves that do not move focus:
+
+- `operability:pointAt` moves the pointer onto the object the step's locator names, for example to
+  open a submenu by hovering.
+- `operability:nextPage` and `operability:previousPage` move the view by one page, for example with
+  PageDown, a mouse wheel, or a swipe in a carousel. They are a common way to cross an
+  [=AdjacentTransition=], such as between the sections of a scrolling view.
+
+The keys and gestures named here only illustrate what an adapter does; they are not part of the
+vocabulary. The standard kinds are declared by the normative Operability ontology, so Producers can
+reference them without serializing them.
 
 <spec-statement>
-1. A [=MoveKind=] names a focus move independently of any key or gesture.
-2. "Next", "previous", "first", and "last" follow the order in which the platform presents the stops
-   or items when the step happens. Operability declares no order of its own.
-3. A [=MoveStep=] without a MoveKind leaves the kind of move undescribed. It documents the step, but
-   a materialization that contains it is not [=Performable materialization|performable=].
-4. Producers **MAY** define other MoveKinds.
+1. A [=FocusMoveKind=] names a focus move, and a [=MoveKind=] names a move that does not move focus.
+   Neither names a key or gesture.
+2. "Next", "previous", "first", and "last" follow the order in which the platform presents the stops,
+   items, or pages when the step happens. Operability declares no order of its own.
+3. A pointer moves directly to an object, so a pointer materialization moves with
+   `operability:pointAt` rather than with focus moves. Through a pointer, a click is a MoveStep with
+   `operability:pointAt` followed by an [=ActivationStep=].
+4. A [=MoveStep=] without a kind leaves the move undescribed. It documents the step, but a
+   materialization that contains it is not [=Performable materialization|performable=].
+5. Producers **MAY** define other FocusMoveKinds and MoveKinds.
 </spec-statement>
 
 ```mermaid
 classDiagram
+  class FocusMoveKind {
+    id
+  }
   class MoveKind {
     id
   }
@@ -291,16 +322,16 @@ classDiagram
 ## AdjacentTransition direction {data-cop-concept="materialization-direction"}
 
 One [=AdjacentTransition=] describes movement in both directions across a border. A
-materialization performs one of them, and `materializationDirectionRef` says which.
+materialization performs one of them, and `materializationDirectionRef` says which. An
+AdjacentTransition has exactly two movements, so there are exactly two
+[=MaterializationDirection|MaterializationDirections=].
 
 <spec-statement>
 1. `operability:forward` moves from the AdjacentTransition's `from` vertex to its `to` vertex. For a
    [=Member transition|member=] AdjacentTransition, it moves to the neighboring member after the
    border.
 2. `operability:backward` moves the other way.
-3. An AdjacentTransition has exactly these two movements, so these are the only two
-   [=MaterializationDirection|MaterializationDirections=].
-4. Each direction can have its own materializations, which are alternatives for that direction.
+3. Each direction can have its own materializations, which are alternatives for that direction.
 </spec-statement>
 
 ```mermaid
@@ -322,41 +353,49 @@ A materialization can leave details out and still describe a way of acting, whic
 document it. To perform it, a runner needs every step to be determined. A materialization is
 [=Performable materialization|performable=] when:
 
-- every [=MoveStep=] names its [=MoveKind=]. A locator alone would leave the runner searching for
-  the object, which is guessing;
-- every [=ActivationStep=] through a pointer names its object with `stepLocatorRef`, because a
-  pointer has to point somewhere. Through a keyboard, an ActivationStep acts on the focused object;
+- every [=MoveStep=] names its kind, a [=FocusMoveKind=] or a [=MoveKind=]. A locator alone would
+  leave the runner searching for the object, which is guessing;
+- every MoveStep with `operability:pointAt` also names its object with `stepLocatorRef`, because the
+  pointer moves straight to that object;
 - every [=ShortcutStep=] names an object that exposes its shortcut through the accessibility API, or
   carries a private adapter hint in Core `extensions`.
 
-Without `materializationStartLocatorRef`, the steps start wherever the user is when the runner
-begins them.
+An [=ActivationStep=] acts on the object the user is at, so it needs nothing more. Without
+`materializationStartLocatorRef`, the steps start wherever the user is when the runner begins them.
 
 <spec-statement>
 1. Before the first step, a [=Synthetic Runner=] that performs a materialization **MUST** check that
    the user is at the object `materializationStartLocatorRef` names, when it names one.
-2. After each [=MoveStep=] that names an object, the runner **MUST** check that the user is at an
-   object that matches the step's locator and that the step's [=MoveKind=] designates. With a
+2. Before a [=MoveStep=] with `operability:pointAt`, the runner **MUST** check that the step's
+   locator matches exactly one object. When it matches several, the runner **MUST NOT** choose one,
+   and the materialization cannot be performed there.
+3. After each MoveStep, the runner **MUST** check that the move happened: focus or the pointer is at
+   a different object, or the view shows a different page. When the step names an object, the
+   runner **MUST** also check that what the step reached matches the step's locator. With a
    keyboard, the user is at the object that has focus.
-3. Before each [=ActivationStep=] that names an object, the runner **MUST** check that the user is at
+4. Before each [=ActivationStep=] that names an object, the runner **MUST** check that the user is at
    an object that matches the step's locator.
-4. When a check fails, the materialization has failed, even if the transition happens afterwards.
-5. The runner **MUST NOT** place focus on an object programmatically. The steps describe what the
+5. When a check fails, the materialization has failed, even if the transition happens afterwards.
+6. The runner **MUST NOT** place focus on an object programmatically. The steps describe what the
    user does, and placing focus for them would hide a defect that the steps are meant to reveal.
-6. The runner **MUST NOT** fill in a detail that a step leaves out. It does not perform a
+7. The runner **MUST NOT** fill in a detail that a step leaves out. It does not perform a
    materialization that is not [=Performable materialization|performable=].
-7. Performing an ActivationStep with one activation gesture shows nothing about the platform's other
-   activation gestures. When a check needs a particular gesture, the gesture comes from a private
-   adapter hint in Core `extensions` or from the runner's own configuration.
-8. Each materialization is its own claim that its steps take the transition. Performing one shows
-   that it works; it shows nothing about the others, even those through the same modality.
+8. After the last step, the runner **MUST** check that the materialized transition was taken: that
+   the user reached its destination. How the runner recognizes the destination is up to the runner,
+   for example through an [=ObservationBinding=] for a [=Surface=] of the destination State.
+9. Every activation gesture of the platform performs an ActivationStep, so choosing one is not
+   filling in a detail. Performing the step with one gesture shows nothing about the others; to
+   check several, the runner performs the step once with each.
+10. A materialization works when every check passes, including the check that the transition was
+    taken. Each materialization is its own claim: one that works shows nothing about the others,
+    even those through the same modality.
 </spec-statement>
 
-A materialization also shows whether an Observability requirement is met. An [=ObservationBinding=]
-observes a [=Surface=] whose `graphNodeRef` is a [=Command=], and it references an
-[=ObservationEvent=]. When that event requires an [=InputModalityProfile=] that lists exactly one
-modality, a runner can check the requirement by performing one materialization through that modality
-of a transition whose `commandRef` is that Command. One materialization that works is enough for
+A materialization also shows whether an Observability requirement is met. Take an
+[=ObservationBinding=] that observes a [=Surface=] whose `graphNodeRef` is a [=Command=]. When the
+binding's [=ObservationEvent=] requires an [=InputModalityProfile=] that lists exactly one modality,
+a runner can check the requirement by performing one materialization through that modality of a
+transition whose `commandRef` is that Command. One materialization that works is enough for
 that requirement; checking that every materialization of the transition works means performing each
 of them. Each required profile is checked on its own, as Observability evaluates profiles
 independently. Profiles that list several modalities are outside this version.
@@ -414,12 +453,12 @@ materializations:
 - By keyboard, the user moves focus past a button that sits before the tab list, onto the Home tab,
   past the Inbox tab, and onto the Drafts tab, and then activates it. Only two of the four moves name
   the object they reach.
-- By pointer, the user activates the Drafts tab.
+- By pointer, the user points at the Drafts tab and activates it.
 - By shortcut, the user performs the shortcut that the Drafts tab exposes.
 
 The example does not name where the keyboard steps start. All three materializations are
-[=Performable materialization|performable=]: every MoveStep names its kind, the pointer step names
-the Drafts tab, and the shortcut step names the tab that exposes the shortcut.
+[=Performable materialization|performable=]: every MoveStep names its kind, the step that points
+names the Drafts tab, and the shortcut step names the tab that exposes the shortcut.
 
 ```json
 {
@@ -601,12 +640,21 @@ the Drafts tab, and the shortcut step names the tab that exposes the shortcut.
       "label": "Select Drafts by pointer",
       "materializationTransitionRef": "urn:transition:select-drafts",
       "materializationModalityRef": "observability:pointer",
-      "materializationStepRefs": ["urn:step:select-drafts:pointer:1"]
+      "materializationStepRefs": [
+        "urn:step:select-drafts:pointer:1",
+        "urn:step:select-drafts:pointer:2"
+      ]
+    },
+    {
+      "@type": "MoveStep",
+      "@id": "urn:step:select-drafts:pointer:1",
+      "stepMoveKindRef": "operability:pointAt",
+      "stepLocatorRef": "urn:locator:drafts-tab"
     },
     {
       "@type": "ActivationStep",
-      "@id": "urn:step:select-drafts:pointer:1",
-      "stepLocatorRef": "urn:locator:drafts-tab"
+      "@id": "urn:step:select-drafts:pointer:2",
+      "stepPreviousRef": "urn:step:select-drafts:pointer:1"
     },
     {
       "@type": "TransitionMaterialization",
@@ -865,3 +913,8 @@ direction.
 
 One pair of materializations serves every slide. The slide tab locator names any tab in the slide
 tab list, and which tab the user reaches is known only when the step happens.
+
+A pointer materialization of the same adjacency would point at a slide tab with
+`operability:pointAt`. The slide tab locator matches every tab, so a runner could not choose one,
+and such a materialization documents the interaction without being performable. A pointer user can
+also swipe: a pointer materialization with one MoveStep using `operability:nextPage` is performable.

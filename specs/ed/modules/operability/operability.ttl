@@ -27,7 +27,7 @@ ujgoperability:ActivationStep a owl:Class ;
   rdfs:subClassOf ujg:Node ;
   owl:disjointWith ujgoperability:MoveStep, ujgoperability:ShortcutStep ;
   rdfs:label "Activation Step" ;
-  rdfs:comment "A materialization step in which the user activates the object they are at: the focused object, or the object pointed at." .
+  rdfs:comment "A materialization step in which the user performs the default action of the object they are at: the focused object, or the object pointed at. Any of the platform's activation gestures performs it." .
 
 ujgoperability:ShortcutStep a owl:Class ;
   rdfs:subClassOf ujg:Node ;
@@ -35,10 +35,17 @@ ujgoperability:ShortcutStep a owl:Class ;
   rdfs:label "Shortcut Step" ;
   rdfs:comment "A materialization step in which the user performs the shortcut that an object exposes. It acts on that object without the user reaching it first." .
 
+ujgoperability:FocusMoveKind a owl:Class ;
+  rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujgoperability:MoveKind ;
+  rdfs:label "Focus Move Kind" ;
+  rdfs:comment "A platform-neutral kind of focus move, used through input modalities that move focus, such as a keyboard. A platform adapter performs it with the gestures of its platform and input modality." .
+
 ujgoperability:MoveKind a owl:Class ;
   rdfs:subClassOf ujg:Node ;
+  owl:disjointWith ujgoperability:FocusMoveKind ;
   rdfs:label "Move Kind" ;
-  rdfs:comment "A platform-neutral kind of focus move. A platform adapter performs it with the gestures of its platform and input modality." .
+  rdfs:comment "A platform-neutral kind of move that does not move focus, such as moving the pointer onto an object or moving the view by a page. A platform adapter performs it with the gestures of its platform and input modality." .
 
 ujgoperability:MaterializationDirection a owl:Class ;
   rdfs:subClassOf ujg:Node ;
@@ -51,29 +58,41 @@ ujgoperability:MaterializationDirection a owl:Class ;
 
 ### Standard individuals
 
-ujgoperability:nextStop a owl:NamedIndividual, ujgoperability:MoveKind ;
+ujgoperability:nextStop a owl:NamedIndividual, ujgoperability:FocusMoveKind ;
   rdfs:label "Next stop"@en ;
   rdfs:comment "Moves focus to the next stop of sequential focus navigation."@en .
 
-ujgoperability:previousStop a owl:NamedIndividual, ujgoperability:MoveKind ;
+ujgoperability:previousStop a owl:NamedIndividual, ujgoperability:FocusMoveKind ;
   rdfs:label "Previous stop"@en ;
   rdfs:comment "Moves focus to the previous stop of sequential focus navigation."@en .
 
-ujgoperability:nextItem a owl:NamedIndividual, ujgoperability:MoveKind ;
+ujgoperability:nextItem a owl:NamedIndividual, ujgoperability:FocusMoveKind ;
   rdfs:label "Next item"@en ;
   rdfs:comment "Moves focus to the next item inside a composite widget, such as the next tab of a tab list."@en .
 
-ujgoperability:previousItem a owl:NamedIndividual, ujgoperability:MoveKind ;
+ujgoperability:previousItem a owl:NamedIndividual, ujgoperability:FocusMoveKind ;
   rdfs:label "Previous item"@en ;
   rdfs:comment "Moves focus to the previous item inside a composite widget."@en .
 
-ujgoperability:firstItem a owl:NamedIndividual, ujgoperability:MoveKind ;
+ujgoperability:firstItem a owl:NamedIndividual, ujgoperability:FocusMoveKind ;
   rdfs:label "First item"@en ;
   rdfs:comment "Moves focus to the first item inside a composite widget."@en .
 
-ujgoperability:lastItem a owl:NamedIndividual, ujgoperability:MoveKind ;
+ujgoperability:lastItem a owl:NamedIndividual, ujgoperability:FocusMoveKind ;
   rdfs:label "Last item"@en ;
   rdfs:comment "Moves focus to the last item inside a composite widget."@en .
+
+ujgoperability:pointAt a owl:NamedIndividual, ujgoperability:MoveKind ;
+  rdfs:label "Point at"@en ;
+  rdfs:comment "Moves the pointer onto the object that the step's locator names, such as hovering over a menu item to open its submenu."@en .
+
+ujgoperability:nextPage a owl:NamedIndividual, ujgoperability:MoveKind ;
+  rdfs:label "Next page"@en ;
+  rdfs:comment "Moves the view forward by one page, such as PageDown, a mouse wheel, or a swipe in a carousel."@en .
+
+ujgoperability:previousPage a owl:NamedIndividual, ujgoperability:MoveKind ;
+  rdfs:label "Previous page"@en ;
+  rdfs:comment "Moves the view back by one page."@en .
 
 ujgoperability:forward a owl:NamedIndividual, ujgoperability:MaterializationDirection ;
   rdfs:label "Forward"@en ;
@@ -183,6 +202,12 @@ ujgoperability:stepLocatorRef a owl:ObjectProperty ;
 
 ujgoperability:stepMoveKindRef a owl:ObjectProperty ;
   rdfs:domain ujgoperability:MoveStep ;
-  rdfs:range ujgoperability:MoveKind ;
+  rdfs:range [
+    a owl:Class ;
+    owl:unionOf (
+      ujgoperability:FocusMoveKind
+      ujgoperability:MoveKind
+    )
+  ] ;
   rdfs:label "step move kind ref" ;
-  rdfs:comment "References the kind of focus move that a MoveStep performs." .
+  rdfs:comment "References the kind of move that a MoveStep performs: a FocusMoveKind, or a MoveKind for a move that does not move focus." .

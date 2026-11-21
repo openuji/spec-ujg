@@ -1,7 +1,7 @@
 # Skill Review: ujg-ed-operability-modeling
 
 Target: Editor's Draft
-Skill scope: Operability module semantics for TransitionMaterialization options that describe how a Graph transition is performed through an input modality, linked MoveStep, ActivationStep, and ShortcutStep chains, platform-neutral MoveKind values, and AdjacentTransition materialization direction
+Skill scope: Operability module semantics for TransitionMaterialization options that describe how a Graph transition is performed through an input modality, linked MoveStep, ActivationStep, and ShortcutStep chains, platform-neutral FocusMoveKind and MoveKind values, and AdjacentTransition materialization direction
 Source: sources/ed/skills/operability/skill.md
 Spec URL: https://ujg.specs.openuji.org/ed/modules/operability
 
@@ -12,8 +12,8 @@ Spec URL: https://ujg.specs.openuji.org/ed/modules/operability
 
 ## Review Inputs
 
-- Source hash: sha256:d4bffbd4e849fce8ab706d4777a0df632fc6eced3cf3122f96dc644f06a4d50c
-- Spec hash: sha256:22a642632651e58cdec7a4f86def81d1d218afb9fb50cea8a7fb1d791f1633fc
+- Source hash: sha256:7b7b60dcac4849bce28e45626ae686aa57d44ebf821cfedc68dbf7307da31e67
+- Spec hash: sha256:e9d1f0e10c98d9e1bb30bc746e8956df7bfad3fbb96a77511531bfa855669b5b
 
 ## Source Headings Likely Affected
 

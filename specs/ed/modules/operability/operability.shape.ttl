@@ -226,6 +226,36 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
         ?otherStep ujgoperability:stepPreviousRef ?previous .
       }
     """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "A pointer moves directly to an object, so a MoveStep of a TransitionMaterialization through observability:pointer must not use a FocusMoveKind." ;
+    sh:select """
+      SELECT $this ?step ?kind
+      WHERE {
+        $this ujgoperability:materializationModalityRef ujgobservability:pointer ;
+              ujgoperability:materializationStepRefs ?step .
+        ?step ujgoperability:stepMoveKindRef ?kind .
+        ?kind a ujgoperability:FocusMoveKind .
+      }
+    """ ;
+  ] ;
+
+  sh:sparql [
+    a sh:SPARQLConstraint ;
+    sh:message "Only a TransitionMaterialization through observability:pointer uses operability:pointAt." ;
+    sh:select """
+      SELECT $this ?step
+      WHERE {
+        $this ujgoperability:materializationStepRefs ?step .
+        ?step ujgoperability:stepMoveKindRef ujgoperability:pointAt .
+
+        FILTER (NOT EXISTS {
+          $this ujgoperability:materializationModalityRef ujgobservability:pointer .
+        })
+      }
+    """ ;
   ] .
 
 ujgoperabilityshape:MoveStepShape a sh:NodeShape ;
@@ -238,9 +268,12 @@ ujgoperabilityshape:MoveStepShape a sh:NodeShape ;
   sh:property [
     sh:path ujgoperability:stepMoveKindRef ;
     sh:maxCount 1 ;
-    sh:class ujgoperability:MoveKind ;
     sh:nodeKind sh:IRI ;
-    sh:message "A MoveStep may declare at most one stepMoveKindRef, and it must reference a MoveKind." ;
+    sh:or (
+      [ sh:class ujgoperability:FocusMoveKind ]
+      [ sh:class ujgoperability:MoveKind ]
+    ) ;
+    sh:message "A MoveStep may declare at most one stepMoveKindRef, and it must reference a FocusMoveKind or a MoveKind." ;
   ] .
 
 ujgoperabilityshape:ActivationStepShape a sh:NodeShape ;
@@ -303,13 +336,21 @@ ujgoperabilityshape:MaterializationStepPropertiesShape a sh:NodeShape ;
     """ ;
   ] .
 
+ujgoperabilityshape:FocusMoveKindShape a sh:NodeShape ;
+  sh:targetClass ujgoperability:FocusMoveKind ;
+  sh:nodeKind sh:IRI ;
+  sh:not [ sh:class ujgoperability:MoveKind ] ;
+  sh:message "A FocusMoveKind must be identified by an IRI and must not also be a MoveKind." .
+
 ujgoperabilityshape:MoveKindShape a sh:NodeShape ;
   sh:targetClass ujgoperability:MoveKind ;
   sh:nodeKind sh:IRI .
 
 ujgoperabilityshape:MaterializationDirectionShape a sh:NodeShape ;
   sh:targetClass ujgoperability:MaterializationDirection ;
-  sh:nodeKind sh:IRI .
+  sh:nodeKind sh:IRI ;
+  sh:in ( ujgoperability:forward ujgoperability:backward ) ;
+  sh:message "A MaterializationDirection must be operability:forward or operability:backward." .
 
 ujgoperabilityshape:MaterializationTransitionRefSubjectShape a sh:NodeShape ;
   sh:targetSubjectsOf ujgoperability:materializationTransitionRef ;

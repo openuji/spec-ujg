@@ -18,7 +18,7 @@ Use Operability for:
 
 - `TransitionMaterialization` nodes that describe one way to perform one `Transition`, `AdjacentTransition`, `OutgoingTransition`, or `InvokingTransition` through one `InputModality`.
 - `MoveStep`, `ActivationStep`, and `ShortcutStep` nodes, linked one after another with `stepPreviousRef`.
-- Platform-neutral `MoveKind` values such as `operability:nextStop` and `operability:nextItem`.
+- Platform-neutral `FocusMoveKind` values such as `operability:nextStop` and `operability:nextItem`, and `MoveKind` values for moves that do not move focus, such as `operability:pointAt` and `operability:nextPage`.
 - `MaterializationDirection` values for the two movements of an `AdjacentTransition`.
 
 Do not use Operability for Graph topology, recognition contracts, Runtime events, test scripts, key bindings, or timing.
@@ -48,6 +48,7 @@ TransitionMaterialization
 MoveStep
 ActivationStep
 ShortcutStep
+FocusMoveKind
 MoveKind
 MaterializationDirection
 ```
@@ -69,12 +70,20 @@ stepMoveKindRef
 Use these standard individuals:
 
 ```text
+# FocusMoveKind: moves focus (keyboard and other focus-moving modalities)
 operability:nextStop
 operability:previousStop
 operability:nextItem
 operability:previousItem
 operability:firstItem
 operability:lastItem
+
+# MoveKind: moves the pointer or the view, not focus
+operability:pointAt
+operability:nextPage
+operability:previousPage
+
+# MaterializationDirection
 operability:forward
 operability:backward
 ```
@@ -120,7 +129,7 @@ Use `materializationDirectionRef` exactly when the transition is an `AdjacentTra
 
 ## Steps
 
-- `MoveStep`: the user moves to another object. Use `stepMoveKindRef` for the kind of focus move.
+- `MoveStep`: the user moves to another object, or moves the view by a page. Use `stepMoveKindRef` for its kind: a `FocusMoveKind` for focus moves, or a `MoveKind` (`operability:pointAt`, `operability:nextPage`, `operability:previousPage`) for moves that do not move focus. A pointer materialization uses `operability:pointAt`, never a focus move; `operability:pointAt` appears only in pointer materializations. A pointer click is a `pointAt` MoveStep followed by an `ActivationStep`.
 - `ActivationStep`: the user activates the object they are at.
 - `ShortcutStep`: the user performs the shortcut that the `stepLocatorRef` object exposes, without reaching it first.
 
@@ -130,17 +139,21 @@ Link the steps with `stepPreviousRef`. Exactly one step has no `stepPreviousRef`
 
 The last step takes the transition. Usually it is an `ActivationStep` or a `ShortcutStep`; it is a `MoveStep` when the move itself takes the transition, as in a tab list whose selection follows focus.
 
-An `ActivationStep` does not say which activation gesture is used, such as Enter or Space. Gestures that do different things, such as toggling a checkbox and submitting its form, belong to different transitions. A `MoveStep` with a `MoveKind` reaches the object that the kind designates; its locator describes that object and does not choose it.
+An `ActivationStep` performs the default action of the object the user is at; every activation gesture of the platform, such as Enter or Space, performs it, so do not say which. A gesture that does something else, such as Enter submitting the form around a focused checkbox, is a `ShortcutStep` on the object it acts on (the submit button), with its gesture from the accessibility API or a private hint in Core `extensions`. A `MoveStep` reaches what its kind designates: the next item for a focus move, the object its locator names for `operability:pointAt`, or the page that comes into view for a page move. Except with `pointAt`, its locator describes what the step reaches and does not choose it.
 
 ## Performing a materialization
 
-A materialization is performable when every `MoveStep` names its `MoveKind`, every pointer `ActivationStep` names its object with `stepLocatorRef`, and every `ShortcutStep` names an object that exposes its shortcut or carries a private hint in Core `extensions`. When the user asks for a materialization that a runner can execute, make it performable. A descriptive materialization may leave these details out.
+A materialization is performable when every `MoveStep` names its kind, every `pointAt` MoveStep also names its object with `stepLocatorRef`, and every `ShortcutStep` names an object that exposes its shortcut or carries a private hint in Core `extensions`. An `ActivationStep` acts on the object the user is at and needs nothing more. A `pointAt` locator must match exactly one object when the step runs; a locator that names a kind of object, such as any tab of a collection, makes the pointer materialization descriptive only. When the user asks for a materialization that a runner can execute, make it performable. A descriptive materialization may leave these details out.
 
 A synthetic runner that performs a materialization:
 
 - checks the start object before the first step when `materializationStartLocatorRef` is present;
-- checks after each `MoveStep` that names an object that the user is at a matching object that the move kind designates, and before each `ActivationStep` that names an object that the user is at a matching object;
+- checks before a `pointAt` MoveStep that its locator matches exactly one object, and never chooses among several;
+- checks after each `MoveStep` that the move happened (focus or the pointer is at a different object, or the view shows a different page) and, when the step names an object, that what it reached matches the locator;
+- checks before each `ActivationStep` that names an object that the user is at a matching object;
+- checks after the last step that the transition was taken, recognizing the destination however it chooses, for example through an `ObservationBinding` for a `Surface` of the destination State;
 - treats a failed check as a failed materialization;
+- may choose any of the platform's activation gestures for an `ActivationStep`, and performs the step once per gesture to check several;
 - never places focus programmatically and never fills in a missing detail.
 
 Each materialization is its own claim. To check an `ObservationEvent` requirement, evaluate each required `InputModalityProfile` on its own: a profile that lists exactly one modality is met by one working materialization through that modality of a transition whose `commandRef` is the Command of the observed Surface. That says nothing about the other materializations. A binding observes a `Surface`, not a `Command`, and the binding references its event. Which materializations a runner performs, and how it reports results, is up to the runner, which names a materialization by its IRI.
@@ -152,6 +165,7 @@ Buttons passed on the way are steps, not Graph States or transitions. When the u
 Operability does not change Graph traversal, Graph validity, Observability recognition, or `requiredInputModalityProfileRefs`.
 
 When the transition has a `commandRef`, make the object that its last step reaches or acts on one that an `ObservationBinding` recognizes for a `Surface` of that `Command`.
+
 Put concrete shortcut keys that are not exposed through the accessibility API in private Core `extensions`, never in Operability terms.
 
 ## Checks before answering
@@ -163,10 +177,11 @@ Put concrete shortcut keys that are not exposed through the accessibility API in
 * Are steps ordered only through `stepPreviousRef`, with exactly one first step and no cycle?
 * Does every step belong to exactly one materialization?
 * Is `stepMoveKindRef` used only on `MoveStep`?
+* Do pointer materializations move with `operability:pointAt` or page moves instead of `FocusMoveKind` values, and does `operability:pointAt` appear only in pointer materializations?
 * Is `materializationDirectionRef` present exactly for `AdjacentTransition` materializations, with `operability:forward` or `operability:backward` only?
 * Did I avoid materializing a `Transition` that declares `fromExitRef`?
 * Is `materializationSourceStateRef` used only for entry transitions or transitions that leave a `CompositeState`?
 * Did I avoid concrete keys, gestures, and ordered arrays?
-* When the materialization is meant to be executed, is it performable: a `MoveKind` on every `MoveStep`, a locator on every pointer `ActivationStep`, and an exposing object or hint for every `ShortcutStep`?
+* When the materialization is meant to be executed, is it performable: a kind on every `MoveStep`, a locator on every `pointAt` MoveStep that matches exactly one object, and an exposing object or hint for every `ShortcutStep`?
 * Did I avoid modeling activation-gesture variants or text entry as Operability terms?
 * Do step locators reference Observability locators, with names through `MessageMeta`?

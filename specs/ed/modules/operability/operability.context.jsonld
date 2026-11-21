@@ -9,6 +9,7 @@
     "MoveStep": "ujgoperability:MoveStep",
     "ActivationStep": "ujgoperability:ActivationStep",
     "ShortcutStep": "ujgoperability:ShortcutStep",
+    "FocusMoveKind": "ujgoperability:FocusMoveKind",
     "MoveKind": "ujgoperability:MoveKind",
     "MaterializationDirection": "ujgoperability:MaterializationDirection",
 

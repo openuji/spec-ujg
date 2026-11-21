@@ -52,8 +52,8 @@
     "ed/operability": {
       "reportPath": "reviews/ed/operability/latest.md",
       "skill": "operability",
-      "sourceHash": "sha256:d4bffbd4e849fce8ab706d4777a0df632fc6eced3cf3122f96dc644f06a4d50c",
-      "specHash": "sha256:22a642632651e58cdec7a4f86def81d1d218afb9fb50cea8a7fb1d791f1633fc",
+      "sourceHash": "sha256:7b7b60dcac4849bce28e45626ae686aa57d44ebf821cfedc68dbf7307da31e67",
+      "specHash": "sha256:e9d1f0e10c98d9e1bb30bc746e8956df7bfad3fbb96a77511531bfa855669b5b",
       "target": "ed"
     },
     "ed/root": {
