@@ -467,7 +467,7 @@ An AI tool generates:
 ```json
 {
   "generatedBy": "AI",
-  "artifactType": "surface-realization",
+  "artifactType": "surface-materialization",
   "stateRef": "urn:ujg:state:refund-form",
   "surfaceRef": "urn:ujg:surface:refund-form",
   "variant": "C",
@@ -666,9 +666,9 @@ Parent and child exposures are tracked separately.
 
 AI-generated page layouts should not collapse child state instrumentation into one parent event.
 
-If the AI changes the page shell, it should update the composite surface realization.
+If the AI changes the page shell, it should update the composite surface materialization.
 
-If the AI changes a child component, it should update that child state's surface realization.
+If the AI changes a child component, it should update that child state's surface materialization.
 
 ## How should AI respect design systems?
 

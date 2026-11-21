@@ -10,8 +10,8 @@
     "ed/design-system": {
       "reportPath": "reviews/ed/design-system/latest.md",
       "skill": "design-system",
-      "sourceHash": "sha256:0957fdf358139f17218e6ef39ad4148ed1338900410c115f7cf3bd72f75bdad0",
-      "specHash": "sha256:da9174ed4ed292a224eb1fa6291c0da7e6625fd99fac7145b362b0d5d48b1209",
+      "sourceHash": "sha256:4b6fd8f10febcbe93988c6929ba20c0b15206453075f117228900a4893622882",
+      "specHash": "sha256:591cbbbcd55de9d4f392ba062f19f012450baa5e1bb50e14806605f274dd619c",
       "target": "ed"
     },
     "ed/domain-model-evaluation": {
@@ -216,6 +216,69 @@
       "sourceHash": "sha256:3a918f749462d52af799987ec0fd2518db3737d2750c4e79d787b9bbdd436861",
       "specHash": "sha256:9fd4c604318828fb2ce37959a197b77183a4a185d7e66278b3faad1c79023f16",
       "target": "tr/1.0-rc3"
+    },
+    "tr/1.0-rc4/core": {
+      "reportPath": "reviews/tr/1.0-rc4/core/latest.md",
+      "skill": "core",
+      "sourceHash": "sha256:81288ddedb7d585307287cc09701913fde2403fbfda82a7c0c92d1ad7e214fc7",
+      "specHash": "sha256:5501a95869c63055a02c96baf816c1038c1c56d972b2b542d7b704974d9a0df8",
+      "target": "tr/1.0-rc4"
+    },
+    "tr/1.0-rc4/design-system": {
+      "reportPath": "reviews/tr/1.0-rc4/design-system/latest.md",
+      "skill": "design-system",
+      "sourceHash": "sha256:8478b332e040062dc86c2000bd0e49356b7dd423cb74eb6675bb2241067007cb",
+      "specHash": "sha256:b6de8e61aefe887560effc99c949d7e62efddea3101c55b289892ce8d23ff79d",
+      "target": "tr/1.0-rc4"
+    },
+    "tr/1.0-rc4/domain-model-evaluation": {
+      "reportPath": "reviews/tr/1.0-rc4/domain-model-evaluation/latest.md",
+      "skill": "domain-model-evaluation",
+      "sourceHash": "sha256:178bef9b8b5b738748cb81e9a91dcf05d3ef1943ccd543f7cbada42da3a83592",
+      "specHash": "sha256:76393ac30f05828df7fe06f583c8350aee44c54992bca98882829ddbc83c8d4c",
+      "target": "tr/1.0-rc4"
+    },
+    "tr/1.0-rc4/domain-model-implementation": {
+      "reportPath": "reviews/tr/1.0-rc4/domain-model-implementation/latest.md",
+      "skill": "domain-model-implementation",
+      "sourceHash": "sha256:00cd0f2009e4b375941d21d485b5a31836ebc2b45ed681414224f2b22980cfea",
+      "specHash": "sha256:76393ac30f05828df7fe06f583c8350aee44c54992bca98882829ddbc83c8d4c",
+      "target": "tr/1.0-rc4"
+    },
+    "tr/1.0-rc4/graph": {
+      "reportPath": "reviews/tr/1.0-rc4/graph/latest.md",
+      "skill": "graph",
+      "sourceHash": "sha256:ec16e349aabb7e34ee8b9dcf7653e8a7933a2698a3e9ecc914b84de975a35ffc",
+      "specHash": "sha256:15c5dd5cb5c174ae5a57001e6765341cc4cd7a4ff449dd3e1bf1ec7b98677d20",
+      "target": "tr/1.0-rc4"
+    },
+    "tr/1.0-rc4/localization": {
+      "reportPath": "reviews/tr/1.0-rc4/localization/latest.md",
+      "skill": "localization",
+      "sourceHash": "sha256:e7c0d9ca21e099b69c29b4b3a7d334b9e224be3d1629649554ea963fce082933",
+      "specHash": "sha256:76b65a61727bb50f49dd5bdf131154df95f567cce07a577482ce9837bb1a87f0",
+      "target": "tr/1.0-rc4"
+    },
+    "tr/1.0-rc4/observability": {
+      "reportPath": "reviews/tr/1.0-rc4/observability/latest.md",
+      "skill": "observability",
+      "sourceHash": "sha256:935f2cd894d27eb19ed47ff3c3b547e2b05f6d4d61f17663895273de8f10a314",
+      "specHash": "sha256:34008ab129efd589946dca92924f7165733232954a87880a39e0153c02402b69",
+      "target": "tr/1.0-rc4"
+    },
+    "tr/1.0-rc4/operability": {
+      "reportPath": "reviews/tr/1.0-rc4/operability/latest.md",
+      "skill": "operability",
+      "sourceHash": "sha256:9c837d10f161404d01cb9e722b47f351f974067aac25c85f48125c7a9c8501d1",
+      "specHash": "sha256:61efe3b255cbf57de67765bec611245e809ce16edc19902f9a809533dd307378",
+      "target": "tr/1.0-rc4"
+    },
+    "tr/1.0-rc4/root": {
+      "reportPath": "reviews/tr/1.0-rc4/root/latest.md",
+      "skill": "root",
+      "sourceHash": "sha256:67c2fb1ba46bd1f98aa2ad9e13f15c2f3f7572d318f7f53438fa9bd7ebbd1223",
+      "specHash": "sha256:6abfd26ba5776fde0be103b6ab7f0010354b20d824229b84f4c9e2cdf9c48edb",
+      "target": "tr/1.0-rc4"
     },
     "tr/2026.06/design-system": {
       "reportPath": "reviews/tr/2026.06/design-system/latest.md",

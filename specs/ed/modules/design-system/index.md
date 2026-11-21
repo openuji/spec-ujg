@@ -1,18 +1,18 @@
 ## Overview
 
 This optional module defines a graph-native vocabulary for describing how design-system artifacts
-realize Surface resources.
+materialize Surface resources.
 
 The module is intentionally first-level. It depends only on Graph and Surface. Surface is the bridge
 between Graph topology and user-facing materialization. Graph nodes do not point to design-system
 artifacts, and Surface resources remain design-system-agnostic.
 
-The Design System module introduces `SurfaceRealization` as the design-system-side bridge. A
-`SurfaceRealization` references exactly one `Surface` and then identifies either a `Component` or a
-`Template` as the primary realization. When a template is used, the realization may reference
+The Design System module introduces `SurfaceMaterialization` as the design-system-side bridge. A
+`SurfaceMaterialization` references exactly one `Surface` and then identifies either a `Component` or a
+`Template` as the primary materialization. When a template is used, the materialization may reference
 `SlotBinding` nodes that fill template-declared `Slot` nodes with surfaces.
 
-This module is optional. It annotates the shared graph with interoperable design-system realization
+This module is optional. It annotates the shared graph with interoperable design-system materialization
 resources, but it does not change graph topology, traversal rules, Surface attachment rules, import
 resolution, rendering behavior, or runtime semantics.
 
@@ -21,32 +21,32 @@ resolution, rendering behavior, or runtime semantics.
 - <dfn>Theme</dfn>: A graph-native design-system scope that references token sources.
 - <dfn>TokenSource</dfn>: An addressable token source, package, manifest, or token set with a
   resolvable `source`. The internal token format is external to UJG.
-- <dfn>Component</dfn>: An addressable design-system artifact that can realize a surface.
+- <dfn>Component</dfn>: An addressable design-system artifact that can materialize a surface.
 - <dfn>Template</dfn>: A reusable design-system artifact that declares slots.
 - <dfn>Slot</dfn>: An addressable slot declaration owned by or referenced from a template.
-- <dfn>SurfaceRealization</dfn>: A design-system-side node that references one surface and describes
-  its primary component or template realization.
-- <dfn>SlotBinding</dfn>: A realization-local binding from a template slot to one surface target.
+- <dfn>SurfaceMaterialization</dfn>: A design-system-side node that references one surface and describes
+  its primary component or template materialization.
+- <dfn>SlotBinding</dfn>: A materialization-local binding from a template slot to one surface target.
 
-## Surface Realization
+## Surface Materialization
 
 A `Surface` is a design-system-agnostic materialized boundary for exactly one supported Graph node.
 Surface defines the relation from `Surface` to that supported Graph node. Graph nodes do not point
 to design-system artifacts or depend on Surface. This module does not add properties to `Surface`
 and does not make `Surface` depend on design-system artifacts.
 
-Design-system realization is expressed with `SurfaceRealization`, `Component`, `Template`, `Slot`,
-and `SlotBinding` nodes. A realization links a stable `Surface` to one primary design-system
-artifact. Template-backed realizations can keep required composition explicit by binding declared
+Design-system materialization is expressed with `SurfaceMaterialization`, `Component`, `Template`, `Slot`,
+and `SlotBinding` nodes. A materialization links a stable `Surface` to one primary design-system
+artifact. Template-backed materializations can keep required composition explicit by binding declared
 slots to child surfaces.
 
-Component, template, and realization inventories are derived from `Component`, `Template`, and
-`SurfaceRealization` nodes instead of being maintained as duplicate lists on `Theme`.
+Component, template, and materialization inventories are derived from `Component`, `Template`, and
+`SurfaceMaterialization` nodes instead of being maintained as duplicate lists on `Theme`.
 
-### SurfaceRealization {data-cop-concept="surface-realization"}
+### SurfaceMaterialization {data-cop-concept="surface-materialization"}
 
-A [=SurfaceRealization=] links one [=Surface=] to its primary design-system realization, either a
-[=Component=] or a [=Template=]. Template-backed realizations may also reference [=SlotBinding|SlotBindings=].
+A [=SurfaceMaterialization=] links one [=Surface=] to its primary design-system materialization, either a
+[=Component=] or a [=Template=]. Template-backed materializations may also reference [=SlotBinding|SlotBindings=].
 
 ```mermaid
 classDiagram
@@ -54,43 +54,43 @@ classDiagram
   class Component
   class Template
   class SlotBinding
-  class SurfaceRealization {
+  class SurfaceMaterialization {
     id
     surfaceRef
     componentRef
     templateRef
     slotBindingRefs
   }
-  SurfaceRealization --> Surface : surfaceRef
-  SurfaceRealization --> Component : componentRef
-  SurfaceRealization --> Template : templateRef
-  SurfaceRealization --> "0..*" SlotBinding : slotBindingRefs
+  SurfaceMaterialization --> Surface : surfaceRef
+  SurfaceMaterialization --> Component : componentRef
+  SurfaceMaterialization --> Template : templateRef
+  SurfaceMaterialization --> "0..*" SlotBinding : slotBindingRefs
 ```
 
 Example JSON node:
 
 ```json
 {
-  "@type": "SurfaceRealization",
-  "@id": "urn:ujg:realization:checkout-form",
-  "label": "Checkout form realization",
+  "@type": "SurfaceMaterialization",
+  "@id": "urn:ujg:materialization:checkout-form",
+  "label": "Checkout form materialization",
   "surfaceRef": "urn:ujg:surface:checkout-form",
   "componentRef": "urn:ujg:component:CheckoutForm"
 }
 ```
 
-A `SurfaceRealization` MUST reference exactly one `Surface` through `surfaceRef` and exactly one
-primary realization through either `componentRef` or `templateRef`. It MUST NOT use both
+A `SurfaceMaterialization` MUST reference exactly one `Surface` through `surfaceRef` and exactly one
+primary materialization through either `componentRef` or `templateRef`. It MUST NOT use both
 `componentRef` and `templateRef`.
 
-Use `componentRef` when one addressable artifact directly realizes the surface and no required child
+Use `componentRef` when one addressable artifact directly materializes the surface and no required child
 composition needs to remain explicit. Use `templateRef` when reusable slots or required child
 surfaces/controls must remain derivable. `slotBindingRefs` MUST be used only on a template-backed
-realization.
+materialization.
 
 ### Component {data-cop-concept="component"}
 
-A [=Component=] is an addressable design-system artifact that can directly realize a [=Surface=].
+A [=Component=] is an addressable design-system artifact that can directly materialize a [=Surface=].
 
 ```mermaid
 classDiagram
@@ -122,7 +122,7 @@ Template
    +-- Slot "submit"     <-- empty hole
 
 
-SurfaceRealization says:
+SurfaceMaterialization says:
 
     use Template FormShell
 
@@ -132,9 +132,9 @@ SurfaceRealization says:
     bind "submit" -> Submit Refund surface
 ```
 
-A `Template` declares reusable holes. A `SurfaceRealization` chooses that template for one surface,
-and its `SlotBinding` nodes fill those holes with surfaces for that realization. A component appears
-inside a slot only indirectly, by realizing a surface that a `SlotBinding` targets.
+A `Template` declares reusable holes. A `SurfaceMaterialization` chooses that template for one surface,
+and its `SlotBinding` nodes fill those holes with surfaces for that materialization. A component appears
+inside a slot only indirectly, by materializing a surface that a `SlotBinding` targets.
 
 A [=Template=] is a reusable design-system artifact that declares zero or more [=Slot|Slots=].
 A template declares reusable slots with `slotRefs`. A template MUST NOT hard-code concrete surfaces,
@@ -188,7 +188,7 @@ Example JSON node:
 ### SlotBinding {data-cop-concept="slot-binding"}
 
 A [=SlotBinding=] fills one declared [=Slot=] with exactly one [=Surface=].
-Concrete assembly belongs to a `SurfaceRealization` through `SlotBinding` nodes.
+Concrete assembly belongs to a `SurfaceMaterialization` through `SlotBinding` nodes.
 
 ```mermaid
 classDiagram
@@ -220,16 +220,16 @@ Example JSON nodes:
     "label": "Checkout form component"
   },
   {
-    "@type": "SurfaceRealization",
-    "@id": "urn:ujg:realization:checkout-form",
-    "label": "Checkout form realization",
+    "@type": "SurfaceMaterialization",
+    "@id": "urn:ujg:materialization:checkout-form",
+    "label": "Checkout form materialization",
     "surfaceRef": "urn:ujg:surface:checkout-form",
     "componentRef": "urn:ujg:component:CheckoutForm"
   },
   {
-    "@type": "SurfaceRealization",
-    "@id": "urn:ujg:realization:checkout-page",
-    "label": "Checkout page realization",
+    "@type": "SurfaceMaterialization",
+    "@id": "urn:ujg:materialization:checkout-page",
+    "label": "Checkout page materialization",
     "surfaceRef": "urn:ujg:surface:checkout-page",
     "templateRef": "urn:ujg:template:checkout-layout",
     "slotBindingRefs": ["urn:ujg:slot-binding:checkout-main"]
@@ -254,7 +254,7 @@ with `targetSurfaceRef`.
 ## Token Scope
 
 Theme and token-source resources describe token scope. They do not define which components,
-templates, or surface realizations exist, and they are independent of the surface realization chain.
+templates, or surface materializations exist, and they are independent of the surface materialization chain.
 
 A `Theme` identifies a design-system context by referencing token sources through `tokenSourceRefs`.
 A `TokenSource` identifies the location of a token source, package, manifest, or token set through
@@ -265,13 +265,13 @@ A `TokenSource` identifies the location of a token source, package, manifest, or
 the same base-resolution model used by Core imports.
 
 Individual token names, token paths, token groups, token values, aliases, and inheritance rules are
-outside this module. Consumers that need component, template, or realization inventories derive them
+outside this module. Consumers that need component, template, or materialization inventories derive them
 from addressable design-system nodes and their references.
 
 ### Theme {data-cop-concept="theme"}
 
 A [=Theme=] is a design-system scope that references token sources. Components, templates,
-and surface realizations are discovered from their own nodes and are not duplicated on the
+and surface materializations are discovered from their own nodes and are not duplicated on the
 `Theme`.
 
 ```mermaid
@@ -344,9 +344,9 @@ The normative Design System JSON-LD context is defined below and is published at
 mappings and coercions for Design System-specific properties and classes.
 
 Surface uses `graphNodeRef` for graph-node attachment. This module keeps a separate, type-scoped
-`surfaceRef` on `SurfaceRealization`, where it means realization-to-Surface. Surface also defines
+`surfaceRef` on `SurfaceMaterialization`, where it means materialization-to-Surface. Surface also defines
 `surfaceRef` on `SurfaceInstance`, where it means surface-instance-to-Surface. Design System
-realization and slot-binding references continue to target stable `Surface` nodes, not
+materialization and slot-binding references continue to target stable `Surface` nodes, not
 `SurfaceInstance` nodes.
 
 :::include ./design-system.context.jsonld :::
@@ -364,10 +364,10 @@ The remaining module semantics beyond the structural SHACL constraints are:
 1. **Surface boundary:** Design System properties MUST NOT change Surface attachment semantics, make
    `Surface` depend on design-system artifacts, or introduce graph traversal, state activation,
    transition validity, composite-state containment, execution order, or lifecycle semantics.
-2. **Surface realization:** A `SurfaceRealization` MUST reference exactly one `Surface` and exactly
-   one primary realization, either `componentRef` or `templateRef`. `slotBindingRefs` MUST be used
+2. **Surface materialization:** A `SurfaceMaterialization` MUST reference exactly one `Surface` and exactly
+   one primary materialization, either `componentRef` or `templateRef`. `slotBindingRefs` MUST be used
    only when `templateRef` is present.
-3. **Slot composition:** `Template` slot references are declarations. `SurfaceRealization` slot
+3. **Slot composition:** `Template` slot references are declarations. `SurfaceMaterialization` slot
    bindings are concrete assembly. A `SlotBinding` MUST reference exactly one `Surface` target
    through `targetSurfaceRef`, and surface targets compose presentation only.
 4. **Token scope:** A `TokenSource` MUST declare exactly one `source` IRI reference. Relative
@@ -392,7 +392,7 @@ It does not duplicate design-system implementation catalogs or renderer configur
 ## Relationship To Core Extensions
 
 Core `extensions` remains available for vendor-private, non-interoperable payloads. Component,
-template, slot, slot-binding, surface-realization, and token-source relationships intended for
+template, slot, slot-binding, surface-materialization, and token-source relationships intended for
 interoperability SHOULD use this module instead of opaque extension payloads.
 
 ## Examples
@@ -401,7 +401,7 @@ Examples in this page compose the Core, Graph, Surface, and Design System contex
 Examples include `label` values on Design System nodes for human readability. Those labels use the
 shared Graph `label` term and are informative unless the referenced class requires labels elsewhere.
 
-### Example A: Surface Without Realization
+### Example A: Surface Without Materialization
 
 ```json
 {
@@ -427,9 +427,9 @@ shared Graph `label` term and are informative unless the referenced class requir
 }
 ```
 
-This example assigns a state to a surface. It does not declare any design-system realization.
+This example assigns a state to a surface. It does not declare any design-system materialization.
 
-### Example B: Component Realization
+### Example B: Component Materialization
 
 ```json
 {
@@ -458,9 +458,9 @@ This example assigns a state to a surface. It does not declare any design-system
       "label": "Cart view component"
     },
     {
-      "@id": "urn:realization:cart-web",
-      "@type": "SurfaceRealization",
-      "label": "Cart web realization",
+      "@id": "urn:materialization:cart-web",
+      "@type": "SurfaceMaterialization",
+      "label": "Cart web materialization",
       "surfaceRef": "urn:surface:cart",
       "componentRef": "urn:component:CartView"
     }
@@ -468,10 +468,10 @@ This example assigns a state to a surface. It does not declare any design-system
 }
 ```
 
-The surface remains unchanged. The realization node points to the surface directly, and clients can
-derive the used component by following the realization reference.
+The surface remains unchanged. The materialization node points to the surface directly, and clients can
+derive the used component by following the materialization reference.
 
-### Example C: Template Realization
+### Example C: Template Materialization
 
 ```json
 {
@@ -522,9 +522,9 @@ derive the used component by following the realization reference.
       "label": "Refund form component"
     },
     {
-      "@id": "urn:realization:refund-form-fields",
-      "@type": "SurfaceRealization",
-      "label": "Refund form fields realization",
+      "@id": "urn:materialization:refund-form-fields",
+      "@type": "SurfaceMaterialization",
+      "label": "Refund form fields materialization",
       "surfaceRef": "urn:surface:refund-form",
       "componentRef": "urn:component:RefundForm"
     },
@@ -562,9 +562,9 @@ derive the used component by following the realization reference.
       "targetSurfaceRef": "urn:surface:submit-refund"
     },
     {
-      "@id": "urn:realization:refund-form",
-      "@type": "SurfaceRealization",
-      "label": "Refund form realization",
+      "@id": "urn:materialization:refund-form",
+      "@type": "SurfaceMaterialization",
+      "label": "Refund form materialization",
       "surfaceRef": "urn:surface:refund",
       "templateRef": "urn:template:FormShell",
       "slotBindingRefs": [
@@ -576,7 +576,7 @@ derive the used component by following the realization reference.
 }
 ```
 
-The template declares slots. The realization binds those slots for this surface.
+The template declares slots. The materialization binds those slots for this surface.
 
 ### Example D: Composite Surface With Child Surfaces
 
@@ -747,9 +747,9 @@ The template declares slots. The realization binds those slots for this surface.
       "targetSurfaceRef": "urn:surface:product-preview"
     },
     {
-      "@id": "urn:realization:product-discovery",
-      "@type": "SurfaceRealization",
-      "label": "Product discovery realization",
+      "@id": "urn:materialization:product-discovery",
+      "@type": "SurfaceMaterialization",
+      "label": "Product discovery materialization",
       "surfaceRef": "urn:surface:product-discovery",
       "templateRef": "urn:template:ProductDiscovery",
       "slotBindingRefs": [
@@ -763,7 +763,7 @@ The template declares slots. The realization binds those slots for this surface.
 }
 ```
 
-The composite state's surface is realized as a shell. Child containment comes from the child journeys
+The composite state's surface is materialized as a shell. Child containment comes from the child journeys
 referenced by `subjourneyRefs`. The child surfaces are placed into slots for presentation only;
 Graph remains the source of containment and traversal semantics.
 
@@ -796,9 +796,9 @@ Graph remains the source of containment and traversal semantics.
       "label": "Checkout component"
     },
     {
-      "@id": "urn:realization:checkout",
-      "@type": "SurfaceRealization",
-      "label": "Checkout realization",
+      "@id": "urn:materialization:checkout",
+      "@type": "SurfaceMaterialization",
+      "label": "Checkout materialization",
       "surfaceRef": "urn:surface:checkout",
       "componentRef": "urn:component:Checkout"
     },
@@ -849,5 +849,5 @@ Graph remains the source of containment and traversal semantics.
 ```
 
 Multiple themes can provide different token sources for the same surface and
-realization graph. Components, templates, and surface realizations remain discoverable from their own
+materialization graph. Components, templates, and surface materializations remain discoverable from their own
 nodes rather than from duplicated `Theme` lists.

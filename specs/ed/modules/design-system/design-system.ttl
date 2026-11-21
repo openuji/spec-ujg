@@ -26,7 +26,7 @@ ujgds:Template a owl:Class ;
 ujgds:Slot a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
-ujgds:SurfaceRealization a owl:Class ;
+ujgds:SurfaceMaterialization a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
 ujgds:SlotBinding a owl:Class ;
@@ -45,19 +45,19 @@ ujgds:source a owl:ObjectProperty ;
   rdfs:comment "References the token source, package, manifest, or token set location." .
 
 ujgds:surfaceRef a owl:ObjectProperty ;
-  rdfs:domain ujgds:SurfaceRealization ;
+  rdfs:domain ujgds:SurfaceMaterialization ;
   rdfs:range ujgsurface:Surface .
 
 ujgds:componentRef a owl:ObjectProperty ;
-  rdfs:domain ujgds:SurfaceRealization ;
+  rdfs:domain ujgds:SurfaceMaterialization ;
   rdfs:range ujgds:Component .
 
 ujgds:templateRef a owl:ObjectProperty ;
-  rdfs:domain ujgds:SurfaceRealization ;
+  rdfs:domain ujgds:SurfaceMaterialization ;
   rdfs:range ujgds:Template .
 
 ujgds:slotBindingRefs a owl:ObjectProperty ;
-  rdfs:domain ujgds:SurfaceRealization ;
+  rdfs:domain ujgds:SurfaceMaterialization ;
   rdfs:range ujgds:SlotBinding .
 
 ujgds:slotRefs a owl:ObjectProperty ;
