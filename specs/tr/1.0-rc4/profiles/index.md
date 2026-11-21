@@ -73,7 +73,7 @@ versions can publish additional profile identifiers without changing the module 
 | `#surface-runtime` | Core, Graph, Surface, Runtime | Surface-aware runtime traces. |
 | `#mapping-metrics` | Core, Graph, Surface, Runtime, Mapping, Metrics | Resolved mappings and aggregate metrics. |
 | `#localized-observability` | Core, Graph, Surface, Localization, Observability | Accessible recognition contracts with localized names and descriptions. |
-| `#design-system` | Core, Graph, Surface, Design System | Design-system realization of graph-facing surfaces. |
+| `#design-system` | Core, Graph, Surface, Design System | Design-system materialization of graph-facing surfaces. |
 | `#automation-resources` | Core, Graph, Surface, Phase, Observability, Entry Binding, Effect, Artifact | Automation-oriented entry selection, observable resources, declared effects, and portable artifacts. |
 
 ### Core {data-cop-concept="core"}
@@ -110,7 +110,7 @@ instances through accessibility-oriented locators and localized names or descrip
 The `#design-system` profile requires [UJG Core](/tr/1.0-rc4/core), [UJG Graph](/tr/1.0-rc4/graph),
 [UJG Surface](/tr/1.0-rc4/surface), and [UJG Design System](/tr/1.0-rc4/modules/design-system). It is suitable for
 tools that connect graph-facing surfaces to design-system components, templates, slots, token
-sources, and realizations.
+sources, and materializations.
 
 ### Automation Resources {data-cop-concept="automation-resources"}
 

@@ -11,8 +11,8 @@
     "Component": "ujgds:Component",
     "Template": "ujgds:Template",
     "Slot": "ujgds:Slot",
-    "SurfaceRealization": {
-      "@id": "ujgds:SurfaceRealization",
+    "SurfaceMaterialization": {
+      "@id": "ujgds:SurfaceMaterialization",
       "@context": {
         "surfaceRef": {
           "@id": "ujgds:surfaceRef",

@@ -2,7 +2,7 @@
 
 UJG 1.0 RC4 is the fourth release-candidate snapshot for the UJG 1.0 line. It is published under `/tr/1.0-rc4/` and supersedes [`1.0-rc3`](../1.0-rc3/) as the current basis for implementation trials, compatibility checks, and vocabulary review before UJG 1.0 Final.
 
-Compared with RC3, RC4 substantially refines Graph composition and movement semantics and adds the Operability module for describing how users perform Graph transitions through input modalities.
+Compared with RC3, RC4 substantially refines Graph composition and movement semantics, adds the Operability module for describing how users perform Graph transitions through input modalities, and renames the Design System bridge from `SurfaceRealization` to `SurfaceMaterialization`.
 
 ## Release Status
 
@@ -22,6 +22,7 @@ Compared with RC3, RC4 substantially refines Graph composition and movement sema
 - Reworked State entry affordances around `entryTransitionRefs`, including shared outgoing and invoking transitions.
 - Clarified CompositeState semantics for one or more independently active child Journeys, shared child-Journey topology, nested composition, exported exits, and optional parent reactions.
 - Added the Operability module with `TransitionMaterialization`, ordered `MoveStep`, `ActivationStep`, and `ShortcutStep` chains, modality and locator references, platform-neutral move kinds, and direction metadata for `AdjacentTransition`.
+- Renamed Design System `SurfaceRealization` to `SurfaceMaterialization` and aligned profile descriptions, contexts, ontology terms, SHACL shapes, examples, and agent guidance with the materialization terminology.
 - Updated Architecture, Core, Surface, Mapping, Metrics, Condition, Data Contract, Effect, Entry Binding, Localization, Domain Model, and agent guidance to align with the revised Graph model.
 
 ## Module Changes
@@ -35,6 +36,10 @@ CompositeState now explicitly represents a parent step that contains one or more
 ### Operability
 
 The new third-level Operability module describes alternative ways to perform Graph transitions through an input modality. A `TransitionMaterialization` identifies the Graph transition, modality, optional start locator and source state, and an ordered chain of movement, activation, or shortcut steps. Operability describes interaction mechanics without redefining Graph topology, recognition contracts, Runtime events, key bindings, or timing.
+
+### Design System
+
+The Design System bridge is now `SurfaceMaterialization`. It links one stable `Surface` to one primary `Component` or `Template`, with template-local `SlotBinding` composition where required. The former `SurfaceRealization` term is not part of the RC4 vocabulary.
 
 ### Related Modules
 
@@ -70,5 +75,6 @@ RC4 is a release candidate, not UJG 1.0 Final. Implementers integrating against 
 - Use `StateCollection` for repeated occurrences of one state and `EntrySelector` only when the selected destination entry genuinely varies per occurrence.
 - Treat child Journeys in a CompositeState as independent flows and react to exported exits explicitly when the parent should move.
 - Use Operability only for how a transition is performed; keep intended topology in Graph and observed behavior in Runtime and Mapping.
+- Replace Design System `SurfaceRealization` nodes with `SurfaceMaterialization`; the class semantics and references are otherwise preserved under the new terminology.
 
 Treat RC4 as stable enough for integration trials, compatibility checks, vocabulary review, and feedback while allowing for final adjustments before the UJG 1.0 Final snapshot.

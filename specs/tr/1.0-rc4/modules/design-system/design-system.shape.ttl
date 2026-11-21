@@ -42,8 +42,8 @@ ujgdsshape:SlotShape a sh:NodeShape ;
   sh:targetClass ujgds:Slot ;
   sh:nodeKind sh:IRI .
 
-ujgdsshape:SurfaceRealizationShape a sh:NodeShape ;
-  sh:targetClass ujgds:SurfaceRealization ;
+ujgdsshape:SurfaceMaterializationShape a sh:NodeShape ;
+  sh:targetClass ujgds:SurfaceMaterialization ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
@@ -76,7 +76,7 @@ ujgdsshape:SurfaceRealizationShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A SurfaceRealization must reference exactly one primary realization through componentRef or templateRef." ;
+    sh:message "A SurfaceMaterialization must reference exactly one primary materialization through componentRef or templateRef." ;
     sh:select """
       SELECT $this
       WHERE {
@@ -89,7 +89,7 @@ ujgdsshape:SurfaceRealizationShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A SurfaceRealization may reference slotBindingRefs only when templateRef is present." ;
+    sh:message "A SurfaceMaterialization may reference slotBindingRefs only when templateRef is present." ;
     sh:select """
       SELECT $this
       WHERE {
