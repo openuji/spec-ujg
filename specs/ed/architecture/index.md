@@ -42,8 +42,13 @@ forcing the shared baseline, or this architecture page, to know every specialize
 may be added later.
 
 Second-level optional modules depend on at least one first-level optional module. They may also
-depend on any needed main spec family modules, but cross-module optional composition belongs at this
-level rather than between first-level modules.
+depend on any needed main spec family modules, but cross-module optional composition belongs at the
+second level or above rather than between first-level modules.
+
+Third-level optional modules depend on at least one second-level optional module and build on its
+vocabulary. For example, a module can describe how a user operates the accessible objects that a
+second-level recognition module identifies. Third-level modules may also depend on first-level and
+main spec family modules.
 
 ## Opaque Extensions
 

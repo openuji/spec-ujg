@@ -56,6 +56,13 @@
           "moduleId": "modules/observability"
         },
         {
+          "key": "operability",
+          "title": "Operability Modeling",
+          "scope": "Operability module semantics for TransitionMaterialization options that describe how a Graph transition is performed through an input modality, linked MoveStep, ActivationStep, and ShortcutStep chains, platform-neutral FocusMoveKind and MoveKind values, and AdjacentTransition materialization direction",
+          "nameSuffix": "operability-modeling",
+          "moduleId": "modules/operability"
+        },
+        {
           "key": "domain-model-evaluation",
           "title": "Domain Model Evaluation",
           "scope": "Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality",
