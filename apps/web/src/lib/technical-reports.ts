@@ -8,9 +8,24 @@ export interface TechnicalReport {
   workspace: SpecWorkspaceKey;
   basePath: string;
   namespaceSlug?: string;
+  baselineContextArtifacts?: readonly string[];
 }
 
 export const TECHNICAL_REPORTS = [
+  {
+    slug: '1.0-rc4',
+    title: 'UJG 1.0 Release Candidate 4',
+    status: 'Release Candidate',
+    published: '2026-11-21',
+    workspace: 'tr-1-0-rc4',
+    basePath: '/tr/1.0-rc4',
+    baselineContextArtifacts: [
+      'core.context.jsonld',
+      'graph.context.jsonld',
+      'surface.context.jsonld',
+      'runtime.context.jsonld',
+    ],
+  },
   {
     slug: '1.0-rc3',
     title: 'UJG 1.0 Release Candidate 3',

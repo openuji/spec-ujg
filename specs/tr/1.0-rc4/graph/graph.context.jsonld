@@ -1,0 +1,104 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "ujggraph": "https://ujg.specs.openuji.org/tr/1.0-rc4/ns/graph#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "Journey": "ujggraph:Journey",
+    "JourneyEntry": "ujggraph:JourneyEntry",
+    "JourneyEntryIndex": "ujggraph:JourneyEntryIndex",
+    "State": "ujggraph:State",
+    "CompositeState": "ujggraph:CompositeState",
+    "Transition": "ujggraph:Transition",
+    "AdjacentTransition": "ujggraph:AdjacentTransition",
+    "Command": "ujggraph:Command",
+    "JourneyExit": "ujggraph:JourneyExit",
+    "OutgoingTransition": "ujggraph:OutgoingTransition",
+    "InvokingTransition": "ujggraph:InvokingTransition",
+    "StateCollection": "ujggraph:StateCollection",
+    "EntrySelector": "ujggraph:EntrySelector",
+
+    "label": "ujggraph:label",
+    "tags": {
+      "@id": "ujggraph:tags",
+      "@container": "@set"
+    },
+    "defaultEntryRef": {
+      "@id": "ujggraph:defaultEntryRef",
+      "@type": "@id"
+    },
+    "entryRefs": {
+      "@id": "ujggraph:entryRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "stateRef": {
+      "@id": "ujggraph:stateRef",
+      "@type": "@id"
+    },
+    "stateRefs": {
+      "@id": "ujggraph:stateRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "transitionRefs": {
+      "@id": "ujggraph:transitionRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "exitRefs": {
+      "@id": "ujggraph:exitRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "from": {
+      "@id": "ujggraph:from",
+      "@type": "@id"
+    },
+    "to": {
+      "@id": "ujggraph:to",
+      "@type": "@id"
+    },
+    "fromExitRef": {
+      "@id": "ujggraph:fromExitRef",
+      "@type": "@id"
+    },
+    "toEntryRef": {
+      "@id": "ujggraph:toEntryRef",
+      "@type": "@id"
+    },
+    "commandRef": {
+      "@id": "ujggraph:commandRef",
+      "@type": "@id"
+    },
+    "subjourneyRefs": {
+      "@id": "ujggraph:subjourneyRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "entryTransitionRefs": {
+      "@id": "ujggraph:entryTransitionRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "memberStateRef": {
+      "@id": "ujggraph:memberStateRef",
+      "@type": "@id"
+    },
+    "memberTransitionRefs": {
+      "@id": "ujggraph:memberTransitionRefs",
+      "@type": "@id",
+      "@container": "@set"
+    },
+    "entrySelectorRef": {
+      "@id": "ujggraph:entrySelectorRef",
+      "@type": "@id"
+    },
+    "candidateJourneyRefs": {
+      "@id": "ujggraph:candidateJourneyRefs",
+      "@type": "@id",
+      "@container": "@set"
+    }
+  }
+}

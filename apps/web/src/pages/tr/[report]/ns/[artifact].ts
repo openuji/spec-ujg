@@ -112,7 +112,7 @@ export const GET: APIRoute = async ({ params }) => {
   if (artifact === 'context.jsonld') {
     const namespaceSlug = report.namespaceSlug ?? report.slug;
     return createJsonResponse({
-      '@context': BASELINE_CONTEXT_ARTIFACTS.map(
+      '@context': (report.baselineContextArtifacts ?? BASELINE_CONTEXT_ARTIFACTS).map(
         (contextArtifact) => `${SPEC_BASE_URL}/tr/${namespaceSlug}/ns/${contextArtifact}`
       ),
     });
