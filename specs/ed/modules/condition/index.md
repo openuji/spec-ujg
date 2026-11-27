@@ -28,7 +28,7 @@ conditions, but it does not replace Graph's topology model.
 
 * <dfn>Condition</dfn>: An addressable predicate-like node that describes when a transition is
   eligible.
-* <dfn>Guarded transition</dfn>: A Graph `Transition` that has a `conditionRef`.
+* <dfn>Guarded transition</dfn>: A Graph `Transition` that has a `condition`.
 * <dfn>ConditionalTransitionSet</dfn>: An addressable grouping of guarded transitions that form one conditional
   branch point.
 * <dfn>Condition branch</dfn>: A group of conditional transitions from the same source state where
@@ -46,13 +46,10 @@ classDiagram
   }
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "Condition",
-  "@id": "urn:ujg:condition:cart-has-items"
-}
+```ujg-example
+./examples/example-05.yamlld
 ```
 
 ## ConditionalTransitionSet {data-cop-concept="conditional-transition-set"}
@@ -65,44 +62,37 @@ classDiagram
   class Transition
   class ConditionalTransitionSet {
     id
-    conditionTransitionRefs
+    conditionTransitions
   }
-  ConditionalTransitionSet --> "2..*" Transition : conditionTransitionRefs
+  ConditionalTransitionSet --> "2..*" Transition : conditionTransitions
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "ConditionalTransitionSet",
-  "@id": "urn:ujg:conditional-transition-set:checkout-eligibility",
-  "conditionTransitionRefs": [
-    "urn:ujg:transition:cart-to-checkout",
-    "urn:ujg:transition:cart-to-empty-cart"
-  ]
-}
+```ujg-example
+./examples/example-04.yamlld
 ```
 
 ## Attachment Model
 
 The module introduces real JSON-LD terms and RDF edges for conditional branching:
 
-* `condition:conditionRef` links a Graph `Transition` to a `Condition`.
-* `condition:conditionTransitionRefs` links a `ConditionalTransitionSet` to the guarded transitions that form
+* `condition` links a Graph `Transition` to a `Condition`.
+* `conditionTransitions` links a `ConditionalTransitionSet` to the guarded transitions that form
   one branch point.
 
 A `Condition` **MUST NOT** reference a target state directly.
 
 Crossing a border that two states share through an `AdjacentTransition` is always possible, so it
 carries no condition. A guarded movement between the same states is a Graph `Transition` with
-`conditionRef`.
+`condition`.
 
 A `ConditionalTransitionSet` **MUST NOT** reference a source state directly. Its effective source state is
 derived from the common `from` value of all referenced transitions.
 
 A `ConditionalTransitionSet` **MUST** reference transitions that all share the same `from` state.
 
-A transition referenced by a `ConditionalTransitionSet` **MUST** have exactly one `conditionRef`.
+A transition referenced by a `ConditionalTransitionSet` **MUST** have exactly one `condition`.
 
 A consumer that implements this module **MUST** treat transitions in a `ConditionalTransitionSet` as conditional
 branch alternatives. In this first version of the module, a `ConditionalTransitionSet` means that one referenced
@@ -125,12 +115,8 @@ This module is published through the following artifacts:
 
 Examples in this page compose the shared baseline context:
 
-```json
-[
-  "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-  "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
-  "https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld"
-]
+```ujg-example
+./examples/example-03.yamlld
 ```
 
 ### Ontology {data-cop-concept="ontology"}
@@ -164,7 +150,7 @@ the SHACL shape.
 
 1. **Graph preservation:** A condition **MUST NOT** create an implicit edge. Every possible movement
    between states **MUST** be represented by a Graph `Transition` or `AdjacentTransition`.
-2. **Transition guard semantics:** A transition with `conditionRef` is eligible only when the
+2. **Transition guard semantics:** A transition with `condition` is eligible only when the
    referenced condition is satisfied by the implementation's domain/runtime context.
 3. **Branch semantics:** A `ConditionalTransitionSet` groups guarded transitions that form one branch point. In
    this version, a `ConditionalTransitionSet` represents a branch where one referenced transition is intended to
@@ -182,126 +168,8 @@ the SHACL shape.
 
 Codex chat branch-check example:
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/codex/branch-condition.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "Journey",
-      "defaultEntryRef": "urn:ujg:entry:codex-chat-in-ide-default",
-      "entryRefs": [
-        "urn:ujg:entry:codex-chat-in-ide-default"
-      ],
-      "@id": "urn:ujg:journey:codex-chat-in-ide",
-      "stateRefs": [
-        "urn:ujg:state:user-asks-codex-to-code",
-        "urn:ujg:state:codex-starts-coding",
-        "urn:ujg:state:branch-confirmation-popup",
-        "urn:ujg:state:switch-back-to-original-branch",
-        "urn:ujg:state:codex-starts-coding-on-original-branch"
-      ],
-      "transitionRefs": [
-        "urn:ujg:transition:ask-code-to-start-coding",
-        "urn:ujg:transition:ask-code-to-branch-popup",
-        "urn:ujg:transition:popup-keep-current-branch",
-        "urn:ujg:transition:popup-go-back",
-        "urn:ujg:transition:switch-back-to-start-coding"
-      ]
-    },
-    {
-      "@type": "JourneyEntry",
-      "@id": "urn:ujg:entry:codex-chat-in-ide-default",
-      "stateRef": "urn:ujg:state:user-asks-codex-to-code"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:user-asks-codex-to-code",
-      "label": "User asks Codex to make code changes"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:codex-starts-coding",
-      "label": "Codex starts coding on the current branch"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:branch-confirmation-popup",
-      "label": "Codex asks whether to continue on the current branch or return to the original branch"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:switch-back-to-original-branch",
-      "label": "IDE switches back to the original branch associated with the chat"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:codex-starts-coding-on-original-branch",
-      "label": "Codex starts coding on the original branch"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:ujg:transition:ask-code-to-start-coding",
-      "from": "urn:ujg:state:user-asks-codex-to-code",
-      "to": "urn:ujg:state:codex-starts-coding",
-      "label": "Branch is unchanged",
-      "conditionRef": "urn:ujg:condition:current-branch-equals-chat-branch"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:ujg:transition:ask-code-to-branch-popup",
-      "from": "urn:ujg:state:user-asks-codex-to-code",
-      "to": "urn:ujg:state:branch-confirmation-popup",
-      "label": "Branch differs",
-      "conditionRef": "urn:ujg:condition:current-branch-differs-from-chat-branch"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:ujg:transition:popup-keep-current-branch",
-      "from": "urn:ujg:state:branch-confirmation-popup",
-      "to": "urn:ujg:state:codex-starts-coding",
-      "label": "Keep me on the current branch"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:ujg:transition:popup-go-back",
-      "from": "urn:ujg:state:branch-confirmation-popup",
-      "to": "urn:ujg:state:switch-back-to-original-branch",
-      "label": "Go back to the original branch"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:ujg:transition:switch-back-to-start-coding",
-      "from": "urn:ujg:state:switch-back-to-original-branch",
-      "to": "urn:ujg:state:codex-starts-coding-on-original-branch",
-      "label": "Continue coding"
-    },
-    {
-      "@type": "ConditionalTransitionSet",
-      "@id": "urn:ujg:conditional-transition-set:resolve-branch-context-before-coding",
-      "label": "Resolve branch context before coding",
-      "conditionTransitionRefs": [
-        "urn:ujg:transition:ask-code-to-start-coding",
-        "urn:ujg:transition:ask-code-to-branch-popup"
-      ]
-    },
-    {
-      "@type": "Condition",
-      "@id": "urn:ujg:condition:current-branch-equals-chat-branch",
-      "label": "Current IDE Git branch equals the branch associated with this Codex chat session"
-    },
-    {
-      "@type": "Condition",
-      "@id": "urn:ujg:condition:current-branch-differs-from-chat-branch",
-      "label": "Current IDE Git branch differs from the branch associated with this Codex chat session"
-    }
-  ]
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 ### Opaque Runtime Hints
@@ -309,17 +177,6 @@ Codex chat branch-check example:
 Runtime condition bindings are intentionally not standardized by this module. Implementations that
 need to bind a `Condition` to product-specific runtime state can use Core `extensions`.
 
-```json
-{
-  "@type": "Condition",
-  "@id": "urn:ujg:condition:current-branch-differs-from-chat-branch",
-  "label": "Current IDE Git branch differs from the branch associated with this Codex chat session",
-  "extensions": {
-    "com.example.runtime-condition": {
-      "conditionKey": "ide.git.currentBranchDiffersFromChatBranch",
-      "domain": "ide.git",
-      "evaluator": "product-private"
-    }
-  }
-}
+```ujg-example
+./examples/example-01.yamlld
 ```

@@ -1,0 +1,5 @@
+type: Message
+id: urn:l10n:message:order-confirmation-title:en
+messageMeta: urn:l10n:message-meta:order-confirmation-title
+locale: urn:l10n:locale:en
+messageValue: Order ${orderNumber} confirmed

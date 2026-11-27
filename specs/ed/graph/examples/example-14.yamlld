@@ -1,0 +1,29 @@
+- type: State
+  id: urn:ujg:state:article
+  label: Article
+  entryTransitions:
+    - urn:ujg:ot:privacy-policy
+    - urn:ujg:it:adjust-privacy-settings
+- type: State
+  id: urn:ujg:state:search-results
+  label: Search results
+  entryTransitions:
+    - urn:ujg:ot:privacy-policy
+    - urn:ujg:it:adjust-privacy-settings
+- type: OutgoingTransition
+  id: urn:ujg:ot:privacy-policy
+  label: Privacy policy
+  toEntry: urn:ujg:entry:privacy-policy
+- type: Journey
+  id: urn:ujg:journey:privacy-policy
+  defaultEntry: urn:ujg:entry:privacy-policy
+  entries:
+    - urn:ujg:entry:privacy-policy
+  states:
+    - urn:ujg:state:privacy-policy
+- type: JourneyEntry
+  id: urn:ujg:entry:privacy-policy
+  state: urn:ujg:state:privacy-policy
+- type: State
+  id: urn:ujg:state:privacy-policy
+  label: Privacy policy

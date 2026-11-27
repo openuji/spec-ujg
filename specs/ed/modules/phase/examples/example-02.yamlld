@@ -1,0 +1,5 @@
+type: Step
+id: urn:ujg:step:enter-shipping
+compositeState: urn:ujg:state:shipping-segment
+phase: urn:ujg:phase:checkout
+order: 1

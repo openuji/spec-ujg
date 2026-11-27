@@ -1,0 +1,758 @@
+{
+  "version": 1,
+  "target": "ed",
+  "terms": [
+    {
+      "module": "core",
+      "term": "extensions",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/core#extensions",
+      "coercion": "@json"
+    },
+    {
+      "module": "core",
+      "term": "imports",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/core#imports",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "core",
+      "term": "members",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/core#members",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ],
+      "derived": true
+    },
+    {
+      "module": "core",
+      "term": "nodes",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/core#nodes",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "graph",
+      "term": "candidateJourneys",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#candidateJourneys",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "graph",
+      "term": "command",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#command",
+      "coercion": "@id"
+    },
+    {
+      "module": "graph",
+      "term": "defaultEntry",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#defaultEntry",
+      "coercion": "@id"
+    },
+    {
+      "module": "graph",
+      "term": "entries",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#entries",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "graph",
+      "term": "entrySelector",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#entrySelector",
+      "coercion": "@id"
+    },
+    {
+      "module": "graph",
+      "term": "entryTransitions",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#entryTransitions",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "graph",
+      "term": "exits",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#exits",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "graph",
+      "term": "from",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#from",
+      "coercion": "@id"
+    },
+    {
+      "module": "graph",
+      "term": "fromExit",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#fromExit",
+      "coercion": "@id"
+    },
+    {
+      "module": "graph",
+      "term": "label",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#label"
+    },
+    {
+      "module": "graph",
+      "term": "memberState",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#memberState",
+      "coercion": "@id"
+    },
+    {
+      "module": "graph",
+      "term": "memberTransitions",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#memberTransitions",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "graph",
+      "term": "state",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#state",
+      "coercion": "@id"
+    },
+    {
+      "module": "graph",
+      "term": "states",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#states",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "graph",
+      "term": "subjourneys",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#subjourneys",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "graph",
+      "term": "tags",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#tags",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "graph",
+      "term": "to",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#to",
+      "coercion": "@id"
+    },
+    {
+      "module": "graph",
+      "term": "toEntry",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#toEntry",
+      "coercion": "@id"
+    },
+    {
+      "module": "graph",
+      "term": "transitions",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/graph#transitions",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "mapping",
+      "term": "explainedByTransition",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#explainedByTransition",
+      "coercion": "@id"
+    },
+    {
+      "module": "mapping",
+      "term": "mappedEvent",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedEvent",
+      "coercion": "@id"
+    },
+    {
+      "module": "mapping",
+      "term": "mappedJourney",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedJourney",
+      "coercion": "@id"
+    },
+    {
+      "module": "mapping",
+      "term": "mappedRuntime",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedRuntime",
+      "coercion": "@id"
+    },
+    {
+      "module": "mapping",
+      "term": "mappedState",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedState",
+      "coercion": "@id"
+    },
+    {
+      "module": "mapping",
+      "term": "mappedSteps",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#mappedSteps",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "mapping",
+      "term": "observedAffordanceEvent",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/mapping#observedAffordanceEvent",
+      "coercion": "@id"
+    },
+    {
+      "module": "metrics",
+      "term": "aggregationMethod",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/metrics#aggregationMethod"
+    },
+    {
+      "module": "metrics",
+      "term": "denominatorCount",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/metrics#denominatorCount",
+      "coercion": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+    },
+    {
+      "module": "metrics",
+      "term": "metricKey",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/metrics#metricKey"
+    },
+    {
+      "module": "metrics",
+      "term": "metricSubject",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/metrics#metricSubject",
+      "coercion": "@id"
+    },
+    {
+      "module": "metrics",
+      "term": "metricUnit",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/metrics#metricUnit"
+    },
+    {
+      "module": "metrics",
+      "term": "metricValue",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/metrics#metricValue"
+    },
+    {
+      "module": "metrics",
+      "term": "numeratorCount",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/metrics#numeratorCount",
+      "coercion": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+    },
+    {
+      "module": "metrics",
+      "term": "sourceMapping",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/metrics#sourceMapping",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/artifact",
+      "term": "name",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/artifact#name",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/artifact",
+      "term": "sourceTouchpoint",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/artifact#sourceTouchpoint",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/artifact",
+      "term": "targetTouchpoints",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/artifact#targetTouchpoints",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/condition",
+      "term": "condition",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/condition#condition",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/condition",
+      "term": "conditionTransitions",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/condition#conditionTransitions",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/data-contract",
+      "term": "dataSchema",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/data-contract#dataSchema",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/data-contract",
+      "term": "dataSchemaSource",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/data-contract#dataSchemaSource",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/data-contract",
+      "term": "dataSurface",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/data-contract#dataSurface",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/design-system",
+      "term": "component",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#component",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/design-system",
+      "term": "materializedSurface",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#materializedSurface",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/design-system",
+      "term": "slot",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#slot",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/design-system",
+      "term": "slotBindings",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#slotBindings",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/design-system",
+      "term": "slots",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#slots",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/design-system",
+      "term": "source",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#source",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/design-system",
+      "term": "targetSurface",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#targetSurface",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/design-system",
+      "term": "template",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#template",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/design-system",
+      "term": "tokenSources",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/design-system#tokenSources",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/effect",
+      "term": "consumedResources",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/effect#consumedResources",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/effect",
+      "term": "effect",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/effect#effect",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/effect",
+      "term": "producedResources",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/effect#producedResources",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/entry-binding",
+      "term": "bindingValue",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/entry-binding#bindingValue"
+    },
+    {
+      "module": "modules/entry-binding",
+      "term": "entry",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/entry-binding#entry",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/experience-annotation",
+      "term": "description",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/experience-annotation#description"
+    },
+    {
+      "module": "modules/experience-annotation",
+      "term": "painpointSteps",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/experience-annotation#painpointSteps",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/experience-annotation",
+      "term": "severity",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/experience-annotation#severity",
+      "coercion": "http://www.w3.org/2001/XMLSchema#decimal"
+    },
+    {
+      "module": "modules/l10n",
+      "term": "argumentNames",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#argumentNames",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/l10n",
+      "term": "copy",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#copy",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/l10n",
+      "term": "defaultLocale",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#defaultLocale",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/l10n",
+      "term": "fallbackLocales",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#fallbackLocales",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/l10n",
+      "term": "locale",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#locale",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/l10n",
+      "term": "localeCode",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#localeCode",
+      "coercion": "http://www.w3.org/2001/XMLSchema#language"
+    },
+    {
+      "module": "modules/l10n",
+      "term": "messageMeta",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#messageMeta",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/l10n",
+      "term": "messageValue",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#messageValue"
+    },
+    {
+      "module": "modules/l10n",
+      "term": "rtl",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#rtl"
+    },
+    {
+      "module": "modules/l10n",
+      "term": "targetLocale",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/l10n#targetLocale",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/observability",
+      "term": "accessibleDescription",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleDescription",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/observability",
+      "term": "accessibleFeatureName",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleFeatureName"
+    },
+    {
+      "module": "modules/observability",
+      "term": "accessibleFeatures",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleFeatures",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/observability",
+      "term": "accessibleFeatureValue",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleFeatureValue"
+    },
+    {
+      "module": "modules/observability",
+      "term": "accessibleName",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleName",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/observability",
+      "term": "accessibleRelations",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleRelations",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/observability",
+      "term": "accessibleRelationType",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#accessibleRelationType"
+    },
+    {
+      "module": "modules/observability",
+      "term": "contextLocators",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#contextLocators",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/observability",
+      "term": "expectedMatchCount",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#expectedMatchCount",
+      "coercion": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+    },
+    {
+      "module": "modules/observability",
+      "term": "inputModalities",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#inputModalities",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/observability",
+      "term": "instanceKeyFeature",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#instanceKeyFeature",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/observability",
+      "term": "locators",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#locators",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/observability",
+      "term": "observationEvent",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#observationEvent",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/observability",
+      "term": "observeSurface",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#observeSurface",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/observability",
+      "term": "requiredInputModalityProfiles",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#requiredInputModalityProfiles",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/observability",
+      "term": "role",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#role"
+    },
+    {
+      "module": "modules/observability",
+      "term": "surfaceInstanceResolver",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#surfaceInstanceResolver",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/observability",
+      "term": "targetLocator",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/observability#targetLocator",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/operability",
+      "term": "materializationDirection",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/operability#materializationDirection",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/operability",
+      "term": "materializationModality",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/operability#materializationModality",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/operability",
+      "term": "materializationSourceState",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/operability#materializationSourceState",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/operability",
+      "term": "materializationStartLocator",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/operability#materializationStartLocator",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/operability",
+      "term": "materializationSteps",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/operability#materializationSteps",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "modules/operability",
+      "term": "materializationTransition",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/operability#materializationTransition",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/operability",
+      "term": "previousStep",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/operability#previousStep",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/operability",
+      "term": "stepLocator",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/operability#stepLocator",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/operability",
+      "term": "stepMoveKind",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/operability#stepMoveKind",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/phase",
+      "term": "compositeState",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/phase#compositeState",
+      "coercion": "@id"
+    },
+    {
+      "module": "modules/phase",
+      "term": "order",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/phase#order",
+      "coercion": "http://www.w3.org/2001/XMLSchema#integer"
+    },
+    {
+      "module": "modules/phase",
+      "term": "phase",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/phase#phase",
+      "coercion": "@id"
+    },
+    {
+      "module": "runtime",
+      "term": "execution",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#execution",
+      "coercion": "@id"
+    },
+    {
+      "module": "runtime",
+      "term": "payload",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#payload",
+      "coercion": "@json"
+    },
+    {
+      "module": "runtime",
+      "term": "previousEvent",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#previousEvent",
+      "coercion": "@id"
+    },
+    {
+      "module": "runtime",
+      "term": "surfaceInstance",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/runtime#surfaceInstance",
+      "coercion": "@id"
+    },
+    {
+      "module": "surface",
+      "term": "channel",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#channel"
+    },
+    {
+      "module": "surface",
+      "term": "graphNode",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#graphNode",
+      "coercion": "@id"
+    },
+    {
+      "module": "surface",
+      "term": "journeys",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#journeys",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    },
+    {
+      "module": "surface",
+      "term": "surface",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#surface",
+      "coercion": "@id"
+    },
+    {
+      "module": "surface",
+      "term": "touchpoints",
+      "iri": "https://ujg.specs.openuji.org/ed/ns/surface#touchpoints",
+      "coercion": "@id",
+      "container": [
+        "@set"
+      ]
+    }
+  ]
+}

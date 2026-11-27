@@ -1,0 +1,5 @@
+type: Transition
+id: urn:ujg:transition:start-registration
+from: urn:ujg:state:registration-open
+to: urn:ujg:state:registration-form
+command: urn:ujg:command:start-registration

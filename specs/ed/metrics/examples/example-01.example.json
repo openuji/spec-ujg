@@ -1,0 +1,14 @@
+{
+  "kind": "fragment",
+  "modules": [
+    "core",
+    "graph",
+    "surface",
+    "runtime",
+    "modules/phase",
+    "mapping",
+    "metrics"
+  ],
+  "source": "https://example.com/ujg/examples/metrics/example-01.yamlld",
+  "validation": "source"
+}

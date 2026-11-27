@@ -17,7 +17,7 @@ histograms, sketches, or event taxonomies. Those can be defined by profiles or f
 - <dfn>MetricObservation</dfn>: An addressable observation that attaches one metric value to one
   metric subject.
 - <dfn>Metric subject</dfn>: The UJG object that a metric describes, identified by
-  `metricSubjectRef`.
+  `metricSubject`.
 - <dfn>Metric key</dfn>: The portable name of the measured fact, identified by `metricKey`.
 - <dfn>Count metric</dfn>: A non-negative integer metric that counts occurrences.
 - <dfn>Rate metric</dfn>: A decimal metric in the closed interval `0..1`, computed from an explicit
@@ -25,7 +25,7 @@ histograms, sketches, or event taxonomies. Those can be defined by profiles or f
 - <dfn>Mapping-derived metric</dfn>: A metric computed from one or more journey-segment
   [=JourneyMapping=] records and their [=MappedStep=] records.
 - <dfn>Source mapping</dfn>: The journey-segment [=JourneyMapping=] used to compute a single-mapping
-  metric, identified by `sourceMappingRef` when applicable.
+  metric, identified by `sourceMapping` when applicable.
 
 ## MetricObservation {data-cop-concept="metric-observation"}
 
@@ -38,57 +38,47 @@ classDiagram
   class JourneyMapping
   class MetricObservation {
     id
-    metricSubjectRef
+    metricSubject
     metricKey
     metricValue
     metricUnit
     numeratorCount
     denominatorCount
     aggregationMethod
-    sourceMappingRef
+    sourceMapping
   }
-  MetricObservation --> Node : metricSubjectRef
-  MetricObservation --> JourneyMapping : sourceMappingRef
+  MetricObservation --> Node : metricSubject
+  MetricObservation --> JourneyMapping : sourceMapping
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@id": "urn:ujg:metric:checkout:unexplained-rate",
-  "@type": "MetricObservation",
-  "metricSubjectRef": "urn:ujg:mapping:execution-12345",
-  "metricKey": "unexplainedMovementRate",
-  "metricValue": 0.25,
-  "metricUnit": "ratio",
-  "numeratorCount": 1,
-  "denominatorCount": 4,
-  "sourceMappingRef": "urn:ujg:mapping:execution-12345"
-}
+```ujg-example
+./examples/example-03.yamlld
 ```
 
 ## Metric Model {data-cop-concept="metric-model"}
 
 A [=MetricObservation=] records a metric value using these fields:
 
-- `metricSubjectRef`: the UJG object that the metric describes.
+- `metricSubject`: the UJG object that the metric describes.
 - `metricKey`: the metric name.
 - `metricValue`: the metric value.
 - `metricUnit`: the unit of `metricValue`.
 - `numeratorCount`: the numerator used to compute a rate metric, when applicable.
 - `denominatorCount`: the denominator used to compute a rate metric, when applicable.
 - `aggregationMethod`: the method used to combine or derive an aggregate metric, when applicable.
-- `sourceMappingRef`: the [=JourneyMapping=] used to compute the metric, when the metric is derived
+- `sourceMapping`: the [=JourneyMapping=] used to compute the metric, when the metric is derived
   from a single mapping.
 
 <spec-statement>
 
-1. A [=MetricObservation=] MUST identify exactly one metric subject using `metricSubjectRef`.
+1. A [=MetricObservation=] MUST identify exactly one metric subject using `metricSubject`.
 2. A [=MetricObservation=] MUST identify exactly one metric key using `metricKey`.
 3. A [=MetricObservation=] MUST provide exactly one metric value using `metricValue`.
 4. A [=MetricObservation=] SHOULD provide `metricUnit`.
 5. A rate [=MetricObservation=] SHOULD provide `numeratorCount` and `denominatorCount`.
-6. A single-mapping [=Mapping-derived metric=] SHOULD provide `sourceMappingRef`.
+6. A single-mapping [=Mapping-derived metric=] SHOULD provide `sourceMapping`.
 
 </spec-statement>
 
@@ -114,15 +104,15 @@ Mapping-derived metrics use these primary attachment points:
 | [=Transition=], [=AdjacentTransition=], or [=OutgoingTransition=] | Aggregate over explained movements | `transitionTraversalCount`, `outgoingTraversalCount` |
 
 For Mapping-derived metrics, the Runtime event chain defines order over mapped state steps. The
-serialized order of `mappedStepRef` is not significant, and affordance-only Runtime events referenced
-with `observedAffordanceEventRef` do not increment `stepCount`.
+serialized order of `mappedSteps` is not significant, and affordance-only Runtime events referenced
+with `observedAffordanceEvent` do not increment `stepCount`.
 
 <spec-statement>
 
 1. A Consumer computing Mapping-derived metrics MUST reconstruct mapped step order using the Runtime
-   causal chain of each `MappedStep.mappedEventRef`.
+   causal chain of each `MappedStep.mappedEvent`.
 2. A Consumer computing Mapping-derived metrics MUST NOT use the serialized order of
-   `mappedStepRef` as the metric order.
+   `mappedSteps` as the metric order.
 3. Every mapped step MUST be included once in `stepCount` for its JourneyMapping segment.
 4. The Runtime root mapped step MUST be included in state visit counts for the state resolved by that step.
 5. The Runtime root mapped step MUST NOT be included in `movementCount`, `explainedMovementCount`,
@@ -130,7 +120,7 @@ with `observedAffordanceEventRef` do not increment `stepCount`.
 6. The first mapped step of every later segment MUST be counted as a movement, including
    same-Journey or same-State re-entry through an [=OutgoingTransition=].
 7. A non-root mapped step is an explained movement when Mapping semantics determine that its
-   `explainedByTransitionRef` identifies a relevant effective [=Transition=] or
+   `explainedByTransition` identifies a relevant effective [=Transition=] or
    [=OutgoingTransition=].
 8. A non-root mapped step is an unexplained movement when Mapping semantics derive a jump for that
    step.
@@ -243,30 +233,30 @@ or SHACL artifacts. Producers and consumers can still validate the baseline mode
 
 ### Unexplained movement rate for one mapping
 
-```json
-{
-  "@id": "urn:ujg:metric:checkout:unexplained-rate",
-  "@type": "MetricObservation",
-  "metricSubjectRef": "urn:ujg:mapping:execution-12345",
-  "metricKey": "unexplainedMovementRate",
-  "metricValue": 0.25,
-  "metricUnit": "ratio",
-  "numeratorCount": 1,
-  "denominatorCount": 4,
-  "sourceMappingRef": "urn:ujg:mapping:execution-12345"
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 ### Traversal count for a transition
 
-```json
-{
-  "@id": "urn:ujg:metric:checkout:transition-cart-payment",
-  "@type": "MetricObservation",
-  "metricSubjectRef": "urn:ujg:transition:cart-to-payment",
-  "metricKey": "transitionTraversalCount",
-  "metricValue": 812,
-  "metricUnit": "count",
-  "aggregationMethod": "sum"
-}
+```ujg-example
+./examples/example-01.yamlld
 ```
+
+## Normative Artifacts
+
+Metrics uses the Core context together with
+`https://ujg.specs.openuji.org/ed/ns/metrics.context.jsonld`. Numerical interpretation and the
+metric-specific rules above remain normative in addition to the structural shapes.
+
+### Ontology
+
+:::include ./metrics.ttl :::
+
+### JSON-LD Context
+
+:::include ./metrics.context.jsonld :::
+
+### Validation
+
+:::include ./metrics.shape.ttl :::

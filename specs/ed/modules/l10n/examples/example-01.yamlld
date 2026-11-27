@@ -1,0 +1,6 @@
+id: urn:l10n:message-meta:order-confirmation-title
+type: MessageMeta
+extensions:
+  com.acme.i18n-runtime:
+    resourceFile: checkout/confirmation.json
+    bundleFormat: icu

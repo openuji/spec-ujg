@@ -19,22 +19,8 @@ The Domain Model Extension does not prescribe technical realization.
 The extension value is attached to `UJGDocument.extensions` using the key
 `org.openuji.domain-model`.
 
-```json
-{
-  "@type": "UJGDocument",
-  "@id": "https://example.org/journey.jsonld",
-  "extensions": {
-    "org.openuji.domain-model": {
-      "id": "urn:domain:model:example",
-      "entities": [],
-      "valueObjects": [],
-      "relationships": [],
-      "domainOperations": [],
-      "invariants": []
-    }
-  },
-  "nodes": []
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 <spec-statement>The value of `extensions["org.openuji.domain-model"]` **MUST** be a
@@ -94,7 +80,7 @@ Domain Model elements. No one-to-one mapping is implied.
 
 ### Multi-Journey Composite Evidence Scope {data-cop-concept="domain-model-composite-evidence-scope"}
 
-When a [=CompositeState=] contains more than one child [=Journey=] through `subjourneyRefs`, each
+When a [=CompositeState=] contains more than one child [=Journey=] through `subjourneys`, each
 child journey is a separate semantic evidence scope for Domain Model interpretation. A producer
 SHOULD analyze each child journey independently before correlating domain concepts across sibling
 child journeys.
@@ -110,7 +96,7 @@ scope; sharing the resource does not change Graph ownership.
 one implied sequence or combined state space merely because they are referenced by the same
 [=CompositeState=].</spec-statement>
 
-<spec-statement>A child [=Journey=] referenced by `subjourneyRefs` **MAY** appear in a Domain Model
+<spec-statement>A child [=Journey=] referenced by `subjourneys` **MAY** appear in a Domain Model
 element's `ujgRefs` when it directly constrains, motivates, or explains that element. More specific
 UJG refs, such as state, transition, condition, or effect refs, MAY also be used.</spec-statement>
 
@@ -405,136 +391,6 @@ For namespace-style artifact discovery, the same schema is also published at
 This example attaches a Domain Model payload to a `UJGDocument`. It demonstrates direct UJG
 traceability and an invariant with no artificial UJG provenance.
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/effect.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/workshop-waitlist.jsonld",
-  "@type": "UJGDocument",
-  "extensions": {
-    "org.openuji.domain-model": {
-      "id": "urn:domain:model:workshop-waitlist",
-      "entities": [
-        {
-          "id": "urn:domain:entity:workshop-participation",
-          "label": "Workshop participation",
-          "ujgRefs": [
-            "urn:ujg:state:waitlisted",
-            "urn:ujg:state:registration-confirmed",
-            "urn:ujg:condition:participant-already-waitlisted"
-          ],
-          "properties": [
-            {
-              "id": "urn:domain:property:participation-status",
-              "label": "Participation status",
-              "ujgRefs": [
-                "urn:ujg:state:waitlisted",
-                "urn:ujg:state:registration-confirmed"
-              ],
-              "valueType": "string",
-              "allowedValues": [
-                "waitlisted",
-                "confirmed"
-              ]
-            }
-          ]
-        }
-      ],
-      "valueObjects": [],
-      "relationships": [],
-      "domainOperations": [
-        {
-          "id": "urn:domain:operation:join-waitlist",
-          "label": "Join waitlist",
-          "ujgRefs": [
-            "urn:ujg:effect:join-waitlist"
-          ],
-          "actsOnRefs": [
-            "urn:domain:entity:workshop-participation"
-          ],
-          "preconditions": [
-            "The participant is eligible to join the waitlist."
-          ],
-          "postconditions": [
-            "A workshop participation is waitlisted."
-          ]
-        }
-      ],
-      "invariants": [
-        {
-          "id": "urn:domain:invariant:participation-scope",
-          "label": "Participation scope",
-          "appliesToRefs": [
-            "urn:domain:entity:workshop-participation"
-          ],
-          "assertion": "A workshop participation belongs to one participant and one workshop."
-        }
-      ]
-    }
-  },
-  "nodes": [
-    {
-      "@type": "Journey",
-      "@id": "urn:ujg:journey:workshop-waitlist",
-      "defaultEntryRef": "urn:ujg:entry:workshop-waitlist",
-      "entryRefs": [
-        "urn:ujg:entry:workshop-waitlist"
-      ],
-      "stateRefs": [
-        "urn:ujg:state:registration-open",
-        "urn:ujg:state:waitlisted",
-        "urn:ujg:state:registration-confirmed"
-      ],
-      "transitionRefs": [
-        "urn:ujg:transition:join-waitlist",
-        "urn:ujg:transition:confirm-registration"
-      ]
-    },
-    {
-      "@type": "JourneyEntry",
-      "@id": "urn:ujg:entry:workshop-waitlist",
-      "stateRef": "urn:ujg:state:registration-open"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:registration-open",
-      "label": "Registration open"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:waitlisted",
-      "label": "Waitlisted"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:registration-confirmed",
-      "label": "Registration confirmed"
-    },
-    {
-      "@type": "Condition",
-      "@id": "urn:ujg:condition:participant-already-waitlisted"
-    },
-    {
-      "@type": "Effect",
-      "@id": "urn:ujg:effect:join-waitlist"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:ujg:transition:join-waitlist",
-      "from": "urn:ujg:state:registration-open",
-      "to": "urn:ujg:state:waitlisted",
-      "conditionRef": "urn:ujg:condition:participant-already-waitlisted",
-      "effectRef": "urn:ujg:effect:join-waitlist"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:ujg:transition:confirm-registration",
-      "from": "urn:ujg:state:waitlisted",
-      "to": "urn:ujg:state:registration-confirmed"
-    }
-  ]
-}
+```ujg-example
+./examples/example-01.yamlld
 ```

@@ -1,0 +1,66 @@
+- type: Journey
+  id: urn:journey:product-gallery
+  label: Product gallery
+  defaultEntry: urn:entry:product-gallery
+  entries:
+    - urn:entry:product-gallery
+  states:
+    - urn:state:slide
+- type: JourneyEntry
+  id: urn:entry:product-gallery
+  state: urn:state:slide
+- type: State
+  id: urn:state:slide
+  label: Slide
+- type: StateCollection
+  id: urn:collection:slides
+  label: Slides
+  memberState: urn:state:slide
+  memberTransitions:
+    - urn:adjacent:slide-neighbors
+- type: AdjacentTransition
+  id: urn:adjacent:slide-neighbors
+  from: urn:state:slide
+  to: urn:state:slide
+- type: AccessibleLocator
+  id: urn:locator:slide-tablist
+  role: tablist
+- type: AccessibleLocator
+  id: urn:locator:slide-tab
+  role: tab
+  contextLocators:
+    - urn:locator:slide-tablist
+- type: TransitionMaterialization
+  id: urn:materialization:next-slide:keyboard
+  materializationTransition: urn:adjacent:slide-neighbors
+  materializationDirection: ujgoperability:forward
+  materializationModality: ujgobservability:keyboard
+  materializationSteps:
+    - urn:step:next-slide:keyboard:1
+    - urn:step:next-slide:keyboard:2
+- type: MoveStep
+  id: urn:step:next-slide:keyboard:1
+  stepMoveKind: ujgoperability:nextStop
+  stepLocator: urn:locator:slide-tab
+- type: MoveStep
+  id: urn:step:next-slide:keyboard:2
+  previousStep: urn:step:next-slide:keyboard:1
+  stepMoveKind: ujgoperability:nextItem
+  stepLocator: urn:locator:slide-tab
+- type: TransitionMaterialization
+  id: urn:materialization:previous-slide:keyboard
+  materializationTransition: urn:adjacent:slide-neighbors
+  materializationDirection: ujgoperability:backward
+  materializationModality: ujgobservability:keyboard
+  materializationSteps:
+    - urn:step:previous-slide:keyboard:1
+    - urn:step:previous-slide:keyboard:2
+- type: MoveStep
+  id: urn:step:previous-slide:keyboard:1
+  stepMoveKind: ujgoperability:nextStop
+  stepLocator: urn:locator:slide-tab
+- type: MoveStep
+  id: urn:step:previous-slide:keyboard:2
+  previousStep: urn:step:previous-slide:keyboard:1
+  stepMoveKind: ujgoperability:previousItem
+  stepLocator: urn:locator:slide-tab

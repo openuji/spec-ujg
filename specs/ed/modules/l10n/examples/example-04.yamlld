@@ -1,0 +1,44 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld
+type: UJGDocument
+id: https://example.com/ujg/l10n/shared-topology-switch.jsonld
+nodes:
+  - type: Locale
+    id: urn:l10n:locale:en
+    localeCode: en
+  - type: Journey
+    id: urn:journey:checkout
+    defaultEntry: urn:entry:checkout-form
+    entries:
+      - type: JourneyEntry
+        id: urn:entry:checkout-form
+        state: urn:state:checkout-form
+      - type: JourneyEntry
+        id: urn:entry:checkout-success
+        state: urn:state:checkout-success
+    states:
+      - type: State
+        id: urn:state:checkout-form
+        label: Form
+        entryTransitions:
+          - type: OutgoingTransition
+            id: urn:ot:english-from-form
+            label: English
+            toEntry: urn:entry:checkout-form
+            targetLocale: urn:l10n:locale:en
+      - type: State
+        id: urn:state:checkout-success
+        label: Success
+        entryTransitions:
+          - type: OutgoingTransition
+            id: urn:ot:english-from-success
+            label: English
+            toEntry: urn:entry:checkout-success
+            targetLocale: urn:l10n:locale:en
+    transitions:
+      - type: Transition
+        id: urn:transition:checkout-submit
+        from: urn:state:checkout-form
+        to: urn:state:checkout-success

@@ -1,0 +1,45 @@
+- type: Journey
+  id: urn:ujg:journey:item-list
+  label: Item list
+  defaultEntry: urn:ujg:entry:item-list
+  entries:
+    - urn:ujg:entry:item-list
+  states:
+    - urn:ujg:state:list-item
+  transitions:
+    - urn:ujg:transition:list-item-toggle
+- type: JourneyEntry
+  id: urn:ujg:entry:item-list
+  state: urn:ujg:state:list-item
+- type: State
+  id: urn:ujg:state:list-item
+  label: List item
+- type: Transition
+  id: urn:ujg:transition:list-item-toggle
+  label: Toggle item
+  from: urn:ujg:state:list-item
+  to: urn:ujg:state:list-item
+  command: urn:ujg:command:toggle-item
+- type: StateCollection
+  id: urn:ujg:collection:list-items
+  label: List items
+  memberState: urn:ujg:state:list-item
+  memberTransitions:
+    - urn:ujg:adjacent:list-item-neighbors
+    - urn:ujg:transition:list-item-next
+- type: AdjacentTransition
+  id: urn:ujg:adjacent:list-item-neighbors
+  from: urn:ujg:state:list-item
+  to: urn:ujg:state:list-item
+- type: Transition
+  id: urn:ujg:transition:list-item-next
+  label: Next item
+  from: urn:ujg:state:list-item
+  to: urn:ujg:state:list-item
+  command: urn:ujg:command:next-item
+- type: Command
+  id: urn:ujg:command:toggle-item
+  label: Toggle item
+- type: Command
+  id: urn:ujg:command:next-item
+  label: Next item

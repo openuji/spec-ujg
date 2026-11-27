@@ -1,0 +1,11 @@
+{
+  "kind": "fragment",
+  "modules": [
+    "core",
+    "graph",
+    "surface",
+    "modules/data-contract"
+  ],
+  "source": "https://example.com/ujg/examples/modules/data-contract/example-04.yamlld",
+  "validation": "source"
+}

@@ -19,10 +19,13 @@
     "tr-snapshots:freeze": "node scripts/freeze-tr-snapshots.js",
     "content-manifests:check": "node scripts/content-manifests.js check",
     "content-manifests:update": "node scripts/content-manifests.js update",
-    "prepare": "husky"
+    "prepare": "husky",
+    "conformance:setup": "pnpm --filter @openuji/web run conformance:setup",
+    "conformance:test": "pnpm --filter @openuji/web run conformance:test",
+    "vocabulary:check": "pnpm --filter @openuji/web run vocabulary:check",
+    "examples:check": "pnpm --filter @openuji/web run examples:check"
   },
   "devDependencies": {
-    "ajv": "^8.20.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
@@ -32,7 +35,6 @@
     "apps/web/src/**/*.{js,jsx,ts,tsx,astro,css,md}": [
       "pnpm --filter @openuji/web exec eslint --fix",
       "prettier --write"
-
     ],
     "specs/**/*.md": [
       "pnpm --filter @openuji/web exec speculator-lint ujg.workspace.json",

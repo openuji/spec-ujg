@@ -19,7 +19,7 @@ ujgobservabilityshape:ObservationBindingShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgobservability:observeSurfaceRef ;
+    sh:path ujgobservability:observeSurface ;
     sh:class ujgsurface:Surface ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -27,7 +27,7 @@ ujgobservabilityshape:ObservationBindingShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgobservability:observationEventRef ;
+    sh:path ujgobservability:observationEvent ;
     sh:class ujgobservability:ObservationEvent ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -35,14 +35,14 @@ ujgobservabilityshape:ObservationBindingShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgobservability:locatorRefs ;
+    sh:path ujgobservability:locators ;
     sh:node ujgobservabilityshape:LocatorShape ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgobservability:surfaceInstanceResolverRef ;
+    sh:path ujgobservability:surfaceInstanceResolver ;
     sh:class ujgobservability:SurfaceInstanceResolver ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
@@ -59,7 +59,7 @@ ujgobservabilityshape:ObservationEventShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgobservability:requiredInputModalityProfileRefs ;
+    sh:path ujgobservability:requiredInputModalityProfiles ;
     sh:class ujgobservability:InputModalityProfile ;
     sh:nodeKind sh:IRI ;
   ] .
@@ -73,7 +73,7 @@ ujgobservabilityshape:InputModalityProfileShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgobservability:inputModalityRefs ;
+    sh:path ujgobservability:inputModalities ;
     sh:class ujgobservability:InputModality ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -84,7 +84,7 @@ ujgobservabilityshape:SurfaceInstanceResolverShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgobservability:instanceKeyFeatureRef ;
+    sh:path ujgobservability:instanceKeyFeature ;
     sh:class ujgobservability:AccessibleFeature ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -97,11 +97,11 @@ ujgobservabilityshape:AccessibleLocatorShape a sh:NodeShape ;
 
   sh:or (
     [ sh:property [ sh:path ujgobservability:role ; sh:minCount 1 ] ]
-    [ sh:property [ sh:path ujgobservability:accessibleNameRef ; sh:minCount 1 ] ]
-    [ sh:property [ sh:path ujgobservability:accessibleDescriptionRef ; sh:minCount 1 ] ]
-    [ sh:property [ sh:path ujgobservability:accessibleFeatureRefs ; sh:minCount 1 ] ]
-    [ sh:property [ sh:path ujgobservability:accessibleRelationRefs ; sh:minCount 1 ] ]
-    [ sh:property [ sh:path ujgobservability:contextLocatorRefs ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:accessibleName ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:accessibleDescription ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:accessibleFeatures ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:accessibleRelations ; sh:minCount 1 ] ]
+    [ sh:property [ sh:path ujgobservability:contextLocators ; sh:minCount 1 ] ]
   ) ;
 
   sh:property [
@@ -111,33 +111,33 @@ ujgobservabilityshape:AccessibleLocatorShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgobservability:accessibleNameRef ;
+    sh:path ujgobservability:accessibleName ;
     sh:class ujgl10n:MessageMeta ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgobservability:accessibleDescriptionRef ;
+    sh:path ujgobservability:accessibleDescription ;
     sh:class ujgl10n:MessageMeta ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgobservability:accessibleFeatureRefs ;
+    sh:path ujgobservability:accessibleFeatures ;
     sh:class ujgobservability:AccessibleFeature ;
     sh:nodeKind sh:IRI ;
   ] ;
 
   sh:property [
-    sh:path ujgobservability:accessibleRelationRefs ;
+    sh:path ujgobservability:accessibleRelations ;
     sh:class ujgobservability:AccessibleRelation ;
     sh:nodeKind sh:IRI ;
   ] ;
 
   sh:property [
-    sh:path ujgobservability:contextLocatorRefs ;
+    sh:path ujgobservability:contextLocators ;
     sh:class ujgobservability:AccessibleLocator ;
     sh:nodeKind sh:IRI ;
   ] .
@@ -172,7 +172,7 @@ ujgobservabilityshape:AccessibleRelationShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgobservability:targetLocatorRef ;
+    sh:path ujgobservability:targetLocator ;
     sh:class ujgobservability:AccessibleLocator ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;

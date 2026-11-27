@@ -19,19 +19,17 @@ Core does not define journeys, states, transitions, runtime traces, experience a
 
 ## Context
 
-Every compact UJG JSON-LD document must include Core context:
+Every compact UJG JSON-LD or YAML-LD document must include Core context:
 
-```json
-"https://ujg.specs.openuji.org/ed/ns/core.context.jsonld"
+```yaml
+https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
 ```
 
 Compose it with module contexts only when their terms are used:
 
-```json
-[
-  "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-  "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld"
-]
+```yaml
+- https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+- https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
 ```
 
 ## Vocabulary
@@ -43,7 +41,7 @@ UJGDocument
 Node
 ```
 
-Use only these Core properties:
+Use only these authored Core properties:
 
 ```text
 imports
@@ -69,19 +67,24 @@ contextRefs
 extension
 ```
 
+`id` and `type` are authoring aliases for standard JSON-LD keywords. Core `members` is
+derived-only validation data, not an authored property.
+
 Use non-Core terms only when a defined module or explicit project extension provides them.
 
 ## UJGDocument and nodes
 
 Use `UJGDocument` as the root document container.
 
-Give the document a stable IRI `@id`.
+Give the document a stable IRI `id`.
 
-Put all addressable modeled objects in top-level `nodes`.
+Put root and standalone definitions in `nodes`; embed locally defined components under their
+module relationships. No exhaustive inventory or redundant references are required.
 
-Give each node a stable IRI `@id`.
+Give each node a stable IRI `id`.
 
-Do not nest addressable objects inside custom properties. Put them in `nodes` and reference them by IRI.
+Use only defined node-valued properties for embedding. An IRI reference alone does not create a
+local definition. Keep source provenance before import composition, and never author derived `members`.
 
 Do not place graph topology, runtime facts, design-system bindings, localization metadata, or app
 metadata directly on `UJGDocument` unless a defined module term or document extension permits it.
@@ -118,11 +121,23 @@ reference resolution, Graph traversal, or Graph semantics.
 * Is Core context included?
 * Are extra contexts included only for terms actually used?
 * Is the root object a `UJGDocument`?
-* Does the document have a stable IRI `@id`?
-* Are addressable objects in top-level `nodes`?
-* Do nodes have stable IRI `@id` values?
+* Does the document have a stable IRI `id`?
+* Are root and embedded definitions discovered, without treating references or opaque payloads as local definitions?
+* Do nodes have stable IRI `id` values?
 * Are `imports` only UJG document IRI references?
 * Are document extensions placed under `UJGDocument.extensions`?
 * Is every `extensions` value a JSON object?
 * Did I avoid invented Core terms?
 * Did I avoid hiding module semantics inside Core or `extensions`?
+
+## Current ED authoring and source scope
+
+Use the current canonical property names and matching vocabulary IRIs. Retired terms are not
+aliases. Prefer nested YAML-LD; accept flat or nested JSON-LD and YAML-LD under the same module
+semantics. Do not change instance identity when changing serialization or filenames.
+
+Resolve imports against each source location independently of `@base`; ordinary node identities
+and references follow standard JSON-LD base rules. Unknown JSON payloads remain opaque.
+
+Consult `references/authoring-terms.json` for canonical mappings and
+`references/specs/authoring/index.md` with its accompanying YAML fixtures for the complete style.

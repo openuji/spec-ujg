@@ -1,0 +1,22 @@
+- type: Journey
+  id: urn:ujg:journey:home
+  defaultEntry: urn:ujg:entry:home
+  entries:
+    - urn:ujg:entry:home
+  states:
+    - urn:ujg:state:home
+- type: JourneyEntry
+  id: urn:ujg:entry:home
+  label: Home entry
+  state: urn:ujg:state:home
+- type: State
+  id: urn:ujg:state:home
+  label: Home
+- type: OutgoingTransition
+  id: urn:ujg:ot:go-home
+  label: Home
+  toEntry: urn:ujg:entry:home
+  command: urn:ujg:command:go-home
+- type: Command
+  id: urn:ujg:command:go-home
+  label: Go home

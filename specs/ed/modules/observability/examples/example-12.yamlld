@@ -1,0 +1,4 @@
+- id: ujgobservability:keyboard
+  type: InputModality
+- id: ujgobservability:pointer
+  type: InputModality

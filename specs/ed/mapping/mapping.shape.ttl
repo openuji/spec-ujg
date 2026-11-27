@@ -24,7 +24,7 @@ ujgmappingshape:JourneyMappingShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgmapping:mappedJourneyRef ;
+    sh:path ujgmapping:mappedJourney ;
     sh:class ujggraph:Journey ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -32,7 +32,7 @@ ujgmappingshape:JourneyMappingShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgmapping:mappedRuntimeRef ;
+    sh:path ujgmapping:mappedRuntime ;
     sh:class ujgruntime:JourneyExecution ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -40,7 +40,7 @@ ujgmappingshape:JourneyMappingShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgmapping:mappedStepRef ;
+    sh:path ujgmapping:mappedSteps ;
     sh:class ujgmapping:MappedStep ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -52,14 +52,14 @@ ujgmappingshape:JourneyMappingShape a sh:NodeShape ;
     sh:select """
       SELECT $this ?event
       WHERE {
-        $this ujgmapping:mappedRuntimeRef ?runtime ;
-              ujgmapping:mappedStepRef ?step .
-        ?step ujgmapping:mappedEventRef ?event .
+        $this ujgmapping:mappedRuntime ?runtime ;
+              ujgmapping:mappedSteps ?step .
+        ?step ujgmapping:mappedEvent ?event .
 
         ?other a ujgmapping:JourneyMapping ;
-               ujgmapping:mappedRuntimeRef ?runtime ;
-               ujgmapping:mappedStepRef ?otherStep .
-        ?otherStep ujgmapping:mappedEventRef ?event .
+               ujgmapping:mappedRuntime ?runtime ;
+               ujgmapping:mappedSteps ?otherStep .
+        ?otherStep ujgmapping:mappedEvent ?event .
 
         FILTER ($this != ?other)
       }
@@ -71,7 +71,7 @@ ujgmappingshape:MappedStepShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgmapping:mappedEventRef ;
+    sh:path ujgmapping:mappedEvent ;
     sh:class ujgruntime:RuntimeEvent ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -79,21 +79,21 @@ ujgmappingshape:MappedStepShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgmapping:observedAffordanceEventRef ;
+    sh:path ujgmapping:observedAffordanceEvent ;
     sh:class ujgruntime:RuntimeEvent ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgmapping:mappedStateRef ;
+    sh:path ujgmapping:mappedState ;
     sh:node ujgmappingshape:StateLikeShape ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgmapping:explainedByTransitionRef ;
+    sh:path ujgmapping:explainedByTransition ;
     sh:node ujgmappingshape:TransitionLikeShape ;
     sh:maxCount 1 ;
   ] .

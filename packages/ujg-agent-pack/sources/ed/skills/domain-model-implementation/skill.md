@@ -8,7 +8,7 @@ The complete UJG document is the contract. The embedded Domain Model describes d
 
 ## Required Inputs
 
-- The full UJG JSON-LD document, including its Domain Model extension.
+- The full UJG JSON-LD or YAML-LD document, including its Domain Model extension.
 - The implementation being created or reviewed.
 - Relevant tests, API contracts, persistence schema, and runtime configuration.
 - The intended realization boundary, such as backend, frontend, workflow engine, or end-to-end system.
@@ -36,7 +36,7 @@ Before relying on the UJG document:
 2. Confirm that referenced IDs resolve and that graph topology is internally coherent.
 3. Identify the journeys, entries, states, composite states, exits, transitions, conditional transition sets, conditions, effects, and bindings relevant to the requested behavior.
 4. Distinguish domain semantics from purely presentational details.
-5. For every `CompositeState` with `subjourneyRefs`, resolve each referenced child `Journey` and treat
+5. For every `CompositeState` with `subjourneys`, resolve each referenced child `Journey` and treat
    each child as an independent local evidence and behavior scope unless explicit modeled semantics or
    supplied domain knowledge supports cross-child correlation.
 
@@ -101,22 +101,22 @@ collection within the same Journey occurrence.
 
 ## Entry and Continuation Authority
 
-For every non-default `JourneyEntry`, `JourneyExit`, parent-boundary `toEntryRef`, and outgoing
-`toEntryRef`, record its permitted predecessor and authority model.
+For every non-default `JourneyEntry`, `JourneyExit`, parent-boundary `toEntry`, and outgoing
+`toEntry`, record its permitted predecessor and authority model.
 
-For a parent transition using `toEntryRef`, verify that the selected `JourneyEntry` belongs to exactly
-one child journey in the target composite's `subjourneyRefs`. For a parent transition using
-`fromExitRef`, verify that the selected `JourneyExit` belongs to exactly one child journey in the
-source composite's `subjourneyRefs`. These refs are singular boundary refinements, not endpoint sets
+For a parent transition using `toEntry`, verify that the selected `JourneyEntry` belongs to exactly
+one child journey in the target composite's `subjourneys`. For a parent transition using
+`fromExit`, verify that the selected `JourneyExit` belongs to exactly one child journey in the
+source composite's `subjourneys`. These refs are singular boundary refinements, not endpoint sets
 or synchronization contracts.
 
-For an `OutgoingTransition`, verify that `toEntryRef` names a JourneyEntry owned by exactly one
-Journey and that the effective destination is that entry's `stateRef`. Treat same-Journey and
+For an `OutgoingTransition`, verify that `toEntry` names a JourneyEntry owned by exactly one
+Journey and that the effective destination is that entry's `state`. Treat same-Journey and
 same-State targets as explicit re-entry and never authorize a direct outgoing State reference.
-When it uses `entrySelectorRef` instead, the destination entry is bound each time the transition is
+When it uses `entrySelector` instead, the destination entry is bound each time the transition is
 taken, not fixed by the UJG: resolve exactly one JourneyEntry from the occurrence where it is taken,
 verify that the entry is owned by exactly one Journey and, when the `EntrySelector` lists
-`candidateJourneyRefs`, by one of those Journeys, and enter nothing when no entry resolves. Never
+`candidateJourneys`, by one of those Journeys, and enter nothing when no entry resolves. Never
 treat an address that resolves to no entry as a destination.
 Offer an entry transition only at occurrences of the State that lists it. While a CompositeState is
 current, offer the entry transitions of the current State in each child Journey, at any depth. Never
@@ -127,7 +127,7 @@ that its Journey declares exits, but retain the source State
 occurrence and its active composite scope while the invoked Journey runs. Keep them suspended: take
 no Transition or AdjacentTransition from them and do not offer the source's entry transitions. States of sibling child
 Journeys outside the suspended scope stay active and keep their own availability. Resume that exact
-source occurrence when the invoked Journey reaches one of its own `exitRefs`; do not enter a
+source occurrence when the invoked Journey reaches one of its own `exits`; do not enter a
 JourneyEntry or take a Transition to get back. Treat the reached exit as the invocation's outcome.
 Cancel the invocation when the invoked Journey is left any other way, including through any
 `OutgoingTransition` taken inside it, even one that re-enters the same Journey. On cancellation,
@@ -140,12 +140,12 @@ occurrence.
 
 When a child `JourneyExit` is reached, treat it as an outcome of that child Journey, not as leaving
 the containing `CompositeState`. Keep the composite and its sibling child journeys active until the
-occurrence is left. Normally that is a parent `Transition` whose `fromExitRef` is that exit: take it
+occurrence is left. Normally that is a parent `Transition` whose `fromExit` is that exit: take it
 when the exit is reached, never before, and only if its guard allows. An `OutgoingTransition` taken
 from inside the composite, or a cancelled invocation, also leaves it. If the composite is suspended
 by an invocation, defer that parent Transition until the invocation completes, and drop it if the
 invocation is cancelled. An occurrence entered through an `InvokingTransition` is not a composite
-child, even when the same Journey is listed in some `subjourneyRefs`; its exit completes the
+child, even when the same Journey is listed in some `subjourneys`; its exit completes the
 invocation. Do not treat a child exit as completing sibling child journeys or as collective
 composite completion unless the UJG explicitly models such behavior elsewhere.
 
@@ -224,3 +224,15 @@ Include the completed trace matrix or a concise link to it. Do not describe an i
   containment alone, or deriving bounded contexts, aggregates, synchronization, lifecycle coupling, or
   Cartesian-product domain states from multi-journey composite topology alone.
 - Letting missing tests, unresolved references, or an unavailable runtime disappear from the final conclusion.
+
+## Current ED authoring and source scope
+
+Use the current canonical property names and matching vocabulary IRIs. Retired terms are not
+aliases. Prefer nested YAML-LD; accept flat or nested JSON-LD and YAML-LD under the same module
+semantics. Do not change instance identity when changing serialization or filenames.
+
+Resolve imports against each source location independently of `@base`; ordinary node identities
+and references follow standard JSON-LD base rules. Unknown JSON payloads remain opaque.
+
+Consult `references/authoring-terms.json` for canonical mappings and
+`references/specs/authoring/index.md` with its accompanying YAML fixtures for the complete style.

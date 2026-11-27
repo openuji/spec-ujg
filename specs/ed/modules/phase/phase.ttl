@@ -20,11 +20,11 @@ ujgphase:Step a owl:Class ;
 
 ### Properties
 
-ujgphase:compositeStateRef a owl:ObjectProperty ;
+ujgphase:compositeState a owl:ObjectProperty ;
   rdfs:domain ujgphase:Step ;
   rdfs:range ujggraph:CompositeState .
 
-ujgphase:phaseRef a owl:ObjectProperty ;
+ujgphase:phase a owl:ObjectProperty ;
   rdfs:domain ujgphase:Step ;
   rdfs:range ujgphase:Phase .
 

@@ -1,0 +1,34 @@
+- type: Journey
+  id: urn:ujg:journey:order-confirmation
+  defaultEntry: urn:ujg:entry:order-confirmation
+  entries:
+    - urn:ujg:entry:order-confirmation
+  states:
+    - urn:ujg:state:order-confirmation
+- type: JourneyEntry
+  id: urn:ujg:entry:order-confirmation
+  state: urn:ujg:state:order-confirmation
+- type: State
+  id: urn:ujg:state:order-confirmation
+  label: Order confirmation
+  entryTransitions:
+    - urn:example:ot:language-english
+  copy: urn:l10n:message-meta:order-confirmation-title
+- type: Locale
+  id: urn:l10n:locale:en
+  localeCode: en
+- type: MessageMeta
+  id: urn:l10n:message-meta:order-confirmation-title
+  argumentNames:
+    - orderNumber
+  defaultLocale: urn:l10n:locale:en
+- type: Message
+  id: urn:l10n:message:order-confirmation-title:en
+  messageMeta: urn:l10n:message-meta:order-confirmation-title
+  locale: urn:l10n:locale:en
+  messageValue: Order ${orderNumber} confirmed
+- type: OutgoingTransition
+  id: urn:example:ot:language-english
+  label: English
+  toEntry: urn:ujg:entry:order-confirmation
+  targetLocale: urn:l10n:locale:en

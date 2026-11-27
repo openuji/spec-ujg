@@ -1,0 +1,12 @@
+type: UJGDocument
+id: https://example.org/journey.jsonld
+extensions:
+  org.openuji.domain-model:
+    id: urn:domain:model:example
+    entities: []
+    valueObjects: []
+    relationships: []
+    domainOperations: []
+    invariants: []
+nodes: []
+"@context": https://ujg.specs.openuji.org/ed/ns/core.context.jsonld

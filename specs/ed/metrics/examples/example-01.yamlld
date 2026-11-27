@@ -1,0 +1,7 @@
+id: urn:ujg:metric:checkout:transition-cart-payment
+type: MetricObservation
+metricSubject: urn:ujg:transition:cart-to-payment
+metricKey: transitionTraversalCount
+metricValue: 812
+metricUnit: count
+aggregationMethod: sum

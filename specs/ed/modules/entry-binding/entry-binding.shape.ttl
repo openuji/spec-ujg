@@ -9,7 +9,7 @@ ujgentrybindingshape:EntryBindingShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgentrybinding:entryRef ;
+    sh:path ujgentrybinding:entry ;
     sh:class ujggraph:JourneyEntry ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -17,7 +17,7 @@ ujgentrybindingshape:EntryBindingShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgentrybinding:value ;
+    sh:path ujgentrybinding:bindingValue ;
     sh:datatype xsd:string ;
     sh:minCount 1 ;
     sh:maxCount 1 ;

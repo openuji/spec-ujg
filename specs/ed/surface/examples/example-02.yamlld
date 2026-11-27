@@ -1,0 +1,34 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+id: https://example.com/ujg/surface/checkout.jsonld
+type: UJGDocument
+nodes:
+  - type: Persona
+    id: urn:ujg:persona:customer
+    label: Customer
+    touchpoints:
+      - urn:ujg:touchpoint:web
+  - type: Touchpoint
+    id: urn:ujg:touchpoint:web
+    label: Web shop
+    channel: web
+    journeys:
+      - urn:ujg:journey:checkout
+  - type: Journey
+    id: urn:ujg:journey:checkout
+    defaultEntry: urn:ujg:entry:checkout-default
+    entries:
+      - type: JourneyEntry
+        id: urn:ujg:entry:checkout-default
+        state: urn:ujg:state:shipping
+    states:
+      - type: State
+        id: urn:ujg:state:shipping
+        label: Shipping
+  - type: Surface
+    id: urn:ujg:surface:shipping-form
+    graphNode: urn:ujg:state:shipping
+  - type: SurfaceInstance
+    id: urn:ujg:surface-instance:shipping-form:1
+    surface: urn:ujg:surface:shipping-form

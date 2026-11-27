@@ -1,0 +1,12 @@
+{
+  "kind": "fragment",
+  "modules": [
+    "core",
+    "graph",
+    "surface",
+    "modules/l10n",
+    "modules/observability"
+  ],
+  "source": "https://example.com/ujg/examples/modules/observability/example-11.yamlld",
+  "validation": "source"
+}

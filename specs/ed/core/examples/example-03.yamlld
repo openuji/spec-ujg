@@ -1,0 +1,7 @@
+"@context": https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+id: https://example.com/ujg/core/document-extension.jsonld
+type: UJGDocument
+extensions:
+  com.example.package:
+    source: private-tooling
+nodes: []

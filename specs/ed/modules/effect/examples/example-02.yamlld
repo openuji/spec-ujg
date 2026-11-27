@@ -1,0 +1,28 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/effect.context.jsonld
+id: https://example.com/ujg/effect/checkout.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:transition:submit-payment
+    type: Transition
+    from: urn:state:payment
+    to: urn:state:confirmation
+    effect:
+      id: urn:effect:authorize-payment
+      type: Effect
+  - id: urn:journey:payment
+    type: Journey
+    states:
+      - id: urn:state:payment
+        type: State
+        label: Payment
+      - id: urn:state:confirmation
+        type: State
+        label: Confirmation
+    entries:
+      - id: urn:entry:payment
+        type: JourneyEntry
+        state: urn:state:payment
+    transitions:
+      - urn:transition:submit-payment

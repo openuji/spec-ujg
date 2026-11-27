@@ -1,40 +1,36 @@
 {
   "@context": {
     "@version": 1.1,
-
     "ujgmapping": "https://ujg.specs.openuji.org/ed/ns/mapping#",
-    "mapping": "https://ujg.specs.openuji.org/ed/ns/mapping#",
-
     "JourneyMapping": "ujgmapping:JourneyMapping",
     "MappedStep": "ujgmapping:MappedStep",
-
-    "mappedJourneyRef": {
-      "@id": "ujgmapping:mappedJourneyRef",
+    "mappedJourney": {
+      "@id": "ujgmapping:mappedJourney",
       "@type": "@id"
     },
-    "mappedRuntimeRef": {
-      "@id": "ujgmapping:mappedRuntimeRef",
+    "mappedRuntime": {
+      "@id": "ujgmapping:mappedRuntime",
       "@type": "@id"
     },
-    "mappedStepRef": {
-      "@id": "ujgmapping:mappedStepRef",
+    "mappedSteps": {
+      "@id": "ujgmapping:mappedSteps",
       "@type": "@id",
       "@container": "@set"
     },
-    "mappedEventRef": {
-      "@id": "ujgmapping:mappedEventRef",
+    "mappedEvent": {
+      "@id": "ujgmapping:mappedEvent",
       "@type": "@id"
     },
-    "observedAffordanceEventRef": {
-      "@id": "ujgmapping:observedAffordanceEventRef",
+    "observedAffordanceEvent": {
+      "@id": "ujgmapping:observedAffordanceEvent",
       "@type": "@id"
     },
-    "mappedStateRef": {
-      "@id": "ujgmapping:mappedStateRef",
+    "mappedState": {
+      "@id": "ujgmapping:mappedState",
       "@type": "@id"
     },
-    "explainedByTransitionRef": {
-      "@id": "ujgmapping:explainedByTransitionRef",
+    "explainedByTransition": {
+      "@id": "ujgmapping:explainedByTransition",
       "@type": "@id"
     }
   }

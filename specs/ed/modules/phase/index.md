@@ -2,7 +2,7 @@
 
 This optional module defines journey-map grouping over intended Graph topology. A [=Phase=] is a
 high-level grouping, and a [=Step=] identifies one experienced [=CompositeState=] through
-`compositeStateRef`.
+`compositeState`.
 
 The module is intentionally first-level. It attaches directly to [[UJG Graph]] composition without
 requiring Surface, Runtime, Mapping, Observability, or Design System data. Surfaces describe how
@@ -31,7 +31,7 @@ metadata; it does not determine Graph traversal, Mapping step order, or Runtime 
 2. A [=Phase=] **MAY** declare at most one integer `order`.
 3. `order` **MUST NOT** be interpreted as Graph traversal, Mapping step order, Runtime event order,
    occurrence, or phase start.
-4. A [=Phase=] groups the [=Step|Steps=] whose `phaseRef` resolves to it; it
+4. A [=Phase=] groups the [=Step|Steps=] whose `phase` resolves to it; it
    does not list or own them.
 5. A [=Phase=] **MUST NOT** directly reference journeys, composite states, states, or surfaces.
 </spec-statement>
@@ -44,34 +44,30 @@ classDiagram
   }
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "Phase",
-  "@id": "urn:ujg:phase:checkout",
-  "order": 2
-}
+```ujg-example
+./examples/example-03.yamlld
 ```
 
 ## Step {data-cop-concept="step"}
 
 A [=Step=] identifies one experienced [=CompositeState=]. The referenced composite state represents
-a distinct nested segment of the intended journey topology; its `subjourneyRefs` identify the child
+a distinct nested segment of the intended journey topology; its `subjourneys` identify the child
 journeys contained by that segment.
 
 <spec-statement>
 1. A [=Step=] **MUST** be identified by an IRI.
-2. A [=Step=] **MUST** declare exactly one `compositeStateRef`.
-3. `compositeStateRef` **MUST** reference a [=CompositeState=] defined in the Graph model.
-4. A [=Step=] **MAY** declare at most one `phaseRef` referencing a [=Phase=].
+2. A [=Step=] **MUST** declare exactly one `compositeState`.
+3. `compositeState` **MUST** reference a [=CompositeState=] defined in the Graph model.
+4. A [=Step=] **MAY** declare at most one `phase` referencing a [=Phase=].
 5. A [=Step=] **MAY** declare at most one integer `order`.
 6. `order` **MUST NOT** be interpreted as Graph traversal, child journey traversal order, Mapping
    step order, Runtime event order, occurrence, or phase start.
-7. `compositeStateRef` **MUST NOT** create traversal, alter transition semantics, select child
+7. `compositeState` **MUST NOT** create traversal, alter transition semantics, select child
    journey entries, or imply Runtime execution order.
 8. A [=Step=] **MUST NOT** use Surface resources as its semantic subject.
-9. A [=Step=]'s `compositeStateRef` remains singular even when the referenced [=CompositeState=]
+9. A [=Step=]'s `compositeState` remains singular even when the referenced [=CompositeState=]
    contains more than one child [=Journey=].
 </spec-statement>
 
@@ -81,35 +77,29 @@ classDiagram
   class Phase
   class Step {
     id
-    compositeStateRef
-    phaseRef
+    compositeState
+    phase
     order
   }
-  Step --> CompositeState : compositeStateRef
-  Step --> Phase : phaseRef
+  Step --> CompositeState : compositeState
+  Step --> Phase : phase
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "Step",
-  "@id": "urn:ujg:step:enter-shipping",
-  "compositeStateRef": "urn:ujg:state:shipping-segment",
-  "phaseRef": "urn:ujg:phase:checkout",
-  "order": 1
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 ## Shared Semantics
 
-1. `compositeStateRef` is the canonical assignment from a [=Step=] to Graph topology.
-2. A [=Phase=]'s associated topology is derived from the `compositeStateRef` values of the
-   [=Step|Steps=] that reference it with `phaseRef`.
-3. The `subjourneyRefs` values of the referenced [=CompositeState=] identify contained child
+1. `compositeState` is the canonical assignment from a [=Step=] to Graph topology.
+2. A [=Phase=]'s associated topology is derived from the `compositeState` values of the
+   [=Step|Steps=] that reference it with `phase`.
+3. The `subjourneys` values of the referenced [=CompositeState=] identify contained child
    journeys; their serialization order does not imply child traversal order, priority,
    synchronization, or completion order.
-4. `Step.order`, `Phase.order`, and `subjourneyRefs` order do not imply child traversal order.
+4. `Step.order`, `Phase.order`, and `subjourneys` order do not imply child traversal order.
 5. [=Step=] and [=Phase=] terms do not repair missing Graph topology.
 6. Consumers that do not implement this module MAY ignore Phase semantics while preserving
    recognized JSON-LD data during read-transform-write.
@@ -138,62 +128,6 @@ The Phase SHACL shape is published at `https://ujg.specs.openuji.org/ed/ns/phase
 
 ### Graph Segment With Phase Grouping
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/phase.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/phase/checkout.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "Journey",
-      "@id": "urn:ujg:journey:checkout-page",
-      "defaultEntryRef": "urn:ujg:entry:checkout-page-default",
-      "entryRefs": ["urn:ujg:entry:checkout-page-default"],
-      "stateRefs": ["urn:ujg:state:shipping-segment"]
-    },
-    {
-      "@type": "JourneyEntry",
-      "@id": "urn:ujg:entry:checkout-page-default",
-      "stateRef": "urn:ujg:state:shipping-segment"
-    },
-    {
-      "@type": "CompositeState",
-      "@id": "urn:ujg:state:shipping-segment",
-      "label": "Shipping segment",
-      "subjourneyRefs": ["urn:ujg:journey:shipping-segment"]
-    },
-    {
-      "@type": "Journey",
-      "@id": "urn:ujg:journey:shipping-segment",
-      "defaultEntryRef": "urn:ujg:entry:shipping-default",
-      "entryRefs": ["urn:ujg:entry:shipping-default"],
-      "stateRefs": ["urn:ujg:state:shipping-form"]
-    },
-    {
-      "@type": "JourneyEntry",
-      "@id": "urn:ujg:entry:shipping-default",
-      "stateRef": "urn:ujg:state:shipping-form"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:shipping-form",
-      "label": "Shipping form"
-    },
-    {
-      "@type": "Phase",
-      "@id": "urn:ujg:phase:checkout",
-      "order": 2
-    },
-    {
-      "@type": "Step",
-      "@id": "urn:ujg:step:enter-shipping",
-      "compositeStateRef": "urn:ujg:state:shipping-segment",
-      "phaseRef": "urn:ujg:phase:checkout",
-      "order": 1
-    }
-  ]
-}
+```ujg-example
+./examples/example-01.yamlld
 ```

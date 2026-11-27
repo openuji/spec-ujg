@@ -1,0 +1,6 @@
+type: Transition
+id: urn:ujg:transition:search-form-to-results
+label: Submit search
+from: urn:ujg:state:search-form
+to: urn:ujg:state:results
+command: urn:ujg:command:submit-search

@@ -9,7 +9,7 @@ it does **not** change graph topology, traversal rules, entry ownership, or impo
 
 ## Terminology
 
-* <dfn>EntryBinding</dfn>: An addressable binding from an opaque `value` to a [=JourneyEntry=].
+* <dfn>EntryBinding</dfn>: An addressable binding from an opaque `bindingValue` to a [=JourneyEntry=].
 
 ## EntryBinding {data-cop-concept="entry-binding"}
 
@@ -20,35 +20,30 @@ An [=EntryBinding=] is an addressable resource that identifies one opaque value 
 classDiagram
   class EntryBinding {
     id
-    entryRef
-    value
+    entry
+    bindingValue
   }
   class JourneyEntry
-  EntryBinding --> JourneyEntry : entryRef
+  EntryBinding --> JourneyEntry : entry
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "EntryBinding",
-  "@id": "urn:ujg:entry-binding:checkout",
-  "entryRef": "urn:ujg:entry:checkout-default",
-  "value": "checkout"
-}
+```ujg-example
+./examples/example-03.yamlld
 ```
 
 ## Attachment Model
 
 The module introduces real JSON-LD terms and RDF edges for entry binding:
 
-* `entryRef` links an `EntryBinding` to a [=JourneyEntry=].
-* `value` carries an opaque string interpreted outside UJG by the current materialization context.
+* `entry` links an `EntryBinding` to a [=JourneyEntry=].
+* `bindingValue` carries an opaque string interpreted outside UJG by the current materialization context.
 
 `EntryBinding` does not declare a touchpoint, materialization discriminator, fallback target,
 structured invocation fields, or execution rule.
 
-If an `EntryBinding` references a [=JourneyEntry=] whose `stateRef` points to a
+If an `EntryBinding` references a [=JourneyEntry=] whose `state` points to a
 [=CompositeState=], the binding selects only that outer entry. It does not select an entry of the
 composite state's child [=Journey=].
 
@@ -106,7 +101,7 @@ the SHACL shape.
 1. **Entry selection only:** Entry Binding properties **MUST NOT** change Graph validity, graph
    traversal behavior, import resolution, or core node identity.
 2. **Opaque value:** Consumers **MUST NOT** infer materialization syntax, protocol, addressing
-   semantics, execution behavior, fallback behavior, or structured invocation data from `value`.
+   semantics, execution behavior, fallback behavior, or structured invocation data from `bindingValue`.
 3. **Graceful degradation:** A consumer that does not implement this module **MAY** ignore Entry
    Binding semantics, but it **SHOULD** preserve recognized JSON-LD data during read-transform-write
    when possible.
@@ -119,61 +114,12 @@ the SHACL shape.
 
 ### Combined JSON Example
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/entry-binding.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/entry-binding/checkout.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "Journey",
-      "@id": "urn:ujg:journey:checkout",
-      "label": "Checkout",
-      "defaultEntryRef": "urn:ujg:entry:checkout-default",
-      "entryRefs": [
-        "urn:ujg:entry:checkout-default"
-      ],
-      "stateRefs": [
-        "urn:ujg:state:checkout-start"
-      ]
-    },
-    {
-      "@type": "JourneyEntry",
-      "@id": "urn:ujg:entry:checkout-default",
-      "label": "Checkout default",
-      "stateRef": "urn:ujg:state:checkout-start"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:checkout-start",
-      "label": "Checkout start"
-    },
-    {
-      "@type": "EntryBinding",
-      "@id": "urn:ujg:entry-binding:checkout",
-      "entryRef": "urn:ujg:entry:checkout-default",
-      "value": "checkout"
-    }
-  ]
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 ### Private Invocation Hints
 
-```json
-{
-  "@id": "urn:ujg:entry-binding:checkout",
-  "@type": "EntryBinding",
-  "entryRef": "urn:ujg:entry:checkout-default",
-  "value": "checkout",
-  "extensions": {
-    "com.acme.launcher": {
-      "prefetch": "intent",
-      "cachePolicy": "stale-while-revalidate"
-    }
-  }
-}
+```ujg-example
+./examples/example-01.yamlld
 ```

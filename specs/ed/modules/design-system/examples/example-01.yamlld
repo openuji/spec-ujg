@@ -1,0 +1,46 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld
+id: https://example.com/ujg/multiple-design-systems.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:state:checkout
+    type: State
+    label: Checkout
+  - id: urn:surface:checkout
+    type: Surface
+    graphNode: urn:state:checkout
+  - id: urn:component:Checkout
+    type: Component
+    label: Checkout component
+  - id: urn:materialization:checkout
+    type: SurfaceMaterialization
+    label: Checkout materialization
+    materializedSurface: urn:surface:checkout
+    component: urn:component:Checkout
+  - id: urn:theme:web
+    type: Theme
+    label: Web theme
+    tokenSources:
+      - id: urn:ujg:token-source:web
+        type: TokenSource
+        label: Web token source
+        source: design/tokens/web.tokens.json
+  - id: urn:theme:kiosk
+    type: Theme
+    label: Kiosk theme
+    tokenSources:
+      - id: urn:ujg:token-source:kiosk
+        type: TokenSource
+        label: Kiosk token source
+        source: design/tokens/kiosk.tokens.json
+  - id: urn:theme:cli
+    type: Theme
+    label: CLI theme
+    tokenSources:
+      - id: urn:ujg:token-source:cli
+        type: TokenSource
+        label: CLI token source
+        source: design/tokens/cli.tokens.json

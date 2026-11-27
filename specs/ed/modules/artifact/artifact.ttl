@@ -18,20 +18,20 @@ ujgartifact:Artifact a owl:Class ;
 
 ### Properties
 
-ujgartifact:nameRef a owl:ObjectProperty ;
+ujgartifact:name a owl:ObjectProperty ;
   rdfs:domain ujgartifact:Artifact ;
   rdfs:range ujgl10n:MessageMeta ;
-  rdfs:label "name ref" ;
+  rdfs:label "name" ;
   rdfs:comment "References localized MessageMeta used as the artifact's human-facing name." .
 
-ujgartifact:sourceTouchpointRef a owl:ObjectProperty ;
+ujgartifact:sourceTouchpoint a owl:ObjectProperty ;
   rdfs:domain ujgartifact:Artifact ;
   rdfs:range ujgsurface:Touchpoint ;
-  rdfs:label "source touchpoint ref" ;
+  rdfs:label "sourceTouchpoint" ;
   rdfs:comment "References the Touchpoint where this artifact is produced, exported, or made available." .
 
-ujgartifact:targetTouchpointRefs a owl:ObjectProperty ;
+ujgartifact:targetTouchpoints a owl:ObjectProperty ;
   rdfs:domain ujgartifact:Artifact ;
   rdfs:range ujgsurface:Touchpoint ;
-  rdfs:label "target touchpoint refs" ;
+  rdfs:label "targetTouchpoints" ;
   rdfs:comment "References Touchpoints where this artifact is consumed, imported, redeemed, or otherwise used." .

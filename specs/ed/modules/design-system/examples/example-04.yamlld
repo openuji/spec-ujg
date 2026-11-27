@@ -1,0 +1,22 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld
+id: https://example.com/ujg/cart-component.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:state:cart
+    type: State
+    label: Cart
+  - id: urn:surface:cart
+    type: Surface
+    graphNode: urn:state:cart
+  - id: urn:component:CartView
+    type: Component
+    label: Cart view component
+  - id: urn:materialization:cart-web
+    type: SurfaceMaterialization
+    label: Cart web materialization
+    materializedSurface: urn:surface:cart
+    component: urn:component:CartView

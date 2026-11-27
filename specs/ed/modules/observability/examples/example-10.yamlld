@@ -1,0 +1,4 @@
+type: AccessibleFeature
+id: urn:ujg:accessible-feature:selected-true
+accessibleFeatureName: selected
+accessibleFeatureValue: "true"

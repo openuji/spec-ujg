@@ -1,0 +1,12 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/effect.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/artifact.context.jsonld
+id: https://example.com/ujg/artifact/export.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:effect:prepare-export
+    type: Effect
+    producedResources:
+      - id: urn:artifact:account-archive
+        type: Artifact

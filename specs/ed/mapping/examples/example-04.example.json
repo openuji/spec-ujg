@@ -1,0 +1,13 @@
+{
+  "kind": "fragment",
+  "modules": [
+    "core",
+    "graph",
+    "surface",
+    "runtime",
+    "modules/phase",
+    "mapping"
+  ],
+  "source": "https://example.com/ujg/examples/mapping/example-04.yamlld",
+  "validation": "source"
+}

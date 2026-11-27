@@ -1,0 +1,13 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "modules/condition",
+    "modules/effect",
+    "modules/entry-binding",
+    "extensions/domain-model"
+  ],
+  "source": "https://example.com/ujg/examples/extensions/domain-model/example-01.yamlld",
+  "validation": "full"
+}

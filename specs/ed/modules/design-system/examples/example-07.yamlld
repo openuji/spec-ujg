@@ -1,0 +1,5 @@
+type: Theme
+id: urn:ujg:theme:shop
+label: Shop theme
+tokenSources:
+  - urn:ujg:token-source:brand

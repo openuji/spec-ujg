@@ -104,7 +104,7 @@ ujgoperability:backward a owl:NamedIndividual, ujgoperability:MaterializationDir
 
 ### Properties
 
-ujgoperability:materializationTransitionRef a owl:ObjectProperty ;
+ujgoperability:materializationTransition a owl:ObjectProperty ;
   rdfs:domain ujgoperability:TransitionMaterialization ;
   rdfs:range [
     a owl:Class ;
@@ -115,16 +115,16 @@ ujgoperability:materializationTransitionRef a owl:ObjectProperty ;
       ujggraph:InvokingTransition
     )
   ] ;
-  rdfs:label "materialization transition ref" ;
-  rdfs:comment "References the Graph transition that a TransitionMaterialization performs. A Transition with fromExitRef is taken when the child exit is reached, not by a user action, so it is never materialized." .
+  rdfs:label "materializationTransition" ;
+  rdfs:comment "References the Graph transition that a TransitionMaterialization performs. A Transition with fromExit is taken when the child exit is reached, not by a user action, so it is never materialized." .
 
-ujgoperability:materializationModalityRef a owl:ObjectProperty ;
+ujgoperability:materializationModality a owl:ObjectProperty ;
   rdfs:domain ujgoperability:TransitionMaterialization ;
   rdfs:range ujgobservability:InputModality ;
-  rdfs:label "materialization modality ref" ;
+  rdfs:label "materializationModality" ;
   rdfs:comment "References the input modality through which a TransitionMaterialization performs its transition." .
 
-ujgoperability:materializationStepRefs a owl:ObjectProperty ;
+ujgoperability:materializationSteps a owl:ObjectProperty ;
   rdfs:domain ujgoperability:TransitionMaterialization ;
   rdfs:range [
     a owl:Class ;
@@ -134,10 +134,10 @@ ujgoperability:materializationStepRefs a owl:ObjectProperty ;
       ujgoperability:ShortcutStep
     )
   ] ;
-  rdfs:label "materialization step refs" ;
-  rdfs:comment "References the materialization steps of a TransitionMaterialization. The values form a set; step order comes from stepPreviousRef." .
+  rdfs:label "materializationSteps" ;
+  rdfs:comment "References the materialization steps of a TransitionMaterialization. The values form a set; step order comes from previousStep." .
 
-ujgoperability:materializationStartLocatorRef a owl:ObjectProperty ;
+ujgoperability:materializationStartLocator a owl:ObjectProperty ;
   rdfs:domain ujgoperability:TransitionMaterialization ;
   rdfs:range [
     a owl:Class ;
@@ -146,22 +146,22 @@ ujgoperability:materializationStartLocatorRef a owl:ObjectProperty ;
       ujgobservability:CustomLocator
     )
   ] ;
-  rdfs:label "materialization start locator ref" ;
+  rdfs:label "materializationStartLocator" ;
   rdfs:comment "References a locator for the object the user is at before the first step." .
 
-ujgoperability:materializationSourceStateRef a owl:ObjectProperty ;
+ujgoperability:materializationSourceState a owl:ObjectProperty ;
   rdfs:domain ujgoperability:TransitionMaterialization ;
   rdfs:range ujggraph:State ;
-  rdfs:label "materialization source state ref" ;
+  rdfs:label "materializationSourceState" ;
   rdfs:comment "References the State in which the steps are performed when the transition does not determine it: a State that lists the materialized entry transition, or a State nested in the CompositeState that the materialized transition leaves." .
 
-ujgoperability:materializationDirectionRef a owl:ObjectProperty ;
+ujgoperability:materializationDirection a owl:ObjectProperty ;
   rdfs:domain ujgoperability:TransitionMaterialization ;
   rdfs:range ujgoperability:MaterializationDirection ;
-  rdfs:label "materialization direction ref" ;
+  rdfs:label "materializationDirection" ;
   rdfs:comment "References which of the two movements of the materialized AdjacentTransition a TransitionMaterialization performs." .
 
-ujgoperability:stepPreviousRef a owl:ObjectProperty ;
+ujgoperability:previousStep a owl:ObjectProperty ;
   rdfs:domain [
     a owl:Class ;
     owl:unionOf (
@@ -178,10 +178,10 @@ ujgoperability:stepPreviousRef a owl:ObjectProperty ;
       ujgoperability:ShortcutStep
     )
   ] ;
-  rdfs:label "step previous ref" ;
+  rdfs:label "previousStep" ;
   rdfs:comment "References the materialization step that a step follows. The first step of a materialization follows no step." .
 
-ujgoperability:stepLocatorRef a owl:ObjectProperty ;
+ujgoperability:stepLocator a owl:ObjectProperty ;
   rdfs:domain [
     a owl:Class ;
     owl:unionOf (
@@ -197,10 +197,10 @@ ujgoperability:stepLocatorRef a owl:ObjectProperty ;
       ujgobservability:CustomLocator
     )
   ] ;
-  rdfs:label "step locator ref" ;
+  rdfs:label "stepLocator" ;
   rdfs:comment "References a locator for the object that a materialization step reaches or acts on." .
 
-ujgoperability:stepMoveKindRef a owl:ObjectProperty ;
+ujgoperability:stepMoveKind a owl:ObjectProperty ;
   rdfs:domain ujgoperability:MoveStep ;
   rdfs:range [
     a owl:Class ;
@@ -209,5 +209,5 @@ ujgoperability:stepMoveKindRef a owl:ObjectProperty ;
       ujgoperability:MoveKind
     )
   ] ;
-  rdfs:label "step move kind ref" ;
+  rdfs:label "stepMoveKind" ;
   rdfs:comment "References the kind of move that a MoveStep performs: a FocusMoveKind, or a MoveKind for a move that does not move focus." .

@@ -1,0 +1,23 @@
+- type: Journey
+  id: urn:ujg:journey:workshop-detail
+  label: Workshop detail
+  entries:
+    - urn:ujg:entry:workshop-registration-open
+    - urn:ujg:entry:workshop-waitlist-open
+    - urn:ujg:entry:workshop-registration-closed
+  states:
+    - urn:ujg:state:workshop-registration-open
+    - urn:ujg:state:workshop-waitlist-open
+    - urn:ujg:state:workshop-registration-closed
+- type: JourneyEntry
+  id: urn:ujg:entry:workshop-registration-open
+  label: Registration open
+  state: urn:ujg:state:workshop-registration-open
+- type: JourneyEntry
+  id: urn:ujg:entry:workshop-waitlist-open
+  label: Waitlist open
+  state: urn:ujg:state:workshop-waitlist-open
+- type: JourneyEntry
+  id: urn:ujg:entry:workshop-registration-closed
+  label: Registration closed
+  state: urn:ujg:state:workshop-registration-closed

@@ -1,0 +1,4 @@
+type: JourneyEntry
+id: urn:ujg:entry:site-search-default
+label: Default search entry
+state: urn:ujg:state:search-form

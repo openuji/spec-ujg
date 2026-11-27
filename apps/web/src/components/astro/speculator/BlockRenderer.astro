@@ -6,6 +6,7 @@ import Mermaid from './Mermaid.astro';
 import StatGrid from './StatGrid.astro';
 import BarChart from './BarChart.astro';
 import CodeCustom from './CodeCustom.astro';
+import CodeExample from './CodeExample.astro';
 import type { CodeLanguage } from 'astro';
 
 interface Props {
@@ -87,6 +88,12 @@ const getSectionNumber = (sectionId?: string): string | undefined => {
       }
 
       case 'codeBlock': {
+        if (node.lang === 'ujg-example' && documentPath) {
+          return (
+            <CodeExample reference={node.value.trim()} documentPath={documentPath} id={node.id} />
+          );
+        }
+
         // Handle Mermaid diagrams
         if (node.lang === 'mermaid') {
           return <Mermaid code={node.value} id={node.id} />;

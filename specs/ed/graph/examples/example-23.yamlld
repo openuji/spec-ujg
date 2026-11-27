@@ -1,0 +1,5 @@
+type: State
+id: urn:ujg:state:search-form
+label: Search form
+tags:
+  - ujgphase:search

@@ -1,0 +1,76 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld
+id: https://example.com/ujg/refund-template.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:state:refund
+    type: State
+    label: Refund request
+  - id: urn:surface:refund
+    type: Surface
+    graphNode: urn:state:refund
+  - id: urn:surface:refund-form
+    type: Surface
+    graphNode: urn:state:refund
+  - id: urn:transition:submit-refund
+    type: Transition
+    from: urn:state:refund
+    to: urn:state:refund-submitted
+    command:
+      id: urn:command:submit-refund
+      type: Command
+      label: Submit refund
+  - id: urn:surface:submit-refund
+    type: Surface
+    graphNode: urn:command:submit-refund
+  - id: urn:component:RefundForm
+    type: Component
+    label: Refund form component
+  - id: urn:materialization:refund-form-fields
+    type: SurfaceMaterialization
+    label: Refund form fields materialization
+    materializedSurface: urn:surface:refund-form
+    component: urn:component:RefundForm
+  - id: urn:template:FormShell
+    type: Template
+    label: Form shell template
+    slots:
+      - id: urn:slot:main
+        type: Slot
+        label: Main content slot
+      - id: urn:slot:submit
+        type: Slot
+        label: Submit action slot
+  - id: urn:materialization:refund-form
+    type: SurfaceMaterialization
+    label: Refund form materialization
+    materializedSurface: urn:surface:refund
+    template: urn:template:FormShell
+    slotBindings:
+      - id: urn:binding:refund-main
+        type: SlotBinding
+        label: Refund main slot binding
+        slot: urn:slot:main
+        targetSurface: urn:surface:refund-form
+      - id: urn:binding:refund-submit
+        type: SlotBinding
+        label: Refund submit slot binding
+        slot: urn:slot:submit
+        targetSurface: urn:surface:submit-refund
+  - id: urn:state:refund-submitted
+    type: State
+    label: Refund submitted
+  - id: urn:journey:refund
+    type: Journey
+    states:
+      - urn:state:refund
+      - urn:state:refund-submitted
+    entries:
+      - id: urn:entry:refund
+        type: JourneyEntry
+        state: urn:state:refund
+    transitions:
+      - urn:transition:submit-refund

@@ -1,0 +1,8 @@
+id: urn:ujg:entry-binding:checkout
+type: EntryBinding
+entry: urn:ujg:entry:checkout-default
+bindingValue: checkout
+extensions:
+  com.acme.launcher:
+    prefetch: intent
+    cachePolicy: stale-while-revalidate

@@ -1,0 +1,48 @@
+- type: State
+  id: urn:ujg:state:article
+  label: Article
+  entryTransitions:
+    - urn:ujg:it:adjust-privacy-settings
+- type: InvokingTransition
+  id: urn:ujg:it:adjust-privacy-settings
+  label: Adjust privacy settings
+  toEntry: urn:ujg:entry:privacy-settings
+  command: urn:ujg:command:adjust-privacy-settings
+- type: Command
+  id: urn:ujg:command:adjust-privacy-settings
+  label: Adjust privacy settings
+- type: Journey
+  id: urn:ujg:journey:privacy-settings
+  defaultEntry: urn:ujg:entry:privacy-settings
+  entries:
+    - urn:ujg:entry:privacy-settings
+  states:
+    - urn:ujg:state:privacy-settings
+  transitions:
+    - urn:ujg:transition:privacy-settings-save
+    - urn:ujg:transition:privacy-settings-dismiss
+  exits:
+    - urn:ujg:exit:settings-saved
+    - urn:ujg:exit:settings-dismissed
+- type: JourneyEntry
+  id: urn:ujg:entry:privacy-settings
+  state: urn:ujg:state:privacy-settings
+- type: State
+  id: urn:ujg:state:privacy-settings
+  label: Privacy settings
+- type: Transition
+  id: urn:ujg:transition:privacy-settings-save
+  label: Save
+  from: urn:ujg:state:privacy-settings
+  to: urn:ujg:exit:settings-saved
+- type: Transition
+  id: urn:ujg:transition:privacy-settings-dismiss
+  label: Back
+  from: urn:ujg:state:privacy-settings
+  to: urn:ujg:exit:settings-dismissed
+- type: JourneyExit
+  id: urn:ujg:exit:settings-saved
+  label: Settings saved
+- type: JourneyExit
+  id: urn:ujg:exit:settings-dismissed
+  label: Settings dismissed

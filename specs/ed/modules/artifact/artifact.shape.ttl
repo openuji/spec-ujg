@@ -9,32 +9,32 @@ ujgartifactshape:ArtifactShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgartifact:nameRef ;
+    sh:path ujgartifact:name ;
     sh:class ujgl10n:MessageMeta ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgartifact:sourceTouchpointRef ;
+    sh:path ujgartifact:sourceTouchpoint ;
     sh:class ujgsurface:Touchpoint ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgartifact:targetTouchpointRefs ;
+    sh:path ujgartifact:targetTouchpoints ;
     sh:class ujgsurface:Touchpoint ;
     sh:nodeKind sh:IRI ;
   ] .
 
 ujgartifactshape:ArtifactTouchpointUsageShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgartifact:sourceTouchpointRef ;
-  sh:targetSubjectsOf ujgartifact:targetTouchpointRefs ;
+  sh:targetSubjectsOf ujgartifact:sourceTouchpoint ;
+  sh:targetSubjectsOf ujgartifact:targetTouchpoints ;
   sh:class ujgartifact:Artifact ;
   sh:nodeKind sh:IRI .
 
 ujgartifactshape:ArtifactNameUsageShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgartifact:nameRef ;
+  sh:targetSubjectsOf ujgartifact:name ;
   sh:class ujgartifact:Artifact ;
   sh:nodeKind sh:IRI .

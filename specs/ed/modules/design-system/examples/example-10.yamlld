@@ -1,0 +1,5 @@
+type: Template
+id: urn:ujg:template:checkout-layout
+label: Checkout layout template
+slots:
+  - urn:ujg:slot:checkout-main

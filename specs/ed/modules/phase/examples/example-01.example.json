@@ -1,0 +1,10 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "modules/phase"
+  ],
+  "source": "https://example.com/ujg/examples/modules/phase/example-01.yamlld",
+  "validation": "full"
+}

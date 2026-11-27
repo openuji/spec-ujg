@@ -6,7 +6,7 @@ The **User Journey Graph (UJG)** standardizes user experience as **computable da
 
 The main spec family is organized into five logical layers:
 
-1. **The Core (Transport):** The universal JSON-LD envelope. Ensures any tool—human or AI—can parse the file structure without ambiguity.
+1. **The Core (Transport):** The JSON-LD or YAML-LD document container, with root-oriented authoring and derived local membership. Ensures any tool—human or AI—can parse the file structure without ambiguity.
 2. **The Graph (Definition):** Defines the "Happy Path." It is the vocabulary for States, Transitions, and Composition (sub-journey referencing).
 3. **The Surface (Materialization):** Exposes supported Graph nodes as addressable
    human-facing surfaces, touchpoints scoped to Journey boundaries, human users, and visible

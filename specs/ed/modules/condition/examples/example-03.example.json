@@ -1,0 +1,10 @@
+{
+  "kind": "context",
+  "modules": [
+    "core",
+    "graph",
+    "modules/condition"
+  ],
+  "source": "https://example.com/ujg/examples/modules/condition/example-03.yamlld",
+  "validation": "source"
+}

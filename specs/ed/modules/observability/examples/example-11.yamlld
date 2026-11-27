@@ -1,0 +1,5 @@
+type: InputModalityProfile
+id: urn:ujg:input-modality-profile:keyboard
+label: Keyboard
+inputModalities:
+  - ujgobservability:keyboard

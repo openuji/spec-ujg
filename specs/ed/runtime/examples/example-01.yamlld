@@ -1,0 +1,38 @@
+"@context": https://ujg.specs.openuji.org/ed/ns/context.jsonld
+id: https://example.com/ujg/runtime/execution-12345.jsonld
+type: UJGDocument
+nodes:
+  - type: JourneyExecution
+    id: urn:ujg:execution:12345
+  - type: State
+    id: urn:ujg:state:shipping-form
+    label: Shipping form
+  - type: State
+    id: urn:ujg:state:payment-card
+    label: Payment card
+  - type: Surface
+    id: urn:ujg:surface:shipping-form
+    graphNode: urn:ujg:state:shipping-form
+  - type: Surface
+    id: urn:ujg:surface:payment-card
+    graphNode: urn:ujg:state:payment-card
+  - type: SurfaceInstance
+    id: urn:ujg:surface-instance:shipping-form
+    surface: urn:ujg:surface:shipping-form
+  - type: SurfaceInstance
+    id: urn:ujg:surface-instance:payment-card
+    surface: urn:ujg:surface:payment-card
+  - type: RuntimeEvent
+    id: urn:ujg:event:12345:100
+    execution: urn:ujg:execution:12345
+    surfaceInstance: urn:ujg:surface-instance:shipping-form
+    payload:
+      action: surface.enter
+  - type: RuntimeEvent
+    id: urn:ujg:event:12345:200
+    execution: urn:ujg:execution:12345
+    previousEvent: urn:ujg:event:12345:100
+    surfaceInstance: urn:ujg:surface-instance:payment-card
+    payload:
+      action: field.complete
+      field: card-number

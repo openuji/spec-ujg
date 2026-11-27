@@ -1,0 +1,10 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "modules/entry-binding"
+  ],
+  "source": "https://example.com/ujg/examples/modules/entry-binding/example-02.yamlld",
+  "validation": "full"
+}

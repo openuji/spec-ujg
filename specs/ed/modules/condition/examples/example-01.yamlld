@@ -1,0 +1,8 @@
+type: Condition
+id: urn:ujg:condition:current-branch-differs-from-chat-branch
+label: Current IDE Git branch differs from the branch associated with this Codex chat session
+extensions:
+  com.example.runtime-condition:
+    conditionKey: ide.git.currentBranchDiffersFromChatBranch
+    domain: ide.git
+    evaluator: product-private

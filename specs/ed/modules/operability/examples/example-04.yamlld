@@ -1,0 +1,8 @@
+- type: MoveStep
+  id: urn:ujg:step:select-drafts:keyboard:4
+  previousStep: urn:ujg:step:select-drafts:keyboard:3
+  stepMoveKind: ujgoperability:nextItem
+  stepLocator: urn:ujg:locator:drafts-tab
+- type: ActivationStep
+  id: urn:ujg:step:select-drafts:keyboard:5
+  previousStep: urn:ujg:step:select-drafts:keyboard:4

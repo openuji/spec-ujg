@@ -1,0 +1,17 @@
+- type: Journey
+  id: urn:ujg:journey:w3c-homepage
+  defaultEntry: urn:ujg:entry:w3c-homepage
+  entries:
+    - urn:ujg:entry:w3c-homepage
+  states:
+    - urn:ujg:state:w3c-root-homepage
+- type: JourneyEntry
+  id: urn:ujg:entry:w3c-homepage
+  state: urn:ujg:state:w3c-root-homepage
+- type: State
+  id: urn:ujg:state:w3c-root-homepage
+  label: W3C homepage
+- type: OutgoingTransition
+  id: urn:ujg:ot:w3c-searchpage-form-back-home
+  label: Back to home page
+  toEntry: urn:ujg:entry:w3c-homepage

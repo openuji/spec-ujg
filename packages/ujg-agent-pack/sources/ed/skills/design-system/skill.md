@@ -27,19 +27,19 @@ Use this dependency direction:
 
 ```text
 State / CompositeState / Command
-          ↑ graphNodeRef
+          ↑ graphNode
         Surface
-          ↑ surfaceRef
+          ↑ materializedSurface
   SurfaceMaterialization
-      ├── componentRef
-      └── templateRef
-             └── slotBindingRefs
+      ├── component
+      └── template
+             └── slotBindings
 Transition / OutgoingTransition / InvokingTransition
-          └── commandRef → Command
+          └── command → Command
 any addressable UJG node
-          └── l10n:copyRef → l10n:MessageBundle
+          └── ujgl10n:copy → ujgl10n:MessageMeta
 Theme
-          └── tokenSourceRefs
+          └── tokenSources
 ```
 Responsibilities:
 - Graph defines intended experience topology and progression.
@@ -66,18 +66,18 @@ SlotBinding
 Properties:
 
 ```text
-tokenSourceRefs
+tokenSources
 source
-surfaceRef
-componentRef
-templateRef
-slotBindingRefs
-slotRefs
-slotRef
-targetSurfaceRef
+materializedSurface
+component
+template
+slotBindings
+slots
+slot
+targetSurface
 ```
 Do not invent or restore stale Design System terms such as `SurfaceRealization`, `componentRefs`, `templateRefs`, `surfaceRealizationRefs`, `surfaceMaterializationRefs`, `themeRef`, `variant`, `props`, `route`, `url`, `intent`, repeat/collection terms, or instance-key terms.
-`Command` / `commandRef` belong to Graph. `l10n:copyRef` / `l10n:MessageBundle` belong to Localization.
+`Command` / `command` belong to Graph. `ujgl10n:copy` / `ujgl10n:MessageMeta` belong to Localization.
 Use Core `extensions` only when the user explicitly requests private, non-interoperable implementation metadata.
 Compose only contexts whose terms are actually used. If Localization terms already occur, preserve and use the existing Localization context and resources; do not duplicate them.
 
@@ -87,17 +87,17 @@ Correct:
 
 ```text
 State / CompositeState / Command
-          <- Surface.graphNodeRef
+          <- Surface.graphNode
 Surface
-          <- SurfaceMaterialization.surfaceRef
+          <- SurfaceMaterialization.materializedSurface
 SurfaceMaterialization
           -> Component | Template
 ```
 For visible affordances under Command semantics:
 
 ```text
-Surface.graphNodeRef -> Command
-Transition.commandRef -> Command
+Surface.graphNode -> Command
+Transition.command -> Command
 ```
 Design System artifacts never replace Surface as the semantic materialization boundary.
 
@@ -112,16 +112,16 @@ A Command:
 - does not itself select which Transition occurs.
 Transition topology remains authoritative for progression.
 Do not copy source States, targets, conditions, or Transition lists onto Command merely to simplify Design System generation.
-Structural or autonomous Transitions need not have `commandRef` when no intentional invocation exists.
+Structural or autonomous Transitions need not have `command` when no intentional invocation exists.
 
 ## Localization boundary
 Localization is optional but authoritative when present.
-`l10n:copyRef` MAY attach any addressable UJG node to an `l10n:MessageBundle`. Do not move, duplicate, or replace valid existing Localization resources merely to simplify Design System modeling.
+`ujgl10n:copy` MAY attach any addressable UJG node to an `ujgl10n:MessageMeta`. Do not move, duplicate, or replace valid existing Localization resources merely to simplify Design System modeling.
 When user-facing copy is already modeled through Localization:
 - treat the copy as localized content, not as evidence for Component or Template identity;
-- preserve existing `copyRef` attachment unless the task explicitly asks to redesign Localization;
+- preserve existing `copy` attachment unless the task explicitly asks to redesign Localization;
 - do not create state-named Components merely to carry different strings;
-- do not duplicate MessageBundles in Design System artifacts.
+- do not duplicate MessageMetas in Design System artifacts.
 When user-facing copy is required but Localization is absent, report or add Localization according to the active Localization module rather than encoding copy identity into Design System node identity.
 Different or context-specific copy alone is insufficient evidence for distinct Surface, Component, or Template identity.
 
@@ -130,11 +130,11 @@ Review in this order:
 
 ```text
 Graph topology
-→ Command / commandRef usage
+→ Command / command usage
 → conditional and boundary transitions
-→ existing Localization / copyRef attachments
+→ existing Localization / copy attachments
 → Surface candidate validity
-→ Surface.graphNodeRef alignment
+→ Surface.graphNode alignment
 → occurrence ownership
 → required visible composition
 → SurfaceMaterialization
@@ -162,9 +162,9 @@ Correct:
 visible affordance
       ↓
 Surface
-      ↓ graphNodeRef
+      ↓ graphNode
 Command
-      ↑ commandRef
+      ↑ command
 Transition(s)
 ```
 Default to one affordance Surface per Command. Reuse that Surface wherever the same Command is materialized.
@@ -178,14 +178,14 @@ If a required visible control has no independently justified Surface identity, k
 
 ### Transition candidates
 Transitions represent progression outcomes, not affordance identity when Command is available.
-A Surface whose `graphNodeRef` targets a Transition, AdjacentTransition, OutgoingTransition, or InvokingTransition is invalid under this model.
+A Surface whose `graphNode` targets a Transition, AdjacentTransition, OutgoingTransition, or InvokingTransition is invalid under this model.
 When correcting such a Surface:
 - retarget it to the justified Command representing the actual invocation; or
 - remove it if no independently visible invocation exists.
 Do not mint a Command merely to preserve a mechanically generated Transition Surface.
 
 ## Structural continuation
-Transitions involving `JourneyExit`, `fromExitRef`, `JourneyEntry`, `toEntryRef`, or parent/child continuation require special care.
+Transitions involving `JourneyExit`, `fromExit`, `JourneyEntry`, `toEntry`, or parent/child continuation require special care.
 A visible invocation may occur inside a child Journey while a parent Transition only continues the resulting outcome.
 Model:
 
@@ -195,7 +195,7 @@ local visible interaction
     → local Transition
     → JourneyExit
 parent structural continuation
-    → fromExitRef
+    → fromExit
     → next parent State
 ```
 Do not give the parent continuation another Command or Surface unless a separate intentional visible invocation genuinely occurs there.
@@ -240,7 +240,7 @@ one SurfaceMaterialization
 many concrete runtime occurrences
 ```
 Do not generate one Surface, Component, Template, SlotBinding, Command, or materialization per runtime/domain occurrence.
-A `targetSurfaceRef` to a Surface composes the stable Surface definition; it does not constrain occurrence count.
+A `targetSurface` to a Surface composes the stable Surface definition; it does not constrain occurrence count.
 If a Command-backed child Surface belongs to each occurrence:
 - keep one authored Command;
 - keep one Command-backed Surface;
@@ -269,7 +269,7 @@ Before replacing a Template materialization with a direct Component, ask:
 > Would a strict downstream implementation lose any required visible element if it only knew this Component identity?
 If yes, keep the composition explicit.
 Do not infer hidden controls from names such as `form`, `panel`, `card`, `review`, or `dialog`.
-When a required visible affordance has a justified Command-backed Surface, compose it using `targetSurfaceRef`.
+When a required visible affordance has a justified Command-backed Surface, compose it using `targetSurface`.
 When slotted content must be explicit, model a Surface for that content first and target that Surface.
 Purely internal component controls remain outside interoperable SlotBinding composition.
 Conditional multiplicity MUST NOT push a justified Command Surface back into a naked Component.
@@ -308,7 +308,7 @@ When that affordance has stable visible identity:
 - use one shared Command;
 - use one Command-backed Surface;
 - reuse it across normal/error form materializations;
-- compose it through `targetSurfaceRef`;
+- compose it through `targetSurface`;
 - do not create Surfaces for valid/invalid outcome Transitions.
 Normal and error form Surfaces SHOULD reuse field Components, action Surface, and Template when only validation/runtime content differs.
 An error State does not itself prove that a separate validation-feedback Component or feedback Slot exists. Default to the same structural form composition unless requirements establish a separately composed visible feedback region. Do not introduce a feedback Slot or ValidationFeedback/ValidationSummary-like Component merely because an error State exists. If validation can render inline within the shared fields Component, keep it as runtime presentation state there.
@@ -317,12 +317,12 @@ If the submit control is required but intentionally has no independent Surface i
 
 ## SurfaceMaterialization
 Every `SurfaceMaterialization` MUST:
-- reference exactly one Surface through `surfaceRef`;
-- use exactly one of `componentRef` or `templateRef`.
-Use `componentRef` for direct materialization when no required child composition must remain explicit.
-Use `templateRef` when reusable or required visible composition through Slots must remain derivable.
+- reference exactly one Surface through `materializedSurface`;
+- use exactly one of `component` or `template`.
+Use `component` for direct materialization when no required child composition must remain explicit.
+Use `template` when reusable or required visible composition through Slots must remain derivable.
 Do not use both.
-Use `slotBindingRefs` only with `templateRef`.
+Use `slotBindings` only with `template`.
 A retained Surface in a Design System-complete artifact should normally have an intended materialization.
 An unmaterialized Surface is not a valid way to preserve a Surface that should have been removed.
 
@@ -341,25 +341,25 @@ opaque direct Component materialization
 ```
 
 ## Template, Slot, and SlotBinding
-A `Template` declares Slots through `slotRefs`.
+A `Template` declares Slots through `slots`.
 Slots represent reusable presentation positions.
 Templates and Slots MUST NOT encode Graph nodes, traversal, Command resolution, runtime instances, localization loading, data binding, collection iteration, condition evaluation, or business logic.
 Templates should not hard-code concrete Surface targets.
 Concrete assembly belongs to a `SurfaceMaterialization` through SlotBindings.
-A `SlotBinding` connects one declared `slotRef` to exactly one Surface target:
+A `SlotBinding` connects one declared `slot` to exactly one Surface target:
 
 ```text
-targetSurfaceRef
+targetSurface
 ```
-Use `targetSurfaceRef` for elements with meaningful stable Surface identity, including visible Command-backed affordances.
-The `slotRef` MUST be declared by the Template used by that SurfaceMaterialization.
+Use `targetSurface` for elements with meaningful stable Surface identity, including visible Command-backed affordances.
+The `slot` MUST be declared by the Template used by that SurfaceMaterialization.
 SlotBindings compose presentation only. They MUST NOT imply Graph traversal, Command invocation, Transition selection, condition evaluation, form submission, execution order, runtime lifecycle, localization resolution, or data iteration.
 
 ## Theme and TokenSource
 Use `TokenSource` for an addressable token source, package, manifest, or token set.
 Every `TokenSource` MUST declare exactly one `source`.
 Use `source` for the token source, package, manifest, or token set IRI reference. Relative `source` values resolve against the containing UJG document location, matching Core import resolution.
-`Theme` identifies a Design System context through `tokenSourceRefs`.
+`Theme` identifies a Design System context through `tokenSources`.
 Do not encode individual token values, aliases, CSS calculations, or inheritance here unless another active module defines them.
 Do not use Theme as a Component, Template, SurfaceMaterialization, Command, Surface, or Localization registry.
 Implementation resolvers MAY map stable IDs to framework Components, Storybook entries, source files, token files, or adapters outside interoperable Design System semantics.
@@ -373,7 +373,7 @@ Read relevant Journey, State/CompositeState, Transition/OutgoingTransition/Invok
 Group Transitions by Command; distinguish multi-outcome invocation, genuine user choices, and structural/autonomous progression. Do not derive Commands from labels alone.
 
 ### 3. Inspect Localization before artifact identity
-Identify existing `copyRef` / `MessageBundle` usage. Preserve valid existing localization. Factor copy differences out of Component/Template reuse decisions.
+Identify existing `copy` / `MessageMeta` usage. Preserve valid existing localization. Factor copy differences out of Component/Template reuse decisions.
 
 ### 4. Filter and align Surfaces
 Require stable visible meaning. Point affordance Surfaces to Command, not outcome Transitions. Do not suppress Command Surfaces because of conditional multiplicity. Allow multiple Surfaces per Command only when distinct visible materialization identity is justified beyond copy alone.
@@ -382,13 +382,13 @@ Require stable visible meaning. Point affordance Surfaces to Command, not outcom
 Compose each nested Surface within the nearest visible State/CompositeState occurrence that owns it. Preserve occurrence boundaries without per-instance vocabulary.
 
 ### 6. Identify required visible composition
-List required child Surfaces. Preserve justified Command-backed affordances through `targetSurfaceRef`; do not hide them in opaque Components.
+List required child Surfaces. Preserve justified Command-backed affordances through `targetSurface`; do not hide them in opaque Components.
 
 ### 7. Derive reusable presentation artifacts
 After factoring out localized/runtime/state-specific content, reuse Components/Templates where structure is the same. Do not merge artifacts whose reusable structures actually differ. Do not derive action Components from styling/emphasis roles or validation-feedback structure from error-state existence alone.
 
 ### 8. Materialize and compose
-Give each retained Surface exactly one Component-backed or Template-backed materialization. Use `targetSurfaceRef` for stable child Surfaces. Keep component-only internals out of SlotBinding.
+Give each retained Surface exactly one Component-backed or Template-backed materialization. Use `targetSurface` for stable child Surfaces. Keep component-only internals out of SlotBinding.
 
 ### 9. Add Theme/TokenSource when needed
 Do not use Theme as a registry.
@@ -414,7 +414,7 @@ Report Graph, Command, Surface, Localization, Design System, expressivity, and m
 - No per-runtime-occurrence Command/Design System nodes or repetition vocabulary were invented.
 
 ### Localization and presentation identity
-- Existing valid `l10n:copyRef` / `MessageBundle` resources were preserved rather than duplicated.
+- Existing valid `ujgl10n:copy` / `MessageMeta` resources were preserved rather than duplicated.
 - User-facing copy was not used as evidence for Component/Template identity.
 - Copy differences were factored out before reuse decisions.
 - State-specific Components/Templates are justified by reusable structure after copy is factored out.
@@ -427,9 +427,9 @@ Report Graph, Command, Surface, Localization, Design System, expressivity, and m
 ### Required composition / materialization
 - A strict implementation can derive every required visible child Surface and control.
 - Direct Component materializations do not hide required controls or child Surfaces.
-- Required Command-backed affordances use `targetSurfaceRef`.
-- Every retained Surface has exactly one materialization using exactly one of `componentRef` or `templateRef`.
-- `slotBindingRefs` occur only on Template-backed materializations.
+- Required Command-backed affordances use `targetSurface`.
+- Every retained Surface has exactly one materialization using exactly one of `component` or `template`.
+- `slotBindings` occur only on Template-backed materializations.
 - Every bound Slot is declared by that Template and every SlotBinding has exactly one Surface target.
 - SlotBindings compose presentation only; they do not invoke Commands, resolve Localization, or select Transitions.
 
@@ -442,3 +442,15 @@ Report Graph, Command, Surface, Localization, Design System, expressivity, and m
 - No `Intent`, action kinds, flags, Transition subtypes, props, routes, URLs, CSS, runtime events, domain iteration, or business logic were invented as interoperable Design System semantics.
 - Upstream Graph/Command/Surface/Localization problems are reported rather than hidden by presentation modeling.
 - Expressivity gaps are reported explicitly.
+
+## Current ED authoring and source scope
+
+Use the current canonical property names and matching vocabulary IRIs. Retired terms are not
+aliases. Prefer nested YAML-LD; accept flat or nested JSON-LD and YAML-LD under the same module
+semantics. Do not change instance identity when changing serialization or filenames.
+
+Resolve imports against each source location independently of `@base`; ordinary node identities
+and references follow standard JSON-LD base rules. Unknown JSON payloads remain opaque.
+
+Consult `references/authoring-terms.json` for canonical mappings and
+`references/specs/authoring/index.md` with its accompanying YAML fixtures for the complete style.

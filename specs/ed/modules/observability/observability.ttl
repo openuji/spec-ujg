@@ -52,23 +52,23 @@ ujgobservability:pointer a owl:NamedIndividual, ujgobservability:InputModality ;
 
 ### Properties
 
-ujgobservability:observeSurfaceRef a owl:ObjectProperty ;
+ujgobservability:observeSurface a owl:ObjectProperty ;
   rdfs:domain ujgobservability:ObservationBinding ;
   rdfs:range ujgsurface:Surface .
 
-ujgobservability:observationEventRef a owl:ObjectProperty ;
+ujgobservability:observationEvent a owl:ObjectProperty ;
   rdfs:domain ujgobservability:ObservationBinding ;
   rdfs:range ujgobservability:ObservationEvent .
 
-ujgobservability:requiredInputModalityProfileRefs a owl:ObjectProperty ;
+ujgobservability:requiredInputModalityProfiles a owl:ObjectProperty ;
   rdfs:domain ujgobservability:ObservationEvent ;
   rdfs:range ujgobservability:InputModalityProfile .
 
-ujgobservability:inputModalityRefs a owl:ObjectProperty ;
+ujgobservability:inputModalities a owl:ObjectProperty ;
   rdfs:domain ujgobservability:InputModalityProfile ;
   rdfs:range ujgobservability:InputModality .
 
-ujgobservability:locatorRefs a owl:ObjectProperty ;
+ujgobservability:locators a owl:ObjectProperty ;
   rdfs:domain ujgobservability:ObservationBinding ;
   rdfs:range [
     a owl:Class ;
@@ -78,7 +78,7 @@ ujgobservability:locatorRefs a owl:ObjectProperty ;
     )
   ] .
 
-ujgobservability:surfaceInstanceResolverRef a owl:ObjectProperty ;
+ujgobservability:surfaceInstanceResolver a owl:ObjectProperty ;
   rdfs:domain ujgobservability:ObservationBinding ;
   rdfs:range ujgobservability:SurfaceInstanceResolver .
 
@@ -86,7 +86,7 @@ ujgobservability:expectedMatchCount a owl:DatatypeProperty ;
   rdfs:domain ujgobservability:ObservationBinding ;
   rdfs:range xsd:nonNegativeInteger .
 
-ujgobservability:instanceKeyFeatureRef a owl:ObjectProperty ;
+ujgobservability:instanceKeyFeature a owl:ObjectProperty ;
   rdfs:domain ujgobservability:SurfaceInstanceResolver ;
   rdfs:range ujgobservability:AccessibleFeature .
 
@@ -94,23 +94,23 @@ ujgobservability:role a owl:DatatypeProperty ;
   rdfs:domain ujgobservability:AccessibleLocator ;
   rdfs:range xsd:string .
 
-ujgobservability:accessibleNameRef a owl:ObjectProperty ;
+ujgobservability:accessibleName a owl:ObjectProperty ;
   rdfs:domain ujgobservability:AccessibleLocator ;
   rdfs:range ujgl10n:MessageMeta .
 
-ujgobservability:accessibleDescriptionRef a owl:ObjectProperty ;
+ujgobservability:accessibleDescription a owl:ObjectProperty ;
   rdfs:domain ujgobservability:AccessibleLocator ;
   rdfs:range ujgl10n:MessageMeta .
 
-ujgobservability:accessibleFeatureRefs a owl:ObjectProperty ;
+ujgobservability:accessibleFeatures a owl:ObjectProperty ;
   rdfs:domain ujgobservability:AccessibleLocator ;
   rdfs:range ujgobservability:AccessibleFeature .
 
-ujgobservability:accessibleRelationRefs a owl:ObjectProperty ;
+ujgobservability:accessibleRelations a owl:ObjectProperty ;
   rdfs:domain ujgobservability:AccessibleLocator ;
   rdfs:range ujgobservability:AccessibleRelation .
 
-ujgobservability:contextLocatorRefs a owl:ObjectProperty ;
+ujgobservability:contextLocators a owl:ObjectProperty ;
   rdfs:domain ujgobservability:AccessibleLocator ;
   rdfs:range ujgobservability:AccessibleLocator .
 
@@ -126,6 +126,6 @@ ujgobservability:accessibleRelationType a owl:DatatypeProperty ;
   rdfs:domain ujgobservability:AccessibleRelation ;
   rdfs:range xsd:string .
 
-ujgobservability:targetLocatorRef a owl:ObjectProperty ;
+ujgobservability:targetLocator a owl:ObjectProperty ;
   rdfs:domain ujgobservability:AccessibleRelation ;
   rdfs:range ujgobservability:AccessibleLocator .

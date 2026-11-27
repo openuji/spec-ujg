@@ -1,0 +1,36 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/effect.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/artifact.context.jsonld
+id: https://example.com/ujg/artifact/federated-share.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:touchpoint:nextcloud-a
+    type: Touchpoint
+    label: Nextcloud A
+  - id: urn:touchpoint:nextcloud-b
+    type: Touchpoint
+    label: Nextcloud B
+  - id: urn:artifact:federated-share
+    type: Artifact
+    label: Federated share for the test file
+    sourceTouchpoint: urn:touchpoint:nextcloud-a
+    targetTouchpoints:
+      - urn:touchpoint:nextcloud-b
+  - id: urn:effect:alice-confirm-share
+    type: Effect
+    label: Alice confirms the remote share
+    producedResources:
+      - urn:artifact:federated-share
+  - id: urn:effect:bob-accept-share
+    type: Effect
+    label: Bob accepts the incoming remote share
+    consumedResources:
+      - urn:artifact:federated-share
+  - id: urn:effect:bob-open-accepted-file
+    type: Effect
+    label: Bob opens the accepted file
+    consumedResources:
+      - urn:artifact:federated-share

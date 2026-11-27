@@ -1,0 +1,138 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/operability.context.jsonld
+id: https://example.com/ujg/operability/mail-tabs.jsonld
+type: UJGDocument
+nodes:
+  - type: Journey
+    id: urn:journey:mail
+    label: Mail
+    defaultEntry: urn:entry:mail
+    entries:
+      - type: JourneyEntry
+        id: urn:entry:mail
+        state: urn:state:home-selected
+    states:
+      - type: State
+        id: urn:state:home-selected
+        label: Home selected
+      - type: State
+        id: urn:state:drafts-selected
+        label: Drafts selected
+    transitions:
+      - type: Transition
+        id: urn:transition:select-drafts
+        label: Select Drafts
+        from: urn:state:home-selected
+        to: urn:state:drafts-selected
+        command:
+          type: Command
+          id: urn:command:select-drafts
+          label: Select Drafts
+  - type: Surface
+    id: urn:surface:select-drafts
+    graphNode: urn:command:select-drafts
+  - type: Locale
+    id: urn:locale:en
+    localeCode: en
+  - type: MessageMeta
+    id: urn:message-meta:home
+    defaultLocale: urn:locale:en
+  - type: Message
+    id: urn:message:home:en
+    messageMeta: urn:message-meta:home
+    locale: urn:locale:en
+    messageValue: Home
+  - type: MessageMeta
+    id: urn:message-meta:drafts
+    defaultLocale: urn:locale:en
+  - type: Message
+    id: urn:message:drafts:en
+    messageMeta: urn:message-meta:drafts
+    locale: urn:locale:en
+    messageValue: Drafts
+  - type: AccessibleLocator
+    id: urn:locator:mail-tablist
+    role: tablist
+  - type: AccessibleLocator
+    id: urn:locator:home-tab
+    role: tab
+    accessibleName: urn:message-meta:home
+    contextLocators:
+      - urn:locator:mail-tablist
+  - type: ObservationEvent
+    id: urn:observation-event:select-drafts-activation
+    label: Select Drafts activation
+    requiredInputModalityProfiles:
+      - type: InputModalityProfile
+        id: urn:input-modality-profile:keyboard
+        label: Keyboard
+        inputModalities:
+          - ujgobservability:keyboard
+      - type: InputModalityProfile
+        id: urn:input-modality-profile:pointer
+        label: Pointer
+        inputModalities:
+          - ujgobservability:pointer
+  - type: ObservationBinding
+    id: urn:binding:select-drafts-activation
+    observeSurface: urn:surface:select-drafts
+    observationEvent: urn:observation-event:select-drafts-activation
+    locators:
+      - type: AccessibleLocator
+        id: urn:locator:drafts-tab
+        role: tab
+        accessibleName: urn:message-meta:drafts
+        contextLocators:
+          - urn:locator:mail-tablist
+  - type: TransitionMaterialization
+    id: urn:materialization:select-drafts:keyboard
+    label: Select Drafts by keyboard
+    materializationTransition: urn:transition:select-drafts
+    materializationModality: ujgobservability:keyboard
+    materializationSteps:
+      - type: MoveStep
+        id: urn:step:select-drafts:keyboard:1
+        stepMoveKind: ujgoperability:nextStop
+      - type: MoveStep
+        id: urn:step:select-drafts:keyboard:2
+        previousStep: urn:step:select-drafts:keyboard:1
+        stepMoveKind: ujgoperability:nextStop
+        stepLocator: urn:locator:home-tab
+      - type: MoveStep
+        id: urn:step:select-drafts:keyboard:3
+        previousStep: urn:step:select-drafts:keyboard:2
+        stepMoveKind: ujgoperability:nextItem
+      - type: MoveStep
+        id: urn:step:select-drafts:keyboard:4
+        previousStep: urn:step:select-drafts:keyboard:3
+        stepMoveKind: ujgoperability:nextItem
+        stepLocator: urn:locator:drafts-tab
+      - type: ActivationStep
+        id: urn:step:select-drafts:keyboard:5
+        previousStep: urn:step:select-drafts:keyboard:4
+  - type: TransitionMaterialization
+    id: urn:materialization:select-drafts:pointer
+    label: Select Drafts by pointer
+    materializationTransition: urn:transition:select-drafts
+    materializationModality: ujgobservability:pointer
+    materializationSteps:
+      - type: MoveStep
+        id: urn:step:select-drafts:pointer:1
+        stepMoveKind: ujgoperability:pointAt
+        stepLocator: urn:locator:drafts-tab
+      - type: ActivationStep
+        id: urn:step:select-drafts:pointer:2
+        previousStep: urn:step:select-drafts:pointer:1
+  - type: TransitionMaterialization
+    id: urn:materialization:select-drafts:shortcut
+    label: Select Drafts by shortcut
+    materializationTransition: urn:transition:select-drafts
+    materializationModality: ujgobservability:keyboard
+    materializationSteps:
+      - type: ShortcutStep
+        id: urn:step:select-drafts:shortcut:1
+        stepLocator: urn:locator:drafts-tab

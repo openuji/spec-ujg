@@ -1,0 +1,3 @@
+type: Command
+id: urn:ujg:command:start-registration
+label: Start registration

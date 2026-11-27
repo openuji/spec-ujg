@@ -79,7 +79,7 @@ versions can publish additional profile identifiers without changing the module 
 ### Core {data-cop-concept="core"}
 
 The `#core` profile requires [UJG Core](/ed/core). It is suitable for tools that exchange UJG document
-containers, imports, top-level nodes, and opaque node extensions without claiming graph semantics.
+containers, imports, root and embedded node definitions, and opaque node extensions without claiming graph semantics.
 
 ### Graph {data-cop-concept="graph"}
 

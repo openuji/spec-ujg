@@ -1,0 +1,10 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "modules/effect"
+  ],
+  "source": "https://example.com/ujg/examples/modules/effect/example-01.yamlld",
+  "validation": "full"
+}

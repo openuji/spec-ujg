@@ -1,0 +1,11 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "modules/phase",
+    "modules/experience-annotation"
+  ],
+  "source": "https://example.com/ujg/examples/modules/experience-annotation/example-01.yamlld",
+  "validation": "full"
+}

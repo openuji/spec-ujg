@@ -1,0 +1,6 @@
+id: urn:artifact:account-archive
+type: Artifact
+name: urn:l10n:message-meta:account-archive-name
+sourceTouchpoint: urn:touchpoint:old-server
+targetTouchpoints:
+  - urn:touchpoint:new-server

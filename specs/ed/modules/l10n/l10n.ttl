@@ -23,7 +23,7 @@ ujgl10n:Message a owl:Class ;
 
 ### Properties
 
-ujgl10n:copyRef a owl:ObjectProperty ;
+ujgl10n:copy a owl:ObjectProperty ;
   rdfs:domain ujg:Node ;
   rdfs:range ujgl10n:MessageMeta .
 
@@ -35,11 +35,11 @@ ujgl10n:argumentNames a owl:DatatypeProperty ;
   rdfs:domain ujgl10n:MessageMeta ;
   rdfs:range xsd:string .
 
-ujgl10n:defaultLocaleRef a owl:ObjectProperty ;
+ujgl10n:defaultLocale a owl:ObjectProperty ;
   rdfs:domain ujgl10n:MessageMeta ;
   rdfs:range ujgl10n:Locale .
 
-ujgl10n:fallbackLocaleRefs a owl:ObjectProperty ;
+ujgl10n:fallbackLocales a owl:ObjectProperty ;
   rdfs:domain ujgl10n:MessageMeta ;
   rdfs:range ujgl10n:Locale .
 
@@ -47,18 +47,18 @@ ujgl10n:rtl a owl:DatatypeProperty ;
   rdfs:domain ujgl10n:MessageMeta ;
   rdfs:range xsd:boolean .
 
-ujgl10n:messageMetaRef a owl:ObjectProperty ;
+ujgl10n:messageMeta a owl:ObjectProperty ;
   rdfs:domain ujgl10n:Message ;
   rdfs:range ujgl10n:MessageMeta .
 
-ujgl10n:localeRef a owl:ObjectProperty ;
+ujgl10n:locale a owl:ObjectProperty ;
   rdfs:domain ujgl10n:Message ;
   rdfs:range ujgl10n:Locale .
 
-ujgl10n:value a owl:DatatypeProperty ;
+ujgl10n:messageValue a owl:DatatypeProperty ;
   rdfs:domain ujgl10n:Message ;
   rdfs:range xsd:string .
 
-ujgl10n:targetLocaleRef a owl:ObjectProperty ;
+ujgl10n:targetLocale a owl:ObjectProperty ;
   rdfs:domain ujggraph:OutgoingTransition ;
   rdfs:range ujgl10n:Locale .

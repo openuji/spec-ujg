@@ -1,0 +1,12 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "surface",
+    "modules/l10n",
+    "modules/observability"
+  ],
+  "source": "https://example.com/ujg/examples/modules/observability/example-03.yamlld",
+  "validation": "full"
+}

@@ -14,7 +14,7 @@ ujgruntimeshape:RuntimeEventShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgruntime:executionId ;
+    sh:path ujgruntime:execution ;
     sh:class ujgruntime:JourneyExecution ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -22,14 +22,14 @@ ujgruntimeshape:RuntimeEventShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgruntime:previousId ;
+    sh:path ujgruntime:previousEvent ;
     sh:class ujgruntime:RuntimeEvent ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgruntime:surfaceInstanceRef ;
+    sh:path ujgruntime:surfaceInstance ;
     sh:class ujgsurface:SurfaceInstance ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;

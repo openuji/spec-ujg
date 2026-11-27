@@ -1,0 +1,10 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "surface"
+  ],
+  "source": "https://example.com/ujg/examples/surface/example-02.yamlld",
+  "validation": "full"
+}

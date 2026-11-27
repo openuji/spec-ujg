@@ -1,0 +1,7 @@
+"@context": https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+id: https://example.com/ujg/flows/order/main.jsonld
+type: UJGDocument
+imports:
+  - ./shared/states.jsonld
+  - ../runtime/events.jsonld
+  - https://example.com/ujg/common/errors.jsonld

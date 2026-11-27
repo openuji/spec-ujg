@@ -1,0 +1,8 @@
+- type: ObservationEvent
+  id: urn:observation-event:presence
+  label: Presence
+- type: ObservationEvent
+  id: urn:observation-event:activation
+  label: Activation
+  requiredInputModalityProfiles:
+    - urn:ujg:input-modality-profile:keyboard

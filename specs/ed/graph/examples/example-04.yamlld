@@ -1,0 +1,7 @@
+type: JourneyEntryIndex
+id: urn:ujg:index:site-pages
+label: Site page index
+entries:
+  - urn:ujg:entry:home-page-default
+  - urn:ujg:entry:search-page-default
+  - urn:ujg:entry:profile-page-default

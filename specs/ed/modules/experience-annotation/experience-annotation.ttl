@@ -13,7 +13,7 @@
 ujgexperienceannotation:PainPoint a owl:Class ;
   rdfs:subClassOf ujg:Node .
 
-ujgexperienceannotation:painpointStepRefs a owl:ObjectProperty ;
+ujgexperienceannotation:painpointSteps a owl:ObjectProperty ;
   rdfs:domain ujgexperienceannotation:PainPoint ;
   rdfs:range ujgphase:Step .
 

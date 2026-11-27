@@ -1,0 +1,6 @@
+type: Transition
+id: urn:ujg:transition:cart-to-checkout
+label: Start checkout
+from: urn:ujg:state:cart
+to: urn:ujg:state:checkout
+toEntry: urn:ujg:entry:shipping-address

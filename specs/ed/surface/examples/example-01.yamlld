@@ -1,0 +1,6 @@
+id: urn:ujg:surface:cart
+type: Surface
+graphNode: urn:ujg:state:cart
+extensions:
+  com.acme.audit:
+    reviewTicket: ACME-1234

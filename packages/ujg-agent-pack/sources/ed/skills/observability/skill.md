@@ -29,16 +29,14 @@ Do not use Observability for Graph traversal, Runtime ordering, raw analytics pa
 
 When using Observability terms, include Core, Surface, Localization, and Observability contexts:
 
-```json
-[
-  "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-  "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-  "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld",
-  "https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld"
-]
+```yaml
+- https://ujg.specs.openuji.org/ed/ns/context.jsonld
+- https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+- https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld
+- https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld
 ```
 
-Include Runtime context only when serializing actual `RuntimeEvent` or `JourneyExecution` nodes. Runtime correlation is derived through `RuntimeEvent.surfaceInstanceRef -> SurfaceInstance.surfaceRef -> ObservationBinding.observeSurfaceRef`.
+Include Runtime context only when serializing actual `RuntimeEvent` or `JourneyExecution` nodes. Runtime correlation is derived through `RuntimeEvent.surfaceInstance -> SurfaceInstance.surface -> ObservationBinding.observeSurface`.
 
 ## Vocabulary
 
@@ -59,24 +57,24 @@ SurfaceInstanceResolver
 Use only these Observability properties:
 
 ```text
-observeSurfaceRef
-observationEventRef
-requiredInputModalityProfileRefs
-inputModalityRefs
-locatorRefs
-surfaceInstanceResolverRef
+observeSurface
+observationEvent
+requiredInputModalityProfiles
+inputModalities
+locators
+surfaceInstanceResolver
 expectedMatchCount
-instanceKeyFeatureRef
+instanceKeyFeature
 role
-accessibleNameRef
-accessibleDescriptionRef
-accessibleFeatureRefs
-accessibleRelationRefs
-contextLocatorRefs
+accessibleName
+accessibleDescription
+accessibleFeatures
+accessibleRelations
+contextLocators
 accessibleFeatureName
 accessibleFeatureValue
 accessibleRelationType
-targetLocatorRef
+targetLocator
 ```
 
 Do not invent:
@@ -88,7 +86,7 @@ xpath
 playwrightLocator
 testId
 runtimeEventRef
-surfaceInstanceRef
+surfaceInstance
 observedAt
 collectorRef
 assertion
@@ -100,21 +98,21 @@ Use private `extensions` only on `CustomLocator` nodes or other UJG nodes for ad
 
 ## Binding model
 
-An `ObservationBinding` must identify exactly one `Surface` with `observeSurfaceRef`.
+An `ObservationBinding` must identify exactly one `Surface` with `observeSurface`.
 
-It must identify one `ObservationEvent` with `observationEventRef`.
+It must identify one `ObservationEvent` with `observationEvent`.
 
-It must list one or more locators with `locatorRefs`. Locators inside one binding are conjunctive; model alternatives as separate bindings pointing to the same surface.
+It must list one or more locators with `locators`. Locators inside one binding are conjunctive; model alternatives as separate bindings pointing to the same surface.
 
 It may declare `expectedMatchCount` as an exact non-negative integer for the full conjunctive locator match. Use `expectedMatchCount: 0` when the exact locator contract should find no matching objects. If `expectedMatchCount` is omitted, do not infer exact cardinality.
 
 Input-modality profile references belong to the referenced `ObservationEvent`, not to `ObservationBinding`, Graph `Command`, or Graph `Transition`.
 
-An `ObservationEvent` may list input-modality profiles with `requiredInputModalityProfileRefs`.
+An `ObservationEvent` may list input-modality profiles with `requiredInputModalityProfiles`.
 
-An `InputModalityProfile` must list one or more modalities with `inputModalityRefs`. All referenced modalities participate in that independently evaluable profile. Do not infer ordering from array order.
+An `InputModalityProfile` must list one or more modalities with `inputModalities`. All referenced modalities participate in that independently evaluable profile. Do not infer ordering from array order.
 
-Use producer-defined IRIs for concrete `ObservationEvent` nodes. Use `observability:keyboard` and `observability:pointer` for standard keyboard and pointer input modalities. Producers may define additional modality IRIs for other input modalities.
+Use producer-defined IRIs for concrete `ObservationEvent` nodes. Use `ujgobservability:keyboard` and `ujgobservability:pointer` for standard keyboard and pointer input modalities. Producers may define additional modality IRIs for other input modalities.
 
 ## Accessible locators
 
@@ -124,26 +122,26 @@ An `AccessibleLocator` must provide at least one of:
 
 ```text
 role
-accessibleNameRef
-accessibleDescriptionRef
-accessibleFeatureRefs
-accessibleRelationRefs
-contextLocatorRefs
+accessibleName
+accessibleDescription
+accessibleFeatures
+accessibleRelations
+contextLocators
 ```
 
-Use `accessibleNameRef` and `accessibleDescriptionRef` to point to Localization `MessageMeta` nodes.
+Use `accessibleName` and `accessibleDescription` to point to Localization `MessageMeta` nodes.
 
 Use `AccessibleFeature` for accessibility-model states and properties such as `selected`, `expanded`, `disabled`, `checked`, `pressed`, `current`, `invalid`, `required`, `busy`, or `hidden`.
 
 Use `AccessibleRelation` for accessibility-model relations such as `controls`, `labelled-by`, `described-by`, `owns`, `active-descendant`, `details`, or `error-message`.
 
-Use `contextLocatorRefs` to scope a locator by surrounding accessible objects. Multiple context locators are conjunctive.
+Use `contextLocators` to scope a locator by surrounding accessible objects. Multiple context locators are conjunctive.
 
 ## Surface instance resolution
 
 Use `SurfaceInstanceResolver` when the same stable `Surface` can appear in repeated concrete occurrences and an adapter needs a stable instance key.
 
-`SurfaceInstanceResolver.instanceKeyFeatureRef` must point to one `AccessibleFeature` that supplies the instance key source.
+`SurfaceInstanceResolver.instanceKeyFeature` must point to one `AccessibleFeature` that supplies the instance key source.
 
 A resolver must not point to concrete `SurfaceInstance` nodes and must not require one binding per repeated occurrence.
 
@@ -159,14 +157,14 @@ Do not promote project-specific selectors or Playwright expressions into Observa
 
 ## Separation rules
 
-Observability does not define `graphNodeRef`, `surfaceRef`, `surfaceInstanceRef`, or touchpoint boundary assignment such as `journeyRefs`. Those are Surface and Runtime terms.
+Observability does not define `graphNode`, `surface`, `surfaceInstance`, or touchpoint boundary assignment such as `journeys`. Those are Surface and Runtime terms.
 
 Observability has no direct dependency on Runtime. Runtime events do not need to reference `ObservationBinding`.
 
 Do not model automation commands, screenshots, API probes, timestamps, execution order, payloads, or click facts as Observability terms. Use Runtime for observed events and private extensions for adapter details.
 
 For invocation modality profile references, model the Graph topology with Graph, attach
-`commandRef` from the relevant `Transition`, `OutgoingTransition`, or `InvokingTransition` to a `Command`, attach a
+`command` from the relevant `Transition`, `OutgoingTransition`, or `InvokingTransition` to a `Command`, attach a
 `Surface` to that `Command`, bind recognition with `ObservationBinding`, and put input-modality
 profile references on the referenced `ObservationEvent`.
 
@@ -178,8 +176,8 @@ profile references on the referenced `ObservationEvent`.
 * Does every binding list at least one locator?
 * Are input-modality profile references declared on `ObservationEvent`, not on `ObservationBinding`, Graph `Command`, or other Graph nodes?
 * Does every `InputModalityProfile` list at least one `InputModality`?
-* Did I use producer-defined concrete event IRIs, standard `observability:keyboard` / `observability:pointer` modality IRIs where applicable, and producer-defined modality IRIs only for additional modalities?
-* If a binding asserts absence, did it keep `locatorRefs` and use `expectedMatchCount: 0`?
+* Did I use producer-defined concrete event IRIs, standard `ujgobservability:keyboard` / `ujgobservability:pointer` modality IRIs where applicable, and producer-defined modality IRIs only for additional modalities?
+* If a binding asserts absence, did it keep `locators` and use `expectedMatchCount: 0`?
 * Are alternative locator strategies separate bindings rather than one disjunctive binding?
 * Do accessible names and descriptions point to `MessageMeta` nodes?
 * Are role, feature, and relation names accessibility-model oriented?
@@ -187,3 +185,15 @@ profile references on the referenced `ObservationEvent`.
 * Did I keep Runtime correlation derived rather than adding an Observability-to-Runtime reference?
 * Do invocation affordance bindings observe Surfaces attached to Commands?
 * Did Observability avoid changing Graph traversal or Surface identity?
+
+## Current ED authoring and source scope
+
+Use the current canonical property names and matching vocabulary IRIs. Retired terms are not
+aliases. Prefer nested YAML-LD; accept flat or nested JSON-LD and YAML-LD under the same module
+semantics. Do not change instance identity when changing serialization or filenames.
+
+Resolve imports against each source location independently of `@base`; ordinary node identities
+and references follow standard JSON-LD base rules. Unknown JSON payloads remain opaque.
+
+Consult `references/authoring-terms.json` for canonical mappings and
+`references/specs/authoring/index.md` with its accompanying YAML fixtures for the complete style.

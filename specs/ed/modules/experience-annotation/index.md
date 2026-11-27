@@ -18,8 +18,8 @@ A [=PainPoint=] is a named issue or friction hypothesis attached to one or more 
 
 <spec-statement>
 1. A [=PainPoint=] **MUST** be identified by an IRI.
-2. A [=PainPoint=] **MUST** declare one or more `painpointStepRefs` values.
-3. Every `painpointStepRefs` value **MUST** resolve to a [=Step=].
+2. A [=PainPoint=] **MUST** declare one or more `painpointSteps` values.
+3. Every `painpointSteps` value **MUST** resolve to a [=Step=].
 4. A [=PainPoint=] **MAY** declare at most one `severity` in the inclusive range `0` through `1`.
 5. A [=PainPoint=] **MAY** declare at most one `description`.
 6. A [=PainPoint=] **MUST NOT** change Graph traversal or assert Runtime occurrence.
@@ -30,23 +30,17 @@ classDiagram
   class Step
   class PainPoint {
     id
-    painpointStepRefs
+    painpointSteps
     severity
     description
   }
-  PainPoint --> "1..*" Step : painpointStepRefs
+  PainPoint --> "1..*" Step : painpointSteps
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "PainPoint",
-  "@id": "urn:ujg:pain:address-validation",
-  "painpointStepRefs": ["urn:ujg:step:shipping"],
-  "severity": 0.7,
-  "description": "Address correction interrupts checkout."
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 ## Normative Artifacts
@@ -67,51 +61,6 @@ Example JSON node:
 
 ### Combined Example
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/phase.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/experience-annotation.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/experience-annotation/checkout.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "CompositeState",
-      "@id": "urn:ujg:state:shipping-segment",
-      "label": "Shipping segment",
-      "subjourneyRefs": ["urn:ujg:journey:shipping-segment"]
-    },
-    {
-      "@type": "Journey",
-      "@id": "urn:ujg:journey:shipping-segment",
-      "defaultEntryRef": "urn:ujg:entry:shipping-default",
-      "entryRefs": ["urn:ujg:entry:shipping-default"],
-      "stateRefs": ["urn:ujg:state:shipping-form"]
-    },
-    {
-      "@type": "JourneyEntry",
-      "@id": "urn:ujg:entry:shipping-default",
-      "stateRef": "urn:ujg:state:shipping-form"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:shipping-form",
-      "label": "Shipping form"
-    },
-    {
-      "@type": "Step",
-      "@id": "urn:ujg:step:shipping",
-      "compositeStateRef": "urn:ujg:state:shipping-segment"
-    },
-    {
-      "@type": "PainPoint",
-      "@id": "urn:ujg:pain:address-validation",
-      "painpointStepRefs": ["urn:ujg:step:shipping"],
-      "severity": 0.7,
-      "description": "Address correction interrupts checkout."
-    }
-  ]
-}
+```ujg-example
+./examples/example-01.yamlld
 ```

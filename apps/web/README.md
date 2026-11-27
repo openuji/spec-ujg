@@ -1,5 +1,23 @@
 # UJG Web
 
+## Spec Validation and Examples
+
+This package owns spec rendering, spec linting, and the ED vocabulary, example, and conformance
+checks. Their implementation and tests live together in [`scripts/conformance`](scripts/conformance/README.md).
+
+Run these commands from the repository root:
+
+```sh
+pnpm --filter @openuji/web lint
+pnpm --filter @openuji/web conformance:setup
+pnpm --filter @openuji/web vocabulary:check
+pnpm --filter @openuji/web conformance:test
+pnpm --filter @openuji/web examples:check
+```
+
+Python setup is needed for the conformance and full example checks. The documentation build uses
+the example loader without running those checks or requiring Python.
+
 ## Dev Content Watching
 
 The dev server watches selected repository-level `specs` folders and invalidates Vite's

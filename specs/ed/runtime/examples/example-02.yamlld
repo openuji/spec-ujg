@@ -1,0 +1,8 @@
+type: RuntimeEvent
+id: urn:ujg:event:12345:200
+execution: urn:ujg:execution:12345
+previousEvent: urn:ujg:event:12345:100
+surfaceInstance: urn:ujg:surface-instance:payment-card
+payload:
+  action: field.complete
+  field: card-number

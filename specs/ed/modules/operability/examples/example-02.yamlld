@@ -1,0 +1,78 @@
+- type: Journey
+  id: urn:journey:mail
+  label: Mail
+  defaultEntry: urn:entry:mail
+  entries:
+    - urn:entry:mail
+  states:
+    - urn:state:home-selected
+    - urn:state:inbox-selected
+    - urn:state:drafts-selected
+  transitions:
+    - urn:transition:select-drafts
+    - urn:transition:select-inbox
+    - urn:transition:select-drafts-from-inbox
+- type: State
+  id: urn:state:inbox-selected
+  label: Inbox selected
+- type: Transition
+  id: urn:transition:select-inbox
+  label: Select Inbox
+  from: urn:state:home-selected
+  to: urn:state:inbox-selected
+  command: urn:command:select-inbox
+- type: Transition
+  id: urn:transition:select-drafts-from-inbox
+  label: Select Drafts
+  from: urn:state:inbox-selected
+  to: urn:state:drafts-selected
+  command: urn:command:select-drafts
+- type: Command
+  id: urn:command:select-inbox
+  label: Select Inbox
+- type: MessageMeta
+  id: urn:message-meta:inbox
+  defaultLocale: urn:locale:en
+- type: Message
+  id: urn:message:inbox:en
+  messageMeta: urn:message-meta:inbox
+  locale: urn:locale:en
+  messageValue: Inbox
+- type: AccessibleLocator
+  id: urn:locator:inbox-tab
+  role: tab
+  accessibleName: urn:message-meta:inbox
+  contextLocators:
+    - urn:locator:mail-tablist
+- type: TransitionMaterialization
+  id: urn:materialization:select-inbox:keyboard
+  materializationTransition: urn:transition:select-inbox
+  materializationModality: ujgobservability:keyboard
+  materializationSteps:
+    - urn:step:select-inbox:keyboard:1
+    - urn:step:select-inbox:keyboard:2
+    - urn:step:select-inbox:keyboard:3
+- type: MoveStep
+  id: urn:step:select-inbox:keyboard:1
+  stepMoveKind: ujgoperability:nextStop
+- type: MoveStep
+  id: urn:step:select-inbox:keyboard:2
+  previousStep: urn:step:select-inbox:keyboard:1
+  stepMoveKind: ujgoperability:nextStop
+  stepLocator: urn:locator:home-tab
+- type: MoveStep
+  id: urn:step:select-inbox:keyboard:3
+  previousStep: urn:step:select-inbox:keyboard:2
+  stepMoveKind: ujgoperability:nextItem
+  stepLocator: urn:locator:inbox-tab
+- type: TransitionMaterialization
+  id: urn:materialization:select-drafts-from-inbox:keyboard
+  materializationTransition: urn:transition:select-drafts-from-inbox
+  materializationModality: ujgobservability:keyboard
+  materializationStartLocator: urn:locator:inbox-tab
+  materializationSteps:
+    - urn:step:select-drafts-from-inbox:keyboard:1
+- type: MoveStep
+  id: urn:step:select-drafts-from-inbox:keyboard:1
+  stepMoveKind: ujgoperability:nextItem
+  stepLocator: urn:locator:drafts-tab

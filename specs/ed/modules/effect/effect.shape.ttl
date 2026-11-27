@@ -8,7 +8,7 @@ ujgeffectshape:TransitionEffectShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgeffect:effectRef ;
+    sh:path ujgeffect:effect ;
     sh:class ujgeffect:Effect ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
@@ -19,13 +19,13 @@ ujgeffectshape:EffectShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgeffect:producedRefs ;
+    sh:path ujgeffect:producedResources ;
     sh:class ujgeffect:EffectResource ;
     sh:nodeKind sh:IRI ;
   ] ;
 
   sh:property [
-    sh:path ujgeffect:consumedRefs ;
+    sh:path ujgeffect:consumedResources ;
     sh:class ujgeffect:EffectResource ;
     sh:nodeKind sh:IRI ;
   ] .
@@ -35,31 +35,31 @@ ujgeffectshape:EffectResourceShape a sh:NodeShape ;
   sh:nodeKind sh:IRI .
 
 ujgeffectshape:EffectReferenceHostShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgeffect:producedRefs ;
-  sh:targetSubjectsOf ujgeffect:consumedRefs ;
+  sh:targetSubjectsOf ujgeffect:producedResources ;
+  sh:targetSubjectsOf ujgeffect:consumedResources ;
   sh:class ujgeffect:Effect ;
   sh:nodeKind sh:IRI .
 
 ujgeffectshape:AdjacentTransitionNoEffectShape a sh:NodeShape ;
   sh:targetClass ujggraph:AdjacentTransition ;
   sh:property [
-    sh:path ujgeffect:effectRef ;
+    sh:path ujgeffect:effect ;
     sh:maxCount 0 ;
-    sh:message "An AdjacentTransition must not declare effectRef; attach effects to Transition or OutgoingTransition." ;
+    sh:message "An AdjacentTransition must not declare effect; attach effects to Transition or OutgoingTransition." ;
   ] .
 
 ujgeffectshape:CommandNoEffectShape a sh:NodeShape ;
   sh:targetClass ujggraph:Command ;
   sh:property [
-    sh:path ujgeffect:effectRef ;
+    sh:path ujgeffect:effect ;
     sh:maxCount 0 ;
-    sh:message "A Command must not declare effectRef; attach effects to Transition or OutgoingTransition." ;
+    sh:message "A Command must not declare effect; attach effects to Transition or OutgoingTransition." ;
   ] .
 
 ujgeffectshape:EntrySelectorNoEffectShape a sh:NodeShape ;
   sh:targetClass ujggraph:EntrySelector ;
   sh:property [
-    sh:path ujgeffect:effectRef ;
+    sh:path ujgeffect:effect ;
     sh:maxCount 0 ;
-    sh:message "An EntrySelector must not declare effectRef; attach effects to Transition or OutgoingTransition." ;
+    sh:message "An EntrySelector must not declare effect; attach effects to Transition or OutgoingTransition." ;
   ] .

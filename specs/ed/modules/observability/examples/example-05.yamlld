@@ -1,0 +1,6 @@
+type: ObservationBinding
+id: urn:ujg:observation-binding:checkout-submit-presence
+observeSurface: urn:ujg:surface:checkout-submit
+observationEvent: urn:ujg:observation-event:presence
+locators:
+  - urn:ujg:locator:checkout-submit

@@ -1,0 +1,5 @@
+type: State
+id: urn:ujg:state:w3c-searchpage-form
+label: Search form
+entryTransitions:
+  - urn:ujg:ot:w3c-searchpage-form-back-home

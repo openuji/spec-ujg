@@ -1,0 +1,4 @@
+type: EntryBinding
+id: urn:ujg:entry-binding:checkout
+entry: urn:ujg:entry:checkout-default
+bindingValue: checkout

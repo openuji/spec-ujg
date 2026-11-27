@@ -1,0 +1,22 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: urn:ujg:data-schema:workshop-detail
+type: object
+required:
+  - workshop
+properties:
+  workshop:
+    type: object
+    required:
+      - id
+      - title
+      - startsAt
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      startsAt:
+        type: string
+        format: date-time
+    additionalProperties: false
+additionalProperties: false

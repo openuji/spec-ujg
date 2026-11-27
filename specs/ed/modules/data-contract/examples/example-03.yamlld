@@ -1,0 +1,22 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/data-contract.context.jsonld
+id: https://example.com/ujg/workshops/detail.jsonld
+type: UJGDocument
+nodes:
+  - type: State
+    id: urn:ujg:state:workshop-detail
+    label: Workshop detail
+  - type: Surface
+    id: urn:ujg:surface:workshop-detail
+    graphNode: urn:ujg:state:workshop-detail
+  - type: DataBinding
+    id: urn:ujg:data-binding:workshop-detail
+    dataSurface: urn:ujg:surface:workshop-detail
+    dataSchema:
+      type: DataSchema
+      id: urn:ujg:data-schema:workshop-detail
+      label: Workshop detail data
+      dataSchemaSource: ./schemas/workshop-detail.schema.json

@@ -34,3 +34,7 @@ ed-combined.md
 NOTICES.md
 *.prompt.md
 .agent
+
+# local conformance environment
+apps/web/scripts/conformance/.venv/
+**/__pycache__/
