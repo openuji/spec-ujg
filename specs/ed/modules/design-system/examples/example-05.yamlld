@@ -1,0 +1,13 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+id: https://example.com/ujg/surface-only.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:state:cart
+    type: State
+    label: Cart
+  - id: urn:surface:cart
+    type: Surface
+    graphNode: urn:state:cart

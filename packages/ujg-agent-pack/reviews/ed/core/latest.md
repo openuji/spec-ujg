@@ -1,7 +1,7 @@
 # Skill Review: ujg-ed-core-modeling
 
 Target: Editor's Draft
-Skill scope: Core module document containers, imports, top-level nodes, and extensions
+Skill scope: Core module document containers, imports, root and embedded node definitions, and extensions
 Source: sources/ed/skills/core/skill.md
 Spec URL: https://ujg.specs.openuji.org/ed/core
 
@@ -12,8 +12,8 @@ Spec URL: https://ujg.specs.openuji.org/ed/core
 
 ## Review Inputs
 
-- Source hash: sha256:8a7ad2895d0d4ab2728323393b4094d6d38550b530a74065f6a8298249ee2585
-- Spec hash: sha256:1dc5ac7274eead66b111b3443e894bf153b5a495090971aa9712d018b5a35639
+- Source hash: sha256:56859a7af456a542ee999f1412ebecf668354251e168be1fbb8d5cf5dccc73df
+- Spec hash: sha256:2c1b79e8702e22dfe01ce75abacb986ead68866911017599280e9ba797b1e167
 
 ## Source Headings Likely Affected
 

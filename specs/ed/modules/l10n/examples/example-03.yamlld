@@ -1,0 +1,49 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld
+type: UJGDocument
+id: https://example.com/ujg/l10n/locale-switch.jsonld
+nodes:
+  - type: Locale
+    id: urn:l10n:locale:en
+    localeCode: en
+  - type: Locale
+    id: urn:l10n:locale:de
+    localeCode: de
+  - type: Journey
+    id: urn:journey:confirmation-en
+    defaultEntry: urn:entry:confirmation-en
+    entries:
+      - type: JourneyEntry
+        id: urn:entry:confirmation-en
+        state: urn:state:confirmation-en
+    states:
+      - type: State
+        id: urn:state:confirmation-en
+        label: English confirmation
+        entryTransitions:
+          - type: OutgoingTransition
+            id: urn:example:ot:language-german
+            label: Deutsch
+            toEntry: urn:entry:confirmation-de
+            targetLocale: urn:l10n:locale:de
+  - type: Journey
+    id: urn:journey:confirmation-de
+    defaultEntry: urn:entry:confirmation-de
+    entries:
+      - type: JourneyEntry
+        id: urn:entry:confirmation-de
+        state: urn:state:summary-de
+    states:
+      - type: State
+        id: urn:state:summary-de
+        label: German order summary
+      - type: State
+        id: urn:state:legal-notice-de
+        label: German legal notice
+    transitions:
+      - type: Transition
+        id: urn:transition:summary-to-legal-notice-de
+        from: urn:state:summary-de
+        to: urn:state:legal-notice-de

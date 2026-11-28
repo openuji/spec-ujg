@@ -1,0 +1,11 @@
+- type: Journey
+  id: urn:ujg:journey:privacy-policy
+  label: Privacy policy
+  defaultEntry: urn:ujg:entry:privacy-policy-default
+  entries:
+    - urn:ujg:entry:privacy-policy-default
+  states:
+    - urn:ujg:state:privacy-policy
+- type: JourneyEntry
+  id: urn:ujg:entry:privacy-policy-default
+  state: urn:ujg:state:privacy-policy

@@ -1,0 +1,105 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld
+id: https://example.com/ujg/product-discovery.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:state:product-discovery
+    type: CompositeState
+    label: Product discovery
+    subjourneys:
+      - id: urn:journey:product-discovery
+        type: Journey
+        defaultEntry: urn:entry:product-discovery-default
+        entries:
+          - type: JourneyEntry
+            id: urn:entry:product-discovery-default
+            state: urn:state:search-query
+        states:
+          - id: urn:state:search-query
+            type: State
+            label: Search query
+          - id: urn:state:filters
+            type: State
+            label: Filters
+          - id: urn:state:results
+            type: State
+            label: Results
+          - id: urn:state:product-preview
+            type: State
+            label: Product preview
+        transitions:
+          - id: urn:transition:search-to-filters
+            type: Transition
+            from: urn:state:search-query
+            to: urn:state:filters
+            label: Refine
+          - id: urn:transition:filters-to-results
+            type: Transition
+            from: urn:state:filters
+            to: urn:state:results
+            label: Apply filters
+          - id: urn:transition:results-to-preview
+            type: Transition
+            from: urn:state:results
+            to: urn:state:product-preview
+            label: Preview product
+  - id: urn:surface:product-discovery
+    type: Surface
+    graphNode: urn:state:product-discovery
+  - id: urn:surface:search-query
+    type: Surface
+    graphNode: urn:state:search-query
+  - id: urn:surface:filters
+    type: Surface
+    graphNode: urn:state:filters
+  - id: urn:surface:results
+    type: Surface
+    graphNode: urn:state:results
+  - id: urn:surface:product-preview
+    type: Surface
+    graphNode: urn:state:product-preview
+  - id: urn:template:ProductDiscovery
+    type: Template
+    label: Product discovery template
+    slots:
+      - id: urn:slot:search
+        type: Slot
+        label: Search slot
+      - id: urn:slot:filters
+        type: Slot
+        label: Filters slot
+      - id: urn:slot:results
+        type: Slot
+        label: Results slot
+      - id: urn:slot:preview
+        type: Slot
+        label: Preview slot
+  - id: urn:materialization:product-discovery
+    type: SurfaceMaterialization
+    label: Product discovery materialization
+    materializedSurface: urn:surface:product-discovery
+    template: urn:template:ProductDiscovery
+    slotBindings:
+      - id: urn:binding:search
+        type: SlotBinding
+        label: Search slot binding
+        slot: urn:slot:search
+        targetSurface: urn:surface:search-query
+      - id: urn:binding:filters
+        type: SlotBinding
+        label: Filters slot binding
+        slot: urn:slot:filters
+        targetSurface: urn:surface:filters
+      - id: urn:binding:results
+        type: SlotBinding
+        label: Results slot binding
+        slot: urn:slot:results
+        targetSurface: urn:surface:results
+      - id: urn:binding:preview
+        type: SlotBinding
+        label: Preview slot binding
+        slot: urn:slot:preview
+        targetSurface: urn:surface:product-preview

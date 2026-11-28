@@ -1,10 +1,8 @@
 {
   "@context": {
     "@version": 1.1,
-
     "ujggraph": "https://ujg.specs.openuji.org/ed/ns/graph#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-
     "Journey": "ujggraph:Journey",
     "JourneyEntry": "ujggraph:JourneyEntry",
     "JourneyEntryIndex": "ujggraph:JourneyEntryIndex",
@@ -18,37 +16,36 @@
     "InvokingTransition": "ujggraph:InvokingTransition",
     "StateCollection": "ujggraph:StateCollection",
     "EntrySelector": "ujggraph:EntrySelector",
-
     "label": "ujggraph:label",
     "tags": {
       "@id": "ujggraph:tags",
       "@container": "@set"
     },
-    "defaultEntryRef": {
-      "@id": "ujggraph:defaultEntryRef",
+    "defaultEntry": {
+      "@id": "ujggraph:defaultEntry",
       "@type": "@id"
     },
-    "entryRefs": {
-      "@id": "ujggraph:entryRefs",
+    "entries": {
+      "@id": "ujggraph:entries",
       "@type": "@id",
       "@container": "@set"
     },
-    "stateRef": {
-      "@id": "ujggraph:stateRef",
+    "state": {
+      "@id": "ujggraph:state",
       "@type": "@id"
     },
-    "stateRefs": {
-      "@id": "ujggraph:stateRefs",
+    "states": {
+      "@id": "ujggraph:states",
       "@type": "@id",
       "@container": "@set"
     },
-    "transitionRefs": {
-      "@id": "ujggraph:transitionRefs",
+    "transitions": {
+      "@id": "ujggraph:transitions",
       "@type": "@id",
       "@container": "@set"
     },
-    "exitRefs": {
-      "@id": "ujggraph:exitRefs",
+    "exits": {
+      "@id": "ujggraph:exits",
       "@type": "@id",
       "@container": "@set"
     },
@@ -60,43 +57,43 @@
       "@id": "ujggraph:to",
       "@type": "@id"
     },
-    "fromExitRef": {
-      "@id": "ujggraph:fromExitRef",
+    "fromExit": {
+      "@id": "ujggraph:fromExit",
       "@type": "@id"
     },
-    "toEntryRef": {
-      "@id": "ujggraph:toEntryRef",
+    "toEntry": {
+      "@id": "ujggraph:toEntry",
       "@type": "@id"
     },
-    "commandRef": {
-      "@id": "ujggraph:commandRef",
+    "command": {
+      "@id": "ujggraph:command",
       "@type": "@id"
     },
-    "subjourneyRefs": {
-      "@id": "ujggraph:subjourneyRefs",
+    "subjourneys": {
+      "@id": "ujggraph:subjourneys",
       "@type": "@id",
       "@container": "@set"
     },
-    "entryTransitionRefs": {
-      "@id": "ujggraph:entryTransitionRefs",
+    "entryTransitions": {
+      "@id": "ujggraph:entryTransitions",
       "@type": "@id",
       "@container": "@set"
     },
-    "memberStateRef": {
-      "@id": "ujggraph:memberStateRef",
+    "memberState": {
+      "@id": "ujggraph:memberState",
       "@type": "@id"
     },
-    "memberTransitionRefs": {
-      "@id": "ujggraph:memberTransitionRefs",
+    "memberTransitions": {
+      "@id": "ujggraph:memberTransitions",
       "@type": "@id",
       "@container": "@set"
     },
-    "entrySelectorRef": {
-      "@id": "ujggraph:entrySelectorRef",
+    "entrySelector": {
+      "@id": "ujggraph:entrySelector",
       "@type": "@id"
     },
-    "candidateJourneyRefs": {
-      "@id": "ujggraph:candidateJourneyRefs",
+    "candidateJourneys": {
+      "@id": "ujggraph:candidateJourneys",
       "@type": "@id",
       "@container": "@set"
     }

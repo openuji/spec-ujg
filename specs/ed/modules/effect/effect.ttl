@@ -19,17 +19,17 @@ ujgeffect:EffectResource a owl:Class ;
 
 ### Properties
 
-ujgeffect:effectRef a owl:ObjectProperty ;
+ujgeffect:effect a owl:ObjectProperty ;
   rdfs:domain [
     a owl:Class ;
     owl:unionOf ( ujggraph:Transition ujggraph:OutgoingTransition )
   ] ;
   rdfs:range ujgeffect:Effect .
 
-ujgeffect:producedRefs a owl:ObjectProperty ;
+ujgeffect:producedResources a owl:ObjectProperty ;
   rdfs:domain ujgeffect:Effect ;
   rdfs:range ujgeffect:EffectResource .
 
-ujgeffect:consumedRefs a owl:ObjectProperty ;
+ujgeffect:consumedResources a owl:ObjectProperty ;
   rdfs:domain ujgeffect:Effect ;
   rdfs:range ujgeffect:EffectResource .

@@ -1,0 +1,5 @@
+type: Transition
+id: urn:ujg:transition:checkout-form-to-complete
+label: Submit checkout
+from: urn:ujg:state:checkout-form
+to: urn:ujg:exit:checkout-complete

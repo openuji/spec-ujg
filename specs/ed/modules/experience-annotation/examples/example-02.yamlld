@@ -1,0 +1,6 @@
+type: PainPoint
+id: urn:ujg:pain:address-validation
+painpointSteps:
+  - urn:ujg:step:shipping
+severity: 0.7
+description: Address correction interrupts checkout.

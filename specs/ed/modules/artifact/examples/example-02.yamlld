@@ -1,0 +1,24 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/effect.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/artifact.context.jsonld
+id: https://example.com/ujg/artifact/named-report.jsonld
+type: UJGDocument
+nodes:
+  - type: Locale
+    id: urn:l10n:locale:en
+    localeCode: en
+  - type: MessageMeta
+    id: urn:l10n:message-meta:artifact-display-name
+    argumentNames:
+      - fileName
+    defaultLocale: urn:l10n:locale:en
+  - type: Message
+    id: urn:l10n:message:artifact-display-name:en
+    messageMeta: urn:l10n:message-meta:artifact-display-name
+    locale: urn:l10n:locale:en
+    messageValue: "Report: ${fileName}"
+  - id: urn:artifact:account-report
+    type: Artifact
+    name: urn:l10n:message-meta:artifact-display-name

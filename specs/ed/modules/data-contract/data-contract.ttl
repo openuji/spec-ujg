@@ -22,17 +22,17 @@ ujgdata:DataBinding a owl:Class ;
 ujgdata:dataSchemaSource a owl:ObjectProperty ;
   rdfs:domain ujgdata:DataSchema ;
   rdfs:range rdfs:Resource ;
-  rdfs:label "data schema source" ;
+  rdfs:label "dataSchemaSource" ;
   rdfs:comment "References the external JSON Schema document defining this data schema." .
 
-ujgdata:dataSurfaceRef a owl:ObjectProperty ;
+ujgdata:dataSurface a owl:ObjectProperty ;
   rdfs:domain ujgdata:DataBinding ;
   rdfs:range ujgsurface:Surface ;
-  rdfs:label "data surface ref" ;
+  rdfs:label "dataSurface" ;
   rdfs:comment "References the Surface whose structured data contract is described." .
 
-ujgdata:dataSchemaRef a owl:ObjectProperty ;
+ujgdata:dataSchema a owl:ObjectProperty ;
   rdfs:domain ujgdata:DataBinding ;
   rdfs:range ujgdata:DataSchema ;
-  rdfs:label "data schema ref" ;
+  rdfs:label "dataSchema" ;
   rdfs:comment "References the DataSchema associated with the bound Surface." .

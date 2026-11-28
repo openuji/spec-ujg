@@ -22,34 +22,34 @@ ujgmapping:MappedStep a owl:Class ;
 
 ### Properties
 
-ujgmapping:mappedJourneyRef a owl:ObjectProperty ;
+ujgmapping:mappedJourney a owl:ObjectProperty ;
   rdfs:domain ujgmapping:JourneyMapping ;
   rdfs:range ujggraph:Journey .
 
-ujgmapping:mappedRuntimeRef a owl:ObjectProperty ;
+ujgmapping:mappedRuntime a owl:ObjectProperty ;
   rdfs:domain ujgmapping:JourneyMapping ;
   rdfs:range ujgruntime:JourneyExecution .
 
-ujgmapping:mappedStepRef a owl:ObjectProperty ;
+ujgmapping:mappedSteps a owl:ObjectProperty ;
   rdfs:domain ujgmapping:JourneyMapping ;
   rdfs:range ujgmapping:MappedStep .
 
-ujgmapping:mappedEventRef a owl:ObjectProperty ;
+ujgmapping:mappedEvent a owl:ObjectProperty ;
   rdfs:domain ujgmapping:MappedStep ;
   rdfs:range ujgruntime:RuntimeEvent .
 
-ujgmapping:observedAffordanceEventRef a owl:ObjectProperty ;
+ujgmapping:observedAffordanceEvent a owl:ObjectProperty ;
   rdfs:domain ujgmapping:MappedStep ;
   rdfs:range ujgruntime:RuntimeEvent .
 
-ujgmapping:mappedStateRef a owl:ObjectProperty ;
+ujgmapping:mappedState a owl:ObjectProperty ;
   rdfs:domain ujgmapping:MappedStep ;
   rdfs:range [
     a owl:Class ;
     owl:unionOf ( ujggraph:State ujggraph:CompositeState )
   ] .
 
-ujgmapping:explainedByTransitionRef a owl:ObjectProperty ;
+ujgmapping:explainedByTransition a owl:ObjectProperty ;
   rdfs:domain ujgmapping:MappedStep ;
   rdfs:range [
     a owl:Class ;

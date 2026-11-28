@@ -1,0 +1,13 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "modules/effect",
+    "modules/l10n",
+    "surface",
+    "modules/artifact"
+  ],
+  "source": "https://example.com/ujg/examples/modules/artifact/example-01.yamlld",
+  "validation": "full"
+}

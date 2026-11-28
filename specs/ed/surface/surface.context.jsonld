@@ -1,29 +1,26 @@
 {
   "@context": {
     "@version": 1.1,
-
     "ujgsurface": "https://ujg.specs.openuji.org/ed/ns/surface#",
-    "surface": "https://ujg.specs.openuji.org/ed/ns/surface#",
     "Surface": "ujgsurface:Surface",
     "SurfaceInstance": "ujgsurface:SurfaceInstance",
     "Touchpoint": "ujgsurface:Touchpoint",
     "Persona": "ujgsurface:Persona",
-
-    "graphNodeRef": {
-      "@id": "ujgsurface:graphNodeRef",
+    "graphNode": {
+      "@id": "ujgsurface:graphNode",
       "@type": "@id"
     },
-    "surfaceRef": {
-      "@id": "ujgsurface:surfaceRef",
+    "surface": {
+      "@id": "ujgsurface:surface",
       "@type": "@id"
     },
-    "touchpointRefs": {
-      "@id": "ujgsurface:touchpointRefs",
+    "touchpoints": {
+      "@id": "ujgsurface:touchpoints",
       "@type": "@id",
       "@container": "@set"
     },
-    "journeyRefs": {
-      "@id": "ujgsurface:journeyRefs",
+    "journeys": {
+      "@id": "ujgsurface:journeys",
       "@type": "@id",
       "@container": "@set"
     },

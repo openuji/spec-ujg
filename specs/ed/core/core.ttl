@@ -14,13 +14,19 @@
 ujg:UJGDocument a owl:Class .
 ujg:Node        a owl:Class .
 
-ujg:documentImports a owl:ObjectProperty ;
+ujg:imports a owl:ObjectProperty ;
   rdfs:domain ujg:UJGDocument ; 
   rdfs:range ujg:UJGDocument .
 
-ujg:documentNodes a owl:ObjectProperty;
+ujg:nodes a owl:ObjectProperty;
   rdfs:domain ujg:UJGDocument ; 
-  rdfs:range ujg:Node .
+  rdfs:range ujg:Node ;
+  rdfs:comment "Authored root and standalone node associations; not an exhaustive membership inventory." .
+
+ujg:members a owl:ObjectProperty ;
+  rdfs:domain ujg:UJGDocument ;
+  rdfs:range ujg:Node ;
+  rdfs:comment "Derived local membership in a source-scoped validation graph. Never an authored membership declaration." .
 
 ### Properties
 

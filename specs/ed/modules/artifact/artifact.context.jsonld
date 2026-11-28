@@ -1,22 +1,18 @@
 {
   "@context": {
     "@version": 1.1,
-
     "ujgartifact": "https://ujg.specs.openuji.org/ed/ns/artifact#",
-    "artifact": "https://ujg.specs.openuji.org/ed/ns/artifact#",
-
     "Artifact": "ujgartifact:Artifact",
-
-    "nameRef": {
-      "@id": "ujgartifact:nameRef",
+    "name": {
+      "@id": "ujgartifact:name",
       "@type": "@id"
     },
-    "sourceTouchpointRef": {
-      "@id": "ujgartifact:sourceTouchpointRef",
+    "sourceTouchpoint": {
+      "@id": "ujgartifact:sourceTouchpoint",
       "@type": "@id"
     },
-    "targetTouchpointRefs": {
-      "@id": "ujgartifact:targetTouchpointRefs",
+    "targetTouchpoints": {
+      "@id": "ujgartifact:targetTouchpoints",
       "@type": "@id",
       "@container": "@set"
     }

@@ -8,7 +8,7 @@ ujgdsshape:ThemeShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgds:tokenSourceRefs ;
+    sh:path ujgds:tokenSources ;
     sh:class ujgds:TokenSource ;
     sh:nodeKind sh:IRI ;
   ] .
@@ -33,7 +33,7 @@ ujgdsshape:TemplateShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgds:slotRefs ;
+    sh:path ujgds:slots ;
     sh:class ujgds:Slot ;
     sh:nodeKind sh:IRI ;
   ] .
@@ -47,7 +47,7 @@ ujgdsshape:SurfaceMaterializationShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgds:surfaceRef ;
+    sh:path ujgds:materializedSurface ;
     sh:class ujgsurface:Surface ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -55,33 +55,33 @@ ujgdsshape:SurfaceMaterializationShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgds:componentRef ;
+    sh:path ujgds:component ;
     sh:class ujgds:Component ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgds:templateRef ;
+    sh:path ujgds:template ;
     sh:class ujgds:Template ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgds:slotBindingRefs ;
+    sh:path ujgds:slotBindings ;
     sh:class ujgds:SlotBinding ;
     sh:nodeKind sh:IRI ;
   ] ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A SurfaceMaterialization must reference exactly one primary materialization through componentRef or templateRef." ;
+    sh:message "A SurfaceMaterialization must reference exactly one primary materialization through component or template." ;
     sh:select """
       SELECT $this
       WHERE {
-        BIND (EXISTS { $this ujgds:componentRef ?component . } AS ?hasComponent)
-        BIND (EXISTS { $this ujgds:templateRef ?template . } AS ?hasTemplate)
+        BIND (EXISTS { $this ujgds:component ?component . } AS ?hasComponent)
+        BIND (EXISTS { $this ujgds:template ?template . } AS ?hasTemplate)
         FILTER ((?hasComponent && ?hasTemplate) || (!?hasComponent && !?hasTemplate))
       }
     """ ;
@@ -89,12 +89,12 @@ ujgdsshape:SurfaceMaterializationShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A SurfaceMaterialization may reference slotBindingRefs only when templateRef is present." ;
+    sh:message "A SurfaceMaterialization may reference slotBindings only when template is present." ;
     sh:select """
       SELECT $this
       WHERE {
-        $this ujgds:slotBindingRefs ?slotBinding .
-        FILTER (NOT EXISTS { $this ujgds:templateRef ?template . })
+        $this ujgds:slotBindings ?slotBinding .
+        FILTER (NOT EXISTS { $this ujgds:template ?template . })
       }
     """ ;
   ] .
@@ -104,7 +104,7 @@ ujgdsshape:SlotBindingShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgds:slotRef ;
+    sh:path ujgds:slot ;
     sh:class ujgds:Slot ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -112,7 +112,7 @@ ujgdsshape:SlotBindingShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgds:targetSurfaceRef ;
+    sh:path ujgds:targetSurface ;
     sh:class ujgsurface:Surface ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;

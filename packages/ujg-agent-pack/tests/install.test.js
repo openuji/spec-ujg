@@ -94,12 +94,22 @@ function generatedStatePath(format, name) {
 }
 
 function assertInstalled(skillsRoot, name) {
-  assert.ok(existsSync(join(installedSkillPath(skillsRoot, name), 'SKILL.md')), `${name} should be installed`);
-  assert.ok(existsSync(installedStatePath(skillsRoot, name)), `${name} should have package-state.json`);
+  assert.ok(
+    existsSync(join(installedSkillPath(skillsRoot, name), 'SKILL.md')),
+    `${name} should be installed`
+  );
+  assert.ok(
+    existsSync(installedStatePath(skillsRoot, name)),
+    `${name} should have package-state.json`
+  );
 }
 
 function assertNotInstalled(skillsRoot, name) {
-  assert.equal(existsSync(installedSkillPath(skillsRoot, name)), false, `${name} should not be installed`);
+  assert.equal(
+    existsSync(installedSkillPath(skillsRoot, name)),
+    false,
+    `${name} should not be installed`
+  );
 }
 
 before(() => {
@@ -231,7 +241,10 @@ test('claude: generated skills omit Codex-only openai.yaml', () => {
   for (const target of manifest().targets) {
     for (const item of target.skills) {
       assert.equal(existsSync(join(buildRoot, 'claude', item.name, 'SKILL.md')), true);
-      assert.equal(existsSync(join(buildRoot, 'claude', item.name, 'agents', 'openai.yaml')), false);
+      assert.equal(
+        existsSync(join(buildRoot, 'claude', item.name, 'agents', 'openai.yaml')),
+        false
+      );
     }
   }
 });
@@ -240,7 +253,11 @@ test('antigravity: project install writes into <project>/.agents/skills', (t) =>
   const home = tempHome(t, 'antigravity');
   const project = tempHome(t, 'antigravity-project');
 
-  runAgentPack(['install', 'antigravity', '--target', 'ed', '--project', project], formats.antigravity, home);
+  runAgentPack(
+    ['install', 'antigravity', '--target', 'ed', '--project', project],
+    formats.antigravity,
+    home
+  );
 
   for (const item of targetSkills('ed')) {
     assertInstalled(join(project, '.agents', 'skills'), item.name);
@@ -252,7 +269,10 @@ test('antigravity: generated skills omit Codex-only openai.yaml', () => {
   for (const target of manifest().targets) {
     for (const item of target.skills) {
       assert.equal(existsSync(join(buildRoot, 'antigravity', item.name, 'SKILL.md')), true);
-      assert.equal(existsSync(join(buildRoot, 'antigravity', item.name, 'agents', 'openai.yaml')), false);
+      assert.equal(
+        existsSync(join(buildRoot, 'antigravity', item.name, 'agents', 'openai.yaml')),
+        false
+      );
     }
   }
 });
@@ -303,3 +323,28 @@ test('ed root skill exposes only the base module family', () => {
     ['root', 'core', 'graph']
   );
 });
+
+for (const [formatKey, format] of Object.entries(formats)) {
+  test(`${formatKey}: ED bundles canonical terms and nested authoring fixtures without changing snapshot references`, () => {
+    const root = targetSkills('ed').find((item) => item.key === 'root');
+    const references = join(buildRoot, format.generatedDir, root.name, 'references');
+    const catalog = readJson(join(references, 'authoring-terms.json'));
+    assert.ok(catalog.terms.some((term) => term.term === 'members' && term.derived));
+    assert.ok(catalog.terms.some((term) => term.iri.endsWith('/graph#states')));
+    const fixture = readFileSync(
+      join(references, 'specs/authoring/examples/example-01.yamlld'),
+      'utf8'
+    );
+    assert.match(fixture, /states:/);
+    assert.doesNotMatch(fixture, /stateRefs:/);
+    assert.ok(existsSync(join(references, 'specs/authoring/index.md')));
+    assert.ok(existsSync(join(references, 'specs/authoring/examples/example-01.example.json')));
+    const snapshot = targetSkills('tr/1.0-rc4').find((item) => item.key === 'root');
+    assert.equal(
+      existsSync(
+        join(buildRoot, format.generatedDir, snapshot.name, 'references/authoring-terms.json')
+      ),
+      false
+    );
+  });
+}

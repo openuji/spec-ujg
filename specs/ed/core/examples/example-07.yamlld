@@ -1,0 +1,5 @@
+id: urn:ujg:node:vendor-private
+type: Node
+extensions:
+  com.acme.example:
+    note: Private payload preserved by Core consumers.

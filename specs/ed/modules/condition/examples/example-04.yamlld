@@ -1,0 +1,5 @@
+type: ConditionalTransitionSet
+id: urn:ujg:conditional-transition-set:checkout-eligibility
+conditionTransitions:
+  - urn:ujg:transition:cart-to-checkout
+  - urn:ujg:transition:cart-to-empty-cart

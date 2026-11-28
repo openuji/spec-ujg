@@ -1,0 +1,12 @@
+- type: CompositeState
+  id: urn:ujg:state:home-page
+  label: Home page
+  subjourneys:
+    - urn:ujg:journey:home-content
+    - urn:ujg:journey:sticky-header
+- type: CompositeState
+  id: urn:ujg:state:article-page
+  label: Article page
+  subjourneys:
+    - urn:ujg:journey:article-content
+    - urn:ujg:journey:sticky-header

@@ -10,7 +10,7 @@ ujgl10nshape:NodeCopyShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgl10n:copyRef ;
+    sh:path ujgl10n:copy ;
     sh:class ujgl10n:MessageMeta ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
@@ -37,14 +37,14 @@ ujgl10nshape:MessageMetaShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgl10n:defaultLocaleRef ;
+    sh:path ujgl10n:defaultLocale ;
     sh:class ujgl10n:Locale ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
   ] ;
 
   sh:property [
-    sh:path ujgl10n:fallbackLocaleRefs ;
+    sh:path ujgl10n:fallbackLocales ;
     sh:class ujgl10n:Locale ;
     sh:nodeKind sh:IRI ;
   ] ;
@@ -60,7 +60,7 @@ ujgl10nshape:MessageShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgl10n:messageMetaRef ;
+    sh:path ujgl10n:messageMeta ;
     sh:class ujgl10n:MessageMeta ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -68,7 +68,7 @@ ujgl10nshape:MessageShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgl10n:localeRef ;
+    sh:path ujgl10n:locale ;
     sh:class ujgl10n:Locale ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -76,7 +76,7 @@ ujgl10nshape:MessageShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgl10n:value ;
+    sh:path ujgl10n:messageValue ;
     sh:datatype xsd:string ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
@@ -84,15 +84,15 @@ ujgl10nshape:MessageShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "No two Message nodes may share the same messageMetaRef and localeRef pair." ;
+    sh:message "No two Message nodes may share the same messageMeta and locale pair." ;
     sh:select """
       SELECT $this
       WHERE {
-        $this ujgl10n:messageMetaRef ?meta ;
-              ujgl10n:localeRef ?locale .
+        $this ujgl10n:messageMeta ?meta ;
+              ujgl10n:locale ?locale .
         ?other a ujgl10n:Message ;
-               ujgl10n:messageMetaRef ?meta ;
-               ujgl10n:localeRef ?locale .
+               ujgl10n:messageMeta ?meta ;
+               ujgl10n:locale ?locale .
         FILTER (?other != $this)
       }
     """ ;
@@ -103,7 +103,7 @@ ujgl10nshape:OutgoingTransitionLocaleShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgl10n:targetLocaleRef ;
+    sh:path ujgl10n:targetLocale ;
     sh:class ujgl10n:Locale ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;
@@ -111,14 +111,14 @@ ujgl10nshape:OutgoingTransitionLocaleShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "An OutgoingTransition with targetLocaleRef must target its destination entry with toEntryRef, not select it through entrySelectorRef." ;
+    sh:message "An OutgoingTransition with targetLocale must target its destination entry with toEntry, not select it through entrySelector." ;
     sh:select """
       SELECT $this
       WHERE {
-        $this ujgl10n:targetLocaleRef ?locale .
+        $this ujgl10n:targetLocale ?locale .
 
         FILTER (NOT EXISTS {
-          $this ujggraph:toEntryRef ?entry .
+          $this ujggraph:toEntry ?entry .
         })
       }
     """ ;

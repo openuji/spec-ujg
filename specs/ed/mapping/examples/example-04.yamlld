@@ -1,0 +1,6 @@
+type: MappedStep
+id: urn:mapping:checkout-1:200
+mappedEvent: urn:event:checkout-1:200
+observedAffordanceEvent: urn:event:checkout-1:150
+mappedState: urn:state:payment
+explainedByTransition: urn:transition:cart-to-payment

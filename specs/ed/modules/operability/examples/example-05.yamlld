@@ -1,0 +1,7 @@
+type: TransitionMaterialization
+id: urn:ujg:materialization:select-drafts:pointer
+materializationTransition: urn:ujg:transition:select-drafts
+materializationModality: ujgobservability:pointer
+materializationSteps:
+  - urn:ujg:step:select-drafts:pointer:1
+  - urn:ujg:step:select-drafts:pointer:2

@@ -1,0 +1,28 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "ujgmetrics": "https://ujg.specs.openuji.org/ed/ns/metrics#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "MetricObservation": "ujgmetrics:MetricObservation",
+    "metricSubject": {
+      "@id": "ujgmetrics:metricSubject",
+      "@type": "@id"
+    },
+    "sourceMapping": {
+      "@id": "ujgmetrics:sourceMapping",
+      "@type": "@id"
+    },
+    "metricKey": "ujgmetrics:metricKey",
+    "metricUnit": "ujgmetrics:metricUnit",
+    "aggregationMethod": "ujgmetrics:aggregationMethod",
+    "metricValue": "ujgmetrics:metricValue",
+    "numeratorCount": {
+      "@id": "ujgmetrics:numeratorCount",
+      "@type": "xsd:nonNegativeInteger"
+    },
+    "denominatorCount": {
+      "@id": "ujgmetrics:denominatorCount",
+      "@type": "xsd:nonNegativeInteger"
+    }
+  }
+}

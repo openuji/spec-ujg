@@ -1,0 +1,8 @@
+{
+  "kind": "fragment",
+  "modules": [
+    "core"
+  ],
+  "source": "https://example.com/ujg/examples/core/example-07.yamlld",
+  "validation": "source"
+}

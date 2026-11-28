@@ -1,0 +1,10 @@
+{
+  "kind": "fragment",
+  "modules": [
+    "core",
+    "graph",
+    "modules/entry-binding"
+  ],
+  "source": "https://example.com/ujg/examples/modules/entry-binding/example-01.yamlld",
+  "validation": "source"
+}

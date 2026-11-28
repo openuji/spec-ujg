@@ -35,34 +35,31 @@ transition edge whose progression has the associated side effect.
 An [=Effect=] declares that a transition edge has an associated side effect. The effect is
 addressable, but this module does not define how the side effect is invoked.
 
-An effect can reference produced or consumed resources through `producedRefs` and `consumedRefs`.
+An effect can reference produced or consumed resources through `producedResources` and `consumedResources`.
 Those references point to concrete subclasses of [=EffectResource=], not to arbitrary graph nodes.
 
 ```mermaid
 classDiagram
   class Effect {
     id
-    producedRefs
-    consumedRefs
+    producedResources
+    consumedResources
   }
   class EffectResource
-  Effect --> "0..*" EffectResource : producedRefs
-  Effect --> "0..*" EffectResource : consumedRefs
+  Effect --> "0..*" EffectResource : producedResources
+  Effect --> "0..*" EffectResource : consumedResources
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@id": "urn:effect:authorize-payment",
-  "@type": "Effect"
-}
+```ujg-example
+./examples/example-03.yamlld
 ```
 
 ## EffectResource {data-cop-concept="effect-resource"}
 
 [=EffectResource=] is an abstract superclass for resources that can be produced or consumed by an
-[=Effect=]. It gives the generic `producedRefs` and `consumedRefs` properties a shared range while
+[=Effect=]. It gives the generic `producedResources` and `consumedResources` properties a shared range while
 leaving concrete resource semantics to other modules.
 
 Concrete modules specialize [=EffectResource=]. For example, [[UJG Artifact]] defines portable
@@ -82,22 +79,22 @@ examples. Use a concrete subclass such as `Artifact`.
 
 The module introduces one transition attachment and two resource references:
 
-- `effect:effectRef` links a Graph `Transition` or `OutgoingTransition` to an `Effect`.
-- `effect:producedRefs` links an `Effect` to one or more produced [=EffectResource=] nodes.
-- `effect:consumedRefs` links an `Effect` to one or more consumed [=EffectResource=] nodes.
+- `ujgeffect:effect` links a Graph `Transition` or `OutgoingTransition` to an `Effect`.
+- `ujgeffect:producedResources` links an `Effect` to one or more produced [=EffectResource=] nodes.
+- `ujgeffect:consumedResources` links an `Effect` to one or more consumed [=EffectResource=] nodes.
 
-A transition without `effectRef` remains fully valid and traversable. Consumers MAY ignore this
+A transition without `effect` remains fully valid and traversable. Consumers MAY ignore this
 module and still process the graph.
 
-A [=Command=] **MUST NOT** declare `effectRef`. A command identifies what was intentionally invoked;
+A [=Command=] **MUST NOT** declare `effect`. A command identifies what was intentionally invoked;
 the transition identifies what progression occurred; the effect identifies the mutation associated
 with that progression.
 
 Crossing a border that two states share through an `AdjacentTransition` has no side effect, so it
-carries no effect. A movement with an effect is a Graph `Transition` with `effectRef`.
+carries no effect. A movement with an effect is a Graph `Transition` with `effect`.
 
 Resource-specific metadata belongs to the referenced resource, not the effect. For example,
-`sourceTouchpointRef` and `targetTouchpointRefs` belong on an `Artifact`; an effect only declares
+`sourceTouchpoint` and `targetTouchpoints` belong on an `Artifact`; an effect only declares
 that it produces or consumes the artifact.
 
 ## Normative Artifacts
@@ -135,7 +132,7 @@ The normative Effect SHACL shape is defined below and is published at
 :::include ./effect.shape.ttl :::
 
 Effect validation depends on the Effect SHACL shape and the ontology graph for each composed
-resource module. The `producedRefs` and `consumedRefs` `sh:class` constraints are evaluated against
+resource module. The `producedResources` and `consumedResources` `sh:class` constraints are evaluated against
 the referenced resource node's concrete class and the resource module's subclass declarations.
 Processors MUST NOT require documents to serialize `EffectResource` as an additional `@type` merely
 to satisfy these constraints.
@@ -145,12 +142,12 @@ the SHACL shape.
 
 1. **Declaration only:** Effect describes that a transition edge has an associated side effect; it
    does not define how that effect is invoked.
-2. **Graph preservation:** `effectRef` MUST NOT create a hidden edge or change the local `from`/`to`
+2. **Graph preservation:** `effect` MUST NOT create a hidden edge or change the local `from`/`to`
    semantics of a host `Transition`, or the destination semantics of a host `OutgoingTransition`,
-   whether its entry is fixed by `toEntryRef` or selected through `entrySelectorRef`.
-3. **Resource boundary:** `producedRefs` and `consumedRefs` MUST point to concrete resources that
+   whether its entry is fixed by `toEntry` or selected through `entrySelector`.
+3. **Resource boundary:** `producedResources` and `consumedResources` MUST point to concrete resources that
    are subclasses of [=EffectResource=]. They MUST NOT be used to create hidden Graph traversal.
-4. **Command separation:** `effectRef` MUST NOT appear on `Command`.
+4. **Command separation:** `effect` MUST NOT appear on `Command`.
 5. **Resource-owned metadata:** Metadata about a produced or consumed resource belongs on the
    referenced resource node. For example, artifact touchpoint metadata belongs on `Artifact`, not
    on `Effect`.
@@ -164,28 +161,8 @@ the SHACL shape.
 
 ### Minimal Example
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/effect.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/effect/checkout.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@id": "urn:transition:submit-payment",
-      "@type": "Transition",
-      "from": "urn:state:payment",
-      "to": "urn:state:confirmation",
-      "effectRef": "urn:effect:authorize-payment"
-    },
-    {
-      "@id": "urn:effect:authorize-payment",
-      "@type": "Effect"
-    }
-  ]
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 ### Artifact Production And Consumption Example
@@ -194,60 +171,6 @@ This example shows a federated share represented as an artifact crossing touchpo
 declare whether they produce or consume the artifact; the artifact declares source and target
 touchpoints.
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/effect.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/artifact.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/effect/federated-share.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@id": "urn:touchpoint:nextcloud-a",
-      "@type": "Touchpoint",
-      "label": "Nextcloud A"
-    },
-    {
-      "@id": "urn:touchpoint:nextcloud-b",
-      "@type": "Touchpoint",
-      "label": "Nextcloud B"
-    },
-    {
-      "@id": "urn:artifact:federated-share",
-      "@type": "Artifact",
-      "label": "Federated share for the test file",
-      "sourceTouchpointRef": "urn:touchpoint:nextcloud-a",
-      "targetTouchpointRefs": [
-        "urn:touchpoint:nextcloud-b"
-      ]
-    },
-    {
-      "@id": "urn:effect:alice-confirm-share",
-      "@type": "Effect",
-      "label": "Alice confirms the remote share",
-      "producedRefs": [
-        "urn:artifact:federated-share"
-      ]
-    },
-    {
-      "@id": "urn:effect:bob-accept-share",
-      "@type": "Effect",
-      "label": "Bob accepts the incoming remote share",
-      "consumedRefs": [
-        "urn:artifact:federated-share"
-      ]
-    },
-    {
-      "@id": "urn:effect:bob-open-accepted-file",
-      "@type": "Effect",
-      "label": "Bob opens the accepted file",
-      "consumedRefs": [
-        "urn:artifact:federated-share"
-      ]
-    }
-  ]
-}
+```ujg-example
+./examples/example-01.yamlld
 ```

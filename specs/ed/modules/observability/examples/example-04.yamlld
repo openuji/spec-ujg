@@ -1,0 +1,7 @@
+type: ObservationBinding
+id: urn:ujg:observation-binding:checkout-error-absent
+observeSurface: urn:ujg:surface:checkout-error
+observationEvent: urn:ujg:observation-event:presence
+locators:
+  - urn:ujg:locator:checkout-error
+expectedMatchCount: 0

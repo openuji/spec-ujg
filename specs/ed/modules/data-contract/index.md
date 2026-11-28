@@ -6,7 +6,7 @@ surfaces.
 A data contract gives stable UJG identity to an external JSON Schema document and binds that schema
 to one [=Surface=]. The binding does not change Graph topology, Surface attachment, Runtime event
 shape, Domain Model meaning, or implementation architecture. Consumers derive the contract's role
-from the referenced surface's existing `graphNodeRef`.
+from the referenced surface's existing `graphNode`.
 
 ## Terminology
 
@@ -42,15 +42,10 @@ classDiagram
   }
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "DataSchema",
-  "@id": "urn:ujg:data-schema:workshop-detail",
-  "label": "Workshop detail data",
-  "dataSchemaSource": "./schemas/workshop-detail.schema.json"
-}
+```ujg-example
+./examples/example-05.yamlld
 ```
 
 ## DataBinding {data-cop-concept="data-binding"}
@@ -62,10 +57,10 @@ explicitly supplied through a visible invocation.
 <spec-statement>
 1. A [=DataBinding=] **MUST** be identified by an IRI.
 2. A [=DataBinding=] **MAY** declare at most one `label`.
-3. A [=DataBinding=] **MUST** declare exactly one `dataSurfaceRef`.
-4. Every `dataSurfaceRef` value **MUST** reference a [=Surface=].
-5. A [=DataBinding=] **MUST** declare exactly one `dataSchemaRef`.
-6. Every `dataSchemaRef` value **MUST** reference a [=DataSchema=].
+3. A [=DataBinding=] **MUST** declare exactly one `dataSurface`.
+4. Every `dataSurface` value **MUST** reference a [=Surface=].
+5. A [=DataBinding=] **MUST** declare exactly one `dataSchema`.
+6. Every `dataSchema` value **MUST** reference a [=DataSchema=].
 7. A [=Surface=] **MUST** be referenced by at most one [=DataBinding=].
 8. Multiple [=Surface|Surfaces=] **MAY** reuse the same [=DataSchema=].
 </spec-statement>
@@ -77,22 +72,17 @@ classDiagram
   class DataBinding {
     id
     label
-    dataSurfaceRef
-    dataSchemaRef
+    dataSurface
+    dataSchema
   }
-  DataBinding --> Surface : dataSurfaceRef
-  DataBinding --> DataSchema : dataSchemaRef
+  DataBinding --> Surface : dataSurface
+  DataBinding --> DataSchema : dataSchema
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "DataBinding",
-  "@id": "urn:ujg:data-binding:workshop-detail",
-  "dataSurfaceRef": "urn:ujg:surface:workshop-registration-open",
-  "dataSchemaRef": "urn:ujg:data-schema:workshop-detail"
-}
+```ujg-example
+./examples/example-04.yamlld
 ```
 
 ## Attachment Model
@@ -102,16 +92,16 @@ The module attaches data contracts only to [=Surface=] nodes.
 Consumers MUST derive the semantic role of a [=DataBinding=] by following:
 
 ```text
-DataBinding.dataSurfaceRef
--> Surface.graphNodeRef
+DataBinding.dataSurface
+-> Surface.graphNode
 -> State | CompositeState | Command
 ```
 
-[=DataBinding=] MUST NOT duplicate `graphNodeRef`.
+[=DataBinding=] MUST NOT duplicate `graphNode`.
 
 ## State And CompositeState Surface Contracts {data-cop-concept="state-surface-contracts"}
 
-When a [=DataBinding=] references a [=Surface=] whose `graphNodeRef` points to a [=State=] or
+When a [=DataBinding=] references a [=Surface=] whose `graphNode` points to a [=State=] or
 [=CompositeState=], the referenced [=DataSchema=] describes the structured application data made
 available to materialize one concrete occurrence of that surface.
 
@@ -127,7 +117,7 @@ behavior.
 
 ## Command Surface Contracts {data-cop-concept="command-surface-contracts"}
 
-When a [=DataBinding=] references a [=Surface=] whose `graphNodeRef` points to a [=Command=], the
+When a [=DataBinding=] references a [=Surface=] whose `graphNode` points to a [=Command=], the
 referenced [=DataSchema=] describes structured data explicitly supplied when the visible invocation
 represented by that surface is invoked.
 
@@ -221,10 +211,10 @@ The normative Data Contract SHACL shape is defined below and is published at
 
 The remaining module semantics beyond the structural SHACL constraints are:
 
-1. **Surface attachment only:** Data bindings target [=Surface=] nodes through `dataSurfaceRef` and
+1. **Surface attachment only:** Data bindings target [=Surface=] nodes through `dataSurface` and
    MUST NOT attach schemas directly to Graph, Condition, or Effect nodes.
 2. **Context-derived role:** Consumers MUST derive materialization or invocation role through
-   `DataBinding.dataSurfaceRef -> Surface.graphNodeRef`.
+   `DataBinding.dataSurface -> Surface.graphNode`.
 3. **External schemas:** A [=DataSchema=] MUST reference one external JSON Schema Draft 2020-12
    document through `dataSchemaSource`; the schema itself remains outside the RDF node.
 4. **One binding per surface:** A [=Surface=] MUST be referenced by at most one [=DataBinding=], but
@@ -239,80 +229,14 @@ The remaining module semantics beyond the structural SHACL constraints are:
 
 ### State Surface Data
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/data-contract.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/workshops/detail.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "State",
-      "@id": "urn:ujg:state:workshop-detail",
-      "label": "Workshop detail"
-    },
-    {
-      "@type": "Surface",
-      "@id": "urn:ujg:surface:workshop-detail",
-      "graphNodeRef": "urn:ujg:state:workshop-detail"
-    },
-    {
-      "@type": "DataSchema",
-      "@id": "urn:ujg:data-schema:workshop-detail",
-      "label": "Workshop detail data",
-      "dataSchemaSource": "./schemas/workshop-detail.schema.json"
-    },
-    {
-      "@type": "DataBinding",
-      "@id": "urn:ujg:data-binding:workshop-detail",
-      "dataSurfaceRef": "urn:ujg:surface:workshop-detail",
-      "dataSchemaRef": "urn:ujg:data-schema:workshop-detail"
-    }
-  ]
-}
+```ujg-example
+./examples/example-03.yamlld
 ```
 
 ### Command Invocation Data
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/data-contract.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/workshops/register.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "Command",
-      "@id": "urn:ujg:command:submit-registration",
-      "label": "Submit registration"
-    },
-    {
-      "@type": "Surface",
-      "@id": "urn:ujg:surface:submit-registration",
-      "graphNodeRef": "urn:ujg:command:submit-registration"
-    },
-    {
-      "@type": "DataSchema",
-      "@id": "urn:ujg:data-schema:registration-submission",
-      "label": "Registration submission",
-      "dataSchemaSource": "./schemas/registration-submission.schema.json"
-    },
-    {
-      "@type": "DataBinding",
-      "@id": "urn:ujg:data-binding:submit-registration",
-      "dataSurfaceRef": "urn:ujg:surface:submit-registration",
-      "dataSchemaRef": "urn:ujg:data-schema:registration-submission"
-    }
-  ]
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 ### External JSON Schema
@@ -320,24 +244,6 @@ The remaining module semantics beyond the structural SHACL constraints are:
 The referenced JSON Schema document is external to UJG. This example is illustrative only; its fields
 are not Data Contract vocabulary.
 
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:ujg:data-schema:workshop-detail",
-  "type": "object",
-  "required": ["workshop"],
-  "properties": {
-    "workshop": {
-      "type": "object",
-      "required": ["id", "title", "startsAt"],
-      "properties": {
-        "id": { "type": "string" },
-        "title": { "type": "string" },
-        "startsAt": { "type": "string", "format": "date-time" }
-      },
-      "additionalProperties": false
-    }
-  },
-  "additionalProperties": false
-}
+```ujg-example
+./examples/example-01.yamlld
 ```

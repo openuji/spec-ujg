@@ -33,74 +33,74 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgoperability:materializationTransitionRef ;
+    sh:path ujgoperability:materializationTransition ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
     sh:node ujgoperabilityshape:MaterializedTransitionShape ;
-    sh:message "A TransitionMaterialization must declare exactly one materializationTransitionRef that references a Transition, AdjacentTransition, OutgoingTransition, or InvokingTransition." ;
+    sh:message "A TransitionMaterialization must declare exactly one materializationTransition that references a Transition, AdjacentTransition, OutgoingTransition, or InvokingTransition." ;
   ] ;
 
   sh:property [
-    sh:path ujgoperability:materializationModalityRef ;
+    sh:path ujgoperability:materializationModality ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
     sh:class ujgobservability:InputModality ;
     sh:nodeKind sh:IRI ;
-    sh:message "A TransitionMaterialization must declare exactly one materializationModalityRef that references an InputModality." ;
+    sh:message "A TransitionMaterialization must declare exactly one materializationModality that references an InputModality." ;
   ] ;
 
   sh:property [
-    sh:path ujgoperability:materializationStepRefs ;
+    sh:path ujgoperability:materializationSteps ;
     sh:minCount 1 ;
     sh:node ujgoperabilityshape:MaterializationStepShape ;
-    sh:message "A TransitionMaterialization must declare at least one materializationStepRefs value, and each must reference a MoveStep, ActivationStep, or ShortcutStep." ;
+    sh:message "A TransitionMaterialization must declare at least one materializationSteps value, and each must reference a MoveStep, ActivationStep, or ShortcutStep." ;
   ] ;
 
   sh:property [
-    sh:path ujgoperability:materializationStartLocatorRef ;
+    sh:path ujgoperability:materializationStartLocator ;
     sh:maxCount 1 ;
     sh:node ujgoperabilityshape:LocatorShape ;
-    sh:message "A TransitionMaterialization may declare at most one materializationStartLocatorRef, and it must reference an AccessibleLocator or CustomLocator." ;
+    sh:message "A TransitionMaterialization may declare at most one materializationStartLocator, and it must reference an AccessibleLocator or CustomLocator." ;
   ] ;
 
   sh:property [
-    sh:path ujgoperability:materializationSourceStateRef ;
+    sh:path ujgoperability:materializationSourceState ;
     sh:maxCount 1 ;
     sh:class ujggraph:State ;
     sh:nodeKind sh:IRI ;
-    sh:message "A TransitionMaterialization may declare at most one materializationSourceStateRef, and it must reference a State." ;
+    sh:message "A TransitionMaterialization may declare at most one materializationSourceState, and it must reference a State." ;
   ] ;
 
   sh:property [
-    sh:path ujgoperability:materializationDirectionRef ;
+    sh:path ujgoperability:materializationDirection ;
     sh:maxCount 1 ;
     sh:in ( ujgoperability:forward ujgoperability:backward ) ;
-    sh:message "A TransitionMaterialization may declare at most one materializationDirectionRef, and it must be operability:forward or operability:backward." ;
+    sh:message "A TransitionMaterialization may declare at most one materializationDirection, and it must be ujgoperability:forward or ujgoperability:backward." ;
   ] ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A Transition with fromExitRef is taken when the child exit is reached, not by a user action, so it has no TransitionMaterialization. Materialize the child Journey's Transition into that exit instead." ;
+    sh:message "A Transition with fromExit is taken when the child exit is reached, not by a user action, so it has no TransitionMaterialization. Materialize the child Journey's Transition into that exit instead." ;
     sh:select """
       SELECT $this ?transition
       WHERE {
-        $this ujgoperability:materializationTransitionRef ?transition .
-        ?transition ujggraph:fromExitRef ?exit .
+        $this ujgoperability:materializationTransition ?transition .
+        ?transition ujggraph:fromExit ?exit .
       }
     """ ;
   ] ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A TransitionMaterialization of an AdjacentTransition must declare materializationDirectionRef." ;
+    sh:message "A TransitionMaterialization of an AdjacentTransition must declare materializationDirection." ;
     sh:select """
       SELECT $this ?transition
       WHERE {
-        $this ujgoperability:materializationTransitionRef ?transition .
+        $this ujgoperability:materializationTransition ?transition .
         ?transition a ujggraph:AdjacentTransition .
 
         FILTER (NOT EXISTS {
-          $this ujgoperability:materializationDirectionRef ?direction .
+          $this ujgoperability:materializationDirection ?direction .
         })
       }
     """ ;
@@ -108,12 +108,12 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "Only a TransitionMaterialization of an AdjacentTransition declares materializationDirectionRef." ;
+    sh:message "Only a TransitionMaterialization of an AdjacentTransition declares materializationDirection." ;
     sh:select """
       SELECT $this ?transition
       WHERE {
-        $this ujgoperability:materializationDirectionRef ?direction ;
-              ujgoperability:materializationTransitionRef ?transition .
+        $this ujgoperability:materializationDirection ?direction ;
+              ujgoperability:materializationTransition ?transition .
 
         FILTER (NOT EXISTS {
           ?transition a ujggraph:AdjacentTransition .
@@ -124,15 +124,15 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A materializationSourceStateRef must reference a State that lists the materialized entry transition in entryTransitionRefs, or a State nested in the CompositeState that the materialized transition leaves." ;
+    sh:message "A materializationSourceState must reference a State that lists the materialized entry transition in entryTransitions, or a State nested in the CompositeState that the materialized transition leaves." ;
     sh:select """
       SELECT $this ?state
       WHERE {
-        $this ujgoperability:materializationSourceStateRef ?state ;
-              ujgoperability:materializationTransitionRef ?transition .
+        $this ujgoperability:materializationSourceState ?state ;
+              ujgoperability:materializationTransition ?transition .
 
         FILTER (NOT EXISTS {
-          ?state ujggraph:entryTransitionRefs ?transition .
+          ?state ujggraph:entryTransitions ?transition .
         })
 
         FILTER (NOT EXISTS {
@@ -144,17 +144,17 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
           {
             ?transition a ujggraph:AdjacentTransition ;
                         ujggraph:from ?left .
-            $this ujgoperability:materializationDirectionRef ujgoperability:forward .
+            $this ujgoperability:materializationDirection ujgoperability:forward .
           }
           UNION
           {
             ?transition a ujggraph:AdjacentTransition ;
                         ujggraph:to ?left .
-            $this ujgoperability:materializationDirectionRef ujgoperability:backward .
+            $this ujgoperability:materializationDirection ujgoperability:backward .
           }
 
           ?left a ujggraph:CompositeState ;
-                (ujggraph:subjourneyRefs/ujggraph:stateRefs)+ ?state .
+                (ujggraph:subjourneys/ujggraph:states)+ ?state .
         })
       }
     """ ;
@@ -162,16 +162,16 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A TransitionMaterialization must have a first step: one of its materializationStepRefs values that declares no stepPreviousRef." ;
+    sh:message "A TransitionMaterialization must have a first step: one of its materializationSteps values that declares no previousStep." ;
     sh:select """
       SELECT $this
       WHERE {
-        $this ujgoperability:materializationStepRefs ?someStep .
+        $this ujgoperability:materializationSteps ?someStep .
 
         FILTER (NOT EXISTS {
-          $this ujgoperability:materializationStepRefs ?first .
+          $this ujgoperability:materializationSteps ?first .
           FILTER (NOT EXISTS {
-            ?first ujgoperability:stepPreviousRef ?previous .
+            ?first ujgoperability:previousStep ?previous .
           })
         })
       }
@@ -180,18 +180,18 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A TransitionMaterialization must have exactly one first step; only one of its materializationStepRefs values may omit stepPreviousRef." ;
+    sh:message "A TransitionMaterialization must have exactly one first step; only one of its materializationSteps values may omit previousStep." ;
     sh:select """
       SELECT $this ?first
       WHERE {
-        $this ujgoperability:materializationStepRefs ?first, ?otherFirst .
+        $this ujgoperability:materializationSteps ?first, ?otherFirst .
         FILTER (?first != ?otherFirst)
 
         FILTER (NOT EXISTS {
-          ?first ujgoperability:stepPreviousRef ?previous .
+          ?first ujgoperability:previousStep ?previous .
         })
         FILTER (NOT EXISTS {
-          ?otherFirst ujgoperability:stepPreviousRef ?otherPrevious .
+          ?otherFirst ujgoperability:previousStep ?otherPrevious .
         })
       }
     """ ;
@@ -199,15 +199,15 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A step's stepPreviousRef must reference a step listed in the same TransitionMaterialization's materializationStepRefs." ;
+    sh:message "A step's previousStep must reference a step listed in the same TransitionMaterialization's materializationSteps." ;
     sh:select """
       SELECT $this ?step ?previous
       WHERE {
-        $this ujgoperability:materializationStepRefs ?step .
-        ?step ujgoperability:stepPreviousRef ?previous .
+        $this ujgoperability:materializationSteps ?step .
+        ?step ujgoperability:previousStep ?previous .
 
         FILTER (NOT EXISTS {
-          $this ujgoperability:materializationStepRefs ?previous .
+          $this ujgoperability:materializationSteps ?previous .
         })
       }
     """ ;
@@ -219,24 +219,24 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
     sh:select """
       SELECT $this ?previous
       WHERE {
-        $this ujgoperability:materializationStepRefs ?step, ?otherStep .
+        $this ujgoperability:materializationSteps ?step, ?otherStep .
         FILTER (?step != ?otherStep)
 
-        ?step ujgoperability:stepPreviousRef ?previous .
-        ?otherStep ujgoperability:stepPreviousRef ?previous .
+        ?step ujgoperability:previousStep ?previous .
+        ?otherStep ujgoperability:previousStep ?previous .
       }
     """ ;
   ] ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A pointer moves directly to an object, so a MoveStep of a TransitionMaterialization through observability:pointer must not use a FocusMoveKind." ;
+    sh:message "A pointer moves directly to an object, so a MoveStep of a TransitionMaterialization through ujgobservability:pointer must not use a FocusMoveKind." ;
     sh:select """
       SELECT $this ?step ?kind
       WHERE {
-        $this ujgoperability:materializationModalityRef ujgobservability:pointer ;
-              ujgoperability:materializationStepRefs ?step .
-        ?step ujgoperability:stepMoveKindRef ?kind .
+        $this ujgoperability:materializationModality ujgobservability:pointer ;
+              ujgoperability:materializationSteps ?step .
+        ?step ujgoperability:stepMoveKind ?kind .
         ?kind a ujgoperability:FocusMoveKind .
       }
     """ ;
@@ -244,15 +244,15 @@ ujgoperabilityshape:TransitionMaterializationShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "Only a TransitionMaterialization through observability:pointer uses operability:pointAt." ;
+    sh:message "Only a TransitionMaterialization through ujgobservability:pointer uses ujgoperability:pointAt." ;
     sh:select """
       SELECT $this ?step
       WHERE {
-        $this ujgoperability:materializationStepRefs ?step .
-        ?step ujgoperability:stepMoveKindRef ujgoperability:pointAt .
+        $this ujgoperability:materializationSteps ?step .
+        ?step ujgoperability:stepMoveKind ujgoperability:pointAt .
 
         FILTER (NOT EXISTS {
-          $this ujgoperability:materializationModalityRef ujgobservability:pointer .
+          $this ujgoperability:materializationModality ujgobservability:pointer .
         })
       }
     """ ;
@@ -266,14 +266,14 @@ ujgoperabilityshape:MoveStepShape a sh:NodeShape ;
   sh:message "A MoveStep must be identified by an IRI and must not also be an ActivationStep or ShortcutStep." ;
 
   sh:property [
-    sh:path ujgoperability:stepMoveKindRef ;
+    sh:path ujgoperability:stepMoveKind ;
     sh:maxCount 1 ;
     sh:nodeKind sh:IRI ;
     sh:or (
       [ sh:class ujgoperability:FocusMoveKind ]
       [ sh:class ujgoperability:MoveKind ]
     ) ;
-    sh:message "A MoveStep may declare at most one stepMoveKindRef, and it must reference a FocusMoveKind or a MoveKind." ;
+    sh:message "A MoveStep may declare at most one stepMoveKind, and it must reference a FocusMoveKind or a MoveKind." ;
   ] .
 
 ujgoperabilityshape:ActivationStepShape a sh:NodeShape ;
@@ -286,27 +286,27 @@ ujgoperabilityshape:MaterializationStepPropertiesShape a sh:NodeShape ;
   sh:targetClass ujgoperability:MoveStep, ujgoperability:ActivationStep, ujgoperability:ShortcutStep ;
 
   sh:property [
-    sh:path ujgoperability:stepLocatorRef ;
+    sh:path ujgoperability:stepLocator ;
     sh:maxCount 1 ;
     sh:node ujgoperabilityshape:LocatorShape ;
-    sh:message "A materialization step may declare at most one stepLocatorRef, and it must reference an AccessibleLocator or CustomLocator." ;
+    sh:message "A materialization step may declare at most one stepLocator, and it must reference an AccessibleLocator or CustomLocator." ;
   ] ;
 
   sh:property [
-    sh:path ujgoperability:stepPreviousRef ;
+    sh:path ujgoperability:previousStep ;
     sh:maxCount 1 ;
     sh:node ujgoperabilityshape:MaterializationStepShape ;
-    sh:message "A materialization step may declare at most one stepPreviousRef, and it must reference a MoveStep, ActivationStep, or ShortcutStep." ;
+    sh:message "A materialization step may declare at most one previousStep, and it must reference a MoveStep, ActivationStep, or ShortcutStep." ;
   ] ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A materialization step must be listed in exactly one TransitionMaterialization's materializationStepRefs." ;
+    sh:message "A materialization step must be listed in exactly one TransitionMaterialization's materializationSteps." ;
     sh:select """
       SELECT $this
       WHERE {
         FILTER (NOT EXISTS {
-          ?materialization ujgoperability:materializationStepRefs $this .
+          ?materialization ujgoperability:materializationSteps $this .
         })
       }
     """ ;
@@ -314,12 +314,12 @@ ujgoperabilityshape:MaterializationStepPropertiesShape a sh:NodeShape ;
 
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A materialization step must be listed in exactly one TransitionMaterialization's materializationStepRefs." ;
+    sh:message "A materialization step must be listed in exactly one TransitionMaterialization's materializationSteps." ;
     sh:select """
       SELECT $this ?materialization
       WHERE {
-        ?materialization ujgoperability:materializationStepRefs $this .
-        ?otherMaterialization ujgoperability:materializationStepRefs $this .
+        ?materialization ujgoperability:materializationSteps $this .
+        ?otherMaterialization ujgoperability:materializationSteps $this .
         FILTER (?materialization != ?otherMaterialization)
       }
     """ ;
@@ -331,7 +331,7 @@ ujgoperabilityshape:MaterializationStepPropertiesShape a sh:NodeShape ;
     sh:select """
       SELECT $this
       WHERE {
-        $this ujgoperability:stepPreviousRef+ $this .
+        $this ujgoperability:previousStep+ $this .
       }
     """ ;
   ] .
@@ -350,49 +350,49 @@ ujgoperabilityshape:MaterializationDirectionShape a sh:NodeShape ;
   sh:targetClass ujgoperability:MaterializationDirection ;
   sh:nodeKind sh:IRI ;
   sh:in ( ujgoperability:forward ujgoperability:backward ) ;
-  sh:message "A MaterializationDirection must be operability:forward or operability:backward." .
+  sh:message "A MaterializationDirection must be ujgoperability:forward or ujgoperability:backward." .
 
-ujgoperabilityshape:MaterializationTransitionRefSubjectShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgoperability:materializationTransitionRef ;
+ujgoperabilityshape:MaterializationTransitionSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgoperability:materializationTransition ;
   sh:class ujgoperability:TransitionMaterialization ;
-  sh:message "Only a TransitionMaterialization declares materializationTransitionRef." .
+  sh:message "Only a TransitionMaterialization declares materializationTransition." .
 
-ujgoperabilityshape:MaterializationModalityRefSubjectShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgoperability:materializationModalityRef ;
+ujgoperabilityshape:MaterializationModalitySubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgoperability:materializationModality ;
   sh:class ujgoperability:TransitionMaterialization ;
-  sh:message "Only a TransitionMaterialization declares materializationModalityRef." .
+  sh:message "Only a TransitionMaterialization declares materializationModality." .
 
-ujgoperabilityshape:MaterializationStepRefsSubjectShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgoperability:materializationStepRefs ;
+ujgoperabilityshape:MaterializationStepSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgoperability:materializationSteps ;
   sh:class ujgoperability:TransitionMaterialization ;
-  sh:message "Only a TransitionMaterialization declares materializationStepRefs." .
+  sh:message "Only a TransitionMaterialization declares materializationSteps." .
 
-ujgoperabilityshape:MaterializationStartLocatorRefSubjectShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgoperability:materializationStartLocatorRef ;
+ujgoperabilityshape:MaterializationStartLocatorSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgoperability:materializationStartLocator ;
   sh:class ujgoperability:TransitionMaterialization ;
-  sh:message "Only a TransitionMaterialization declares materializationStartLocatorRef." .
+  sh:message "Only a TransitionMaterialization declares materializationStartLocator." .
 
-ujgoperabilityshape:MaterializationSourceStateRefSubjectShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgoperability:materializationSourceStateRef ;
+ujgoperabilityshape:MaterializationSourceStateSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgoperability:materializationSourceState ;
   sh:class ujgoperability:TransitionMaterialization ;
-  sh:message "Only a TransitionMaterialization declares materializationSourceStateRef." .
+  sh:message "Only a TransitionMaterialization declares materializationSourceState." .
 
-ujgoperabilityshape:MaterializationDirectionRefSubjectShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgoperability:materializationDirectionRef ;
+ujgoperabilityshape:MaterializationDirectionSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgoperability:materializationDirection ;
   sh:class ujgoperability:TransitionMaterialization ;
-  sh:message "Only a TransitionMaterialization declares materializationDirectionRef." .
+  sh:message "Only a TransitionMaterialization declares materializationDirection." .
 
-ujgoperabilityshape:StepPreviousRefSubjectShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgoperability:stepPreviousRef ;
+ujgoperabilityshape:StepPreviousSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgoperability:previousStep ;
   sh:node ujgoperabilityshape:MaterializationStepShape ;
-  sh:message "Only a MoveStep, ActivationStep, or ShortcutStep declares stepPreviousRef." .
+  sh:message "Only a MoveStep, ActivationStep, or ShortcutStep declares previousStep." .
 
-ujgoperabilityshape:StepLocatorRefSubjectShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgoperability:stepLocatorRef ;
+ujgoperabilityshape:StepLocatorSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgoperability:stepLocator ;
   sh:node ujgoperabilityshape:MaterializationStepShape ;
-  sh:message "Only a MoveStep, ActivationStep, or ShortcutStep declares stepLocatorRef." .
+  sh:message "Only a MoveStep, ActivationStep, or ShortcutStep declares stepLocator." .
 
-ujgoperabilityshape:StepMoveKindRefSubjectShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgoperability:stepMoveKindRef ;
+ujgoperabilityshape:StepMoveKindSubjectShape a sh:NodeShape ;
+  sh:targetSubjectsOf ujgoperability:stepMoveKind ;
   sh:class ujgoperability:MoveStep ;
-  sh:message "Only a MoveStep declares stepMoveKindRef." .
+  sh:message "Only a MoveStep declares stepMoveKind." .

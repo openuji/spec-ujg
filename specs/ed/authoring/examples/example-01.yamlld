@@ -1,0 +1,27 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - "@base": https://example.com/flows/checkout
+id: ""
+type: UJGDocument
+nodes:
+  - id: "#checkout"
+    type: Journey
+    label: Checkout
+    entries:
+      - id: "#start"
+        type: JourneyEntry
+        state: "#cart"
+    defaultEntry: "#start"
+    states:
+      - id: "#cart"
+        type: State
+        label: Shopping cart
+      - id: "#payment"
+        type: State
+        label: Payment
+    transitions:
+      - id: "#continue"
+        type: Transition
+        from: "#cart"
+        to: "#payment"

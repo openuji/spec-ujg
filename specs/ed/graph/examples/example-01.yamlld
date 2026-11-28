@@ -1,0 +1,6 @@
+type: Transition
+id: urn:ujg:transition:checkout-to-payment-error
+label: Show payment error
+from: urn:ujg:state:checkout
+to: urn:ujg:state:payment-error
+fromExit: urn:ujg:exit:payment-failed

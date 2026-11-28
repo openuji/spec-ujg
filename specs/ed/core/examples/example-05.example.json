@@ -1,0 +1,8 @@
+{
+  "kind": "context",
+  "modules": [
+    "core"
+  ],
+  "source": "https://example.com/ujg/examples/core/example-05.yamlld",
+  "validation": "source"
+}

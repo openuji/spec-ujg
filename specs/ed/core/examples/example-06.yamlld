@@ -1,0 +1,6 @@
+"@context": https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+id: https://example.com/ujg/core/minimal.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:ujg:node:vendor-private
+    type: Node

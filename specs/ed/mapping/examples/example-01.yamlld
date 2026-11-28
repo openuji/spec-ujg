@@ -1,0 +1,135 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/mapping.context.jsonld
+id: https://example.com/ujg/mapping/affordance-events.jsonld
+type: UJGDocument
+nodes:
+  - type: Journey
+    id: urn:journey:checkout
+    label: Checkout
+    defaultEntry: urn:entry:checkout
+    entries:
+      - type: JourneyEntry
+        id: urn:entry:checkout
+        state: urn:state:cart
+    states:
+      - type: State
+        id: urn:state:cart
+        label: Cart
+        entryTransitions:
+          - urn:outgoing:help
+      - type: State
+        id: urn:state:payment
+        label: Payment
+        entryTransitions:
+          - urn:outgoing:help
+    transitions:
+      - type: Transition
+        id: urn:transition:cart-to-payment
+        from: urn:state:cart
+        to: urn:state:payment
+        command:
+          type: Command
+          id: urn:command:checkout-action
+          label: Continue to payment
+  - type: Journey
+    id: urn:journey:help
+    label: Help
+    defaultEntry: urn:entry:help
+    entries:
+      - type: JourneyEntry
+        id: urn:entry:help
+        state: urn:state:help
+    states:
+      - type: State
+        id: urn:state:help
+        label: Help
+  - type: OutgoingTransition
+    id: urn:outgoing:help
+    toEntry: urn:entry:help
+    command:
+      type: Command
+      id: urn:command:help-action
+      label: Open help
+  - type: Surface
+    id: urn:surface:cart
+    graphNode: urn:state:cart
+  - type: Surface
+    id: urn:surface:checkout-action
+    graphNode: urn:command:checkout-action
+  - type: Surface
+    id: urn:surface:payment
+    graphNode: urn:state:payment
+  - type: Surface
+    id: urn:surface:help-action
+    graphNode: urn:command:help-action
+  - type: Surface
+    id: urn:surface:help
+    graphNode: urn:state:help
+  - type: SurfaceInstance
+    id: urn:surface-instance:cart
+    surface: urn:surface:cart
+  - type: SurfaceInstance
+    id: urn:surface-instance:checkout-action
+    surface: urn:surface:checkout-action
+  - type: SurfaceInstance
+    id: urn:surface-instance:payment
+    surface: urn:surface:payment
+  - type: SurfaceInstance
+    id: urn:surface-instance:help-action
+    surface: urn:surface:help-action
+  - type: SurfaceInstance
+    id: urn:surface-instance:help
+    surface: urn:surface:help
+  - type: JourneyExecution
+    id: urn:execution:checkout-1
+  - type: RuntimeEvent
+    id: urn:event:checkout-1:100
+    execution: urn:execution:checkout-1
+    surfaceInstance: urn:surface-instance:cart
+  - type: RuntimeEvent
+    id: urn:event:checkout-1:150
+    execution: urn:execution:checkout-1
+    previousEvent: urn:event:checkout-1:100
+    surfaceInstance: urn:surface-instance:checkout-action
+  - type: RuntimeEvent
+    id: urn:event:checkout-1:200
+    execution: urn:execution:checkout-1
+    previousEvent: urn:event:checkout-1:150
+    surfaceInstance: urn:surface-instance:payment
+  - type: RuntimeEvent
+    id: urn:event:checkout-1:250
+    execution: urn:execution:checkout-1
+    previousEvent: urn:event:checkout-1:200
+    surfaceInstance: urn:surface-instance:help-action
+  - type: RuntimeEvent
+    id: urn:event:checkout-1:300
+    execution: urn:execution:checkout-1
+    previousEvent: urn:event:checkout-1:250
+    surfaceInstance: urn:surface-instance:help
+  - type: JourneyMapping
+    id: urn:mapping:checkout-1
+    mappedRuntime: urn:execution:checkout-1
+    mappedJourney: urn:journey:checkout
+    mappedSteps:
+      - type: MappedStep
+        id: urn:mapping:checkout-1:100
+        mappedEvent: urn:event:checkout-1:100
+        mappedState: urn:state:cart
+      - type: MappedStep
+        id: urn:mapping:checkout-1:200
+        mappedEvent: urn:event:checkout-1:200
+        observedAffordanceEvent: urn:event:checkout-1:150
+        mappedState: urn:state:payment
+        explainedByTransition: urn:transition:cart-to-payment
+  - type: JourneyMapping
+    id: urn:mapping:checkout-1:help-segment
+    mappedRuntime: urn:execution:checkout-1
+    mappedJourney: urn:journey:help
+    mappedSteps:
+      - type: MappedStep
+        id: urn:mapping:checkout-1:300
+        mappedEvent: urn:event:checkout-1:300
+        observedAffordanceEvent: urn:event:checkout-1:250
+        mappedState: urn:state:help
+        explainedByTransition: urn:outgoing:help

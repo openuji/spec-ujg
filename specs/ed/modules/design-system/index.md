@@ -56,36 +56,30 @@ classDiagram
   class SlotBinding
   class SurfaceMaterialization {
     id
-    surfaceRef
-    componentRef
-    templateRef
-    slotBindingRefs
+    materializedSurface
+    component
+    template
+    slotBindings
   }
-  SurfaceMaterialization --> Surface : surfaceRef
-  SurfaceMaterialization --> Component : componentRef
-  SurfaceMaterialization --> Template : templateRef
-  SurfaceMaterialization --> "0..*" SlotBinding : slotBindingRefs
+  SurfaceMaterialization --> Surface : materializedSurface
+  SurfaceMaterialization --> Component : component
+  SurfaceMaterialization --> Template : template
+  SurfaceMaterialization --> "0..*" SlotBinding : slotBindings
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "SurfaceMaterialization",
-  "@id": "urn:ujg:materialization:checkout-form",
-  "label": "Checkout form materialization",
-  "surfaceRef": "urn:ujg:surface:checkout-form",
-  "componentRef": "urn:ujg:component:CheckoutForm"
-}
+```ujg-example
+./examples/example-12.yamlld
 ```
 
-A `SurfaceMaterialization` MUST reference exactly one `Surface` through `surfaceRef` and exactly one
-primary materialization through either `componentRef` or `templateRef`. It MUST NOT use both
-`componentRef` and `templateRef`.
+A `SurfaceMaterialization` MUST reference exactly one `Surface` through `materializedSurface` and exactly one
+primary materialization through either `component` or `template`. It MUST NOT use both
+`component` and `template`.
 
-Use `componentRef` when one addressable artifact directly materializes the surface and no required child
-composition needs to remain explicit. Use `templateRef` when reusable slots or required child
-surfaces/controls must remain derivable. `slotBindingRefs` MUST be used only on a template-backed
+Use `component` when one addressable artifact directly materializes the surface and no required child
+composition needs to remain explicit. Use `template` when reusable slots or required child
+surfaces/controls must remain derivable. `slotBindings` MUST be used only on a template-backed
 materialization.
 
 ### Component {data-cop-concept="component"}
@@ -99,14 +93,10 @@ classDiagram
   }
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "Component",
-  "@id": "urn:ujg:component:CheckoutForm",
-  "label": "Checkout form component"
-}
+```ujg-example
+./examples/example-11.yamlld
 ```
 
 ### Template {data-cop-concept="template"}
@@ -137,7 +127,7 @@ and its `SlotBinding` nodes fill those holes with surfaces for that materializat
 inside a slot only indirectly, by materializing a surface that a `SlotBinding` targets.
 
 A [=Template=] is a reusable design-system artifact that declares zero or more [=Slot|Slots=].
-A template declares reusable slots with `slotRefs`. A template MUST NOT hard-code concrete surfaces,
+A template declares reusable slots with `slots`. A template MUST NOT hard-code concrete surfaces,
 components, transitions, or outgoing transitions into those slots.
 
 ```mermaid
@@ -145,20 +135,15 @@ classDiagram
   class Slot
   class Template {
     id
-    slotRefs
+    slots
   }
-  Template --> "0..*" Slot : slotRefs
+  Template --> "0..*" Slot : slots
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "Template",
-  "@id": "urn:ujg:template:checkout-layout",
-  "label": "Checkout layout template",
-  "slotRefs": ["urn:ujg:slot:checkout-main"]
-}
+```ujg-example
+./examples/example-10.yamlld
 ```
 
 ### Slot {data-cop-concept="slot"}
@@ -175,14 +160,10 @@ classDiagram
   }
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "Slot",
-  "@id": "urn:ujg:slot:checkout-main",
-  "label": "Checkout main slot"
-}
+```ujg-example
+./examples/example-09.yamlld
 ```
 
 ### SlotBinding {data-cop-concept="slot-binding"}
@@ -196,49 +177,21 @@ classDiagram
   class Surface
   class SlotBinding {
     id
-    slotRef
-    targetSurfaceRef
+    slot
+    targetSurface
   }
-  SlotBinding --> Slot : slotRef
-  SlotBinding --> Surface : targetSurfaceRef
+  SlotBinding --> Slot : slot
+  SlotBinding --> Surface : targetSurface
 ```
 
-Example JSON nodes:
+Example nodes:
 
-```json
-[
-  {
-    "@type": "SlotBinding",
-    "@id": "urn:ujg:slot-binding:checkout-main",
-    "label": "Checkout main slot binding",
-    "slotRef": "urn:ujg:slot:checkout-main",
-    "targetSurfaceRef": "urn:ujg:surface:checkout-form"
-  },
-  {
-    "@type": "Component",
-    "@id": "urn:ujg:component:CheckoutForm",
-    "label": "Checkout form component"
-  },
-  {
-    "@type": "SurfaceMaterialization",
-    "@id": "urn:ujg:materialization:checkout-form",
-    "label": "Checkout form materialization",
-    "surfaceRef": "urn:ujg:surface:checkout-form",
-    "componentRef": "urn:ujg:component:CheckoutForm"
-  },
-  {
-    "@type": "SurfaceMaterialization",
-    "@id": "urn:ujg:materialization:checkout-page",
-    "label": "Checkout page materialization",
-    "surfaceRef": "urn:ujg:surface:checkout-page",
-    "templateRef": "urn:ujg:template:checkout-layout",
-    "slotBindingRefs": ["urn:ujg:slot-binding:checkout-main"]
-  }
-]
+```ujg-example
+./examples/example-08.yamlld
 ```
 
-A `SlotBinding` MUST reference exactly one declared slot with `slotRef` and exactly one surface with
-`targetSurfaceRef`.
+A `SlotBinding` MUST reference exactly one declared slot with `slot` and exactly one surface with
+`targetSurface`.
 
 When a `SlotBinding` targets a `Surface`, the target surface is composed into the slot for
 presentation purposes only. The binding MUST NOT imply graph traversal, state activation, transition
@@ -248,15 +201,15 @@ surface through the Surface layer.
 
 If a transition, outgoing transition, or outgoing-transition group affordance belongs in a slot,
 model the stable invocation as a [=Command=], reference it from the applicable Graph edge with
-`commandRef`, model a `Surface` for that command through the Surface layer, and target that surface
-with `targetSurfaceRef`.
+`command`, model a `Surface` for that command through the Surface layer, and target that surface
+with `targetSurface`.
 
 ## Token Scope
 
 Theme and token-source resources describe token scope. They do not define which components,
 templates, or surface materializations exist, and they are independent of the surface materialization chain.
 
-A `Theme` identifies a design-system context by referencing token sources through `tokenSourceRefs`.
+A `Theme` identifies a design-system context by referencing token sources through `tokenSources`.
 A `TokenSource` identifies the location of a token source, package, manifest, or token set through
 `source`.
 
@@ -279,20 +232,15 @@ classDiagram
   class TokenSource
   class Theme {
     id
-    tokenSourceRefs
+    tokenSources
   }
-  Theme --> "0..*" TokenSource : tokenSourceRefs
+  Theme --> "0..*" TokenSource : tokenSources
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "Theme",
-  "@id": "urn:ujg:theme:shop",
-  "label": "Shop theme",
-  "tokenSourceRefs": ["urn:ujg:token-source:brand"]
-}
+```ujg-example
+./examples/example-07.yamlld
 ```
 
 ### TokenSource {data-cop-concept="token-source"}
@@ -310,15 +258,10 @@ classDiagram
   }
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "TokenSource",
-  "@id": "urn:ujg:token-source:workshop-foundation",
-  "label": "Workshop foundation tokens",
-  "source": "design/tokens/workshop-foundation.tokens.json"
-}
+```ujg-example
+./examples/example-06.yamlld
 ```
 
 ## Normative Artifacts
@@ -343,11 +286,10 @@ The normative Design System JSON-LD context is defined below and is published at
 `https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld`. It provides compact JSON-LD term
 mappings and coercions for Design System-specific properties and classes.
 
-Surface uses `graphNodeRef` for graph-node attachment. This module keeps a separate, type-scoped
-`surfaceRef` on `SurfaceMaterialization`, where it means materialization-to-Surface. Surface also defines
-`surfaceRef` on `SurfaceInstance`, where it means surface-instance-to-Surface. Design System
-materialization and slot-binding references continue to target stable `Surface` nodes, not
-`SurfaceInstance` nodes.
+Surface uses `graphNode` for Graph attachment and `surface` on `SurfaceInstance`.
+Design System uses the distinct canonical term `materializedSurface` on `SurfaceMaterialization`.
+These terms have separate RDF properties and require no type-scoped override. All published module
+contexts can therefore compose without an ambiguous `surface` property mapping.
 
 :::include ./design-system.context.jsonld :::
 
@@ -365,11 +307,11 @@ The remaining module semantics beyond the structural SHACL constraints are:
    `Surface` depend on design-system artifacts, or introduce graph traversal, state activation,
    transition validity, composite-state containment, execution order, or lifecycle semantics.
 2. **Surface materialization:** A `SurfaceMaterialization` MUST reference exactly one `Surface` and exactly
-   one primary materialization, either `componentRef` or `templateRef`. `slotBindingRefs` MUST be used
-   only when `templateRef` is present.
+   one primary materialization, either `component` or `template`. `slotBindings` MUST be used
+   only when `template` is present.
 3. **Slot composition:** `Template` slot references are declarations. `SurfaceMaterialization` slot
    bindings are concrete assembly. A `SlotBinding` MUST reference exactly one `Surface` target
-   through `targetSurfaceRef`, and surface targets compose presentation only.
+   through `targetSurface`, and surface targets compose presentation only.
 4. **Token scope:** A `TokenSource` MUST declare exactly one `source` IRI reference. Relative
    `source` values MUST resolve against the containing `UJGDocument` location.
 5. **Out of scope:** Component implementation APIs, props, variants, lifecycle, layout algorithms,
@@ -403,69 +345,16 @@ shared Graph `label` term and are informative unless the referenced class requir
 
 ### Example A: Surface Without Materialization
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/surface-only.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@id": "urn:state:cart",
-      "@type": "State",
-      "label": "Cart"
-    },
-    {
-      "@id": "urn:surface:cart",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:cart"
-    }
-  ]
-}
+```ujg-example
+./examples/example-05.yamlld
 ```
 
 This example assigns a state to a surface. It does not declare any design-system materialization.
 
 ### Example B: Component Materialization
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/cart-component.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@id": "urn:state:cart",
-      "@type": "State",
-      "label": "Cart"
-    },
-    {
-      "@id": "urn:surface:cart",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:cart"
-    },
-    {
-      "@id": "urn:component:CartView",
-      "@type": "Component",
-      "label": "Cart view component"
-    },
-    {
-      "@id": "urn:materialization:cart-web",
-      "@type": "SurfaceMaterialization",
-      "label": "Cart web materialization",
-      "surfaceRef": "urn:surface:cart",
-      "componentRef": "urn:component:CartView"
-    }
-  ]
-}
+```ujg-example
+./examples/example-04.yamlld
 ```
 
 The surface remains unchanged. The materialization node points to the surface directly, and clients can
@@ -473,379 +362,26 @@ derive the used component by following the materialization reference.
 
 ### Example C: Template Materialization
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/refund-template.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@id": "urn:state:refund",
-      "@type": "State",
-      "label": "Refund request"
-    },
-    {
-      "@id": "urn:surface:refund",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:refund"
-    },
-    {
-      "@id": "urn:surface:refund-form",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:refund"
-    },
-    {
-      "@id": "urn:transition:submit-refund",
-      "@type": "Transition",
-      "from": "urn:state:refund",
-      "to": "urn:state:refund-submitted",
-      "commandRef": "urn:command:submit-refund"
-    },
-    {
-      "@id": "urn:command:submit-refund",
-      "@type": "Command",
-      "label": "Submit refund"
-    },
-    {
-      "@id": "urn:surface:submit-refund",
-      "@type": "Surface",
-      "graphNodeRef": "urn:command:submit-refund"
-    },
-    {
-      "@id": "urn:component:RefundForm",
-      "@type": "Component",
-      "label": "Refund form component"
-    },
-    {
-      "@id": "urn:materialization:refund-form-fields",
-      "@type": "SurfaceMaterialization",
-      "label": "Refund form fields materialization",
-      "surfaceRef": "urn:surface:refund-form",
-      "componentRef": "urn:component:RefundForm"
-    },
-    {
-      "@id": "urn:template:FormShell",
-      "@type": "Template",
-      "label": "Form shell template",
-      "slotRefs": [
-        "urn:slot:main",
-        "urn:slot:submit"
-      ]
-    },
-    {
-      "@id": "urn:slot:main",
-      "@type": "Slot",
-      "label": "Main content slot"
-    },
-    {
-      "@id": "urn:slot:submit",
-      "@type": "Slot",
-      "label": "Submit action slot"
-    },
-    {
-      "@id": "urn:binding:refund-main",
-      "@type": "SlotBinding",
-      "label": "Refund main slot binding",
-      "slotRef": "urn:slot:main",
-      "targetSurfaceRef": "urn:surface:refund-form"
-    },
-    {
-      "@id": "urn:binding:refund-submit",
-      "@type": "SlotBinding",
-      "label": "Refund submit slot binding",
-      "slotRef": "urn:slot:submit",
-      "targetSurfaceRef": "urn:surface:submit-refund"
-    },
-    {
-      "@id": "urn:materialization:refund-form",
-      "@type": "SurfaceMaterialization",
-      "label": "Refund form materialization",
-      "surfaceRef": "urn:surface:refund",
-      "templateRef": "urn:template:FormShell",
-      "slotBindingRefs": [
-        "urn:binding:refund-main",
-        "urn:binding:refund-submit"
-      ]
-    }
-  ]
-}
+```ujg-example
+./examples/example-03.yamlld
 ```
 
 The template declares slots. The materialization binds those slots for this surface.
 
 ### Example D: Composite Surface With Child Surfaces
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/product-discovery.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@id": "urn:state:product-discovery",
-      "@type": "CompositeState",
-      "label": "Product discovery",
-      "subjourneyRefs": ["urn:journey:product-discovery"]
-    },
-    {
-      "@id": "urn:journey:product-discovery",
-      "@type": "Journey",
-      "defaultEntryRef": "urn:entry:product-discovery-default",
-      "entryRefs": [
-        "urn:entry:product-discovery-default"
-      ],
-      "stateRefs": [
-        "urn:state:search-query",
-        "urn:state:filters",
-        "urn:state:results",
-        "urn:state:product-preview"
-      ],
-      "transitionRefs": [
-        "urn:transition:search-to-filters",
-        "urn:transition:filters-to-results",
-        "urn:transition:results-to-preview"
-      ]
-    },
-    {
-      "@type": "JourneyEntry",
-      "@id": "urn:entry:product-discovery-default",
-      "stateRef": "urn:state:search-query"
-    },
-    {
-      "@id": "urn:state:search-query",
-      "@type": "State",
-      "label": "Search query"
-    },
-    {
-      "@id": "urn:state:filters",
-      "@type": "State",
-      "label": "Filters"
-    },
-    {
-      "@id": "urn:state:results",
-      "@type": "State",
-      "label": "Results"
-    },
-    {
-      "@id": "urn:state:product-preview",
-      "@type": "State",
-      "label": "Product preview"
-    },
-    {
-      "@id": "urn:transition:search-to-filters",
-      "@type": "Transition",
-      "from": "urn:state:search-query",
-      "to": "urn:state:filters",
-      "label": "Refine"
-    },
-    {
-      "@id": "urn:transition:filters-to-results",
-      "@type": "Transition",
-      "from": "urn:state:filters",
-      "to": "urn:state:results",
-      "label": "Apply filters"
-    },
-    {
-      "@id": "urn:transition:results-to-preview",
-      "@type": "Transition",
-      "from": "urn:state:results",
-      "to": "urn:state:product-preview",
-      "label": "Preview product"
-    },
-    {
-      "@id": "urn:surface:product-discovery",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:product-discovery"
-    },
-    {
-      "@id": "urn:surface:search-query",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:search-query"
-    },
-    {
-      "@id": "urn:surface:filters",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:filters"
-    },
-    {
-      "@id": "urn:surface:results",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:results"
-    },
-    {
-      "@id": "urn:surface:product-preview",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:product-preview"
-    },
-    {
-      "@id": "urn:template:ProductDiscovery",
-      "@type": "Template",
-      "label": "Product discovery template",
-      "slotRefs": [
-        "urn:slot:search",
-        "urn:slot:filters",
-        "urn:slot:results",
-        "urn:slot:preview"
-      ]
-    },
-    {
-      "@id": "urn:slot:search",
-      "@type": "Slot",
-      "label": "Search slot"
-    },
-    {
-      "@id": "urn:slot:filters",
-      "@type": "Slot",
-      "label": "Filters slot"
-    },
-    {
-      "@id": "urn:slot:results",
-      "@type": "Slot",
-      "label": "Results slot"
-    },
-    {
-      "@id": "urn:slot:preview",
-      "@type": "Slot",
-      "label": "Preview slot"
-    },
-    {
-      "@id": "urn:binding:search",
-      "@type": "SlotBinding",
-      "label": "Search slot binding",
-      "slotRef": "urn:slot:search",
-      "targetSurfaceRef": "urn:surface:search-query"
-    },
-    {
-      "@id": "urn:binding:filters",
-      "@type": "SlotBinding",
-      "label": "Filters slot binding",
-      "slotRef": "urn:slot:filters",
-      "targetSurfaceRef": "urn:surface:filters"
-    },
-    {
-      "@id": "urn:binding:results",
-      "@type": "SlotBinding",
-      "label": "Results slot binding",
-      "slotRef": "urn:slot:results",
-      "targetSurfaceRef": "urn:surface:results"
-    },
-    {
-      "@id": "urn:binding:preview",
-      "@type": "SlotBinding",
-      "label": "Preview slot binding",
-      "slotRef": "urn:slot:preview",
-      "targetSurfaceRef": "urn:surface:product-preview"
-    },
-    {
-      "@id": "urn:materialization:product-discovery",
-      "@type": "SurfaceMaterialization",
-      "label": "Product discovery materialization",
-      "surfaceRef": "urn:surface:product-discovery",
-      "templateRef": "urn:template:ProductDiscovery",
-      "slotBindingRefs": [
-        "urn:binding:search",
-        "urn:binding:filters",
-        "urn:binding:results",
-        "urn:binding:preview"
-      ]
-    }
-  ]
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 The composite state's surface is materialized as a shell. Child containment comes from the child journeys
-referenced by `subjourneyRefs`. The child surfaces are placed into slots for presentation only;
+referenced by `subjourneys`. The child surfaces are placed into slots for presentation only;
 Graph remains the source of containment and traversal semantics.
 
 ### Example E: Multiple Design-System Token Scopes
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/core.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/design-system.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/multiple-design-systems.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@id": "urn:state:checkout",
-      "@type": "State",
-      "label": "Checkout"
-    },
-    {
-      "@id": "urn:surface:checkout",
-      "@type": "Surface",
-      "graphNodeRef": "urn:state:checkout"
-    },
-    {
-      "@id": "urn:component:Checkout",
-      "@type": "Component",
-      "label": "Checkout component"
-    },
-    {
-      "@id": "urn:materialization:checkout",
-      "@type": "SurfaceMaterialization",
-      "label": "Checkout materialization",
-      "surfaceRef": "urn:surface:checkout",
-      "componentRef": "urn:component:Checkout"
-    },
-    {
-      "@id": "urn:ujg:token-source:web",
-      "@type": "TokenSource",
-      "label": "Web token source",
-      "source": "design/tokens/web.tokens.json"
-    },
-    {
-      "@id": "urn:ujg:token-source:kiosk",
-      "@type": "TokenSource",
-      "label": "Kiosk token source",
-      "source": "design/tokens/kiosk.tokens.json"
-    },
-    {
-      "@id": "urn:ujg:token-source:cli",
-      "@type": "TokenSource",
-      "label": "CLI token source",
-      "source": "design/tokens/cli.tokens.json"
-    },
-    {
-      "@id": "urn:theme:web",
-      "@type": "Theme",
-      "label": "Web theme",
-      "tokenSourceRefs": [
-        "urn:ujg:token-source:web"
-      ]
-    },
-    {
-      "@id": "urn:theme:kiosk",
-      "@type": "Theme",
-      "label": "Kiosk theme",
-      "tokenSourceRefs": [
-        "urn:ujg:token-source:kiosk"
-      ]
-    },
-    {
-      "@id": "urn:theme:cli",
-      "@type": "Theme",
-      "label": "CLI theme",
-      "tokenSourceRefs": [
-        "urn:ujg:token-source:cli"
-      ]
-    }
-  ]
-}
+```ujg-example
+./examples/example-01.yamlld
 ```
 
 Multiple themes can provide different token sources for the same surface and

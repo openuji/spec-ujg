@@ -220,7 +220,7 @@ function collectSpecModules(target) {
         config,
         files: files.map((file) => rel(file)),
         interestingFiles: files
-          .filter((file) => /\.(context\.jsonld|shape\.ttl|ttl|json|md)$/.test(file))
+          .filter((file) => /\.(context\.jsonld|shape\.ttl|ttl|json|md|yamlld)$/.test(file))
           .map((file) => rel(file)),
         hash: hashFiles(directory, files),
       });
@@ -324,8 +324,10 @@ function sourceHash(skill) {
 }
 
 function specHashInput(context, skill) {
+  const ids = skillModuleIds(context, skill);
+  if (context.target.kind === 'ed' && context.modules.has('authoring')) ids.push('authoring');
   return Object.fromEntries(
-    skillModuleIds(context, skill).map((id) => {
+    [...new Set(ids)].map((id) => {
       const module = context.modules.get(id);
       return [id, module?.hash || 'missing'];
     })
@@ -614,7 +616,27 @@ function artifactContents(format, context, skill) {
     ...format.extraArtifacts(context, skill),
     ['references/skill-tree.json', stableJson(generatedSkillTree(context, skill))],
     ['references/related-skills.md', relatedSkillsMarkdown(context, skill)],
+    ...authoringReferences(context, skill),
   ];
+}
+
+function authoringReferences(context, skill) {
+  if (context.target.kind !== 'ed') return [];
+  const authoring = context.modules.get('authoring');
+  if (!authoring) return [];
+  const terms = join(authoring.directory, 'terms.json');
+  const entries = [['references/authoring-terms.json', readText(terms)]];
+  const ids = new Set([...skillModuleIds(context, skill), 'authoring']);
+  for (const id of ids) {
+    const module = context.modules.get(id);
+    if (!module) continue;
+    for (const file of module.files) {
+      if (!/\.(yamlld|example\.json)$/.test(file) && !(id === 'authoring' && file.endsWith('/index.md'))) continue;
+      const absolute = resolve(REPO_ROOT, file);
+      entries.push([`references/specs/${relative(context.target.specRootAbs, absolute).split('\\').join('/')}`, readText(absolute)]);
+    }
+  }
+  return entries;
 }
 
 function artifactHash(entries) {

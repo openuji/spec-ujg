@@ -1,0 +1,4 @@
+type: AdjacentTransition
+id: urn:ujg:adjacent:section-1-section-2
+from: urn:ujg:state:section-1
+to: urn:ujg:state:section-2

@@ -1,0 +1,3 @@
+type: SurfaceInstance
+id: urn:ujg:surface-instance:shipping-form:1
+surface: urn:ujg:surface:shipping-form

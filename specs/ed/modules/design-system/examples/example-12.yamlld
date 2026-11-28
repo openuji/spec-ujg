@@ -1,0 +1,5 @@
+type: SurfaceMaterialization
+id: urn:ujg:materialization:checkout-form
+label: Checkout form materialization
+materializedSurface: urn:ujg:surface:checkout-form
+component: urn:ujg:component:CheckoutForm

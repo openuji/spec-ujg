@@ -1,18 +1,28 @@
 {
   "@context": {
     "@version": 1.1,
-    
     "ujg": "https://ujg.specs.openuji.org/ed/ns/core#",
-    "@vocab": "https://ujg.specs.openuji.org/ed/ns/core#",
-
+    "id": "@id",
+    "type": "@type",
+    "UJGDocument": "ujg:UJGDocument",
+    "Node": "ujg:Node",
     "imports": {
-      "@id": "ujg:documentImports", "@type": "@id", "@container": "@set"
+      "@id": "ujg:imports",
+      "@type": "@id",
+      "@container": "@set"
     },
     "nodes": {
-      "@id": "ujg:documentNodes", "@container": "@set"
+      "@id": "ujg:nodes",
+      "@container": "@set"
     },
     "extensions": {
-      "@id": "ujg:extensions", "@type": "@json"
+      "@id": "ujg:extensions",
+      "@type": "@json"
+    },
+    "members": {
+      "@id": "ujg:members",
+      "@type": "@id",
+      "@container": "@set"
     }
   }
 }

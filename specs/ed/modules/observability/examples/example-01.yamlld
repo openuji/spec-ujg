@@ -1,0 +1,55 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/runtime.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld
+id: https://example.com/ujg/observability/runtime-correlation.jsonld
+type: UJGDocument
+nodes:
+  - type: State
+    id: urn:state:bob-pending-federated-share
+    label: Bob pending federated share
+  - type: Surface
+    id: urn:surface:bob-pending-share
+    graphNode: urn:state:bob-pending-federated-share
+  - type: SurfaceInstance
+    id: urn:surface-instance:bob-pending-share:shared-folder-42
+    surface: urn:surface:bob-pending-share
+  - type: ObservationEvent
+    id: urn:observation-event:presence
+    label: Presence
+  - type: Locale
+    id: urn:locale:en
+    localeCode: en
+  - type: MessageMeta
+    id: urn:message-meta:files
+    defaultLocale: urn:locale:en
+  - type: Message
+    id: urn:message:files:en
+    messageMeta: urn:message-meta:files
+    locale: urn:locale:en
+    messageValue: Files
+  - type: AccessibleFeature
+    id: urn:feature:shared-folder-42
+    accessibleFeatureName: file-id
+    accessibleFeatureValue: shared-folder-42
+  - type: SurfaceInstanceResolver
+    id: urn:resolver:bob-pending-share-file-id
+    instanceKeyFeature: urn:feature:shared-folder-42
+  - type: ObservationBinding
+    id: urn:binding:bob-pending-share-present
+    observeSurface: urn:surface:bob-pending-share
+    observationEvent: urn:observation-event:presence
+    surfaceInstanceResolver: urn:resolver:bob-pending-share-file-id
+    locators:
+      - type: AccessibleLocator
+        id: urn:locator:files-heading
+        role: heading
+        accessibleName: urn:message-meta:files
+  - type: JourneyExecution
+    id: urn:execution:fed-share-runtime-001
+  - type: RuntimeEvent
+    id: urn:runtime-event:bob-pending-share-present-001
+    execution: urn:execution:fed-share-runtime-001
+    surfaceInstance: urn:surface-instance:bob-pending-share:shared-folder-42

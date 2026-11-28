@@ -1,0 +1,7 @@
+type: JourneyMapping
+id: urn:mapping:checkout-1
+mappedRuntime: urn:execution:checkout-1
+mappedJourney: urn:journey:checkout
+mappedSteps:
+  - urn:mapping:checkout-1:100
+  - urn:mapping:checkout-1:200

@@ -1,0 +1,279 @@
+---
+import { createHash } from 'node:crypto';
+import { loadExample } from '../../../../scripts/conformance/examples.js';
+import CodeCustom from './CodeCustom.astro';
+
+interface Props {
+  reference: string;
+  documentPath: string;
+  id?: string;
+}
+
+const { reference, documentPath, id } = Astro.props;
+const example = await loadExample(reference, documentPath);
+const exampleId =
+  id ||
+  `example-${createHash('sha256').update(`${documentPath}:${reference}`).digest('hex').slice(0, 12)}`;
+const formats = [
+  { key: 'yaml', label: 'YAML-LD', code: example.yaml, lang: 'yaml' as const },
+  { key: 'json', label: 'JSON-LD', code: example.json, lang: 'json' as const },
+];
+---
+
+<div
+  class="format-example"
+  id={exampleId}
+  data-format-example={!example.metadata.schemaDocument || undefined}
+>
+  {
+    example.metadata.schemaDocument ? (
+      <CodeCustom code={example.json} lang="json" collapsible={false} />
+    ) : (
+      <>
+        <div class="format-switcher">
+          <div class="format-tabs" data-format-tabs hidden aria-label="Example format">
+            {formats.map((format) => (
+              <button
+                type="button"
+                id={`${exampleId}-tab-${format.key}`}
+                data-format-tab={format.key}
+              >
+                {format.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div class="format-panels">
+          {formats.map((format) => (
+            <div id={`${exampleId}-panel-${format.key}`} data-format-panel={format.key}>
+              <p class="format-label" data-format-label>
+                {format.label}
+              </p>
+              <CodeCustom
+                code={format.code}
+                lang={format.lang}
+                collapsible={format.code.split('\n').length > 12}
+              />
+            </div>
+          ))}
+        </div>
+      </>
+    )
+  }
+</div>
+
+<script>
+  function setupFormatExamples() {
+    document.querySelectorAll<HTMLElement>('[data-format-example]').forEach((example) => {
+      if (example.dataset.formatReady) return;
+      const list = example.querySelector<HTMLElement>('[data-format-tabs]');
+      const tabs = [...example.querySelectorAll<HTMLButtonElement>('[data-format-tab]')];
+      const panels = [...example.querySelectorAll<HTMLElement>('[data-format-panel]')];
+      if (!list || tabs.length !== panels.length || tabs.length === 0) return;
+
+      const activate = (index: number, focus = false) => {
+        tabs.forEach((tab, i) => {
+          const selected = i === index;
+          tab.setAttribute('aria-selected', String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+          panels[i].setAttribute('aria-hidden', String(!selected));
+          panels[i].toggleAttribute('inert', !selected);
+        });
+        if (focus) tabs[index].focus();
+      };
+      list.setAttribute('role', 'tablist');
+      list.hidden = false;
+      tabs.forEach((tab, index) => {
+        tab.setAttribute('role', 'tab');
+        tab.setAttribute('aria-controls', panels[index].id);
+        panels[index].setAttribute('role', 'tabpanel');
+        panels[index].setAttribute('aria-labelledby', tab.id);
+        panels[index].tabIndex = 0;
+        tab.addEventListener('click', () => activate(index));
+        tab.addEventListener('keydown', (event) => {
+          let next: number;
+          if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+          else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+          else if (event.key === 'Home') next = 0;
+          else if (event.key === 'End') next = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          activate(next, true);
+        });
+      });
+      example
+        .querySelectorAll<HTMLElement>('[data-format-label]')
+        .forEach((label) => (label.hidden = true));
+      example.dataset.formatReady = 'true';
+      activate(0);
+    });
+  }
+  setupFormatExamples();
+  document.addEventListener('astro:page-load', setupFormatExamples);
+</script>
+
+<style>
+  .format-example {
+    margin-block: 1.5rem 2rem;
+    min-width: 0;
+  }
+  .format-switcher {
+    display: none;
+    justify-content: flex-end;
+    margin-bottom: 0.625rem;
+  }
+  .format-example[data-format-ready='true'] .format-switcher {
+    display: flex;
+  }
+  .format-tabs:not([hidden]) {
+    display: inline-grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 0.2rem;
+    padding: 0.2rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: color-mix(in oklab, var(--muted) 68%, transparent);
+  }
+  .format-tabs button {
+    font: inherit;
+    font-size: 0.75rem;
+    line-height: 1;
+    font-weight: 600;
+    min-height: 2.25rem;
+    padding: 0.625rem 0.75rem;
+    border: 0;
+    border-radius: 0.55rem;
+    color: var(--muted-foreground);
+    background: transparent;
+    cursor: pointer;
+    transition:
+      background-color 0.16s ease,
+      color 0.16s ease,
+      box-shadow 0.16s ease;
+  }
+  .format-tabs button:hover {
+    color: var(--foreground);
+    background: color-mix(in oklab, var(--card) 55%, transparent);
+  }
+  .format-tabs button[aria-selected='true'] {
+    color: var(--foreground);
+    background: var(--card);
+    box-shadow: 0 1px 3px color-mix(in oklab, var(--foreground) 12%, transparent);
+  }
+  .format-tabs button:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  .format-example[data-format-ready='true'] .format-panels {
+    display: grid;
+  }
+  .format-example[data-format-ready='true'] [data-format-panel] {
+    grid-area: 1 / 1;
+    min-width: 0;
+    margin-top: 0;
+  }
+  .format-example[data-format-ready='true'] [data-format-panel][aria-hidden='true'] {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .format-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .format-example :global(.code-block-wrapper) {
+    margin-block: 0;
+  }
+  .format-example[data-format-ready='true'] [data-format-panel] :global(.code-block-wrapper) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .format-example[data-format-ready='true'] [data-format-panel] :global(.code-content) {
+    flex: 1;
+  }
+  [data-format-panel] + [data-format-panel] {
+    margin-top: 1rem;
+  }
+  .format-tabs[hidden],
+  [data-format-label][hidden] {
+    display: none;
+  }
+  @media print {
+    :global(body:has(.format-example)) {
+      --foreground: #111;
+      --background: #fff;
+      --card: #fff;
+      --primary: #111;
+      --muted-foreground: #333;
+      --border: #ccc;
+      color: #111;
+      background: #fff;
+    }
+    :global(body:has(.format-example) > header),
+    :global(body:has(.format-example) .sidebar),
+    :global(body:has(.format-example) .theme-switcher),
+    :global(body:has(.format-example) .sidebar-container::before) {
+      display: none !important;
+    }
+    :global(body:has(.format-example) .sidebar-container),
+    :global(body:has(.format-example) main) {
+      display: block;
+      max-width: none;
+      width: auto;
+      padding: 0;
+      margin: 0;
+    }
+    .format-switcher,
+    [data-format-panel='json'] {
+      display: none !important;
+    }
+    .format-example[data-format-ready='true'] .format-panels {
+      display: block;
+    }
+    [data-format-panel='yaml'],
+    [data-format-label] {
+      display: block !important;
+      visibility: visible !important;
+    }
+    .format-example :global(.code-content) {
+      max-height: none !important;
+      overflow: visible !important;
+      padding-bottom: 1rem !important;
+    }
+    .format-example :global(.code-block-wrapper) {
+      position: static;
+      overflow: visible;
+      border: 0;
+      border-radius: 0;
+    }
+    .format-example :global(.code-theme--light) {
+      display: block !important;
+    }
+    .format-example :global(.code-theme--dark) {
+      display: none !important;
+    }
+    .format-example :global(pre) {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .format-example :global(.code-collapse-toggle),
+    .format-example :global(.copy-btn),
+    .format-example :global(.code-block-wrapper::after) {
+      display: none !important;
+    }
+  }
+</style>
+<noscript>
+  <style>
+    .format-example .code-content {
+      max-height: none !important;
+      overflow-y: visible !important;
+      padding-bottom: 1rem !important;
+    }
+    .format-example .code-collapse-toggle,
+    .format-example .copy-btn,
+    .format-example .code-block-wrapper::after {
+      display: none !important;
+    }
+  </style>
+</noscript>

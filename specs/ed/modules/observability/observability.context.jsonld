@@ -1,11 +1,8 @@
 {
   "@context": {
     "@version": 1.1,
-
     "ujgobservability": "https://ujg.specs.openuji.org/ed/ns/observability#",
-    "observability": "https://ujg.specs.openuji.org/ed/ns/observability#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-
     "ObservationBinding": "ujgobservability:ObservationBinding",
     "ObservationEvent": "ujgobservability:ObservationEvent",
     "InputModality": "ujgobservability:InputModality",
@@ -15,74 +12,72 @@
     "AccessibleRelation": "ujgobservability:AccessibleRelation",
     "CustomLocator": "ujgobservability:CustomLocator",
     "SurfaceInstanceResolver": "ujgobservability:SurfaceInstanceResolver",
-
     "keyboard": "ujgobservability:keyboard",
     "pointer": "ujgobservability:pointer",
-
-    "observeSurfaceRef": {
-      "@id": "ujgobservability:observeSurfaceRef",
+    "observeSurface": {
+      "@id": "ujgobservability:observeSurface",
       "@type": "@id"
     },
-    "observationEventRef": {
-      "@id": "ujgobservability:observationEventRef",
+    "observationEvent": {
+      "@id": "ujgobservability:observationEvent",
       "@type": "@id"
     },
-    "requiredInputModalityProfileRefs": {
-      "@id": "ujgobservability:requiredInputModalityProfileRefs",
+    "requiredInputModalityProfiles": {
+      "@id": "ujgobservability:requiredInputModalityProfiles",
       "@type": "@id",
       "@container": "@set"
     },
-    "inputModalityRefs": {
-      "@id": "ujgobservability:inputModalityRefs",
+    "inputModalities": {
+      "@id": "ujgobservability:inputModalities",
       "@type": "@id",
       "@container": "@set"
     },
-    "locatorRefs": {
-      "@id": "ujgobservability:locatorRefs",
+    "locators": {
+      "@id": "ujgobservability:locators",
       "@type": "@id",
       "@container": "@set"
     },
-    "surfaceInstanceResolverRef": {
-      "@id": "ujgobservability:surfaceInstanceResolverRef",
+    "surfaceInstanceResolver": {
+      "@id": "ujgobservability:surfaceInstanceResolver",
       "@type": "@id"
     },
     "expectedMatchCount": {
       "@id": "ujgobservability:expectedMatchCount",
       "@type": "xsd:nonNegativeInteger"
     },
-    "instanceKeyFeatureRef": {
-      "@id": "ujgobservability:instanceKeyFeatureRef",
+    "instanceKeyFeature": {
+      "@id": "ujgobservability:instanceKeyFeature",
       "@type": "@id"
     },
     "role": "ujgobservability:role",
-    "accessibleNameRef": {
-      "@id": "ujgobservability:accessibleNameRef",
+    "accessibleName": {
+      "@id": "ujgobservability:accessibleName",
       "@type": "@id"
     },
-    "accessibleDescriptionRef": {
-      "@id": "ujgobservability:accessibleDescriptionRef",
+    "accessibleDescription": {
+      "@id": "ujgobservability:accessibleDescription",
       "@type": "@id"
     },
-    "accessibleFeatureRefs": {
-      "@id": "ujgobservability:accessibleFeatureRefs",
+    "accessibleFeatures": {
+      "@id": "ujgobservability:accessibleFeatures",
       "@type": "@id",
       "@container": "@set"
     },
-    "accessibleRelationRefs": {
-      "@id": "ujgobservability:accessibleRelationRefs",
+    "accessibleRelations": {
+      "@id": "ujgobservability:accessibleRelations",
       "@type": "@id",
       "@container": "@set"
     },
-    "contextLocatorRefs": {
-      "@id": "ujgobservability:contextLocatorRefs",
+    "contextLocators": {
+      "@id": "ujgobservability:contextLocators",
       "@type": "@id",
       "@container": "@set"
     },
     "accessibleFeatureName": "ujgobservability:accessibleFeatureName",
     "accessibleFeatureValue": "ujgobservability:accessibleFeatureValue",
     "accessibleRelationType": "ujgobservability:accessibleRelationType",
-    "targetLocatorRef": {
-      "@id": "ujgobservability:targetLocatorRef",
+    "targetLocator": {
+      "@id": "ujgobservability:targetLocator",
       "@type": "@id"
     }
   }

@@ -1,0 +1,13 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "surface",
+    "runtime",
+    "modules/phase",
+    "mapping"
+  ],
+  "source": "https://example.com/ujg/examples/mapping/example-02.yamlld",
+  "validation": "full"
+}

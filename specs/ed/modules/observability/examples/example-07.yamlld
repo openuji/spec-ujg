@@ -1,0 +1,5 @@
+type: CustomLocator
+id: urn:ujg:locator:checkout-submit-test-id
+extensions:
+  com.acme.locator:
+    testId: submit-order

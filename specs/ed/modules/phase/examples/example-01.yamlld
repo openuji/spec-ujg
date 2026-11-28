@@ -1,0 +1,37 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/phase.context.jsonld
+id: https://example.com/ujg/phase/checkout.jsonld
+type: UJGDocument
+nodes:
+  - type: Journey
+    id: urn:ujg:journey:checkout-page
+    defaultEntry: urn:ujg:entry:checkout-page-default
+    entries:
+      - type: JourneyEntry
+        id: urn:ujg:entry:checkout-page-default
+        state: urn:ujg:state:shipping-segment
+    states:
+      - type: CompositeState
+        id: urn:ujg:state:shipping-segment
+        label: Shipping segment
+        subjourneys:
+          - type: Journey
+            id: urn:ujg:journey:shipping-segment
+            defaultEntry: urn:ujg:entry:shipping-default
+            entries:
+              - type: JourneyEntry
+                id: urn:ujg:entry:shipping-default
+                state: urn:ujg:state:shipping-form
+            states:
+              - type: State
+                id: urn:ujg:state:shipping-form
+                label: Shipping form
+  - type: Phase
+    id: urn:ujg:phase:checkout
+    order: 2
+  - type: Step
+    id: urn:ujg:step:enter-shipping
+    compositeState: urn:ujg:state:shipping-segment
+    phase: urn:ujg:phase:checkout
+    order: 1

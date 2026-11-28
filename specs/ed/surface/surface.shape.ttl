@@ -4,7 +4,7 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ujgsurfaceshape:GraphNodeRefTargetShape a sh:NodeShape ;
+ujgsurfaceshape:GraphNodeTargetShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
   sh:or (
     [ sh:class ujggraph:State ]
@@ -17,8 +17,8 @@ ujgsurfaceshape:SurfaceShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgsurface:graphNodeRef ;
-    sh:node ujgsurfaceshape:GraphNodeRefTargetShape ;
+    sh:path ujgsurface:graphNode ;
+    sh:node ujgsurfaceshape:GraphNodeTargetShape ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
@@ -29,7 +29,7 @@ ujgsurfaceshape:SurfaceInstanceShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgsurface:surfaceRef ;
+    sh:path ujgsurface:surface ;
     sh:class ujgsurface:Surface ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -52,7 +52,7 @@ ujgsurfaceshape:PersonaShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgsurface:touchpointRefs ;
+    sh:path ujgsurface:touchpoints ;
     sh:class ujgsurface:Touchpoint ;
     sh:nodeKind sh:IRI ;
   ] .
@@ -75,7 +75,7 @@ ujgsurfaceshape:TouchpointShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgsurface:journeyRefs ;
+    sh:path ujgsurface:journeys ;
     sh:class ujggraph:Journey ;
     sh:nodeKind sh:IRI ;
   ] .

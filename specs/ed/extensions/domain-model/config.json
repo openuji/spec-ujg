@@ -12,7 +12,8 @@
   ],
   "custom": {
     "family": "extension",
-    "order": 100
+    "order": 100,
+    "extensionKey": "org.openuji.domain-model"
   },
   "respec": {
     "noConformance": true,

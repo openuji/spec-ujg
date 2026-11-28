@@ -67,7 +67,7 @@ Report failures, but continue semantic evaluation where possible.
 
 Analyze the canonical UJG directly.
 
-For each `CompositeState` with `subjourneyRefs`, evaluate each referenced child journey as an
+For each `CompositeState` with `subjourneys`, evaluate each referenced child journey as an
 independent semantic evidence scope before accepting any cross-child correlation. A child journey's
 evidence includes its entries, states, composite states, transitions, exits, and applicable optional
 module nodes referenced by those topology elements. Conditions and Effects attached to transitions
@@ -412,3 +412,15 @@ Do not compare against a preferred architecture.
 
 Do not allow a high overall score to hide unsupported semantics, UJG alignment issues, circular
 operations, or missing topology support.
+
+## Current ED authoring and source scope
+
+Use the current canonical property names and matching vocabulary IRIs. Retired terms are not
+aliases. Prefer nested YAML-LD; accept flat or nested JSON-LD and YAML-LD under the same module
+semantics. Do not change instance identity when changing serialization or filenames.
+
+Resolve imports against each source location independently of `@base`; ordinary node identities
+and references follow standard JSON-LD base rules. Unknown JSON payloads remain opaque.
+
+Consult `references/authoring-terms.json` for canonical mappings and
+`references/specs/authoring/index.md` with its accompanying YAML fixtures for the complete style.

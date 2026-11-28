@@ -90,7 +90,7 @@ Analyze canonical UJG directly.
 
 Do not first translate UJG into prose requirements.
 
-For each `CompositeState` with `subjourneyRefs`, analyze every referenced child `Journey` as its own
+For each `CompositeState` with `subjourneys`, analyze every referenced child `Journey` as its own
 semantic evidence scope before correlating across siblings. A child journey's evidence includes its
 `JourneyEntry` contracts, reachable `State` and `CompositeState` nodes, local `Transition` nodes,
 `JourneyExit` contracts, and applicable optional-module nodes referenced by those topology elements.
@@ -296,7 +296,7 @@ Do not fabricate `ujgRefs` for independent domain knowledge.
 
 Do not add irrelevant transitive references.
 
-A child `Journey` referenced by `subjourneyRefs` may appear in `ujgRefs` only when that journey
+A child `Journey` referenced by `subjourneys` may appear in `ujgRefs` only when that journey
 directly constrains, motivates, or explains the Domain Model element. One Domain Model element may
 reference multiple child journeys, and multiple elements may reference the same child journey; neither
 case is a mechanical derivation rule.
@@ -394,3 +394,15 @@ Explicit domain knowledge may add semantics that UJG does not contain.
 Domain design creates the smallest coherent technology-neutral model satisfying both.
 
 Do not confuse topology constraints, domain knowledge, and design choices.
+
+## Current ED authoring and source scope
+
+Use the current canonical property names and matching vocabulary IRIs. Retired terms are not
+aliases. Prefer nested YAML-LD; accept flat or nested JSON-LD and YAML-LD under the same module
+semantics. Do not change instance identity when changing serialization or filenames.
+
+Resolve imports against each source location independently of `@base`; ordinary node identities
+and references follow standard JSON-LD base rules. Unknown JSON payloads remain opaque.
+
+Consult `references/authoring-terms.json` for canonical mappings and
+`references/specs/authoring/index.md` with its accompanying YAML fixtures for the complete style.

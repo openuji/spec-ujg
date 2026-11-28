@@ -1,0 +1,10 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "modules/l10n"
+  ],
+  "source": "https://example.com/ujg/examples/modules/l10n/example-02.yamlld",
+  "validation": "full"
+}

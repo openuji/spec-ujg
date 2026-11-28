@@ -1,0 +1,21 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "surface",
+    "runtime",
+    "modules/phase",
+    "mapping",
+    "metrics",
+    "modules/data-contract",
+    "modules/l10n",
+    "modules/observability",
+    "modules/design-system",
+    "modules/entry-binding",
+    "modules/effect",
+    "modules/artifact"
+  ],
+  "source": "https://example.com/ujg/examples/authoring/example-01.yamlld",
+  "validation": "full"
+}

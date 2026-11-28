@@ -1,0 +1,4 @@
+type: AccessibleLocator
+id: urn:ujg:locator:checkout-submit
+role: button
+accessibleName: urn:l10n:message-meta:submit-order

@@ -1,0 +1,14 @@
+- type: Journey
+  id: urn:ujg:journey:site-search
+  label: Site search
+  defaultEntry: urn:ujg:entry:site-search-default
+  entries:
+    - urn:ujg:entry:site-search-default
+  states:
+    - urn:ujg:state:search-form
+    - urn:ujg:state:results
+  transitions:
+    - urn:ujg:transition:search-form-to-results
+- type: JourneyEntry
+  id: urn:ujg:entry:site-search-default
+  state: urn:ujg:state:search-form

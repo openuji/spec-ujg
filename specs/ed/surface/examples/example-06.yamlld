@@ -1,0 +1,11 @@
+- type: Persona
+  id: urn:ujg:persona:customer
+  label: Customer
+  tags:
+    - shopper
+  touchpoints:
+    - urn:ujg:touchpoint:web
+- type: Touchpoint
+  id: urn:ujg:touchpoint:web
+  label: Web shop
+  channel: web

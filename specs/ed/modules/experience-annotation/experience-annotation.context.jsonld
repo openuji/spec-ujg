@@ -4,8 +4,8 @@
     "ujgexperienceannotation": "https://ujg.specs.openuji.org/ed/ns/experience-annotation#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
     "PainPoint": "ujgexperienceannotation:PainPoint",
-    "painpointStepRefs": {
-      "@id": "ujgexperienceannotation:painpointStepRefs",
+    "painpointSteps": {
+      "@id": "ujgexperienceannotation:painpointSteps",
       "@type": "@id",
       "@container": "@set"
     },

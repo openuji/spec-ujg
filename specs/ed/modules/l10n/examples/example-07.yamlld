@@ -1,0 +1,9 @@
+type: MessageMeta
+id: urn:l10n:message-meta:order-confirmation-title
+argumentNames:
+  - orderNumber
+defaultLocale: urn:l10n:locale:en
+fallbackLocales:
+  - urn:l10n:locale:en
+  - urn:l10n:locale:de
+rtl: false

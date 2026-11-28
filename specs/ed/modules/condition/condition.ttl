@@ -19,10 +19,10 @@ ujgcond:ConditionalTransitionSet a owl:Class ;
 
 ### Properties
 
-ujgcond:conditionRef a owl:ObjectProperty ;
+ujgcond:condition a owl:ObjectProperty ;
   rdfs:domain ujggraph:Transition ;
   rdfs:range ujgcond:Condition .
 
-ujgcond:conditionTransitionRefs a owl:ObjectProperty ;
+ujgcond:conditionTransitions a owl:ObjectProperty ;
   rdfs:domain ujgcond:ConditionalTransitionSet ;
   rdfs:range ujggraph:Transition .

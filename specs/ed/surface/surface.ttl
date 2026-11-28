@@ -28,7 +28,7 @@ ujgsurface:Persona a owl:Class ;
 
 ### Properties
 
-ujgsurface:graphNodeRef a owl:ObjectProperty ;
+ujgsurface:graphNode a owl:ObjectProperty ;
   rdfs:domain ujgsurface:Surface ;
   rdfs:range [
     a owl:Class ;
@@ -39,20 +39,20 @@ ujgsurface:graphNodeRef a owl:ObjectProperty ;
     )
   ] .
 
-ujgsurface:surfaceRef a owl:ObjectProperty ;
+ujgsurface:surface a owl:ObjectProperty ;
   rdfs:domain ujgsurface:SurfaceInstance ;
   rdfs:range ujgsurface:Surface .
 
-ujgsurface:touchpointRefs a owl:ObjectProperty ;
+ujgsurface:touchpoints a owl:ObjectProperty ;
   rdfs:domain ujgsurface:Persona ;
   rdfs:range ujgsurface:Touchpoint ;
-  rdfs:label "touchpoint refs" ;
+  rdfs:label "touchpoints" ;
   rdfs:comment "References touchpoints associated with this human role, archetype, or participant perspective." .
 
-ujgsurface:journeyRefs a owl:ObjectProperty ;
+ujgsurface:journeys a owl:ObjectProperty ;
   rdfs:domain ujgsurface:Touchpoint ;
   rdfs:range ujggraph:Journey ;
-  rdfs:label "journey refs" ;
+  rdfs:label "journeys" ;
   rdfs:comment "References meaningful Journey boundaries presented through this Touchpoint." .
 
 ujgsurface:channel a owl:DatatypeProperty ;

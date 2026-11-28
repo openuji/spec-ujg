@@ -1,0 +1,4 @@
+type: DataSchema
+id: urn:ujg:data-schema:workshop-detail
+label: Workshop detail data
+dataSchemaSource: ./schemas/workshop-detail.schema.json

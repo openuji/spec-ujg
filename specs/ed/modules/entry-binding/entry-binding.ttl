@@ -19,14 +19,14 @@ ujgentrybinding:EntryBinding a owl:Class ;
 
 ### Properties
 
-ujgentrybinding:entryRef a owl:ObjectProperty ;
+ujgentrybinding:entry a owl:ObjectProperty ;
   rdfs:domain ujgentrybinding:EntryBinding ;
   rdfs:range ujggraph:JourneyEntry ;
-  rdfs:label "entry ref" ;
+  rdfs:label "entry" ;
   rdfs:comment "References the JourneyEntry selected by this EntryBinding." .
 
-ujgentrybinding:value a owl:DatatypeProperty ;
+ujgentrybinding:bindingValue a owl:DatatypeProperty ;
   rdfs:domain ujgentrybinding:EntryBinding ;
   rdfs:range xsd:string ;
-  rdfs:label "value" ;
+  rdfs:label "bindingValue" ;
   rdfs:comment "Opaque materialization-context value for selecting the referenced JourneyEntry." .

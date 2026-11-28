@@ -1,0 +1,6 @@
+type: Touchpoint
+id: urn:ujg:touchpoint:web
+label: Web shop
+channel: web
+journeys:
+  - urn:ujg:journey:checkout

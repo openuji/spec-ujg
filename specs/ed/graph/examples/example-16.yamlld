@@ -1,0 +1,19 @@
+- type: Journey
+  id: urn:ujg:journey:confirmation
+  defaultEntry: urn:ujg:entry:confirmation
+  entries:
+    - urn:ujg:entry:confirmation
+  states:
+    - urn:ujg:state:confirmation
+- type: JourneyEntry
+  id: urn:ujg:entry:confirmation
+  state: urn:ujg:state:confirmation
+- type: State
+  id: urn:ujg:state:confirmation
+  label: Confirmation
+  entryTransitions:
+    - urn:ujg:ot:reenter-confirmation
+- type: OutgoingTransition
+  id: urn:ujg:ot:reenter-confirmation
+  label: Re-enter confirmation
+  toEntry: urn:ujg:entry:confirmation

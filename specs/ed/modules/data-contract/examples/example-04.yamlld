@@ -1,0 +1,4 @@
+type: DataBinding
+id: urn:ujg:data-binding:workshop-detail
+dataSurface: urn:ujg:surface:workshop-registration-open
+dataSchema: urn:ujg:data-schema:workshop-detail

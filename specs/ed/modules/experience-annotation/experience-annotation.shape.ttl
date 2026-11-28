@@ -9,7 +9,7 @@ ujgexperienceannotationshape:PainPointShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgexperienceannotation:painpointStepRefs ;
+    sh:path ujgexperienceannotation:painpointSteps ;
     sh:class ujgphase:Step ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;

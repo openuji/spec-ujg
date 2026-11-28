@@ -1,0 +1,11 @@
+"@context": https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+id: https://example.com/ujg/core/nodes.jsonld
+type: UJGDocument
+nodes:
+  - id: urn:ujg:node:alpha
+    type: Node
+  - id: urn:ujg:node:beta
+    type: Node
+    extensions:
+      com.example.audit:
+        checksum: sha256:abc123

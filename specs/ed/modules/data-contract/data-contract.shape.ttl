@@ -33,7 +33,7 @@ ujgdatashape:DataBindingShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgdata:dataSurfaceRef ;
+    sh:path ujgdata:dataSurface ;
     sh:class ujgsurface:Surface ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -41,7 +41,7 @@ ujgdatashape:DataBindingShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgdata:dataSchemaRef ;
+    sh:path ujgdata:dataSchema ;
     sh:class ujgdata:DataSchema ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -54,8 +54,8 @@ ujgdatashape:DataSchemaSourceUsageShape a sh:NodeShape ;
   sh:nodeKind sh:IRI .
 
 ujgdatashape:DataBindingUsageShape a sh:NodeShape ;
-  sh:targetSubjectsOf ujgdata:dataSurfaceRef ;
-  sh:targetSubjectsOf ujgdata:dataSchemaRef ;
+  sh:targetSubjectsOf ujgdata:dataSurface ;
+  sh:targetSubjectsOf ujgdata:dataSchema ;
   sh:class ujgdata:DataBinding ;
   sh:nodeKind sh:IRI .
 
@@ -63,13 +63,13 @@ ujgdatashape:SurfaceDataBindingCardinalityShape a sh:NodeShape ;
   sh:targetClass ujgsurface:Surface ;
   sh:sparql [
     a sh:SPARQLConstraint ;
-    sh:message "A Surface must be referenced by at most one DataBinding through dataSurfaceRef." ;
+    sh:message "A Surface must be referenced by at most one DataBinding through dataSurface." ;
     sh:select """
       PREFIX ujgdata: <https://ujg.specs.openuji.org/ed/ns/data-contract#>
 
       SELECT $this WHERE {
-        ?first ujgdata:dataSurfaceRef $this .
-        ?second ujgdata:dataSurfaceRef $this .
+        ?first ujgdata:dataSurface $this .
+        ?second ujgdata:dataSurface $this .
         FILTER(str(?first) < str(?second))
       }
     """ ;

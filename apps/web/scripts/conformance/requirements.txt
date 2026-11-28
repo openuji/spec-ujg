@@ -1,0 +1,8 @@
+html5rdf==1.2.1
+owlrl==7.6.2
+packaging==26.4
+prettytable==3.19.0
+pyparsing==3.3.3
+pyshacl==0.40.2
+rdflib==7.6.0
+wcwidth==0.9.5

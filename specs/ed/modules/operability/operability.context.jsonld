@@ -1,10 +1,7 @@
 {
   "@context": {
     "@version": 1.1,
-
     "ujgoperability": "https://ujg.specs.openuji.org/ed/ns/operability#",
-    "operability": "https://ujg.specs.openuji.org/ed/ns/operability#",
-
     "TransitionMaterialization": "ujgoperability:TransitionMaterialization",
     "MoveStep": "ujgoperability:MoveStep",
     "ActivationStep": "ujgoperability:ActivationStep",
@@ -12,42 +9,41 @@
     "FocusMoveKind": "ujgoperability:FocusMoveKind",
     "MoveKind": "ujgoperability:MoveKind",
     "MaterializationDirection": "ujgoperability:MaterializationDirection",
-
-    "materializationTransitionRef": {
-      "@id": "ujgoperability:materializationTransitionRef",
+    "materializationTransition": {
+      "@id": "ujgoperability:materializationTransition",
       "@type": "@id"
     },
-    "materializationModalityRef": {
-      "@id": "ujgoperability:materializationModalityRef",
+    "materializationModality": {
+      "@id": "ujgoperability:materializationModality",
       "@type": "@id"
     },
-    "materializationStepRefs": {
-      "@id": "ujgoperability:materializationStepRefs",
+    "materializationSteps": {
+      "@id": "ujgoperability:materializationSteps",
       "@type": "@id",
       "@container": "@set"
     },
-    "materializationStartLocatorRef": {
-      "@id": "ujgoperability:materializationStartLocatorRef",
+    "materializationStartLocator": {
+      "@id": "ujgoperability:materializationStartLocator",
       "@type": "@id"
     },
-    "materializationSourceStateRef": {
-      "@id": "ujgoperability:materializationSourceStateRef",
+    "materializationSourceState": {
+      "@id": "ujgoperability:materializationSourceState",
       "@type": "@id"
     },
-    "materializationDirectionRef": {
-      "@id": "ujgoperability:materializationDirectionRef",
+    "materializationDirection": {
+      "@id": "ujgoperability:materializationDirection",
       "@type": "@id"
     },
-    "stepPreviousRef": {
-      "@id": "ujgoperability:stepPreviousRef",
+    "previousStep": {
+      "@id": "ujgoperability:previousStep",
       "@type": "@id"
     },
-    "stepLocatorRef": {
-      "@id": "ujgoperability:stepLocatorRef",
+    "stepLocator": {
+      "@id": "ujgoperability:stepLocator",
       "@type": "@id"
     },
-    "stepMoveKindRef": {
-      "@id": "ujgoperability:stepMoveKindRef",
+    "stepMoveKind": {
+      "@id": "ujgoperability:stepMoveKind",
       "@type": "@id"
     }
   }

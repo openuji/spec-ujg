@@ -9,7 +9,7 @@ ujgphaseshape:StepShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujgphase:compositeStateRef ;
+    sh:path ujgphase:compositeState ;
     sh:class ujggraph:CompositeState ;
     sh:nodeKind sh:IRI ;
     sh:minCount 1 ;
@@ -17,7 +17,7 @@ ujgphaseshape:StepShape a sh:NodeShape ;
   ] ;
 
   sh:property [
-    sh:path ujgphase:phaseRef ;
+    sh:path ujgphase:phase ;
     sh:class ujgphase:Phase ;
     sh:nodeKind sh:IRI ;
     sh:maxCount 1 ;

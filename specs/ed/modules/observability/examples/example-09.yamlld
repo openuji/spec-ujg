@@ -1,0 +1,4 @@
+type: AccessibleRelation
+id: urn:ujg:accessible-relation:form-labelled-by-heading
+accessibleRelationType: labelled-by
+targetLocator: urn:ujg:locator:checkout-heading

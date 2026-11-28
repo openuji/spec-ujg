@@ -1,0 +1,4 @@
+type: TokenSource
+id: urn:ujg:token-source:workshop-foundation
+label: Workshop foundation tokens
+source: design/tokens/workshop-foundation.tokens.json

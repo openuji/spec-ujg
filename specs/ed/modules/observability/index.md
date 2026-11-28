@@ -12,8 +12,8 @@ binding has a `SurfaceInstanceResolver`, the resolver identifies the accessibili
 used to derive the concrete instance key.
 
 Observability has no direct dependency on Runtime. When Runtime data is present, a consumer can
-correlate events to bindings by resolving `RuntimeEvent.surfaceInstanceRef` to a `SurfaceInstance`
-and matching that instance's `surfaceRef` to `ObservationBinding.observeSurfaceRef`.
+correlate events to bindings by resolving `RuntimeEvent.surfaceInstance` to a `SurfaceInstance`
+and matching that instance's `surface` to `ObservationBinding.observeSurface`.
 
 Observation events can also reference input-modality profiles. This lets a producer describe
 affordance recognition across independently evaluated input strategies while keeping the Graph
@@ -24,8 +24,8 @@ other modality identifiers remain producer-defined.
 
 - <dfn>ObservationBinding</dfn>: An addressable recognition contract for one `Surface`.
 - <dfn>ObservationEvent</dfn>: An addressable, owner-defined semantic event contract.
-- <dfn>InputModality</dfn>: An addressable input modality. `observability:keyboard` and
-  `observability:pointer` are standard modalities; other concrete modality identifiers are
+- <dfn>InputModality</dfn>: An addressable input modality. `ujgobservability:keyboard` and
+  `ujgobservability:pointer` are standard modalities; other concrete modality identifiers are
   producer-defined.
 - <dfn>InputModalityProfile</dfn>: An addressable interaction strategy defined by one or more input
   modalities.
@@ -59,29 +59,15 @@ classDiagram
   class InputModalityProfile
   class ObservationEvent {
     id
-    requiredInputModalityProfileRefs
+    requiredInputModalityProfiles
   }
-  ObservationEvent --> "0..*" InputModalityProfile : requiredInputModalityProfileRefs
+  ObservationEvent --> "0..*" InputModalityProfile : requiredInputModalityProfiles
 ```
 
-Example JSON nodes:
+Example nodes:
 
-```json
-[
-  {
-    "@type": "ObservationEvent",
-    "@id": "urn:observation-event:presence",
-    "label": "Presence"
-  },
-  {
-    "@type": "ObservationEvent",
-    "@id": "urn:observation-event:activation",
-    "label": "Activation",
-    "requiredInputModalityProfileRefs": [
-      "urn:ujg:input-modality-profile:keyboard"
-    ]
-  }
-]
+```ujg-example
+./examples/example-13.yamlld
 ```
 
 ## InputModality {data-cop-concept="input-modality"}
@@ -89,8 +75,8 @@ Example JSON nodes:
 An [=InputModality=] identifies one input modality that can participate in an interaction strategy.
 This module defines two standard input modality identifiers:
 
-- `observability:keyboard`: keyboard-based interaction.
-- `observability:pointer`: pointer-based interaction, including mouse, pen, touch, or equivalent
+- `ujgobservability:keyboard`: keyboard-based interaction.
+- `ujgobservability:pointer`: pointer-based interaction, including mouse, pen, touch, or equivalent
   pointing input.
 
 Other concrete modality identifiers are producer-defined.
@@ -106,47 +92,31 @@ classDiagram
   }
 ```
 
-Example JSON nodes:
+Example nodes:
 
-```json
-[
-  {
-    "@id": "observability:keyboard",
-    "@type": "InputModality"
-  },
-  {
-    "@id": "observability:pointer",
-    "@type": "InputModality"
-  }
-]
+```ujg-example
+./examples/example-12.yamlld
 ```
 
 ## InputModalityProfile {data-cop-concept="input-modality-profile"}
 
 An [=InputModalityProfile=] identifies one independently evaluable interaction strategy. Its
-`inputModalityRefs` values identify the modalities that participate in that strategy.
+`inputModalities` values identify the modalities that participate in that strategy.
 
 ```mermaid
 classDiagram
   class InputModality
   class InputModalityProfile {
     id
-    inputModalityRefs
+    inputModalities
   }
-  InputModalityProfile --> "1..*" InputModality : inputModalityRefs
+  InputModalityProfile --> "1..*" InputModality : inputModalities
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "InputModalityProfile",
-  "@id": "urn:ujg:input-modality-profile:keyboard",
-  "label": "Keyboard",
-  "inputModalityRefs": [
-    "observability:keyboard"
-  ]
-}
+```ujg-example
+./examples/example-11.yamlld
 ```
 
 ## AccessibleFeature {data-cop-concept="accessible-feature"}
@@ -163,15 +133,10 @@ classDiagram
   }
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "AccessibleFeature",
-  "@id": "urn:ujg:accessible-feature:selected-true",
-  "accessibleFeatureName": "selected",
-  "accessibleFeatureValue": "true"
-}
+```ujg-example
+./examples/example-10.yamlld
 ```
 
 ## AccessibleRelation {data-cop-concept="accessible-relation"}
@@ -185,20 +150,15 @@ classDiagram
   class AccessibleRelation {
     id
     accessibleRelationType
-    targetLocatorRef
+    targetLocator
   }
-  AccessibleRelation --> AccessibleLocator : targetLocatorRef
+  AccessibleRelation --> AccessibleLocator : targetLocator
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "AccessibleRelation",
-  "@id": "urn:ujg:accessible-relation:form-labelled-by-heading",
-  "accessibleRelationType": "labelled-by",
-  "targetLocatorRef": "urn:ujg:locator:checkout-heading"
-}
+```ujg-example
+./examples/example-09.yamlld
 ```
 
 ## AccessibleLocator {data-cop-concept="accessible-locator"}
@@ -214,28 +174,23 @@ classDiagram
   class AccessibleLocator {
     id
     role
-    accessibleNameRef
-    accessibleDescriptionRef
-    accessibleFeatureRefs
-    accessibleRelationRefs
-    contextLocatorRefs
+    accessibleName
+    accessibleDescription
+    accessibleFeatures
+    accessibleRelations
+    contextLocators
   }
-  AccessibleLocator --> MessageMeta : accessibleNameRef
-  AccessibleLocator --> MessageMeta : accessibleDescriptionRef
-  AccessibleLocator --> "0..*" AccessibleFeature : accessibleFeatureRefs
-  AccessibleLocator --> "0..*" AccessibleRelation : accessibleRelationRefs
-  AccessibleLocator --> "0..*" AccessibleLocator : contextLocatorRefs
+  AccessibleLocator --> MessageMeta : accessibleName
+  AccessibleLocator --> MessageMeta : accessibleDescription
+  AccessibleLocator --> "0..*" AccessibleFeature : accessibleFeatures
+  AccessibleLocator --> "0..*" AccessibleRelation : accessibleRelations
+  AccessibleLocator --> "0..*" AccessibleLocator : contextLocators
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "AccessibleLocator",
-  "@id": "urn:ujg:locator:checkout-submit",
-  "role": "button",
-  "accessibleNameRef": "urn:l10n:message-meta:submit-order"
-}
+```ujg-example
+./examples/example-08.yamlld
 ```
 
 ## CustomLocator {data-cop-concept="custom-locator"}
@@ -251,18 +206,10 @@ classDiagram
   }
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "CustomLocator",
-  "@id": "urn:ujg:locator:checkout-submit-test-id",
-  "extensions": {
-    "com.acme.locator": {
-      "testId": "submit-order"
-    }
-  }
-}
+```ujg-example
+./examples/example-07.yamlld
 ```
 
 ## SurfaceInstanceResolver {data-cop-concept="surface-instance-resolver"}
@@ -275,19 +222,15 @@ classDiagram
   class AccessibleFeature
   class SurfaceInstanceResolver {
     id
-    instanceKeyFeatureRef
+    instanceKeyFeature
   }
-  SurfaceInstanceResolver --> AccessibleFeature : instanceKeyFeatureRef
+  SurfaceInstanceResolver --> AccessibleFeature : instanceKeyFeature
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "SurfaceInstanceResolver",
-  "@id": "urn:ujg:resolver:cart-line-item",
-  "instanceKeyFeatureRef": "urn:ujg:accessible-feature:line-item-sku"
-}
+```ujg-example
+./examples/example-06.yamlld
 ```
 
 ## ObservationBinding {data-cop-concept="observation-binding"}
@@ -304,64 +247,51 @@ classDiagram
   class SurfaceInstanceResolver
   class ObservationBinding {
     id
-    observeSurfaceRef
-    observationEventRef
-    locatorRefs
-    surfaceInstanceResolverRef
+    observeSurface
+    observationEvent
+    locators
+    surfaceInstanceResolver
     expectedMatchCount
   }
-  ObservationBinding --> Surface : observeSurfaceRef
-  ObservationBinding --> ObservationEvent : observationEventRef
-  ObservationBinding --> AccessibleLocator : locatorRefs
-  ObservationBinding --> CustomLocator : locatorRefs
-  ObservationBinding --> SurfaceInstanceResolver : surfaceInstanceResolverRef
+  ObservationBinding --> Surface : observeSurface
+  ObservationBinding --> ObservationEvent : observationEvent
+  ObservationBinding --> AccessibleLocator : locators
+  ObservationBinding --> CustomLocator : locators
+  ObservationBinding --> SurfaceInstanceResolver : surfaceInstanceResolver
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "ObservationBinding",
-  "@id": "urn:ujg:observation-binding:checkout-submit-presence",
-  "observeSurfaceRef": "urn:ujg:surface:checkout-submit",
-  "observationEventRef": "urn:ujg:observation-event:presence",
-  "locatorRefs": ["urn:ujg:locator:checkout-submit"]
-}
+```ujg-example
+./examples/example-05.yamlld
 ```
 
 Example absence assertion:
 
-```json
-{
-  "@type": "ObservationBinding",
-  "@id": "urn:ujg:observation-binding:checkout-error-absent",
-  "observeSurfaceRef": "urn:ujg:surface:checkout-error",
-  "observationEventRef": "urn:ujg:observation-event:presence",
-  "locatorRefs": ["urn:ujg:locator:checkout-error"],
-  "expectedMatchCount": 0
-}
+```ujg-example
+./examples/example-04.yamlld
 ```
 
 ## Binding Model
 
 The module introduces one canonical interoperable attachment:
 
-- `observability:observeSurfaceRef` links an `ObservationBinding` to one `Surface`.
+- `ujgobservability:observeSurface` links an `ObservationBinding` to one `Surface`.
 
 An `ObservationBinding` also identifies:
 
-- `observationEventRef`: the semantic event being observed.
-- `locatorRefs`: one or more locator nodes that define how the surface evidence is recognized.
-- `surfaceInstanceResolverRef`: an optional resolver for deriving a concrete `SurfaceInstance` when
+- `observationEvent`: the semantic event being observed.
+- `locators`: one or more locator nodes that define how the surface evidence is recognized.
+- `surfaceInstanceResolver`: an optional resolver for deriving a concrete `SurfaceInstance` when
   the same stable surface is repeated.
 - `expectedMatchCount`: an optional exact cardinality for the full conjunctive locator match.
 
-`locatorRefs` inside one binding are conjunctive: all referenced locators must match. Alternative
+`locators` inside one binding are conjunctive: all referenced locators must match. Alternative
 recognition strategies SHOULD be modeled as separate `ObservationBinding` nodes that reference the
 same surface.
 
 When `expectedMatchCount` is present, a consumer that evaluates the binding MUST compare the number
-of objects matching the binding's full `locatorRefs` contract in the current recognition scope to
+of objects matching the binding's full `locators` contract in the current recognition scope to
 that exact non-negative integer. `expectedMatchCount: 0` means the locator contract is expected to
 find no matching objects. `expectedMatchCount: 1` means exactly one matching object is expected. If
 `expectedMatchCount` is omitted, the binding preserves the existing positive recognition semantics
@@ -372,12 +302,12 @@ the same `Surface`. `SurfaceInstanceResolver` does not reference concrete `Surfa
 MUST NOT require one binding per repeated occurrence.
 
 Input-modality profile references belong to the referenced `ObservationEvent`, not to
-`ObservationBinding`. A binding that references an event with `requiredInputModalityProfileRefs`
+`ObservationBinding`. A binding that references an event with `requiredInputModalityProfiles`
 uses those event-level profile references without changing its own surface, locator, or instance
 resolver contract.
 
-Observability does not define `graphNodeRef`, `surfaceRef`, `surfaceInstanceRef`, or touchpoint
-boundary assignment such as `journeyRefs`. Those are Surface and Runtime terms.
+Observability does not define `graphNode`, `surface`, `surfaceInstance`, or touchpoint
+boundary assignment such as `journeys`. Those are Surface and Runtime terms.
 Observability does not define Runtime properties.
 
 ## Locator Model
@@ -387,7 +317,7 @@ accessibility object exposed through an accessibility API, not on DOM structure,
 Playwright expressions, or raw text content. WAI-ARIA defines an accessibility API as platform
 interfaces that expose object and event information to assistive technologies [[WAI-ARIA-1.2]].
 
-`AccessibleLocator.accessibleNameRef` and `AccessibleLocator.accessibleDescriptionRef` reference
+`AccessibleLocator.accessibleName` and `AccessibleLocator.accessibleDescription` reference
 localized `MessageMeta` nodes for the computed accessible-object name and description. For web DOM
 environments, producers and consumers SHOULD compute accessible-object names and descriptions
 according to [[ACCNAME-1.2]], then match the computed value against a locale-appropriate `Message`
@@ -400,11 +330,11 @@ normative Observability terms.
 An `AccessibleLocator` MUST provide at least one of:
 
 - `role`
-- `accessibleNameRef`
-- `accessibleDescriptionRef`
-- `accessibleFeatureRefs`
-- `accessibleRelationRefs`
-- `contextLocatorRefs`
+- `accessibleName`
+- `accessibleDescription`
+- `accessibleFeatures`
+- `accessibleRelations`
+- `contextLocators`
 
 `AccessibleFeature` names SHOULD be accessibility-model oriented, such as `selected`, `expanded`,
 `disabled`, `checked`, `pressed`, `current`, `invalid`, `required`, `busy`, or `hidden`. Producers
@@ -414,7 +344,7 @@ is available.
 `AccessibleRelation` names SHOULD also be accessibility-model oriented, such as `controls`,
 `labelled-by`, `described-by`, `owns`, `active-descendant`, `details`, or `error-message`.
 
-`contextLocatorRefs` scope a locator by another accessible object. Multiple context locators are
+`contextLocators` scope a locator by another accessible object. Multiple context locators are
 conjunctive.
 
 `CustomLocator` is the escape hatch for stable semantic markers, CSS selectors, tool-specific
@@ -427,17 +357,17 @@ opaque to consumers that do not understand that extension.
 Runtime correlation is derived, not modeled as an Observability-to-Runtime reference.
 
 ```text
-RuntimeEvent.surfaceInstanceRef -> SurfaceInstance.surfaceRef = ObservationBinding.observeSurfaceRef
+RuntimeEvent.surfaceInstance -> SurfaceInstance.surface = ObservationBinding.observeSurface
 ```
 
 An observation adapter that emits Runtime data SHOULD:
 
-1. match the binding's `locatorRefs`;
+1. match the binding's `locators`;
 2. when `expectedMatchCount` is present, compare the match count to that exact value;
-3. when `surfaceInstanceResolverRef` is present, read the resolver's `instanceKeyFeatureRef` from the
+3. when `surfaceInstanceResolver` is present, read the resolver's `instanceKeyFeature` from the
    matched accessible object or contextual accessible object;
 4. resolve or create the matching `SurfaceInstance`;
-5. emit the required Runtime `surfaceInstanceRef`.
+5. emit the required Runtime `surfaceInstance`.
 
 For `expectedMatchCount: 0`, a satisfied absence contract does not provide a matched accessible
 object for instance resolution. Observability still does not require Runtime events to reference an
@@ -484,35 +414,35 @@ The rules below define the remaining module semantics beyond the structural cons
 the SHACL shape.
 
 1. **Surface first:** An `ObservationBinding` MUST identify exactly one `Surface` using
-   `observeSurfaceRef`.
+   `observeSurface`.
 2. **No graph traversal:** Observability properties MUST NOT change Graph validity, graph traversal
    behavior, import resolution, or core node identity.
 3. **No Runtime dependency:** Observability MUST NOT require Runtime data and MUST NOT define a
    Runtime property.
 4. **Derived Runtime correlation:** Consumers MAY correlate Runtime events to bindings by matching
-   `RuntimeEvent.surfaceInstanceRef -> SurfaceInstance.surfaceRef` to
-   `ObservationBinding.observeSurfaceRef`.
-5. **Conjunctive locators:** `locatorRefs` inside one `ObservationBinding` are conjunctive.
+   `RuntimeEvent.surfaceInstance -> SurfaceInstance.surface` to
+   `ObservationBinding.observeSurface`.
+5. **Conjunctive locators:** `locators` inside one `ObservationBinding` are conjunctive.
 6. **Exact match counts:** When `expectedMatchCount` is present on an `ObservationBinding`,
    consumers that evaluate the binding MUST compare the number of objects matching the full
    conjunctive locator contract in the current recognition scope to that exact non-negative integer.
    `expectedMatchCount: 0` means the locator contract is expected to find no matching objects. When
    `expectedMatchCount` is omitted, consumers MUST NOT infer exact cardinality from the binding.
 7. **Event-level modality profiles:** Input-modality profile references MUST be declared on
-   `ObservationEvent` with `requiredInputModalityProfileRefs`, not on `ObservationBinding` or Graph
+   `ObservationEvent` with `requiredInputModalityProfiles`, not on `ObservationBinding` or Graph
    `Transition` nodes.
-8. **Profile modality references:** `InputModalityProfile.inputModalityRefs` values identify
+8. **Profile modality references:** `InputModalityProfile.inputModalities` values identify
    `InputModality` nodes. Consumers MUST NOT infer interaction order from the order of values.
 9. **Standard and owner-defined modality IRIs:** Event identifiers remain producer-defined.
-   Observability reserves `observability:keyboard` and `observability:pointer` as standard
+   Observability reserves `ujgobservability:keyboard` and `ujgobservability:pointer` as standard
    `InputModality` identifiers; producers define other concrete modality identifiers.
-10. **Instance resolver:** `SurfaceInstanceResolver.instanceKeyFeatureRef` MUST identify one
+10. **Instance resolver:** `SurfaceInstanceResolver.instanceKeyFeature` MUST identify one
    `AccessibleFeature` that supplies the instance key source. A resolver MUST NOT reference concrete
    `SurfaceInstance` nodes.
 11. **Accessible-object semantics:** `AccessibleLocator` identifies an accessible object, not an
    implementation node or selector expression.
-12. **Localized name and description matching:** `accessibleNameRef` and
-   `accessibleDescriptionRef` MUST resolve to `MessageMeta` nodes. In web DOM environments,
+12. **Localized name and description matching:** `accessibleName` and
+   `accessibleDescription` MUST resolve to `MessageMeta` nodes. In web DOM environments,
    adapters SHOULD compute accessible names and descriptions according to [[ACCNAME-1.2]], then
    match the computed values against locale-appropriate `Message` values for those message metas.
 13. **Accessibility API orientation:** Role, feature, and relation names SHOULD describe
@@ -528,112 +458,8 @@ the SHACL shape.
 
 ### Minimal Example
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/observability/share.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "State",
-      "@id": "urn:state:bob-pending-federated-share",
-      "label": "Bob pending federated share"
-    },
-    {
-      "@type": "Surface",
-      "@id": "urn:surface:bob-pending-share",
-      "graphNodeRef": "urn:state:bob-pending-federated-share"
-    },
-    {
-      "@type": "ObservationEvent",
-      "@id": "urn:observation-event:presence",
-      "label": "Presence"
-    },
-    {
-      "@type": "AccessibleFeature",
-      "@id": "urn:feature:selected-true",
-      "label": "Selected true",
-      "accessibleFeatureName": "selected",
-      "accessibleFeatureValue": "true"
-    },
-    {
-      "@type": "AccessibleFeature",
-      "@id": "urn:feature:file-id",
-      "label": "File identifier",
-      "accessibleFeatureName": "file-id",
-      "accessibleFeatureValue": "*"
-    },
-    {
-      "@type": "Locale",
-      "@id": "urn:locale:en",
-      "localeCode": "en"
-    },
-    {
-      "@type": "MessageMeta",
-      "@id": "urn:message-meta:files",
-      "defaultLocaleRef": "urn:locale:en"
-    },
-    {
-      "@type": "Message",
-      "@id": "urn:message:files:en",
-      "messageMetaRef": "urn:message-meta:files",
-      "localeRef": "urn:locale:en",
-      "value": "Files"
-    },
-    {
-      "@type": "MessageMeta",
-      "@id": "urn:message-meta:shared-with-you",
-      "defaultLocaleRef": "urn:locale:en"
-    },
-    {
-      "@type": "Message",
-      "@id": "urn:message:shared-with-you:en",
-      "messageMetaRef": "urn:message-meta:shared-with-you",
-      "localeRef": "urn:locale:en",
-      "value": "Shared with you"
-    },
-    {
-      "@type": "AccessibleLocator",
-      "@id": "urn:locator:files-heading",
-      "label": "Files heading",
-      "role": "heading",
-      "accessibleNameRef": "urn:message-meta:files"
-    },
-    {
-      "@type": "AccessibleLocator",
-      "@id": "urn:locator:shared-with-you-tab-selected",
-      "label": "Selected Shared with you tab",
-      "role": "tab",
-      "accessibleNameRef": "urn:message-meta:shared-with-you",
-      "accessibleFeatureRefs": [
-        "urn:feature:selected-true"
-      ]
-    },
-    {
-      "@type": "SurfaceInstanceResolver",
-      "@id": "urn:resolver:bob-pending-share-file-id",
-      "label": "Pending share file identifier resolver",
-      "instanceKeyFeatureRef": "urn:feature:file-id"
-    },
-    {
-      "@type": "ObservationBinding",
-      "@id": "urn:binding:bob-pending-share-present",
-      "label": "Bob sees pending federated share",
-      "observeSurfaceRef": "urn:surface:bob-pending-share",
-      "observationEventRef": "urn:observation-event:presence",
-      "surfaceInstanceResolverRef": "urn:resolver:bob-pending-share-file-id",
-      "locatorRefs": [
-        "urn:locator:files-heading",
-        "urn:locator:shared-with-you-tab-selected"
-      ]
-    }
-  ]
-}
+```ujg-example
+./examples/example-03.yamlld
 ```
 
 ### Input Modality Requirement Example
@@ -642,198 +468,16 @@ This example shows a producer-defined activation event for a Surface attached to
 references two producer-defined modality profiles that use standard keyboard and pointer modality
 identifiers.
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/observability/activation-modalities.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "State",
-      "@id": "urn:state:checkout-ready",
-      "label": "Checkout ready"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:state:checkout-submitted",
-      "label": "Checkout submitted"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:transition:submit-checkout",
-      "label": "Submit checkout",
-      "from": "urn:state:checkout-ready",
-      "to": "urn:state:checkout-submitted",
-      "commandRef": "urn:command:submit-checkout"
-    },
-    {
-      "@type": "Command",
-      "@id": "urn:command:submit-checkout",
-      "label": "Submit checkout"
-    },
-    {
-      "@type": "Surface",
-      "@id": "urn:surface:submit-checkout",
-      "graphNodeRef": "urn:command:submit-checkout"
-    },
-    {
-      "@type": "InputModalityProfile",
-      "@id": "urn:input-modality-profile:keyboard",
-      "label": "Keyboard",
-      "inputModalityRefs": [
-        "observability:keyboard"
-      ]
-    },
-    {
-      "@type": "InputModalityProfile",
-      "@id": "urn:input-modality-profile:pointer",
-      "label": "Pointer",
-      "inputModalityRefs": [
-        "observability:pointer"
-      ]
-    },
-    {
-      "@type": "ObservationEvent",
-      "@id": "urn:observation-event:submit-checkout-activation",
-      "label": "Submit checkout activation",
-      "requiredInputModalityProfileRefs": [
-        "urn:input-modality-profile:keyboard",
-        "urn:input-modality-profile:pointer"
-      ]
-    },
-    {
-      "@type": "Locale",
-      "@id": "urn:locale:en",
-      "localeCode": "en"
-    },
-    {
-      "@type": "MessageMeta",
-      "@id": "urn:message-meta:submit-checkout",
-      "defaultLocaleRef": "urn:locale:en"
-    },
-    {
-      "@type": "Message",
-      "@id": "urn:message:submit-checkout:en",
-      "messageMetaRef": "urn:message-meta:submit-checkout",
-      "localeRef": "urn:locale:en",
-      "value": "Submit checkout"
-    },
-    {
-      "@type": "AccessibleLocator",
-      "@id": "urn:locator:submit-checkout",
-      "role": "button",
-      "accessibleNameRef": "urn:message-meta:submit-checkout"
-    },
-    {
-      "@type": "ObservationBinding",
-      "@id": "urn:binding:submit-checkout-activation",
-      "observeSurfaceRef": "urn:surface:submit-checkout",
-      "observationEventRef": "urn:observation-event:submit-checkout-activation",
-      "locatorRefs": [
-        "urn:locator:submit-checkout"
-      ]
-    }
-  ]
-}
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 ### Runtime Correlation Example
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/runtime.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/observability/runtime-correlation.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "State",
-      "@id": "urn:state:bob-pending-federated-share",
-      "label": "Bob pending federated share"
-    },
-    {
-      "@type": "Surface",
-      "@id": "urn:surface:bob-pending-share",
-      "graphNodeRef": "urn:state:bob-pending-federated-share"
-    },
-    {
-      "@type": "SurfaceInstance",
-      "@id": "urn:surface-instance:bob-pending-share:shared-folder-42",
-      "surfaceRef": "urn:surface:bob-pending-share"
-    },
-    {
-      "@type": "ObservationEvent",
-      "@id": "urn:observation-event:presence",
-      "label": "Presence"
-    },
-    {
-      "@type": "Locale",
-      "@id": "urn:locale:en",
-      "localeCode": "en"
-    },
-    {
-      "@type": "MessageMeta",
-      "@id": "urn:message-meta:files",
-      "defaultLocaleRef": "urn:locale:en"
-    },
-    {
-      "@type": "Message",
-      "@id": "urn:message:files:en",
-      "messageMetaRef": "urn:message-meta:files",
-      "localeRef": "urn:locale:en",
-      "value": "Files"
-    },
-    {
-      "@type": "AccessibleFeature",
-      "@id": "urn:feature:shared-folder-42",
-      "accessibleFeatureName": "file-id",
-      "accessibleFeatureValue": "shared-folder-42"
-    },
-    {
-      "@type": "AccessibleLocator",
-      "@id": "urn:locator:files-heading",
-      "role": "heading",
-      "accessibleNameRef": "urn:message-meta:files"
-    },
-    {
-      "@type": "SurfaceInstanceResolver",
-      "@id": "urn:resolver:bob-pending-share-file-id",
-      "instanceKeyFeatureRef": "urn:feature:shared-folder-42"
-    },
-    {
-      "@type": "ObservationBinding",
-      "@id": "urn:binding:bob-pending-share-present",
-      "observeSurfaceRef": "urn:surface:bob-pending-share",
-      "observationEventRef": "urn:observation-event:presence",
-      "surfaceInstanceResolverRef": "urn:resolver:bob-pending-share-file-id",
-      "locatorRefs": [
-        "urn:locator:files-heading"
-      ]
-    },
-    {
-      "@type": "JourneyExecution",
-      "@id": "urn:execution:fed-share-runtime-001"
-    },
-    {
-      "@type": "RuntimeEvent",
-      "@id": "urn:runtime-event:bob-pending-share-present-001",
-      "executionId": "urn:execution:fed-share-runtime-001",
-      "surfaceInstanceRef": "urn:surface-instance:bob-pending-share:shared-folder-42"
-    }
-  ]
-}
+```ujg-example
+./examples/example-01.yamlld
 ```
 
 The runtime event can be correlated to `urn:binding:bob-pending-share-present` because its referenced
-surface instance points back to `urn:surface:bob-pending-share`. The event does not reference the
+surface instance points back to `urn:ujgsurface:bob-pending-share`. The event does not reference the
 binding.

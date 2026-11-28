@@ -56,23 +56,23 @@ text, or changing a value, as part of a transition is outside this version.
 ## TransitionMaterialization {data-cop-concept="transition-materialization"}
 
 A [=TransitionMaterialization=] references the transition it performs with
-`materializationTransitionRef`, the input modality it uses with `materializationModalityRef`, and its
-steps with `materializationStepRefs`. The transition can be a [=Transition=], an
+`materializationTransition`, the input modality it uses with `materializationModality`, and its
+steps with `materializationSteps`. The transition can be a [=Transition=], an
 [=AdjacentTransition=], an [=OutgoingTransition=], or an [=InvokingTransition=]. A transition can have
 several materializations, for example one by keyboard, one by pointer, and one by shortcut.
 
-Where the user starts matters for the steps. `materializationStartLocatorRef` can name the object
+Where the user starts matters for the steps. `materializationStartLocator` can name the object
 the user is at before the first step, such as the Inbox tab right after Inbox was selected. When it
 is omitted, the start is not described.
 
 A [=Transition=] starts at its `from` vertex, so its steps happen there. An
 [=Entry transition|entry transition=] has no `from`: every [=State=] that lists it offers it, and
-each of those States can need different steps to reach it. `materializationSourceStateRef` names the
+each of those States can need different steps to reach it. `materializationSourceState` names the
 State in which the steps are performed. Without it, the steps apply at every State that lists the
 transition. In the same way, a transition that leaves a [=CompositeState=] is performed in one of
-the States nested in it, and `materializationSourceStateRef` can name that State.
+the States nested in it, and `materializationSourceState` can name that State.
 
-Some transitions are not performed by a user action. A [=Transition=] with `fromExitRef` is taken
+Some transitions are not performed by a user action. A [=Transition=] with `fromExit` is taken
 when a child Journey of its CompositeState reaches that [=JourneyExit=]. The user's steps lead to the
 exit, so they belong to the child Journey's Transition into the exit, and that Transition is the one
 to materialize.
@@ -92,7 +92,7 @@ to materialize.
 6. One materialization of a [=Member transition|member transition=] serves every
    [=Collection member|member=] of its [=StateCollection=]. Its locators name the kind of object, and
    the concrete object is known only when the step happens.
-7. When the materialized transition has a `commandRef`, the object that its last step reaches or
+7. When the materialized transition has a `command`, the object that its last step reaches or
    acts on **SHOULD** be one that an [=ObservationBinding=] recognizes for a [=Surface=] of that
    [=Command=]. A transition without a Command can still be materialized.
 </spec-statement>
@@ -116,40 +116,31 @@ classDiagram
   class ShortcutStep
   class TransitionMaterialization {
     id
-    materializationTransitionRef
-    materializationModalityRef
-    materializationStepRefs
-    materializationStartLocatorRef
-    materializationSourceStateRef
-    materializationDirectionRef
+    materializationTransition
+    materializationModality
+    materializationSteps
+    materializationStartLocator
+    materializationSourceState
+    materializationDirection
   }
-  TransitionMaterialization --> Transition : materializationTransitionRef
-  TransitionMaterialization --> AdjacentTransition : materializationTransitionRef
-  TransitionMaterialization --> OutgoingTransition : materializationTransitionRef
-  TransitionMaterialization --> InvokingTransition : materializationTransitionRef
-  TransitionMaterialization --> InputModality : materializationModalityRef
-  TransitionMaterialization --> "0..*" MoveStep : materializationStepRefs
-  TransitionMaterialization --> "0..*" ActivationStep : materializationStepRefs
-  TransitionMaterialization --> "0..*" ShortcutStep : materializationStepRefs
-  TransitionMaterialization --> AccessibleLocator : materializationStartLocatorRef
-  TransitionMaterialization --> CustomLocator : materializationStartLocatorRef
-  TransitionMaterialization --> State : materializationSourceStateRef
-  TransitionMaterialization --> MaterializationDirection : materializationDirectionRef
+  TransitionMaterialization --> Transition : materializationTransition
+  TransitionMaterialization --> AdjacentTransition : materializationTransition
+  TransitionMaterialization --> OutgoingTransition : materializationTransition
+  TransitionMaterialization --> InvokingTransition : materializationTransition
+  TransitionMaterialization --> InputModality : materializationModality
+  TransitionMaterialization --> "0..*" MoveStep : materializationSteps
+  TransitionMaterialization --> "0..*" ActivationStep : materializationSteps
+  TransitionMaterialization --> "0..*" ShortcutStep : materializationSteps
+  TransitionMaterialization --> AccessibleLocator : materializationStartLocator
+  TransitionMaterialization --> CustomLocator : materializationStartLocator
+  TransitionMaterialization --> State : materializationSourceState
+  TransitionMaterialization --> MaterializationDirection : materializationDirection
 ```
 
-Example JSON node:
+Example node:
 
-```json
-{
-  "@type": "TransitionMaterialization",
-  "@id": "urn:ujg:materialization:select-drafts:pointer",
-  "materializationTransitionRef": "urn:ujg:transition:select-drafts",
-  "materializationModalityRef": "observability:pointer",
-  "materializationStepRefs": [
-    "urn:ujg:step:select-drafts:pointer:1",
-    "urn:ujg:step:select-drafts:pointer:2"
-  ]
-}
+```ujg-example
+./examples/example-05.yamlld
 ```
 
 ## Materialization steps {data-cop-concept="materialization-steps"}
@@ -159,18 +150,18 @@ user passes or points at on the way, and each page the view moves by. An [=Activ
 activates the object the user is at. A [=ShortcutStep=] performs the shortcut that an object
 exposes.
 
-Each step can name the object it reaches or acts on with `stepLocatorRef`. This detail is optional: a
+Each step can name the object it reaches or acts on with `stepLocator`. This detail is optional: a
 step without a locator still counts as one step of the path. The number of steps describes how much
 the user does to take the transition through that modality.
 
-Each step names the step it follows with `stepPreviousRef`, and the first step follows none. This is
-how the steps are ordered; the order of the `materializationStepRefs` values means nothing.
+Each step names the step it follows with `previousStep`, and the first step follows none. This is
+how the steps are ordered; the order of the `materializationSteps` values means nothing.
 
 <spec-statement>
-1. Each [=Materialization step|step=] follows the step it names in `stepPreviousRef`. The step that
+1. Each [=Materialization step|step=] follows the step it names in `previousStep`. The step that
    follows no step comes first, and the materialized transition happens when the last step is
    performed.
-2. The order of `materializationStepRefs` values **MUST NOT** define step order.
+2. The order of `materializationSteps` values **MUST NOT** define step order.
 3. A [=MoveStep=] moves the user to another object, or moves the view by a page. It is the last step
    only when the move itself takes the transition, as in a tab list whose selection follows focus.
 4. An [=ActivationStep=] performs the default action of the object the user is at: the focused
@@ -181,16 +172,16 @@ how the steps are ordered; the order of the `materializationStepRefs` values mea
    the object it acts on, such as the form's submit button.
 6. A [=ShortcutStep=] performs the shortcut that an object exposes. It acts on that object without
    the user reaching it first.
-7. When a step names an object with `stepLocatorRef`, the object it reaches or acts on matches that
+7. When a step names an object with `stepLocator`, the object it reaches or acts on matches that
    locator.
 8. A MoveStep reaches what its kind designates: for a [=FocusMoveKind=], an object such as the next
-   item in the order the platform presents; for `operability:pointAt`, the object its locator
-   names; for a page move, the page that comes into view. Except with `operability:pointAt`, the
+   item in the order the platform presents; for `ujgoperability:pointAt`, the object its locator
+   names; for a page move, the page that comes into view. Except with `ujgoperability:pointAt`, the
    locator describes what the step reaches; it does not choose it.
 9. Operability defines no keys, buttons, or gestures. A [=Platform adapter=] performs each step with
    the gestures that its platform and input modality use for it.
 10. The gesture of a ShortcutStep is the shortcut that the accessibility API exposes for the object
-    its `stepLocatorRef` names, such as `aria-keyshortcuts` on the web [[WAI-ARIA-1.2]]. When the
+    its `stepLocator` names, such as `aria-keyshortcuts` on the web [[WAI-ARIA-1.2]]. When the
     shortcut is not exposed there, Producers **MAY** describe it as a private adapter hint in Core
     `extensions`.
 </spec-statement>
@@ -203,28 +194,28 @@ classDiagram
   class CustomLocator
   class MoveStep {
     id
-    stepMoveKindRef
-    stepLocatorRef
-    stepPreviousRef
+    stepMoveKind
+    stepLocator
+    previousStep
   }
   class ActivationStep {
     id
-    stepLocatorRef
-    stepPreviousRef
+    stepLocator
+    previousStep
   }
   class ShortcutStep {
     id
-    stepLocatorRef
-    stepPreviousRef
+    stepLocator
+    previousStep
   }
-  MoveStep --> FocusMoveKind : stepMoveKindRef
-  MoveStep --> MoveKind : stepMoveKindRef
-  MoveStep --> AccessibleLocator : stepLocatorRef
-  ActivationStep --> AccessibleLocator : stepLocatorRef
-  ShortcutStep --> AccessibleLocator : stepLocatorRef
-  MoveStep --> CustomLocator : stepLocatorRef
-  ActivationStep --> CustomLocator : stepLocatorRef
-  ShortcutStep --> CustomLocator : stepLocatorRef
+  MoveStep --> FocusMoveKind : stepMoveKind
+  MoveStep --> MoveKind : stepMoveKind
+  MoveStep --> AccessibleLocator : stepLocator
+  ActivationStep --> AccessibleLocator : stepLocator
+  ShortcutStep --> AccessibleLocator : stepLocator
+  MoveStep --> CustomLocator : stepLocator
+  ActivationStep --> CustomLocator : stepLocator
+  ShortcutStep --> CustomLocator : stepLocator
 ```
 
 Any step can follow any step:
@@ -234,34 +225,21 @@ classDiagram
   class MoveStep
   class ActivationStep
   class ShortcutStep
-  MoveStep --> MoveStep : stepPreviousRef
-  MoveStep --> ActivationStep : stepPreviousRef
-  MoveStep --> ShortcutStep : stepPreviousRef
-  ActivationStep --> MoveStep : stepPreviousRef
-  ActivationStep --> ActivationStep : stepPreviousRef
-  ActivationStep --> ShortcutStep : stepPreviousRef
-  ShortcutStep --> MoveStep : stepPreviousRef
-  ShortcutStep --> ActivationStep : stepPreviousRef
-  ShortcutStep --> ShortcutStep : stepPreviousRef
+  MoveStep --> MoveStep : previousStep
+  MoveStep --> ActivationStep : previousStep
+  MoveStep --> ShortcutStep : previousStep
+  ActivationStep --> MoveStep : previousStep
+  ActivationStep --> ActivationStep : previousStep
+  ActivationStep --> ShortcutStep : previousStep
+  ShortcutStep --> MoveStep : previousStep
+  ShortcutStep --> ActivationStep : previousStep
+  ShortcutStep --> ShortcutStep : previousStep
 ```
 
-Example JSON nodes:
+Example nodes:
 
-```json
-[
-  {
-    "@type": "MoveStep",
-    "@id": "urn:ujg:step:select-drafts:keyboard:4",
-    "stepPreviousRef": "urn:ujg:step:select-drafts:keyboard:3",
-    "stepMoveKindRef": "operability:nextItem",
-    "stepLocatorRef": "urn:ujg:locator:drafts-tab"
-  },
-  {
-    "@type": "ActivationStep",
-    "@id": "urn:ujg:step:select-drafts:keyboard:5",
-    "stepPreviousRef": "urn:ujg:step:select-drafts:keyboard:4"
-  }
-]
+```ujg-example
+./examples/example-04.yamlld
 ```
 
 ## FocusMoveKind and MoveKind {data-cop-concept="move-kind"}
@@ -273,22 +251,22 @@ other than focus: the pointer, or the view.
 This module defines six standard focus moves in two groups. The first group moves between the stops
 of sequential focus navigation, which a desktop keyboard performs with Tab and Shift+Tab:
 
-- `operability:nextStop`
-- `operability:previousStop`
+- `ujgoperability:nextStop`
+- `ujgoperability:previousStop`
 
 The second group moves among the items of a composite widget, such as a tab list, menu, or grid,
 which a desktop keyboard performs with the arrow keys, Home, and End [[WAI-ARIA-APG]]:
 
-- `operability:nextItem`
-- `operability:previousItem`
-- `operability:firstItem`
-- `operability:lastItem`
+- `ujgoperability:nextItem`
+- `ujgoperability:previousItem`
+- `ujgoperability:firstItem`
+- `ujgoperability:lastItem`
 
 It also defines three standard moves that do not move focus:
 
-- `operability:pointAt` moves the pointer onto the object the step's locator names, for example to
+- `ujgoperability:pointAt` moves the pointer onto the object the step's locator names, for example to
   open a submenu by hovering.
-- `operability:nextPage` and `operability:previousPage` move the view by one page, for example with
+- `ujgoperability:nextPage` and `ujgoperability:previousPage` move the view by one page, for example with
   PageDown, a mouse wheel, or a swipe in a carousel. They are a common way to cross an
   [=AdjacentTransition=], such as between the sections of a scrolling view.
 
@@ -302,8 +280,8 @@ reference them without serializing them.
 2. "Next", "previous", "first", and "last" follow the order in which the platform presents the stops,
    items, or pages when the step happens. Operability declares no order of its own.
 3. A pointer moves directly to an object, so a pointer materialization moves with
-   `operability:pointAt` rather than with focus moves. Through a pointer, a click is a MoveStep with
-   `operability:pointAt` followed by an [=ActivationStep=].
+   `ujgoperability:pointAt` rather than with focus moves. Through a pointer, a click is a MoveStep with
+   `ujgoperability:pointAt` followed by an [=ActivationStep=].
 4. A [=MoveStep=] without a kind leaves the move undescribed. It documents the step, but a
    materialization that contains it is not [=Performable materialization|performable=].
 5. Producers **MAY** define other FocusMoveKinds and MoveKinds.
@@ -322,15 +300,15 @@ classDiagram
 ## AdjacentTransition direction {data-cop-concept="materialization-direction"}
 
 One [=AdjacentTransition=] describes movement in both directions across a border. A
-materialization performs one of them, and `materializationDirectionRef` says which. An
+materialization performs one of them, and `materializationDirection` says which. An
 AdjacentTransition has exactly two movements, so there are exactly two
 [=MaterializationDirection|MaterializationDirections=].
 
 <spec-statement>
-1. `operability:forward` moves from the AdjacentTransition's `from` vertex to its `to` vertex. For a
+1. `ujgoperability:forward` moves from the AdjacentTransition's `from` vertex to its `to` vertex. For a
    [=Member transition|member=] AdjacentTransition, it moves to the neighboring member after the
    border.
-2. `operability:backward` moves the other way.
+2. `ujgoperability:backward` moves the other way.
 3. Each direction can have its own materializations, which are alternatives for that direction.
 </spec-statement>
 
@@ -355,18 +333,18 @@ document it. To perform it, a runner needs every step to be determined. A materi
 
 - every [=MoveStep=] names its kind, a [=FocusMoveKind=] or a [=MoveKind=]. A locator alone would
   leave the runner searching for the object, which is guessing;
-- every MoveStep with `operability:pointAt` also names its object with `stepLocatorRef`, because the
+- every MoveStep with `ujgoperability:pointAt` also names its object with `stepLocator`, because the
   pointer moves straight to that object;
 - every [=ShortcutStep=] names an object that exposes its shortcut through the accessibility API, or
   carries a private adapter hint in Core `extensions`.
 
 An [=ActivationStep=] acts on the object the user is at, so it needs nothing more. Without
-`materializationStartLocatorRef`, the steps start wherever the user is when the runner begins them.
+`materializationStartLocator`, the steps start wherever the user is when the runner begins them.
 
 <spec-statement>
 1. Before the first step, a [=Synthetic Runner=] that performs a materialization **MUST** check that
-   the user is at the object `materializationStartLocatorRef` names, when it names one.
-2. Before a [=MoveStep=] with `operability:pointAt`, the runner **MUST** check that the step's
+   the user is at the object `materializationStartLocator` names, when it names one.
+2. Before a [=MoveStep=] with `ujgoperability:pointAt`, the runner **MUST** check that the step's
    locator matches exactly one object. When it matches several, the runner **MUST NOT** choose one,
    and the materialization cannot be performed there.
 3. After each MoveStep, the runner **MUST** check that the move happened: focus or the pointer is at
@@ -392,10 +370,10 @@ An [=ActivationStep=] acts on the object the user is at, so it needs nothing mor
 </spec-statement>
 
 A materialization also shows whether an Observability requirement is met. Take an
-[=ObservationBinding=] that observes a [=Surface=] whose `graphNodeRef` is a [=Command=]. When the
+[=ObservationBinding=] that observes a [=Surface=] whose `graphNode` is a [=Command=]. When the
 binding's [=ObservationEvent=] requires an [=InputModalityProfile=] that lists exactly one modality,
 a runner can check the requirement by performing one materialization through that modality of a
-transition whose `commandRef` is that Command. One materialization that works is enough for
+transition whose `command` is that Command. One materialization that works is enough for
 that requirement; checking that every materialization of the transition works means performing each
 of them. Each required profile is checked on its own, as Observability evaluates profiles
 independently. Profiles that list several modalities are outside this version.
@@ -438,7 +416,7 @@ The remaining module semantics beyond the structural SHACL constraints are:
 1. **No Graph change:** Operability properties **MUST NOT** change Graph validity, graph traversal,
    import resolution, or core node identity.
 2. **No Observability change:** Operability **MUST NOT** change how an [=ObservationBinding=]
-   recognizes a [=Surface=] or what `requiredInputModalityProfileRefs` requires.
+   recognizes a [=Surface=] or what `requiredInputModalityProfiles` requires.
 3. **Graceful degradation:** Consumers that do not implement Operability semantics **MAY** ignore
    Operability data, but **SHOULD** preserve recognized JSON-LD data during read-transform-write when
    possible.
@@ -460,217 +438,8 @@ The example does not name where the keyboard steps start. All three materializat
 [=Performable materialization|performable=]: every MoveStep names its kind, the step that points
 names the Drafts tab, and the shortcut step names the tab that exposes the shortcut.
 
-```json
-{
-  "@context": [
-    "https://ujg.specs.openuji.org/ed/ns/context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/surface.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/l10n.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/observability.context.jsonld",
-    "https://ujg.specs.openuji.org/ed/ns/operability.context.jsonld"
-  ],
-  "@id": "https://example.com/ujg/operability/mail-tabs.jsonld",
-  "@type": "UJGDocument",
-  "nodes": [
-    {
-      "@type": "Journey",
-      "@id": "urn:journey:mail",
-      "label": "Mail",
-      "defaultEntryRef": "urn:entry:mail",
-      "entryRefs": ["urn:entry:mail"],
-      "stateRefs": ["urn:state:home-selected", "urn:state:drafts-selected"],
-      "transitionRefs": ["urn:transition:select-drafts"]
-    },
-    {
-      "@type": "JourneyEntry",
-      "@id": "urn:entry:mail",
-      "stateRef": "urn:state:home-selected"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:state:home-selected",
-      "label": "Home selected"
-    },
-    {
-      "@type": "State",
-      "@id": "urn:state:drafts-selected",
-      "label": "Drafts selected"
-    },
-    {
-      "@type": "Transition",
-      "@id": "urn:transition:select-drafts",
-      "label": "Select Drafts",
-      "from": "urn:state:home-selected",
-      "to": "urn:state:drafts-selected",
-      "commandRef": "urn:command:select-drafts"
-    },
-    {
-      "@type": "Command",
-      "@id": "urn:command:select-drafts",
-      "label": "Select Drafts"
-    },
-    {
-      "@type": "Surface",
-      "@id": "urn:surface:select-drafts",
-      "graphNodeRef": "urn:command:select-drafts"
-    },
-    {
-      "@type": "Locale",
-      "@id": "urn:locale:en",
-      "localeCode": "en"
-    },
-    {
-      "@type": "MessageMeta",
-      "@id": "urn:message-meta:home",
-      "defaultLocaleRef": "urn:locale:en"
-    },
-    {
-      "@type": "Message",
-      "@id": "urn:message:home:en",
-      "messageMetaRef": "urn:message-meta:home",
-      "localeRef": "urn:locale:en",
-      "value": "Home"
-    },
-    {
-      "@type": "MessageMeta",
-      "@id": "urn:message-meta:drafts",
-      "defaultLocaleRef": "urn:locale:en"
-    },
-    {
-      "@type": "Message",
-      "@id": "urn:message:drafts:en",
-      "messageMetaRef": "urn:message-meta:drafts",
-      "localeRef": "urn:locale:en",
-      "value": "Drafts"
-    },
-    {
-      "@type": "AccessibleLocator",
-      "@id": "urn:locator:mail-tablist",
-      "role": "tablist"
-    },
-    {
-      "@type": "AccessibleLocator",
-      "@id": "urn:locator:home-tab",
-      "role": "tab",
-      "accessibleNameRef": "urn:message-meta:home",
-      "contextLocatorRefs": ["urn:locator:mail-tablist"]
-    },
-    {
-      "@type": "AccessibleLocator",
-      "@id": "urn:locator:drafts-tab",
-      "role": "tab",
-      "accessibleNameRef": "urn:message-meta:drafts",
-      "contextLocatorRefs": ["urn:locator:mail-tablist"]
-    },
-    {
-      "@type": "InputModalityProfile",
-      "@id": "urn:input-modality-profile:keyboard",
-      "label": "Keyboard",
-      "inputModalityRefs": ["observability:keyboard"]
-    },
-    {
-      "@type": "InputModalityProfile",
-      "@id": "urn:input-modality-profile:pointer",
-      "label": "Pointer",
-      "inputModalityRefs": ["observability:pointer"]
-    },
-    {
-      "@type": "ObservationEvent",
-      "@id": "urn:observation-event:select-drafts-activation",
-      "label": "Select Drafts activation",
-      "requiredInputModalityProfileRefs": [
-        "urn:input-modality-profile:keyboard",
-        "urn:input-modality-profile:pointer"
-      ]
-    },
-    {
-      "@type": "ObservationBinding",
-      "@id": "urn:binding:select-drafts-activation",
-      "observeSurfaceRef": "urn:surface:select-drafts",
-      "observationEventRef": "urn:observation-event:select-drafts-activation",
-      "locatorRefs": ["urn:locator:drafts-tab"]
-    },
-    {
-      "@type": "TransitionMaterialization",
-      "@id": "urn:materialization:select-drafts:keyboard",
-      "label": "Select Drafts by keyboard",
-      "materializationTransitionRef": "urn:transition:select-drafts",
-      "materializationModalityRef": "observability:keyboard",
-      "materializationStepRefs": [
-        "urn:step:select-drafts:keyboard:1",
-        "urn:step:select-drafts:keyboard:2",
-        "urn:step:select-drafts:keyboard:3",
-        "urn:step:select-drafts:keyboard:4",
-        "urn:step:select-drafts:keyboard:5"
-      ]
-    },
-    {
-      "@type": "MoveStep",
-      "@id": "urn:step:select-drafts:keyboard:1",
-      "stepMoveKindRef": "operability:nextStop"
-    },
-    {
-      "@type": "MoveStep",
-      "@id": "urn:step:select-drafts:keyboard:2",
-      "stepPreviousRef": "urn:step:select-drafts:keyboard:1",
-      "stepMoveKindRef": "operability:nextStop",
-      "stepLocatorRef": "urn:locator:home-tab"
-    },
-    {
-      "@type": "MoveStep",
-      "@id": "urn:step:select-drafts:keyboard:3",
-      "stepPreviousRef": "urn:step:select-drafts:keyboard:2",
-      "stepMoveKindRef": "operability:nextItem"
-    },
-    {
-      "@type": "MoveStep",
-      "@id": "urn:step:select-drafts:keyboard:4",
-      "stepPreviousRef": "urn:step:select-drafts:keyboard:3",
-      "stepMoveKindRef": "operability:nextItem",
-      "stepLocatorRef": "urn:locator:drafts-tab"
-    },
-    {
-      "@type": "ActivationStep",
-      "@id": "urn:step:select-drafts:keyboard:5",
-      "stepPreviousRef": "urn:step:select-drafts:keyboard:4"
-    },
-    {
-      "@type": "TransitionMaterialization",
-      "@id": "urn:materialization:select-drafts:pointer",
-      "label": "Select Drafts by pointer",
-      "materializationTransitionRef": "urn:transition:select-drafts",
-      "materializationModalityRef": "observability:pointer",
-      "materializationStepRefs": [
-        "urn:step:select-drafts:pointer:1",
-        "urn:step:select-drafts:pointer:2"
-      ]
-    },
-    {
-      "@type": "MoveStep",
-      "@id": "urn:step:select-drafts:pointer:1",
-      "stepMoveKindRef": "operability:pointAt",
-      "stepLocatorRef": "urn:locator:drafts-tab"
-    },
-    {
-      "@type": "ActivationStep",
-      "@id": "urn:step:select-drafts:pointer:2",
-      "stepPreviousRef": "urn:step:select-drafts:pointer:1"
-    },
-    {
-      "@type": "TransitionMaterialization",
-      "@id": "urn:materialization:select-drafts:shortcut",
-      "label": "Select Drafts by shortcut",
-      "materializationTransitionRef": "urn:transition:select-drafts",
-      "materializationModalityRef": "observability:keyboard",
-      "materializationStepRefs": ["urn:step:select-drafts:shortcut:1"]
-    },
-    {
-      "@type": "ShortcutStep",
-      "@id": "urn:step:select-drafts:shortcut:1",
-      "stepLocatorRef": "urn:locator:drafts-tab"
-    }
-  ]
-}
+```ujg-example
+./examples/example-03.yamlld
 ```
 
 The binding observes the Surface of the "Select Drafts" Command, and its activation event requires
@@ -697,115 +466,8 @@ To turn the previous example into this one:
 - replace the `urn:journey:mail` node with the one below, which lists the new State and Transitions;
 - add the other nodes below.
 
-```json
-[
-  {
-    "@type": "Journey",
-    "@id": "urn:journey:mail",
-    "label": "Mail",
-    "defaultEntryRef": "urn:entry:mail",
-    "entryRefs": ["urn:entry:mail"],
-    "stateRefs": [
-      "urn:state:home-selected",
-      "urn:state:inbox-selected",
-      "urn:state:drafts-selected"
-    ],
-    "transitionRefs": [
-      "urn:transition:select-drafts",
-      "urn:transition:select-inbox",
-      "urn:transition:select-drafts-from-inbox"
-    ]
-  },
-  {
-    "@type": "State",
-    "@id": "urn:state:inbox-selected",
-    "label": "Inbox selected"
-  },
-  {
-    "@type": "Transition",
-    "@id": "urn:transition:select-inbox",
-    "label": "Select Inbox",
-    "from": "urn:state:home-selected",
-    "to": "urn:state:inbox-selected",
-    "commandRef": "urn:command:select-inbox"
-  },
-  {
-    "@type": "Transition",
-    "@id": "urn:transition:select-drafts-from-inbox",
-    "label": "Select Drafts",
-    "from": "urn:state:inbox-selected",
-    "to": "urn:state:drafts-selected",
-    "commandRef": "urn:command:select-drafts"
-  },
-  {
-    "@type": "Command",
-    "@id": "urn:command:select-inbox",
-    "label": "Select Inbox"
-  },
-  {
-    "@type": "MessageMeta",
-    "@id": "urn:message-meta:inbox",
-    "defaultLocaleRef": "urn:locale:en"
-  },
-  {
-    "@type": "Message",
-    "@id": "urn:message:inbox:en",
-    "messageMetaRef": "urn:message-meta:inbox",
-    "localeRef": "urn:locale:en",
-    "value": "Inbox"
-  },
-  {
-    "@type": "AccessibleLocator",
-    "@id": "urn:locator:inbox-tab",
-    "role": "tab",
-    "accessibleNameRef": "urn:message-meta:inbox",
-    "contextLocatorRefs": ["urn:locator:mail-tablist"]
-  },
-  {
-    "@type": "TransitionMaterialization",
-    "@id": "urn:materialization:select-inbox:keyboard",
-    "materializationTransitionRef": "urn:transition:select-inbox",
-    "materializationModalityRef": "observability:keyboard",
-    "materializationStepRefs": [
-      "urn:step:select-inbox:keyboard:1",
-      "urn:step:select-inbox:keyboard:2",
-      "urn:step:select-inbox:keyboard:3"
-    ]
-  },
-  {
-    "@type": "MoveStep",
-    "@id": "urn:step:select-inbox:keyboard:1",
-    "stepMoveKindRef": "operability:nextStop"
-  },
-  {
-    "@type": "MoveStep",
-    "@id": "urn:step:select-inbox:keyboard:2",
-    "stepPreviousRef": "urn:step:select-inbox:keyboard:1",
-    "stepMoveKindRef": "operability:nextStop",
-    "stepLocatorRef": "urn:locator:home-tab"
-  },
-  {
-    "@type": "MoveStep",
-    "@id": "urn:step:select-inbox:keyboard:3",
-    "stepPreviousRef": "urn:step:select-inbox:keyboard:2",
-    "stepMoveKindRef": "operability:nextItem",
-    "stepLocatorRef": "urn:locator:inbox-tab"
-  },
-  {
-    "@type": "TransitionMaterialization",
-    "@id": "urn:materialization:select-drafts-from-inbox:keyboard",
-    "materializationTransitionRef": "urn:transition:select-drafts-from-inbox",
-    "materializationModalityRef": "observability:keyboard",
-    "materializationStartLocatorRef": "urn:locator:inbox-tab",
-    "materializationStepRefs": ["urn:step:select-drafts-from-inbox:keyboard:1"]
-  },
-  {
-    "@type": "MoveStep",
-    "@id": "urn:step:select-drafts-from-inbox:keyboard:1",
-    "stepMoveKindRef": "operability:nextItem",
-    "stepLocatorRef": "urn:locator:drafts-tab"
-  }
-]
+```ujg-example
+./examples/example-02.yamlld
 ```
 
 ### Carousel Example
@@ -816,105 +478,14 @@ neighboring slides. By keyboard, the user moves focus onto the slide tab list an
 or previous tab, which shows the neighboring slide. The adjacency gets one materialization for each
 direction.
 
-```json
-[
-  {
-    "@type": "Journey",
-    "@id": "urn:journey:product-gallery",
-    "label": "Product gallery",
-    "defaultEntryRef": "urn:entry:product-gallery",
-    "entryRefs": ["urn:entry:product-gallery"],
-    "stateRefs": ["urn:state:slide"]
-  },
-  {
-    "@type": "JourneyEntry",
-    "@id": "urn:entry:product-gallery",
-    "stateRef": "urn:state:slide"
-  },
-  {
-    "@type": "State",
-    "@id": "urn:state:slide",
-    "label": "Slide"
-  },
-  {
-    "@type": "StateCollection",
-    "@id": "urn:collection:slides",
-    "label": "Slides",
-    "memberStateRef": "urn:state:slide",
-    "memberTransitionRefs": ["urn:adjacent:slide-neighbors"]
-  },
-  {
-    "@type": "AdjacentTransition",
-    "@id": "urn:adjacent:slide-neighbors",
-    "from": "urn:state:slide",
-    "to": "urn:state:slide"
-  },
-  {
-    "@type": "AccessibleLocator",
-    "@id": "urn:locator:slide-tablist",
-    "role": "tablist"
-  },
-  {
-    "@type": "AccessibleLocator",
-    "@id": "urn:locator:slide-tab",
-    "role": "tab",
-    "contextLocatorRefs": ["urn:locator:slide-tablist"]
-  },
-  {
-    "@type": "TransitionMaterialization",
-    "@id": "urn:materialization:next-slide:keyboard",
-    "materializationTransitionRef": "urn:adjacent:slide-neighbors",
-    "materializationDirectionRef": "operability:forward",
-    "materializationModalityRef": "observability:keyboard",
-    "materializationStepRefs": [
-      "urn:step:next-slide:keyboard:1",
-      "urn:step:next-slide:keyboard:2"
-    ]
-  },
-  {
-    "@type": "MoveStep",
-    "@id": "urn:step:next-slide:keyboard:1",
-    "stepMoveKindRef": "operability:nextStop",
-    "stepLocatorRef": "urn:locator:slide-tab"
-  },
-  {
-    "@type": "MoveStep",
-    "@id": "urn:step:next-slide:keyboard:2",
-    "stepPreviousRef": "urn:step:next-slide:keyboard:1",
-    "stepMoveKindRef": "operability:nextItem",
-    "stepLocatorRef": "urn:locator:slide-tab"
-  },
-  {
-    "@type": "TransitionMaterialization",
-    "@id": "urn:materialization:previous-slide:keyboard",
-    "materializationTransitionRef": "urn:adjacent:slide-neighbors",
-    "materializationDirectionRef": "operability:backward",
-    "materializationModalityRef": "observability:keyboard",
-    "materializationStepRefs": [
-      "urn:step:previous-slide:keyboard:1",
-      "urn:step:previous-slide:keyboard:2"
-    ]
-  },
-  {
-    "@type": "MoveStep",
-    "@id": "urn:step:previous-slide:keyboard:1",
-    "stepMoveKindRef": "operability:nextStop",
-    "stepLocatorRef": "urn:locator:slide-tab"
-  },
-  {
-    "@type": "MoveStep",
-    "@id": "urn:step:previous-slide:keyboard:2",
-    "stepPreviousRef": "urn:step:previous-slide:keyboard:1",
-    "stepMoveKindRef": "operability:previousItem",
-    "stepLocatorRef": "urn:locator:slide-tab"
-  }
-]
+```ujg-example
+./examples/example-01.yamlld
 ```
 
 One pair of materializations serves every slide. The slide tab locator names any tab in the slide
 tab list, and which tab the user reaches is known only when the step happens.
 
 A pointer materialization of the same adjacency would point at a slide tab with
-`operability:pointAt`. The slide tab locator matches every tab, so a runner could not choose one,
+`ujgoperability:pointAt`. The slide tab locator matches every tab, so a runner could not choose one,
 and such a materialization documents the interaction without being performable. A pointer user can
-also swipe: a pointer materialization with one MoveStep using `operability:nextPage` is performable.
+also swipe: a pointer materialization with one MoveStep using `ujgoperability:nextPage` is performable.

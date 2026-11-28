@@ -14,53 +14,75 @@
           "scope": "base UJG document modeling across Core, Graph, Surface, Runtime, Mapping, and Metrics",
           "nameSuffix": "modeling",
           "moduleId": null,
-          "moduleIds": ["core", "graph", "surface", "runtime", "mapping", "metrics"],
-          "relatedSkillKeys": ["core", "graph"],
-          "description": "Generate, review, correct, and reason about base User Journey Graph JSON-LD for the Editor's Draft across Core, Graph, Surface, Runtime, Mapping, and Metrics.",
+          "moduleIds": [
+            "core",
+            "graph",
+            "surface",
+            "runtime",
+            "mapping",
+            "metrics"
+          ],
+          "relatedSkillKeys": [
+            "core",
+            "graph"
+          ],
+          "description": "Generate, review, correct, and reason about base User Journey Graph JSON-LD and YAML-LD for the Editor's Draft across Core, Graph, Surface, Runtime, Mapping, and Metrics.",
           "shortDescription": "Model base UJG modules for ED",
-          "defaultPrompt": "Use $ujg-ed-modeling to generate or review Editor's Draft UJG JSON-LD across Core, Graph, Surface, Runtime, Mapping, and Metrics."
+          "defaultPrompt": "Use $ujg-ed-modeling to generate or review current Editor's Draft UJG YAML-LD or JSON-LD for base UJG document modeling across Core, Graph, Surface, Runtime, Mapping, and Metrics."
         },
         {
           "key": "core",
           "title": "Core Modeling",
-          "scope": "Core module document containers, imports, top-level nodes, and extensions",
+          "scope": "Core module document containers, imports, root and embedded node definitions, and extensions",
           "nameSuffix": "core-modeling",
-          "moduleId": "core"
+          "moduleId": "core",
+          "description": "Generate, review, correct, and reason about Core Modeling in User Journey Graph JSON-LD and YAML-LD for the Editor's Draft. Use when the task is scoped to Core module document containers, imports, root and embedded node definitions, and extensions or crosses this module boundary.",
+          "defaultPrompt": "Use $ujg-ed-core-modeling to generate or review current Editor's Draft UJG YAML-LD or JSON-LD for Core module document containers, imports, root and embedded node definitions, and extensions."
         },
         {
           "key": "graph",
           "title": "Graph Modeling",
           "scope": "Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes",
           "nameSuffix": "graph-modeling",
-          "moduleId": "graph"
+          "moduleId": "graph",
+          "description": "Generate, review, correct, and reason about Graph Modeling in User Journey Graph JSON-LD and YAML-LD for the Editor's Draft. Use when the task is scoped to Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes or crosses this module boundary.",
+          "defaultPrompt": "Use $ujg-ed-graph-modeling to generate or review current Editor's Draft UJG YAML-LD or JSON-LD for Graph module topology, journeys, states, transitions, exits, outgoing navigation, and indexes."
         },
         {
           "key": "design-system",
           "title": "Design System Modeling",
           "scope": "Design System module semantics and its relationship to Graph and Surface",
           "nameSuffix": "design-system-modeling",
-          "moduleId": "modules/design-system"
+          "moduleId": "modules/design-system",
+          "description": "Generate, review, correct, and reason about Design System Modeling in User Journey Graph JSON-LD and YAML-LD for the Editor's Draft. Use when the task is scoped to Design System module semantics and its relationship to Graph and Surface or crosses this module boundary.",
+          "defaultPrompt": "Use $ujg-ed-design-system-modeling to generate or review current Editor's Draft UJG YAML-LD or JSON-LD for Design System module semantics and its relationship to Graph and Surface."
         },
         {
           "key": "localization",
           "title": "Localization Modeling",
           "scope": "Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata",
           "nameSuffix": "l10n-modeling",
-          "moduleId": "modules/l10n"
+          "moduleId": "modules/l10n",
+          "description": "Generate, review, correct, and reason about Localization Modeling in User Journey Graph JSON-LD and YAML-LD for the Editor's Draft. Use when the task is scoped to Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata or crosses this module boundary.",
+          "defaultPrompt": "Use $ujg-ed-l10n-modeling to generate or review current Editor's Draft UJG YAML-LD or JSON-LD for Localization module semantics for MessageMeta copy metadata, addressable Message values, Locale resources, and locale-switch metadata."
         },
         {
           "key": "observability",
           "title": "Observability Modeling",
           "scope": "Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver",
           "nameSuffix": "observability-modeling",
-          "moduleId": "modules/observability"
+          "moduleId": "modules/observability",
+          "description": "Generate, review, correct, and reason about Observability Modeling in User Journey Graph JSON-LD and YAML-LD for the Editor's Draft. Use when the task is scoped to Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver or crosses this module boundary.",
+          "defaultPrompt": "Use $ujg-ed-observability-modeling to generate or review current Editor's Draft UJG YAML-LD or JSON-LD for Observability module semantics for ObservationBinding, ObservationEvent input modality requirements, accessible-object locators, surface recognition contracts, and SurfaceInstanceResolver."
         },
         {
           "key": "operability",
           "title": "Operability Modeling",
           "scope": "Operability module semantics for TransitionMaterialization options that describe how a Graph transition is performed through an input modality, linked MoveStep, ActivationStep, and ShortcutStep chains, platform-neutral FocusMoveKind and MoveKind values, and AdjacentTransition materialization direction",
           "nameSuffix": "operability-modeling",
-          "moduleId": "modules/operability"
+          "moduleId": "modules/operability",
+          "description": "Generate, review, correct, and reason about Operability Modeling in User Journey Graph JSON-LD and YAML-LD for the Editor's Draft. Use when the task is scoped to Operability module semantics for TransitionMaterialization options that describe how a Graph transition is performed through an input modality, linked MoveStep, ActivationStep, and ShortcutStep chains, platform-neutral FocusMoveKind and MoveKind values, and AdjacentTransition materialization direction or crosses this module boundary.",
+          "defaultPrompt": "Use $ujg-ed-operability-modeling to generate or review current Editor's Draft UJG YAML-LD or JSON-LD for Operability module semantics for TransitionMaterialization options that describe how a Graph transition is performed through an input modality, linked MoveStep, ActivationStep, and ShortcutStep chains, platform-neutral FocusMoveKind and MoveKind values, and AdjacentTransition materialization direction."
         },
         {
           "key": "domain-model-evaluation",
@@ -70,7 +92,7 @@
           "moduleId": "extensions/domain-model",
           "description": "Evaluate generated DomainModel outputs for the Editor's Draft against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality.",
           "shortDescription": "Evaluate UJG Domain Models for ED",
-          "defaultPrompt": "Use $ujg-ed-domain-model-evaluation to evaluate a generated DomainModel against the supplied UJG document, Domain Model JSON Schema, and any explicit domain knowledge."
+          "defaultPrompt": "Use $ujg-ed-domain-model-evaluation to generate or review current Editor's Draft UJG YAML-LD or JSON-LD for Domain Model Document Extension evaluation against UJG topology, optional explicit domain knowledge, schema validity, traceability, minimality, alignment, assumptions, and realization neutrality."
         },
         {
           "key": "domain-model-implementation",
@@ -80,7 +102,7 @@
           "moduleId": "extensions/domain-model",
           "description": "Review or implement software against a User Journey Graph document with a Domain Model extension for the Editor's Draft, preserving domain behavior, guarded branches, effects, invariants, and journey semantics. Use when the full UJG document is the behavioral source of truth; do not use to evaluate the DomainModel JSON alone.",
           "shortDescription": "Review UJG domain implementations for ED",
-          "defaultPrompt": "Use $ujg-ed-domain-model-implementation to review or implement software against a full UJG document with a Domain Model extension, including graph topology, guarded branches, effects, invariants, and journey semantics."
+          "defaultPrompt": "Use $ujg-ed-domain-model-implementation to generate or review current Editor's Draft UJG YAML-LD or JSON-LD for software implementation conformance against a full UJG document with the Domain Model Document Extension, including domain behavior, guarded branches, effects, invariants, and journey semantics."
         }
       ]
     },

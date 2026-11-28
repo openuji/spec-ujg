@@ -1,0 +1,20 @@
+- type: SlotBinding
+  id: urn:ujg:slot-binding:checkout-main
+  label: Checkout main slot binding
+  slot: urn:ujg:slot:checkout-main
+  targetSurface: urn:ujg:surface:checkout-form
+- type: Component
+  id: urn:ujg:component:CheckoutForm
+  label: Checkout form component
+- type: SurfaceMaterialization
+  id: urn:ujg:materialization:checkout-form
+  label: Checkout form materialization
+  materializedSurface: urn:ujg:surface:checkout-form
+  component: urn:ujg:component:CheckoutForm
+- type: SurfaceMaterialization
+  id: urn:ujg:materialization:checkout-page
+  label: Checkout page materialization
+  materializedSurface: urn:ujg:surface:checkout-page
+  template: urn:ujg:template:checkout-layout
+  slotBindings:
+    - urn:ujg:slot-binding:checkout-main

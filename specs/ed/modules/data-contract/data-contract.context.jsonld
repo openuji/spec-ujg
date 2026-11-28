@@ -1,23 +1,19 @@
 {
   "@context": {
     "@version": 1.1,
-
     "ujgdata": "https://ujg.specs.openuji.org/ed/ns/data-contract#",
-    "dataContract": "https://ujg.specs.openuji.org/ed/ns/data-contract#",
-
     "DataSchema": "ujgdata:DataSchema",
     "DataBinding": "ujgdata:DataBinding",
-
     "dataSchemaSource": {
       "@id": "ujgdata:dataSchemaSource",
       "@type": "@id"
     },
-    "dataSurfaceRef": {
-      "@id": "ujgdata:dataSurfaceRef",
+    "dataSurface": {
+      "@id": "ujgdata:dataSurface",
       "@type": "@id"
     },
-    "dataSchemaRef": {
-      "@id": "ujgdata:dataSchemaRef",
+    "dataSchema": {
+      "@id": "ujgdata:dataSchema",
       "@type": "@id"
     }
   }

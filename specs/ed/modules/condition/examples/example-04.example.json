@@ -1,0 +1,10 @@
+{
+  "kind": "fragment",
+  "modules": [
+    "core",
+    "graph",
+    "modules/condition"
+  ],
+  "source": "https://example.com/ujg/examples/modules/condition/example-04.yamlld",
+  "validation": "source"
+}

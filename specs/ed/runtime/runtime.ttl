@@ -21,15 +21,15 @@ ujgruntime:RuntimeEvent a owl:Class ;
 
 ### Properties
 
-ujgruntime:executionId a owl:ObjectProperty ;
+ujgruntime:execution a owl:ObjectProperty ;
   rdfs:domain ujgruntime:RuntimeEvent ;
   rdfs:range ujgruntime:JourneyExecution .
 
-ujgruntime:previousId a owl:ObjectProperty ;
+ujgruntime:previousEvent a owl:ObjectProperty ;
   rdfs:domain ujgruntime:RuntimeEvent ;
   rdfs:range ujgruntime:RuntimeEvent .
 
-ujgruntime:surfaceInstanceRef a owl:ObjectProperty ;
+ujgruntime:surfaceInstance a owl:ObjectProperty ;
   rdfs:domain ujgruntime:RuntimeEvent ;
   rdfs:range ujgsurface:SurfaceInstance .
 

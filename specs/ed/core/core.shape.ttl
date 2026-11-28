@@ -9,13 +9,13 @@ ujgshape:UJGDocumentShape a sh:NodeShape ;
   sh:nodeKind sh:IRI ;
 
   sh:property [
-    sh:path ujg:documentImports ;
+    sh:path ujg:imports ;
     sh:nodeKind sh:IRI ;
     sh:minCount 0 ;
   ] ;
 
   sh:property [
-    sh:path ujg:documentNodes ;
+    sh:path ujg:nodes ;
     sh:nodeKind sh:IRI ;
     sh:minCount 0 ;
   ] ;
@@ -28,7 +28,8 @@ ujgshape:UJGDocumentShape a sh:NodeShape ;
 
 ujgshape:NodeShape a sh:NodeShape ;
   sh:targetClass ujg:Node ;
-  sh:targetObjectsOf ujg:documentNodes ;
+  sh:targetObjectsOf ujg:nodes ;
+  sh:targetObjectsOf ujg:members ;
   sh:nodeKind sh:IRI ;
 
   sh:property [

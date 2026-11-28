@@ -1,0 +1,9 @@
+id: urn:ujg:metric:checkout:unexplained-rate
+type: MetricObservation
+metricSubject: urn:ujg:mapping:execution-12345
+metricKey: unexplainedMovementRate
+metricValue: 0.25
+metricUnit: ratio
+numeratorCount: 1
+denominatorCount: 4
+sourceMapping: urn:ujg:mapping:execution-12345

@@ -1,0 +1,19 @@
+- type: State
+  id: urn:ujg:state:list-item
+  label: List item
+  entryTransitions:
+    - urn:ujg:ot:open-item
+- type: OutgoingTransition
+  id: urn:ujg:ot:open-item
+  label: Open item
+  entrySelector: urn:ujg:selector:item-destination
+  command: urn:ujg:command:open-item
+- type: Command
+  id: urn:ujg:command:open-item
+  label: Open item
+- type: EntrySelector
+  id: urn:ujg:selector:item-destination
+  label: Item destination
+  candidateJourneys:
+    - urn:ujg:journey:article
+    - urn:ujg:journey:topic

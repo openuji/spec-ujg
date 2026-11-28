@@ -1,0 +1,11 @@
+{
+  "kind": "fragment",
+  "modules": [
+    "core",
+    "graph",
+    "surface",
+    "runtime"
+  ],
+  "source": "https://example.com/ujg/examples/runtime/example-03.yamlld",
+  "validation": "source"
+}

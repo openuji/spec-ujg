@@ -1,0 +1,70 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/core.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/graph.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld
+id: https://example.com/ujg/codex/branch-condition.jsonld
+type: UJGDocument
+nodes:
+  - type: Journey
+    defaultEntry: urn:ujg:entry:codex-chat-in-ide-default
+    entries:
+      - type: JourneyEntry
+        id: urn:ujg:entry:codex-chat-in-ide-default
+        state: urn:ujg:state:user-asks-codex-to-code
+    id: urn:ujg:journey:codex-chat-in-ide
+    states:
+      - type: State
+        id: urn:ujg:state:user-asks-codex-to-code
+        label: User asks Codex to make code changes
+      - type: State
+        id: urn:ujg:state:codex-starts-coding
+        label: Codex starts coding on the current branch
+      - type: State
+        id: urn:ujg:state:branch-confirmation-popup
+        label: Codex asks whether to continue on the current branch or return to the original branch
+      - type: State
+        id: urn:ujg:state:switch-back-to-original-branch
+        label: IDE switches back to the original branch associated with the chat
+      - type: State
+        id: urn:ujg:state:codex-starts-coding-on-original-branch
+        label: Codex starts coding on the original branch
+    transitions:
+      - type: Transition
+        id: urn:ujg:transition:ask-code-to-start-coding
+        from: urn:ujg:state:user-asks-codex-to-code
+        to: urn:ujg:state:codex-starts-coding
+        label: Branch is unchanged
+        condition:
+          type: Condition
+          id: urn:ujg:condition:current-branch-equals-chat-branch
+          label: Current IDE Git branch equals the branch associated with this Codex chat session
+      - type: Transition
+        id: urn:ujg:transition:ask-code-to-branch-popup
+        from: urn:ujg:state:user-asks-codex-to-code
+        to: urn:ujg:state:branch-confirmation-popup
+        label: Branch differs
+        condition:
+          type: Condition
+          id: urn:ujg:condition:current-branch-differs-from-chat-branch
+          label: Current IDE Git branch differs from the branch associated with this Codex chat session
+      - type: Transition
+        id: urn:ujg:transition:popup-keep-current-branch
+        from: urn:ujg:state:branch-confirmation-popup
+        to: urn:ujg:state:codex-starts-coding
+        label: Keep me on the current branch
+      - type: Transition
+        id: urn:ujg:transition:popup-go-back
+        from: urn:ujg:state:branch-confirmation-popup
+        to: urn:ujg:state:switch-back-to-original-branch
+        label: Go back to the original branch
+      - type: Transition
+        id: urn:ujg:transition:switch-back-to-start-coding
+        from: urn:ujg:state:switch-back-to-original-branch
+        to: urn:ujg:state:codex-starts-coding-on-original-branch
+        label: Continue coding
+  - type: ConditionalTransitionSet
+    id: urn:ujg:conditional-transition-set:resolve-branch-context-before-coding
+    label: Resolve branch context before coding
+    conditionTransitions:
+      - urn:ujg:transition:ask-code-to-start-coding
+      - urn:ujg:transition:ask-code-to-branch-popup

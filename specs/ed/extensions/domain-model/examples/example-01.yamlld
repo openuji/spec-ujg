@@ -1,0 +1,78 @@
+"@context":
+  - https://ujg.specs.openuji.org/ed/ns/context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/condition.context.jsonld
+  - https://ujg.specs.openuji.org/ed/ns/effect.context.jsonld
+id: https://example.com/ujg/workshop-waitlist.jsonld
+type: UJGDocument
+extensions:
+  org.openuji.domain-model:
+    id: urn:domain:model:workshop-waitlist
+    entities:
+      - id: urn:domain:entity:workshop-participation
+        label: Workshop participation
+        ujgRefs:
+          - urn:ujg:state:waitlisted
+          - urn:ujg:state:registration-confirmed
+          - urn:ujg:condition:participant-already-waitlisted
+        properties:
+          - id: urn:domain:property:participation-status
+            label: Participation status
+            ujgRefs:
+              - urn:ujg:state:waitlisted
+              - urn:ujg:state:registration-confirmed
+            valueType: string
+            allowedValues:
+              - waitlisted
+              - confirmed
+    valueObjects: []
+    relationships: []
+    domainOperations:
+      - id: urn:domain:operation:join-waitlist
+        label: Join waitlist
+        ujgRefs:
+          - urn:ujg:effect:join-waitlist
+        actsOnRefs:
+          - urn:domain:entity:workshop-participation
+        preconditions:
+          - The participant is eligible to join the waitlist.
+        postconditions:
+          - A workshop participation is waitlisted.
+    invariants:
+      - id: urn:domain:invariant:participation-scope
+        label: Participation scope
+        appliesToRefs:
+          - urn:domain:entity:workshop-participation
+        assertion: A workshop participation belongs to one participant and one workshop.
+nodes:
+  - type: Journey
+    id: urn:ujg:journey:workshop-waitlist
+    defaultEntry: urn:ujg:entry:workshop-waitlist
+    entries:
+      - type: JourneyEntry
+        id: urn:ujg:entry:workshop-waitlist
+        state: urn:ujg:state:registration-open
+    states:
+      - type: State
+        id: urn:ujg:state:registration-open
+        label: Registration open
+      - type: State
+        id: urn:ujg:state:waitlisted
+        label: Waitlisted
+      - type: State
+        id: urn:ujg:state:registration-confirmed
+        label: Registration confirmed
+    transitions:
+      - type: Transition
+        id: urn:ujg:transition:join-waitlist
+        from: urn:ujg:state:registration-open
+        to: urn:ujg:state:waitlisted
+        condition:
+          type: Condition
+          id: urn:ujg:condition:participant-already-waitlisted
+        effect:
+          type: Effect
+          id: urn:ujg:effect:join-waitlist
+      - type: Transition
+        id: urn:ujg:transition:confirm-registration
+        from: urn:ujg:state:waitlisted
+        to: urn:ujg:state:registration-confirmed

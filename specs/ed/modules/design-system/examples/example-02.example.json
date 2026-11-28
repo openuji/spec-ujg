@@ -1,0 +1,11 @@
+{
+  "kind": "document",
+  "modules": [
+    "core",
+    "graph",
+    "surface",
+    "modules/design-system"
+  ],
+  "source": "https://example.com/ujg/examples/modules/design-system/example-02.yamlld",
+  "validation": "full"
+}
